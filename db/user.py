@@ -52,16 +52,17 @@ class User(Base):
     @staticmethod
     async def get_all_users(session: AsyncSession) -> list: # получение всех пользователей из БД
         query = select(User).order_by(User.user_id)
-        users = await session.scalars(query)
+        result = await session.scalars(query)
         #users_not_root = users[1:]
-        users_not_root = users.all()
+        users_not_root = result.all()
         return users_not_root
     
 
     @staticmethod
-    async def get_user_by_name(session: AsyncSession, user_name)  -> None: # получение пользователя по RFID коду
-        query = select(User).where(User.user_name == user_name)
-        user = session.scalars(query).one()
+    async def get_user_by_email(session: AsyncSession, user_email: str)  -> None: # получение пользователя по RFID коду
+        query = select(User).where(User.user_email == user_email)
+        result = await session.scalars(query)
+        user = result.one()
         return user
     
     """ @staticmethod

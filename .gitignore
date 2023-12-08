@@ -160,6 +160,6 @@ cython_debug/
 #.idea/
 
 # Temp dir
-/.temp/
+temp/
 main/
 postgres_data/

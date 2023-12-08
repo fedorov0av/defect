@@ -13,6 +13,7 @@ from db.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.routers.auth import auth_router
+from app.middleware.auth import auth_required
 
 app = FastAPI()
 router = APIRouter()
@@ -31,7 +32,9 @@ async def signin(request:Request):
     return templates.TemplateResponse("login/login.html",context={"request":request})
 
 @app.get("/defect/",response_class=HTMLResponse)
+@auth_required
 async def get_defects(request:Request):
+    #print(request.cookies)
     return templates.TemplateResponse("defect/defect.html",context={"request":request})
 
 @app.get("/user/{item_id}")
