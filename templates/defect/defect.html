@@ -448,7 +448,7 @@
     </div>
   </div>
   <!----------------------------------------Модальное окно "Карточка пользователя"------------------------------------------>
-  <div class="modal fade" id="CardUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="CardUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-target="#myModal">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -460,41 +460,37 @@
               <input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
               <div class="block_data1">
                 <div class="block_input_data_user"><b>Фамилия</b></div>
-                  <input type="text" class="form-control" name="position" v-model="newUserSurname" placeholder="Фамилия">
+                  <input type="text" class="form-control" name="position" v-model="cardUserSurname" placeholder="Фамилия">
               </div>
               <div class="block_data1">
                 <div class="block_input_data_user"><b>Имя</b></div>
-                <input type="text" class="form-control" name="name" v-model="newUserName" placeholder="Имя">
+                <input type="text" class="form-control" name="name" v-model="cardUserName" placeholder="Имя">
               </div>
               <div class="block_data1">
                 <div class="block_input_data_user"><b>Отчество</b></div>
-                  <input type="text" class="form-control" name="position" v-model="newUserFathername" placeholder="Отчество">
+                  <input type="text" class="form-control" name="position" v-model="cardUserFathername" placeholder="Отчество">
               </div>
               <div class="block_data1">
                 <div class="block_input_data_user"><b>Должность</b></div>
-                  <input type="text" class="form-control" name="position" v-model="newUserPosition" placeholder="Должность">
+                  <input type="text" class="form-control" name="position" v-model="cardUserPosition" placeholder="Должность">
               </div>
               <div class="block_data1">
                 <div class="block_input_data_user"><b>Отдел</b></div>
-                  <select class="form-select" aria-label="Default select example" v-model="newUserDivision">
+                  <select class="form-select" aria-label="Default select example" v-model="cardUserDivision">
                     <option disabled selected>Выберите подразделение</option>
                     <option v-for="division in divisions">{{ division.division_name }}</option>
                   </select> 
               </div>
               <div class="block_data1">
                 <div class="block_input_data_user"><b>Роль пользователя</b></div>
-                  <select class="form-select" aria-label="Default select example" v-model="newUserRole">
+                  <select class="form-select" aria-label="Default select example" v-model="cardUserRole">
                     <option disabled selected>Выберите роль пользователя</option>
                     <option v-for="role in roles">{{ role.role_name }}</option>
                   </select>
               </div>
               <div class="block_data1">
                 <div class="block_input_data_user"><b>E-mail</b></div>
-                  <input type="email" class="form-control" name="email" v-model="newUserEmail" placeholder="E-mail">
-              </div>
-              <div class="block_data1">
-                <div class="block_input_data_user"><b>Временный пароль</b></div>
-                  <input type="text" class="form-control" name="position" v-model="newUserTempPassword" placeholder="Временный пароль">
+                  <input type="email" class="form-control" name="email" v-model="cardUserEmail" placeholder="E-mail">
               </div>
               <div class="modal-footer">
                 <button @click="editUser" class="btn btn-primary" type="button">Изменить</button>
@@ -509,62 +505,60 @@
 
 
 <!----------------------------------------Модальное окно "Добавить дефект"------------------------------------------>
-<div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Добавление дефекта</h5>
-        <!--<p class="mylabel">Этап "Регистрация"</p>-->
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="post">
-            <input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
-            <div class="block_data1">
-              <div class="block_input_data_user"><b>Оборудование</b></div>
-                <select class="form-select" aria-label="Default select example" v-model="TypeDefect">
-                  <option disabled selected>Выберите Оборудование</option>
-                  
-                </select>
-            </div>
-            <div class="block_data1">
-              <div class="block_input_data_user"><b>KKS</b></div>
-                <input type="text" class="form-control" name="position" v-model="newUserPosition" placeholder="xxxx xxxx xxxx xxxx"
-                data-hs-mask-options='{
-                  "template": "0000 0000 0000 0000"
-                }'>
-            </div>
-            <div class="block_data1">
-              <div class="block_input_data_user"><b>Описание дефекта</b></div>
-              <textarea class="form-control" name="department" placeholder="Описание дефекта"></textarea>
-            </div>
-            <div class="block_data1">
-              <div class="block_input_data_user"><b>Местоположение</b></div>
-              <textarea class="form-control" name="department" placeholder="Местоположение"></textarea>
-            </div>
-            <div class="block_data1">
-              <div class="block_input_data_user"><b>Тип дефекта</b></div>
-                <select class="form-select" aria-label="Default select example" v-model="TypeDefect">
-                  <option disabled selected>Выберите тип дефекта</option>
-                  <option v-for="role in roles">{{ role.role_name }}</option>
-                </select>
-            </div>
-            <div class="block_data1">
-              <div class="block_input_data_user"><b>Подразделение-владелец</b></div>
-                <select class="form-select" aria-label="Default select example" v-model="newUserDivision">
-                  <option disabled selected>Выберите подразделение</option>
-                  <option v-for="division in divisions">{{ division.division_name }}</option>
-                </select> 
-            </div>
-            <div class="modal-footer">
-              <button @click="addNewDefect" class="btn btn-primary" type="button">Сохранить</button>
-            </div>
-          </form>
+<div id="vueDefect">
+  <div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Добавление дефекта</h5>
+          <!--<p class="mylabel">Этап "Регистрация"</p>-->
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+              <input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
+              <div class="block_data1">
+                <div class="block_input_data_user"><b>Оборудование</b></div>
+                  <input type="text" class="form-control" name="position" v-model="newSystemName" placeholder="Оборудование">
+              </div>
+              <div class="block_data1">
+                <div class="block_input_data_user"><b>KKS</b></div>
+                  <input type="text" class="form-control" name="position" v-model="newSystemKKS" placeholder="xxxx xxxx xxxx xxxx"
+                  data-hs-mask-options='{
+                    "template": "0000 0000 0000 0000"
+                  }'>
+              </div>
+              <div class="block_data1">
+                <div class="block_input_data_user"><b>Описание дефекта</b></div>
+                <textarea class="form-control" name="department" v-model="newDefectNotes" placeholder="Описание дефекта"></textarea>
+              </div>
+              <div class="block_data1">
+                <div class="block_input_data_user"><b>Местоположение</b></div>
+                <textarea class="form-control" name="department"  v-model="newLocation" placeholder="Местоположение"></textarea>
+              </div>
+              <div class="block_data1">
+                <div class="block_input_data_user"><b>Тип дефекта</b></div>
+                  <select class="form-select" aria-label="Default select example" v-model="newTypeDefect">
+                    <option disabled selected>Выберите тип дефекта</option>
+                    <option v-for="defect_type_defect in defect_type_defects">{{ defect_type_defect.type_defect_name }}</option>
+                  </select>
+              </div>
+              <div class="block_data1">
+                <div class="block_input_data_user"><b>Подразделение-владелец</b></div>
+                  <select class="form-select" aria-label="Default select example" v-model="newUserDivision">
+                    <option disabled selected>Выберите подразделение</option>
+                    <option v-for="division in defect_divisions">{{ division.division_name }}</option>
+                  </select> 
+              </div>
+              <div class="modal-footer">
+                <button @click="addNewDefect" class="btn btn-primary" type="button">Сохранить</button>
+              </div>
+            </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
 {% endraw %}
 <!--
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -740,4 +734,5 @@
 <script src="{{ url_for('defect_js', path='nav.js') }}"></script>
 <script src="{{ url_for('defect_js', path='user.js') }}"></script>
 <script src="{{ url_for('defect_js', path='filter.js') }}"></script>
+<script src="{{ url_for('defect_js', path='defect.js') }}"></script>
 

@@ -26,7 +26,7 @@ class TypeDefect(Base):
         return type_defect
 
     @staticmethod
-    async def get_all_systems(session: AsyncSession): # получение всех систем в БД
+    async def get_type_defects(session: AsyncSession): # получение всех систем в БД
         query = select(TypeDefect).order_by(TypeDefect.type_defect_id)
         result = await session.scalars(query)
         types_defect = result.all()

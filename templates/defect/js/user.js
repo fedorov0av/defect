@@ -15,6 +15,13 @@ const appVueUser = Vue.createApp({
         newUserEmail: '',
         newUserTempPassword: '',
 
+        cardUserSurname: '',
+        cardUserFathername: '',
+        cardUserName: '',
+        cardUserPosition: '',
+        cardUserDivision: '',
+        cardUserRole: '',
+        cardUserEmail: '',
 
       }
     },
@@ -71,6 +78,7 @@ const appVueUser = Vue.createApp({
                 console.log(response.data);
                 Swal.fire({html:"<b>Пользователь добавлен!</b>", heightAuto: false}); 
                 document.getElementById('closeModalAddUser').click();
+                
                   })
             .catch(err => {
                 Swal.fire({html:"<b>Произошла ошибка при добавлении пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -79,7 +87,33 @@ const appVueUser = Vue.createApp({
           } /* else */
         }, /* addNewUser */
         handleDoubleClick (event){
-            console.log(event)
+          console.log(event.target.parentNode.childNodes[0].textContent)
+          id_user = event.target.parentNode.childNodes[0].textContent
+          axios
+            .post('/user/',{
+              "user_id": parseInt(id_user),
+            })
+            .then(response => {
+              user = response.data;
+              console.log(user);
+              this.cardUserSurname = user.user_surname;
+              this.cardUserFathername = user.user_fathername;
+              this.cardUserName = user.user_name;
+              this.cardUserPosition = user.user_position;
+              this.cardUserDivision = user.user_division;
+              this.cardUserRole = user.user_role;
+              this.cardUserEmail = user.user_email;
+
+              var myModal = new bootstrap.Modal(document.getElementById('CardUserModalWindow'), {
+                keyboard: false
+              })
+              myModal.show()
+                  })
+            .catch(err => {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+            }) /* axios */
+          
         }, /* handleDoubleClick */
         }, /* methods */
 

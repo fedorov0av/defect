@@ -5,6 +5,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from db.base import Base
 from db.user import User
 from db.type_defect import TypeDefect
+from db.system import System
+from db.status_defect import StatusDefect
+from db.division import Division
+
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 
@@ -12,9 +17,9 @@ class Defect(Base):
     __tablename__ = "defect" # процесс учета средств оснащения
     defect_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
     defect_created_at: Mapped[datetime.datetime] = mapped_column(DateTime('Europe/Moscow'), default=datetime.datetime.strptime(datetime.datetime.now().isoformat(sep=" ", timespec="seconds"), "%Y-%m-%d %H:%M:%S"))# таймштамп вноса предмета
-    defect_registrar_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - регистратор дефекта.
-    defect_registrar: Mapped["User"] = relationship(foreign_keys=[defect_registrar_id]) #  для работы с таблицей User как с объектом
-    defect_owner_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - владелец оборудования.
+    defect_registrator_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - регистратор дефекта.
+    defect_registrar: Mapped["User"] = relationship(foreign_keys=[defect_registrator_id]) #  для работы с таблицей User как с объектом
+    defect_owner_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - владелец оборудования.
     defect_owner: Mapped["User"] = relationship(foreign_keys=[defect_owner_id]) #  для работы с таблицей User как с объектом
     defect_repair_manager_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - руководитель ремонта.
     defect_repair_manager: Mapped["User"] = relationship(foreign_keys=[defect_repair_manager_id]) #  для работы с таблицей User как с объектом
@@ -25,9 +30,32 @@ class Defect(Base):
     defect_location: Mapped[str] = mapped_column(String(500)) # Местоположение дефекта.
     defect_type_id: Mapped[int] = mapped_column(ForeignKey("type_defect.type_defect_id")) # вид дефекта
     defect_type: Mapped["TypeDefect"] = relationship(foreign_keys=[defect_type_id]) #  для работы с таблицей TypeDefect как с объектом
+    defect_status_id: Mapped[int] = mapped_column(ForeignKey("status_defect.status_defect_id")) # статус (Этап) дефекта
+    defect_status: Mapped["StatusDefect"] = relationship(foreign_keys=[defect_status_id]) #  для работы с таблицей StatusDefect как с объектом
+    defect_division_id: Mapped[int] = mapped_column(ForeignKey("division.division_id"), nullable=True) # id поста из таблицы User - руководитель ремонта.
+    defect_division: Mapped["Division"] = relationship(foreign_keys=[defect_division_id]) #  для работы с таблицей User как с объектом
+    defect_system_id: Mapped[int] = mapped_column(ForeignKey("system.system_id")) # вид дефекта
+    defect_system: Mapped["System"] = relationship(foreign_keys=[defect_system_id]) #  для работы с таблицей System как с объектом
     #defect_status_id: Mapped[int] = mapped_column(ForeignKey("status_defect.id")) # статус (Этап) дефекта
     #defect_status: Mapped["StatusDefect"] = relationship(foreign_keys=[defect_status_id]) #  для работы с таблицей StatusDefect как с объектом
     
+
+    @staticmethod
+    async def get_all_defect(session: AsyncSession): # получение всех систем в БД
+        query = select(Defect).order_by(Defect.defect_id)
+        result = await session.scalars(query)
+        divisions = result.all()
+        return divisions
+    
+    @staticmethod
+    async def add_defect(session: AsyncSession, defect_registrator: User, defect_description: str, defect_system: System,
+                          defect_location: str, defect_type: TypeDefect, defect_status: StatusDefect, defect_division: Division): # добавление системы в БД
+        defect = Defect(defect_registrator_id=defect_registrator.user_id, defect_description=defect_description, defect_division_id=defect_division.division_id,
+                        defect_location=defect_location, defect_type_id=defect_type.type_defect_id, defect_status_id=defect_status.status_defect_id, defect_system_id=defect_system.system_id)
+        session.add(defect)
+        await session.commit()
+        return defect
+
 ########################### fix me ###############
     """ @staticmethod
     def add_defect(

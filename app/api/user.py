@@ -12,7 +12,7 @@ from db.database import get_db
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
-from app.schemas.user import User_p
+from app.schemas.user import User_p, User_id
 
 user_router = APIRouter()
 
@@ -69,7 +69,16 @@ async def get_users(session: AsyncSession = Depends(get_db)):
         )
     return user_l
 
-@user_router.post("/user/{user_id}")
-async def get_user(user_id: int, q: Union[str, None] = None, session: AsyncSession = Depends(get_db)):
-    user: User = await User.get_user_by_id(session, user_id)
-    return user
+@user_router.post("/user/")
+async def get_user(user_id: User_id, session: AsyncSession = Depends(get_db)):
+    user: User = await User.get_user_by_id(session, user_id.user_id)
+    return {
+                "user_id": user.user_id,
+                'user_surname': user.user_surname,
+                'user_name': user.user_name,
+                'user_fathername': user.user_fathername,
+                'user_position': user.user_position,
+                'user_division': user.user_division.division_name,
+                'user_role': user.user_role[-1].role_name,
+                "user_email": user.user_email
+            }
