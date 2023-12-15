@@ -1,9 +1,11 @@
 <!doctype html>
-<html lang="en" data-bs-theme="auto">
+<html lang="ru" data-bs-theme="auto">
   <head>
     <script src="{{ url_for('static_js', path='color-modes.js') }}"></script>
     <script src="{{ url_for('static_js', path='vue3.js') }}"></script>
     <script src="{{ url_for('static_js', path='axios.min.js') }}"></script>
+    <script src="{{ url_for('static_js', path='sweetalert2.js') }}"></script>
+    <script src="{{ url_for('static_js', path='vue-router.global.js') }}"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -14,7 +16,7 @@
 <link rel="stylesheet" href="{{ url_for('static_css', path='login-styles.css') }}">    
 
     <!-- Bootstrap core CSS -->
-<link href="{{ url_for('static_css', path='login-bootstrap.min.css') }}" rel="stylesheet" integrity="TxHXy/yVQbBlAvM7qVF8YXY4RDIYXNUTFr3LyojgL1J5sOJnLNifuEMl2JMPfCVH" crossorigin="anonymous">
+<link href="{{ url_for('static_css', path='bootstrap.min.css') }}" rel="stylesheet" crossorigin="anonymous">
 
     <!-- Favicons 
 <link rel="apple-touch-icon" href="{{ url_for('static_img', path='apple-touch-icon.png') }}" sizes="180x180">
@@ -22,7 +24,7 @@
 <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="manifest" href="/docs/5.1/assets/img/favicons/manifest.json">
 <link rel="mask-icon" href="/docs/5.1/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
-<link rel="icon" href="/docs/5.1/assets/img/favicons/favicon.ico">
+<link rel="icon" href="{{ url_for('static_img', path='favicon.ico') }}">
 <meta name="theme-color" content="#7952b3">-->
 
 
@@ -103,6 +105,16 @@
   .bd-mode-toggle .dropdown-menu .active .bi {
     display: block !important;
   }
+
+  .block_h1 {
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .block_h2 {
+    text-align: center;
+  }
 </style>
 
 
@@ -163,134 +175,40 @@
 
 
 <main class="form-signin w-100 m-auto">
-<img class="mb-4" src="{{ url_for('static_img', path='akkuyu.png') }}" alt="" width="100" height="100">
-{% raw %}<div id="login_vue" ><h1 class="h3 mb-3 fw-normal">Войдите в систему {{ message }}</h1></div>{% endraw %}
+<img class="mb-4" src="{{ url_for('static_img', path='logo.svg') }}" alt="" width="300" height="300">
+<h2 class="block_h1">Журнал дефектов</h1>
+{% raw %}<div id="login_vue" ><h2 class="block_h2 h3 mb-3 fw-normal">Войдите в систему:</h2></div>{% endraw %}
 
 {% raw %}
-
-<div id="usern" class="form-floating">
-  <input id="floatingInput" input type="text" v-model="username" class="form-control" placeholder="Логин">  
+<div id="vueLogin">
+<div class="form-floating">
+  <input id="floatingInput" @keyup.enter="createPost" input type="email" v-model="email" class="form-control" placeholder="Логин">  
 </div>
 
-<div id="pswd" class="form-floating">
-  <input id="floatingPassword" type="password" v-model="password" class="form-control" placeholder="Пароль">
+<div  class="form-floating">
+  <input id="floatingPassword" @keyup.enter="createPost" type="password" v-model="password" class="form-control" placeholder="Пароль">
 </div>
 
-<div id="app1">
-  <button @click="get_root" type="button">
-    Count is: {{ temp }} + {{ count }}
-  </button>
-</div>
-
-<div class="form-check text-start my-3">
+<!-- <div class="form-check text-start my-3">
   <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
   <label class="form-check-label" for="flexCheckDefault">
     Запомните меня
   </label>
-</div>
+</div> -->
 
-<div id="app2">
-  <button @click="createPost" class="btn btn-primary w-100 py-2" type="button">Войти</button>
+    <button @click="createPost" v-on:keyup.enter="createPost" class="btn btn-primary w-100 py-2" :type="typeButton">Войти</button>
 </div>
 {% endraw %}
-<p class="mt-5 mb-3 text-body-secondary">&copy; Аккую Нуклеар 2023</p>
+<p class="mt-3 mb-3 text-body-secondary">&copy; Аккую Нуклеар 2023</p>
 </main>
 <script src="{{ url_for('static_js', path='bootstrap.bundle.min.js') }}" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
-<script>
-
-/////////////////////////////////////////////////////
-
-const app = Vue.createApp({
-  data() {
-    return {
-      message: Vue.ref(''),
-    }
-  },
-  methods: {
-    increment() {
-      us.username++
-    }
-  },
-})
-const vm = app.mount('#login_vue')
-
-/////////////////////Логин///////////////////////////
-
-const us = Vue.createApp({
-  data() {
-    return {
-      username: Vue.ref('Логин')
-    }
-  },
-  methods: {
-    increment() {
-      this.username++
-    }
-  },
-}).mount('#usern')
-
-/////////////////////Пароль///////////////////////////
-
-const ps = Vue.createApp({
-  data() {
-    return {
-      password: Vue.ref('Пароль')
-    }
-  },
-  methods: {
-    increment() {
-      ps.password++
-      console.log(this.password)
-    }
-  },
-}).mount('#pswd')
-
-/////////////////////////////////////////////////
-
-function increment() {
-  count.value++
-}
-/////////////////////////////////////////////////
-
-const mydata = Vue.createApp ({
-  data(){
-    return{
-      temp: NaN,
-      count: Vue.ref(0),
-    }
-  },
-  methods: {
-    get_root() {
-      axios.get('http://192.168.1.126:8000/users')
-      .then(response => this.temp = response.data);
-      this.count++;
-    }
-  },
-}).mount('#app1')
-
-////////////////////////////////////////////////////////////////////
-
-const mydata1 = Vue.createApp ({
-  data(){
-    return{
-      postData: {username: '1', password: '1'}
-    }
-  },
-  methods: {
-    createPost() {
-      this.postData.username = us.username;
-      this.postData.password = ps.password;
-      console.log(this.postData);
-      axios
-      .post('http://192.168.1.126:8000/auth', this.postData)
-      .then(response => console.log(response.data));
-    } 
-  },
-}).mount('#app2')
-
-
-</script>
-
+<script src="{{ url_for('login_js', path='login.js') }}"></script>
+<script>if (!location.hash) {
+  location.hash = "#reloading";
+  location.reload(true);
+  } else {
+  location.hash = "#reloaded";
+  }</script>
 </body>
 </html>
+<!-- axios.post('http://192.168.1.126:8000/auth', {email: "root@root.root", password: "toor",}) -->

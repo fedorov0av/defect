@@ -30,8 +30,8 @@ async def auth(auth_data:AuthData, response: Response, session: AsyncSession = D
     # Create new access/refresh tokens pair
     access_token = access_security.create_access_token(subject=subject)
     refresh_token = refresh_security.create_refresh_token(subject=subject)
-    response.set_cookie(key="jwt_access_token", value=access_token)
-    response.set_cookie(key="jwt_refresh_token", value=refresh_token)
+    response.set_cookie(key="jwt_access_token", value=access_token,)
+    response.set_cookie(key="jwt_refresh_token", value=refresh_token,)
 
     return {"access_token": access_token, "refresh_token": refresh_token}
 
@@ -47,14 +47,3 @@ async def refresh(
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 
-@auth_router.get("/users/me")
-async def read_current_user(request: Request,
-        credentials: JwtAuthorizationCredentials = Security(access_security)
-):  
-    print(request.cookies)
-    # auto_error=False, fo we should check manually
-    if not credentials:
-        raise HTTPException(status_code=401, detail='my-custom-details')
-
-    # now we can access Credentials object
-    return {"username": credentials["username"], "role": credentials["role"]}

@@ -1,5 +1,6 @@
 from fastapi import Request, HTTPException
 from fastapi.responses import RedirectResponse
+from jwt.exceptions import ExpiredSignatureError, DecodeError
 import starlette.status as status
 from functools import wraps
 from utils.jwt import decode_token
@@ -38,7 +39,7 @@ def auth_required(func):
         try:
             jwt_access_token = request.cookies['jwt_access_token'] 
             data_jwt = await decode_token(jwt_access_token)
-        except KeyError:
+        except (KeyError, ExpiredSignatureError, DecodeError):
             return RedirectResponse(url="/")
         else:
             if (datetime.datetime.now().timestamp() > data_jwt['exp']):

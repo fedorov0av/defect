@@ -22,4 +22,4 @@ class Role(Base):
     async def get_role_by_rolename(session: AsyncSession, role_name:str): # получить роль по названию роли
         query = select(Role).where(Role.role_name == role_name)
         role = await session.scalars(query)
-        return role
+        return role.one()

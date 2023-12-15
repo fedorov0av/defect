@@ -9,6 +9,8 @@ import asyncpg
 from db.base import Base
 from db.user import User
 from db.role import Role
+from db.type_defect import TypeDefect
+from db.division import Division
 from db.defect import Defect
 from db.history_defect import History
 from db.type_defect import TypeDefect
@@ -21,6 +23,10 @@ ROOT = {
     'qr_code': '45871209762859',
     'password': 'toor',
 }
+
+TYPES_DEFECT = ['ЖД основного оборудования', 'ЖД по строительным конструкциям', 'ЖД по освещению', 'ЖД по систем пожаротушения']
+
+DIVISIONS = ['ОС','СДТУ','АДМИНИСТРАЦИЯ']
 
 DATABASE_USER = 'postgres'
 DATABASE_PASSWORD = 'defect0'
@@ -60,11 +66,27 @@ async def create_tables():
         session.add(group_so)
     ################################################ """
 
+    ########### добавление типов дефектов в БД #######
+    async with async_session() as session:
+        for type_defect in TYPES_DEFECT:
+            type_defect = TypeDefect(type_defect_name=type_defect)
+            session.add(type_defect)
+            await session.commit()
+    ################################################
+
     ########### добавление списка ролей в БД #######
     async with async_session() as session:
         for role_name in ROLES:
             role = Role(role_name=role_name)
             session.add(role)
+            await session.commit()
+    ################################################
+
+    ########### добавление подраздлений в БД #######
+    async with async_session() as session:
+        for division_name in DIVISIONS:
+            division = Division(division_name=division_name)
+            session.add(division)
             await session.commit()
     ################################################
 
@@ -74,16 +96,19 @@ async def create_tables():
         hash_salt: tuple[str, str] = security.get_hash_salt(ROOT['password'])
         user_password_hash, user_salt_for_password = hash_salt
         result_roles = await Role.get_all_roles(session)
+        result_divisions = await Division.get_all_division(session)
         role_admin = result_roles[-1]
+        division_admin = result_divisions[-1]
+
         root_user = User(
             user_name = 'root',
             user_fathername = 'root',
             user_surname = 'root',
             user_position = 'root',
-            user_division = 'root',
             user_password_hash = user_password_hash,
             user_salt_for_password = user_salt_for_password,
             user_temp_password = False,
+            user_division_id = division_admin.division_id,
             user_email = 'root@root.root'
         )
         root_user.user_role.append(role_admin)
