@@ -3,7 +3,6 @@ from typing import List, AsyncGenerator
 from sqlalchemy import String, Boolean, func, DateTime, select, or_, ForeignKey
 from sqlalchemy.engine import row
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
-from sqlalchemy.ext.asyncio import AsyncSession
 from utils import security
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
@@ -38,7 +37,7 @@ class User(Base):
     def __repr__(self) -> str:
         return self.__str__() """
     
-    @staticmethod # fix me подразделение в отдельной таблице
+    @staticmethod
     async def add_user(session: AsyncSession, user_name: str, user_fathername: str, user_surname: str, user_position: str,
                  user_division: Division, user_password: str, user_email:str, user_role: Role=None) -> None: # добавление пользователя в БД
         hash_salt: tuple[str, str] = security.get_hash_salt(user_password)

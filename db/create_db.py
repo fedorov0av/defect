@@ -26,6 +26,17 @@ ROOT = {
 
 TYPES_DEFECT = ['ЖД основного оборудования', 'ЖД по строительным конструкциям', 'ЖД по освещению', 'ЖД по систем пожаротушения']
 
+STATUS_DEFECT = ['Зарегистрирован', # 1
+                 'Подтвержден', # 2
+                 'Принят в работу', # 3
+                 'Назначен исполнитель', # 4
+                 'Работы завершены', # 5
+                 'Устранен', # 6
+                 'Не устранен', # 7
+                 'Требует корректировки', # 8
+                 'Отменен',  # 9
+                 ]
+
 DIVISIONS = ['ОС','СДТУ','АДМИНИСТРАЦИЯ']
 
 DATABASE_USER = 'postgres'
@@ -71,6 +82,14 @@ async def create_tables():
         for type_defect in TYPES_DEFECT:
             type_defect = TypeDefect(type_defect_name=type_defect)
             session.add(type_defect)
+            await session.commit()
+    ################################################
+            
+    ########### добавление статусов дефектов в БД #######
+    async with async_session() as session:
+        for status_defect_name in STATUS_DEFECT:
+            status_defect = StatusDefect(status_defect_name=status_defect_name)
+            session.add(status_defect)
             await session.commit()
     ################################################
 

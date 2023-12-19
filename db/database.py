@@ -18,7 +18,7 @@ class DatabaseSessionManager:
 
     def __init__(self):
         self._engine = create_async_engine(DATABASE_URL, echo=True)
-        self._sessionmaker = async_sessionmaker(autocommit=False, bind=self._engine)
+        self._sessionmaker = async_sessionmaker(autocommit=False, bind=self._engine, expire_on_commit=False)
 
     async def close(self):
         if self._engine is None:

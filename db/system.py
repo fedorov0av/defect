@@ -21,11 +21,22 @@ class System(Base):
         return system
 
     @staticmethod
+    async def get_system_by_kks(session: AsyncSession, system_kks:str): # получение системы по ключу system_kks
+        system_kks_up = system_kks.upper()
+        query = select(System).where(System.system_kks == system_kks_up)
+        result = await session.scalars(query)
+        system = result.one()
+        return system
+
+
+    @staticmethod
     async def add_system(session: AsyncSession, system_name: str, system_kks: str,): # добавление системы в БД
-        system = System(system_name=system_name, system_kks=system_kks)
+        system_kks_up = system_kks.upper()
+        system = System(system_name=system_name, system_kks=system_kks_up)
         session.add(system)
         await session.commit()
-        return system
+
+
 
     @staticmethod
     async def get_all_system(session: AsyncSession): # получение всех систем в БД

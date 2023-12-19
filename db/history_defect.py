@@ -1,12 +1,15 @@
 import datetime
 from sqlalchemy import ForeignKey, Integer, Text, String, DateTime, func, select, Boolean
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+
 
 from db.base import Base
 from db.user import User
 from db.defect import Defect
 from db.type_defect import TypeDefect
 from db.status_defect import StatusDefect
+from typing import List, AsyncGenerator
 
 
 class History(Base):
@@ -21,3 +24,23 @@ class History(Base):
     history_comment: Mapped[str] = mapped_column(String(500)) # Коммент.
     history_created_at: Mapped[datetime.datetime] = mapped_column(DateTime('Europe/Moscow'), default=datetime.datetime.strptime(datetime.datetime.now().isoformat(sep=" ", timespec="seconds"), "%Y-%m-%d %H:%M:%S"))# таймштамп вноса предмета
 
+    @staticmethod
+    async def add_history(session: AsyncSession, defect: Defect, user: User, status: StatusDefect, comment: str) -> None: # добавление истории в дефект в БД
+        history = History(
+                        history_defect_id=defect.defect_id,
+                        history_user_id=user.user_id,
+                        history_status_id=status.status_defect_id,
+                        history_comment=comment
+                          )
+        session.add(history)
+        await session.commit()
+        return history
+    
+    @staticmethod
+    async def get_history_by_defect(session: AsyncSession, defect: Defect,) -> list:
+        query = select(History).where(History.history_defect_id == defect.defect_id).order_by(History.history_id).options(selectinload(History.history_defect))\
+                                                                                    .options(selectinload(History.history_user))\
+                                                                                    .options(selectinload(History.history_status))
+        result = await session.scalars(query)
+        historys = result.all()
+        return historys
