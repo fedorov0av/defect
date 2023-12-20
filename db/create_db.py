@@ -45,7 +45,8 @@ DATABASE_NAME = 'defectdb'
 
 DATABASE_URL = f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@0.0.0.0:5432/defectdb"
 
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(DATABASE_URL,)
+""" engine = create_async_engine(DATABASE_URL, echo=True) """
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 async def create_tables():

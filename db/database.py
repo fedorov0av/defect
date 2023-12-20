@@ -17,7 +17,7 @@ DATABASE_URL = f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@0.0.0.
 class DatabaseSessionManager:
 
     def __init__(self):
-        self._engine = create_async_engine(DATABASE_URL, echo=True)
+        self._engine = create_async_engine(DATABASE_URL, echo=True, future=True,  connect_args={"server_settings": {"application_name": "myapp", "timezone": "Europe/Moscow"}})
         self._sessionmaker = async_sessionmaker(autocommit=False, bind=self._engine, expire_on_commit=False)
 
     async def close(self):
@@ -62,6 +62,17 @@ class DatabaseSessionManager:
 
 sessionmanager = DatabaseSessionManager()
 
-async def get_db():
+""" async def get_db():
     async with sessionmanager.session() as session:
-        yield session
+        yield session """
+engine = create_async_engine(DATABASE_URL, echo=True, future=True,  connect_args={"server_settings": {"application_name": "myapp", "timezone": "Europe/Moscow"}})
+
+async_session = async_sessionmaker(engine, expire_on_commit=False)
+async def get_db():
+    """Get a database session.
+
+    To be used for dependency injection.
+    """
+    async with async_session() as session:
+        async with session.begin():
+            yield session

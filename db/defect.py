@@ -75,6 +75,31 @@ class Defect(Base):
         return defect
     
     @staticmethod
+    async def update_defect_by_id(session: AsyncSession,
+                                  defect_id: int,
+                                  defect_registrator_id: int=None,
+                                  defect_owner_id: int=None,
+                                  defect_repair_manager_id: int=None,
+                                  defect_worker_id: int=None,
+                                  defect_planned_finish_date: datetime.datetime=None,
+                                  defect_description: str=None,
+                                  defect_location: str=None,
+                                  defect_type_id: int=None,
+                                  defect_status_id: int=None, # OK
+                                  defect_division_id: int=None,
+                                  defect_system_id: int=None,
+                                  ): # обновление дефект в БД (там где нет ОК, значит обновление тех полей еще не реализовано)
+        defect:Defect = await Defect.get_defect_by_id(session, defect_id)
+        if defect_status_id:
+            status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, defect_status_id)
+            defect.defect_status_id = status.status_defect_id
+        else:
+            raise Exception('Не указан статус дефекта')
+        session.add(defect)
+        await session.commit() 
+        return defect
+
+    @staticmethod
     async def del_defect_by_defect(session: AsyncSession, defect):
         session.delete(defect)
         await session.commit() 
