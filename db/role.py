@@ -21,5 +21,6 @@ class Role(Base):
     @staticmethod
     async def get_role_by_rolename(session: AsyncSession, role_name:str): # получить роль по названию роли
         query = select(Role).where(Role.role_name == role_name)
-        role = await session.scalars(query)
-        return role.one()
+        result = await session.execute(query)
+        role = result.scalars().one()
+        return role

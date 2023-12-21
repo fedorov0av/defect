@@ -14,11 +14,10 @@ from db.division import Division
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-
 class Defect(Base):
     __tablename__ = "defect" # процесс учета средств оснащения
     defect_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
-    defect_created_at: Mapped[datetime.datetime] = mapped_column(DateTime('Europe/Moscow'), default=func.now(), onupdate=func.now())# таймштамп вноса предмета
+    defect_created_at: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now())# таймштамп вноса предмета
     #defect_created_at: Mapped[datetime.datetime] = mapped_column(DateTime('Europe/Moscow'), server_default=func.now(), onupdate=func.now())# таймштамп вноса предмета
     defect_registrator_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - регистратор дефекта.
     defect_registrar: Mapped["User"] = relationship(foreign_keys=[defect_registrator_id]) #  для работы с таблицей User как с объектом
@@ -93,8 +92,6 @@ class Defect(Base):
         if defect_status_id:
             status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, defect_status_id)
             defect.defect_status_id = status.status_defect_id
-        else:
-            raise Exception('Не указан статус дефекта')
         session.add(defect)
         await session.commit() 
         return defect

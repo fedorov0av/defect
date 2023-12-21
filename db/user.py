@@ -62,18 +62,30 @@ class User(Base):
     
 
     @staticmethod
-    async def get_user_by_email(session: AsyncSession, user_email: str)  -> None: # получение пользователя по RFID коду
+    async def get_user_by_email(session: AsyncSession, user_email: str): # получение пользователя по RFID коду
         query = select(User).where(User.user_email == user_email).options(selectinload(User.user_role)).options(selectinload(User.user_division))
         result = await session.scalars(query)
         user = result.one()
         return user
     
     @staticmethod
-    async def get_user_by_id(session: AsyncSession, user_id: int)  -> None: # получение пользователя по RFID коду
+    async def get_user_by_id(session: AsyncSession, user_id: int): # получение пользователя по RFID коду
         query = select(User).where(User.user_id == user_id).options(selectinload(User.user_role)).options(selectinload(User.user_division))
         result = await session.scalars(query)
         user = result.one()
         return user
+    
+    @staticmethod
+    async def get_user_by_role(session: AsyncSession, role: Role): # получение пользователя по ролям
+        query = select(User).where(
+                User.user_role.any(Role.role_name == role.role_name),
+                ).order_by(User.user_id).options(selectinload(User.user_role)).options(selectinload(User.user_division))
+        result = await session.scalars(query)
+        users = result.all()
+        return users
+
+        
+        
     
 
 async def get_user_db(session: AsyncSession = Depends(get_db)):

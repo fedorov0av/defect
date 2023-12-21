@@ -62,17 +62,6 @@ class DatabaseSessionManager:
 
 sessionmanager = DatabaseSessionManager()
 
-""" async def get_db():
-    async with sessionmanager.session() as session:
-        yield session """
-engine = create_async_engine(DATABASE_URL, echo=True, future=True,  connect_args={"server_settings": {"application_name": "myapp", "timezone": "Europe/Moscow"}})
-
-async_session = async_sessionmaker(engine, expire_on_commit=False)
 async def get_db():
-    """Get a database session.
-
-    To be used for dependency injection.
-    """
-    async with async_session() as session:
-        async with session.begin():
-            yield session
+    async with sessionmanager.session() as session:
+        yield session

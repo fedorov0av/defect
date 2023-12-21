@@ -30,12 +30,11 @@ async def update_status_defects(defect_id: Defect_id, status_name: StatusDefect_
 
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
     status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
-    print(status_defect.status_defect_id)
-    print(status_defect.status_defect_id)
-    print(status_defect.status_defect_id)
-    print(status_defect.status_defect_id)
-    print(status_defect.status_defect_id)
-    defect = await Defect.update_defect_by_id(session, defect.defect_id, status_defect.status_defect_id)
+
+    defect = await Defect.update_defect_by_id(session = session,
+                                            defect_id = defect.defect_id,
+                                            defect_status_id = status_defect.status_defect_id)
+
     history = await History.add_history(
         session=session,
         defect=defect,

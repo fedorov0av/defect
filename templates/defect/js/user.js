@@ -26,6 +26,20 @@ const appVueUser = Vue.createApp({
       }
     },
     methods: {
+        closeCardUserModalWindow() {
+          console.log('closeCardUserModalWindow');
+          
+          this.clearData();
+        }, /* closeCardUserModalWindow */
+        clearData() {
+          cardUserSurname = '';
+          cardUserFathername = '';
+          cardUserName = '';
+          cardUserPosition = '';
+          cardUserDivision = '';
+          cardUserRole = '';
+          cardUserEmail = '';
+        }, /* clearData */
         updateTableUser() {
             axios
             .post('/users',)

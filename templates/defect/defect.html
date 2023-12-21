@@ -3,6 +3,7 @@
   <head>
     <!-- Подключиение js-файла фреймворка Bootstrap 3 -->
     <link href="{{ url_for('static_css', path='bootstrap.min.css') }}" rel="stylesheet" crossorigin="anonymous">
+    <script src="{{ url_for('static_js', path='jquery.min.js') }}"></script>
     
     <script src="{{ url_for('static_js', path='sweetalert2.js') }}"></script>
     <script src="{{ url_for('static_js', path='defect-color-modes.js') }}"></script>
@@ -109,6 +110,12 @@
         margin-left: auto;
       }
 
+      @media screen and (max-width: 1550px) {
+          .button-text {
+              display: none;
+          }
+      }
+
       .rr {
         margin-left: 10px;
 
@@ -126,7 +133,8 @@
 
       .block_filter {
         padding: 5px 15px;
-        background-color: antiquewhite;
+        max-height: 50px;
+        background-color: rgb(204, 227, 253);
       }
 
       .mydatechoise {
@@ -190,6 +198,11 @@
 
       .status_confirm_defect {
         background-color: #f3da25;
+        color: #000;
+      }
+
+      .status_accept_defect {
+        background-color: #8bd2e7;
         color: #000;
       }
 
@@ -420,7 +433,9 @@
       <button type="submit" class="btn btn-primary">Применить</button>
     </div>
     <div class="lastbutton">
-      <button type="submit" class="btn btn-primary">Скрыть закрытые дефекты</button>
+      <button type="submit" class="btn btn-primary button-text">
+        <span class="button-text">Скрыть закрытые дефекты</span>
+      </button>
     </div>
   </div>
 </div>
@@ -472,7 +487,7 @@
 
 
   <!----------------------------------------Модальное окно "Добавить пользователя"------------------------------------------>
-  <div class="modal fade" id="AddUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div id="AddUserModalWindow" class="modal fade"  ref="vueAddUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -587,7 +602,7 @@
 
 <!----------------------------------------Модальное окно "Добавить дефект"------------------------------------------>
 <div id="vueAddDefect">
-  <div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" @click.outside="closeAddDefectModalWindow">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header status_add_defect">
@@ -726,12 +741,12 @@
 
 <!----------------------------------------Модальное окно "Подтвердить дефект"------------------------------------------>
 <div id="vueConfirmDefect">
-  <div class="modal fade" id="ConfirmDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="ConfirmDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modalConfirmDefectModalWindow">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header status_confirm_defect">
           <h2 class="modal-title" id="exampleModalLabel">Подтверждение дефекта №</h2>
-          <h2 class="modal-title" id="exampleModalLabel" v-model="cardDefectID"> {{ cardDefectID }}</h2>
+          <h2 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h2>
           <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="closeConfirmDefectModalWindow"></button>
         </div>
         <div class="modal-body">
@@ -801,15 +816,12 @@
                   <b>Дата регистрации</b>
                 </div>
                 <input type="text" class="form-control" placeholder="Дата регистрации" v-model="cardDateRegistration" disabled>
-                <div id="MyDataFormat">
-                  <p>{{ cardDateRegistration | formatDate }}</p>
-                </div>
             </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Руководитель ремонта</b></div>
-                  <select class="form-select" aria-label="Default select example" v-model="cardRepairManager">
-                    <option disabled selected>Выберите подразделение</option>
-                    <option v-for="division in defect_divisions">{{ division.division_name }}</option>
+                  <select class="form-select" aria-label="Default select example" v-model="newRepairManager_id">
+                    <option selected disabled>Выберите руководителя ремонта</option>
+                    <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name }}</option>
                   </select> 
               </div>
             </div>
@@ -822,8 +834,8 @@
               <div class="block_data2">
                 <div class="block_input_data"><b>Исполнитель ремонта</b></div>
                   <select class="form-select" aria-label="Default select example" v-model="cardWorker" disabled>
-                    <option disabled selected>Выберите подразделение</option>
-                    <option v-for="division in defect_divisions">{{ division.division_name }}</option>
+                    <option selected disabled>Выберите исполнителя ремонта</option>
+                    <option v-for="worker in workers">{{ worker.user_surname + ' ' + worker.user_name }}</option>
                   </select> 
               </div>
             </div>
@@ -847,7 +859,7 @@
                 <div class="block_input_data">
                   <b>Результат проверки</b>
                 </div>
-                <input type="text" class="form-control" placeholder="Результат проверки"  aria-label="readonly input example" v-model="cardCheckerDescription" disabled>
+                <input type="text" class="form-control" placeholder="Результат проверки"  disabled>
               </div>
             </div>
 
@@ -878,7 +890,8 @@
             </div>
 
             <div class="modal-footer">
-              <button @click="confirmDefect" class="btn btn-primary" type="button">Подтвердить</button>
+              <button @click="cancelDefect" class="btn btn-primary" type="button">Отменить дефект</button>
+              <button @click="confirmDefect" class="btn btn-primary" type="button">Подтвердить дефект</button>
             </div>
           </form>
         </div>
@@ -886,6 +899,168 @@
     </div>
   </div>
 </div>
+
+<!----------------------------------------Модальное окно "Принять дефект"------------------------------------------>
+<div id="vueAcceptDefect">
+  <div class="modal fade" id="AcceptModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header status_accept_defect">
+          <h2 class="modal-title" id="exampleModalLabel">Принятие дефекта №</h2>
+          <h2 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h2>
+          <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="closeAcceptModalWindow"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            <input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
+
+            <div class="block_row">
+              <div class="block_data2">
+                <div class="block_input_data"><b>Тип дефекта</b></div>
+                  <select class="form-select" aria-label="Default select example" v-model="cardTypeDefectName">
+                    <option disabled selected>Выберите тип дефекта</option>
+                    <option v-for="defect_type_defect in defect_type_defects">{{ defect_type_defect.type_defect_name }}</option>
+                  </select>
+              </div>
+              <div class="block_data2">
+                  <div class="block_input_data"><b>Статус дефекта</b></div>
+                    <input type="text" class="form-control" v-model="cardStatusDefectName" placeholder="Статус дефекта" disabled>
+              </div>
+            </div>
+
+            <div class="block_row">
+              <div class="block_data2">
+                <div class="block_input_data">
+                  <b>KKS</b>
+                </div>
+                <input type="text" class="form-control" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx"
+                data-hs-mask-options='{
+                  "template": "0000 0000 0000 0000"
+                }'>
+              </div>
+              <div class="block_data2">
+                  <div class="block_input_data">
+                    <b>Оборудование</b>
+                  </div>
+                  <input type="text" class="form-control" v-model="cardSystemName" placeholder="Оборудование">
+              </div>
+            </div>
+
+            <div class="block_row">
+              <div class="block_data3">
+                <div class="block_input_data"><b>Описание дефекта</b></div>
+                <textarea class="form-control" v-model="cardDescription" placeholder="Описание дефекта"></textarea>
+              </div>
+              <div class="block_data3">
+                <div class="block_input_data"><b>Местоположение</b></div>
+                <textarea class="form-control" v-model="cardLocation" placeholder="Местоположение"></textarea>
+              </div>
+            </div>
+
+            <div class="block_row">
+              <div class="block_data2">
+                <div class="block_input_data"><b>Подразделение-владелец</b></div>
+                  <select class="form-select" aria-label="Default select example" v-model="cardDivisionOwner">
+                    <option disabled selected>Выберите подразделение</option>
+                    <option v-for="division in defect_divisions">{{ division.division_name }}</option>
+                  </select> 
+              </div>
+              <div class="block_data2">
+                <div class="block_input_data"><b>Обнаружил дефект</b></div>
+                  <input type="text" class="form-control" placeholder="Обнаружил дефект"  aria-label="readonly input example" v-model="cardRegistrator" disabled>
+              </div>
+            </div>
+
+            <div class="block_row">
+              <div class="block_data2">
+                <div class="block_input_data">
+                  <b>Дата регистрации</b>
+                </div>
+                <input type="text" class="form-control" placeholder="Дата регистрации" v-model="cardDateRegistration" disabled>
+            </div>
+              <div class="block_data2">
+                <div class="block_input_data"><b>Руководитель ремонта</b></div>
+                  <select class="form-select" aria-label="Default select example" v-model="newRepairManager_id">
+                    <option selected disabled>Выберите руководителя ремонта</option>
+                    <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name }}</option>
+                  </select> 
+              </div>
+            </div>
+
+            <div class="block_row">
+              <div class="block_data2">
+                <div class="block_input_data"><b>Срок устранения</b></div>
+                  <input class="form-control" type="date" />
+              </div>
+              <div class="block_data2">
+                <div class="block_input_data"><b>Исполнитель ремонта</b></div>
+                  <select class="form-select" aria-label="Default select example" v-model="cardWorker" disabled>
+                    <option selected disabled>Выберите исполнителя ремонта</option>
+                    <option v-for="worker in workers">{{ worker.user_surname + ' ' + worker.user_name }}</option>
+                  </select> 
+              </div>
+            </div>
+
+            <div class="block_row">
+              <div class="block_data4">
+                <div class="block_input_data"><b>Выполненные работы</b></div>
+                <textarea class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" disabled></textarea>
+              </div>
+            </div>
+            
+            <div class="block_row">
+              <div class="block_data2">
+                <div class="block_input_data"><b>Выполнил проверку</b></div>
+                  <select class="form-select" aria-label="Disabled select example" v-model="cardChecker" disabled>
+                    <option disabled selected>Выберите подразделение</option>
+                    <option v-for="division in defect_divisions"></option>
+                  </select> 
+              </div>
+              <div class="block_data2">
+                <div class="block_input_data">
+                  <b>Результат проверки</b>
+                </div>
+                <input type="text" class="form-control" placeholder="Результат проверки"  disabled>
+              </div>
+            </div>
+
+            <div class="block-history">
+              <h3>История дефекта</h3>
+              <div class="table-responsive small">
+                <table class="table table-striped table-sm">
+                  <thead>
+                    <tr >
+                      <th scope="col">#</th>
+                      <th scope="col">Дата</th>
+                      <th scope="col">Статус</th>
+                      <th scope="col">Ответственное лицо</th>
+                      <th scope="col">Комментарий</th>
+                    </tr>
+                  </thead>
+                  <tbody class="demotable">
+                      <tr v-for="cardHistory in cardHistorys">
+                        <td >{{ cardHistory.history_date }}</td>
+                        <td >{{ cardHistory.history_status }}</td>
+                        <td >{{ cardHistory.history_user.user_surname }}</td>
+                        <td >{{ cardHistory.history_comment }}</td>
+                      </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button @click="cancelDefect" class="btn btn-primary" type="button">Отменить дефект</button>
+              <button @click="confirmDefect" class="btn btn-primary" type="button">Подтвердить дефект</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endraw %}
 <!--
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -912,7 +1087,7 @@
     <main>
       <div class="table-responsive small">
         <!-- <table class="table table-striped table-sm"> -->
-        <table class="table table-bordered border-primary">
+        <table class="table table-bordered table-striped border-primary">
           <tbody>
             <thead>
               <tr class="head_table">
@@ -958,18 +1133,7 @@
 </script>
 
 <script>
-  const appVueData = Vue.createApp({
-    data() {
-      return {
-        cardDateRegistration: new Date()
-      };
-    },
-    filters: {
-    formatDate(value) {
-      return  moment(String(new Date())).format('dddd');
-    }
-  }
-  }).mount(MyDataFormat);
+
 
 </script>
 
@@ -978,5 +1142,7 @@
 <script src="{{ url_for('defect_js', path='user.js') }}"></script>
 <script src="{{ url_for('defect_js', path='filter.js') }}"></script>
 <script src="{{ url_for('defect_js', path='defect.js') }}"></script>
+<script src="{{ url_for('defect_js', path='confirm-defect.js') }}"></script>
+<script src="{{ url_for('defect_js', path='accept-defect.js') }}"></script>
 <script src="{{ url_for('defect_js', path='main-table.js') }}"></script>
 

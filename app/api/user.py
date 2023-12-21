@@ -82,3 +82,45 @@ async def get_user(user_id: User_id, session: AsyncSession = Depends(get_db)):
                 'user_role': user.user_role[-1].role_name,
                 "user_email": user.user_email
             }
+
+@user_router.post("/user/repair_managers")
+async def get_repair_managers(session: AsyncSession = Depends(get_db)):
+    role_repair_manager: Role = await Role.get_role_by_rolename(session, "Руководитель")
+    
+    result: list[User] = await User.get_user_by_role(session, role_repair_manager)
+    user_l = list()
+    for user in result:
+        user_l.append(
+            {
+                "user_id": user.user_id,
+                'user_surname': user.user_surname,
+                'user_name': user.user_name,
+                'user_fathername': user.user_fathername,
+                'user_position': user.user_position,
+                'user_division': user.user_division.division_name,
+                'user_role': user.user_role[-1].role_name,
+                "user_email": user.user_email
+            }
+        )
+    return user_l
+
+@user_router.post("/user/workers")
+async def get_worker(session: AsyncSession = Depends(get_db)):
+    role_worker: Role = await Role.get_role_by_rolename(session, "Исполнитель")
+    
+    result: list[User] = await User.get_user_by_role(session, role_worker)
+    user_l = list()
+    for user in result:
+        user_l.append(
+            {
+                "user_id": user.user_id,
+                'user_surname': user.user_surname,
+                'user_name': user.user_name,
+                'user_fathername': user.user_fathername,
+                'user_position': user.user_position,
+                'user_division': user.user_division.division_name,
+                'user_role': user.user_role[-1].role_name,
+                "user_email": user.user_email
+            }
+        )
+    return user_l
