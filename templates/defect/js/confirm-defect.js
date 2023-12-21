@@ -31,6 +31,7 @@ const appConfirmDefect = Vue.createApp({
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
+        newDate: '', /* Для хранения ДАТЫ РЕМОНТА  в карточке  */
 
         cardHistorys: [{
           "history_id": 0,
@@ -153,6 +154,10 @@ const appConfirmDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       confirmDefect() {
+        if (this.newDate =='' || this.newRepairManager_id == 0) {
+          Swal.fire({html:"<b>Не все поля заполнены!</b>", heightAuto: false}); 
+          return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
+        }
         Swal.fire({
           title: "Вы действительно хотите подтвердить дефект?",
           showDenyButton: true,
