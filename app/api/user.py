@@ -12,7 +12,7 @@ from db.database import get_db
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
-from app.schemas.user import User_p, User_id
+from app.schemas.user import User_p, User_id, User_update
 
 user_router = APIRouter()
 
@@ -47,6 +47,23 @@ async def add_new_user(user_p: User_p, session: AsyncSession = Depends(get_db)):
         user_password=user_p.password,
         user_role=role,
         user_email=user_p.email
+        )
+    return user
+
+@user_router.post("/user/update")
+async def update_user(user_update: User_update, session: AsyncSession = Depends(get_db)):
+    user = await User.get_user_by_id(session, user_update.user_id)
+    division = await Division.get_division_by_name(session, user_update.user_division)
+    role = await Role.get_role_by_rolename(session, user_update.user_role)
+    user: User = await User.update_user(
+        session=session,
+        user_name=user_update.user_name,
+        user_fathername=user_update.user_fathername,
+        user_surname=user_update.user_surname,
+        user_position=user_update.user_position,
+        user_division=division,
+        user_role=role,
+        user_email=user_update.email
         )
     return user
 

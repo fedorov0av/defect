@@ -29,7 +29,9 @@ class User(Base):
     user_salt_for_password: Mapped[str] = mapped_column(String(60)) # соль для хеширования пароля пользователя в системе
     user_temp_password: Mapped[bool] = mapped_column(Boolean, default=True) # в данный момент используется временный пароль?
     user_email: Mapped[str] = mapped_column(String(50)) # хешированный пароль пользователя в системе
-    user_created_at: Mapped[datetime.datetime] = mapped_column(DateTime, server_default=func.now()) # таймштамп создания записи
+    user_created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    ) # таймштамп создания записи
     ########################### fix me
     """ def __str__(self) -> str:
         return f"User(id={self.id!r}, name={self.user_name!r}, user_fathername={self.user_fathername}, user_surname={self.user_surname!r},)"
@@ -50,6 +52,22 @@ class User(Base):
         await session.commit()
         return user
 
+    @staticmethod
+    async def update_user(session: AsyncSession, user_id, user_name: str, user_fathername: str, user_surname: str, user_position: str,
+                 user_division: Division, user_email:str, user_role: Role=None) -> None: # изменение пользователя в БД
+        user = await User.get_user_by_id(session=session, user_id=user_id)
+        user.user_name = user_name
+        user.user_fathername = user_fathername
+        user.user_surname = user_surname
+        user.user_position = user_position
+        user.user_division_id = user_division
+        user.user_email = user_email
+        if user_role:
+            user.user_role.clear()
+            user.user_role.append(user_role)
+        session.add(user)
+        await session.commit()
+        return user
     
 
     @staticmethod

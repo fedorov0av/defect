@@ -166,9 +166,23 @@ const appConfirmDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[1].status_defect_name}}
+            data = {
+              "defect_id": {
+                "defect_id": parseInt(this.defect_id)
+              },
+              "status_name": {
+                "status_defect_name": this.statuses_defect[1].status_defect_name
+              },
+              "repair_manager_id": {
+                "user_id": parseInt(this.newRepairManager_id)
+              },
+              "defect_planned_finish_date_str": {
+                "date": this.newDate
+              }
+            }
             axios
-            .post('/update_status_defect', data)
+            axios
+            .post('/confirm_defect', data)
             .then(response => {
                 document.getElementById('closeConfirmDefectModalWindow').click();
                 appVueDefect.updateTables()

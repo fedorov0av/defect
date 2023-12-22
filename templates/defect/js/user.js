@@ -22,16 +22,34 @@ const appVueUser = Vue.createApp({
         cardUserDivision: '',
         cardUserRole: '',
         cardUserEmail: '',
+        cardUserID: '',
 
       }
     },
+    mounted() {
+      var myModalEl = document.getElementById('AddUserModalWindow')
+      myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        console.log(event);
+        appVueUser.clearData();
+    })
+    },
     methods: {
+        clearData() {
+          this.newUserSurname = '';
+          this.newUserName = '';
+          this.newUserFathername = '';
+          this.newUserPosition = '';
+          this.newUserDivision = '';
+          this.newUserRole = '';
+          this.newUserEmail = '';
+          this.newUserTempPassword = '';
+        }, /* clearData */
         closeCardUserModalWindow() {
           console.log('closeCardUserModalWindow');
           
           this.clearData();
         }, /* closeCardUserModalWindow */
-        clearData() {
+        clearData2() {
           cardUserSurname = '';
           cardUserFathername = '';
           cardUserName = '';
@@ -100,6 +118,36 @@ const appVueUser = Vue.createApp({
             }) /* axios */
           } /* else */
         }, /* addNewUser */
+        editUser() {
+          if (this.cardUserSurname == '' || this.cardUserName == '' || this.cardUserPosition == ''
+              || this.cardUserDivision == '' || this.cardUserRole == '' || this.cardUserEmail == ''){
+                Swal.fire({html:"<b>Все значения (кроме отчества) должны быть заполнены!</b>", heightAuto: false}); 
+          } /* if */
+          else {
+            axios
+            .post('/user/update', 
+                  {
+                    "user_id": this.cardUserID,
+                    "user_surname": this.cardUserSurname,
+                    "user_name": this.cardUserName,
+                    "user_position": this.cardUserPosition,
+                    "user_division": this.cardUserDivision,
+                    "user_role": this.cardUserRole,
+                    "email": this.cardUserEmail,
+                  }
+            )
+            .then(response => {
+                console.log(response.data);
+                Swal.fire({html:"<b>Данные пользователя изменены!</b>", heightAuto: false}); 
+                document.getElementById('closeModalEditUser').click();
+                
+                  })
+            .catch(err => {
+                Swal.fire({html:"<b>Произошла ошибка при изменении данных пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+            }) /* axios */
+          } /* else */
+        }, /* editUser */
         handleDoubleClick (event){
           console.log(event.target.parentNode.childNodes[0].textContent)
           id_user = event.target.parentNode.childNodes[0].textContent
@@ -110,6 +158,7 @@ const appVueUser = Vue.createApp({
             .then(response => {
               user = response.data;
               console.log(user);
+              this.cardUserID = user.user_id;
               this.cardUserSurname = user.user_surname;
               this.cardUserFathername = user.user_fathername;
               this.cardUserName = user.user_name;

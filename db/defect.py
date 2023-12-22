@@ -17,7 +17,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 class Defect(Base):
     __tablename__ = "defect" # процесс учета средств оснащения
     defect_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
-    defect_created_at: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now())# таймштамп вноса предмета
+    defect_created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )# таймштамп создания записи дефекта FIX ME
     #defect_created_at: Mapped[datetime.datetime] = mapped_column(DateTime('Europe/Moscow'), server_default=func.now(), onupdate=func.now())# таймштамп вноса предмета
     defect_registrator_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - регистратор дефекта.
     defect_registrar: Mapped["User"] = relationship(foreign_keys=[defect_registrator_id]) #  для работы с таблицей User как с объектом
@@ -80,7 +82,7 @@ class Defect(Base):
                                   defect_owner_id: int=None,
                                   defect_repair_manager_id: int=None,
                                   defect_worker_id: int=None,
-                                  defect_planned_finish_date: datetime.datetime=None,
+                                  defect_planned_finish_date: datetime.datetime=None, # OK
                                   defect_description: str=None,
                                   defect_location: str=None,
                                   defect_type_id: int=None,
@@ -92,6 +94,11 @@ class Defect(Base):
         if defect_status_id:
             status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, defect_status_id)
             defect.defect_status_id = status.status_defect_id
+        if defect_planned_finish_date:
+            defect.defect_planned_finish_date = defect_planned_finish_date
+        if defect_repair_manager_id:
+            defect.defect_repair_manager_id = defect_repair_manager_id
+
         session.add(defect)
         await session.commit() 
         return defect

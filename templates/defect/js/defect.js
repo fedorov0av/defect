@@ -17,7 +17,12 @@ const appVueAddDefect = Vue.createApp({
     mounted() {
       this.updateTableDivision()
       this.updateTableTypeDefect()
-      $(this.$refs.vueAddUserModalWindow).on("hidden.bs.modal", this.closeAddDefectModalWindow)
+      var myModalEl = document.getElementById('AddDefectModalWindow')
+      myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        console.log(event);
+        appVueAddDefect.clearData();
+        appVueDefect.updateTables();
+    })
     },
     methods: {
       closeAddDefectModalWindow() {
@@ -25,12 +30,12 @@ const appVueAddDefect = Vue.createApp({
         this.clearData();
       }, /* closeAddDefectModalWindow */
       clearData() {
-        newSystemName = '';
-        newSystemKKS = '';
-        newDefectNotes = '';
-        newLocation = '';
-        newTypeDefect = '';
-        newDivisionOwner = '';
+        this.newSystemName = '';
+        this.newSystemKKS = '';
+        this.newDefectNotes = '';
+        this.newLocation = '';
+        this.newTypeDefect = '';
+        this.newDivisionOwner = '';
       }, /* clearData */
       updateTableDivision() {
         axios
@@ -66,7 +71,7 @@ const appVueAddDefect = Vue.createApp({
           .then(response => {
               console.log(response.data);
               Swal.fire({html:"<b>Дефект добавлен!</b>", heightAuto: false}); 
-              document.getElementById('closeModalAddUser').click();
+              document.getElementById('closeModalAddDefect').click();
               
                 })
           .catch(err => {

@@ -4,7 +4,16 @@ const appAcceptDefect = Vue.createApp({
         defect_id: 0,
         defect_divisions: {},
         defect_type_defects: {},
-        statuses_defect:{},
+        statuses_defect:{}, /* ['Зарегистрирован', # 1
+                 'Подтвержден', # 2
+                 'Принят в работу', # 3
+                 'Назначен исполнитель', # 4
+                 'Работы завершены', # 5
+                 'Устранен', # 6
+                 'Не устранен', # 7
+                 'Требует корректировки', # 8
+                 'Отменен',  # 9
+                 ] */
         repair_managers: {},
         workers: {},
 
@@ -151,25 +160,29 @@ const appAcceptDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       acceptDefect() {
+        if (this.cardWorker == '') {
+          Swal.fire({html:"<b>ИСПОЛНИТЕЛЬ РЕМОНТА!</b>", heightAuto: false}); 
+          return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
+        }
         Swal.fire({
-          title: "Вы действительно хотите подтвердить дефект?",
+          title: "Вы действительно хотите принять дефект?",
           showDenyButton: true,
-          acceptButtonText: "ПОДТВЕРЖДАЮ!",
+          confirmButtonText: "ПРИНИМАЮ!",
           denyButtonText: `ОТМЕНА!`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
-          if (result.isAccepteded) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[1].status_defect_name}}
+          if (result.isConfirmed) {
+            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[2].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {
                 document.getElementById('closeAcceptModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("ДЕФЕКТ ПОДТВЕРЖДЕН!", "", "success");
+                Swal.fire("ДЕФЕКТ ПРИНЯТ!", "", "success");
                   }) /* axios */
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ПОДТВЕРЖДЕНИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
                     console.log(err);
                 }) /* axios */
           }
@@ -177,24 +190,24 @@ const appAcceptDefect = Vue.createApp({
       },/* acceptDefect */
       cancelDefect() {
         Swal.fire({
-          title: "Вы действительно хотите отменить дефект?",
+          title: "Вы действительно хотите отправить дефект на корректировку?",
           showDenyButton: true,
-          acceptButtonText: "ДА!",
+          confirmButtonText: "ДА!",
           denyButtonText: `НЕТ!`
         }).then((result) => {
           /* Read more about isAccepted, isDenied below */
-          if (result.isAccepted) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[8].status_defect_name}}
+          if (result.isConfirmed) {
+            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[7].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {
                 document.getElementById('closeAcceptModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("ДЕФЕКТ ОТМЕНЕН!", "", "success");
+                Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ!", "", "success");
                   }) /* axios */
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ОТМЕНЫ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 
                     console.log(err);
                 }) /* axios */
             }

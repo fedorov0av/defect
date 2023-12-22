@@ -10,7 +10,7 @@ class System(Base):
     system_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
     system_name: Mapped[str] = mapped_column(String(150)) # название системы или оборудования
     system_kks: Mapped[str] = mapped_column(String(100), unique=True, nullable=True) # kks кодировка системы или оборудования
-    system_created_at: Mapped[datetime.datetime] = mapped_column(DateTime, server_default=func.now())  # таймштамп создания записи
+    system_created_at: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now())  # таймштамп создания записи
 
 
     @staticmethod

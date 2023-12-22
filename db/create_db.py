@@ -62,8 +62,11 @@ async def create_tables():
             f'CREATE DATABASE "{DATABASE_NAME}" OWNER "{DATABASE_USER}"'
         )
         await sys_conn.close()
+    except Exception as e:
+        print(e)
+        await conn.close()
     else:
-        conn.close()
+        await conn.close()
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)

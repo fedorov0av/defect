@@ -21,17 +21,18 @@ class History(Base):
     history_user: Mapped["User"] = relationship(foreign_keys=[history_user_id]) #  для работы с таблицей User как с объектом
     history_status_id: Mapped[int] = mapped_column(ForeignKey("status_defect.status_defect_id")) # статус (Этап) дефекта
     history_status: Mapped["StatusDefect"] = relationship(foreign_keys=[history_status_id]) #  для работы с таблицей StatusDefect как с объектом
-    history_comment: Mapped[str] = mapped_column(String(500)) # Коммент.
-    history_created_at: Mapped[datetime.datetime] = mapped_column(DateTime('Europe/Moscow'), default=datetime.datetime.strptime(datetime.datetime.now().isoformat(sep=" ", timespec="seconds"), "%Y-%m-%d %H:%M:%S"))# таймштамп вноса предмета
+    history_comment: Mapped[str] = mapped_column(String(500), nullable=True) # Коммент.
+    history_created_at: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now()) # Дата создания
 
     @staticmethod
-    async def add_history(session: AsyncSession, defect: Defect, user: User, status: StatusDefect, comment: str) -> None: # добавление истории в дефект в БД
+    async def add_history(session: AsyncSession, defect: Defect, user: User, status: StatusDefect, comment: str = None) -> None: # добавление истории в дефект в БД
         history = History(
                         history_defect_id=defect.defect_id,
                         history_user_id=user.user_id,
                         history_status_id=status.status_defect_id,
-                        history_comment=comment
                           )
+        if comment:
+            history.history_comment = comment
         session.add(history)
         await session.commit()
         return history

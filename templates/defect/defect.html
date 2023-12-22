@@ -602,12 +602,12 @@
 
 <!----------------------------------------Модальное окно "Добавить дефект"------------------------------------------>
 <div id="vueAddDefect">
-  <div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" @click.outside="closeAddDefectModalWindow">
+  <div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header status_add_defect">
           <h2 class="modal-title" id="exampleModalLabel">Регистрация дефекта</h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalAddDefect"></button>
         </div>
         <div class="modal-body">
           <form method="post">
@@ -1044,7 +1044,6 @@
                         <td >{{ cardHistory.history_user.user_surname }}</td>
                         <td >{{ cardHistory.history_comment }}</td>
                       </tr>
-
                   </tbody>
                 </table>
               </div>
@@ -1052,7 +1051,7 @@
 
             <div class="modal-footer">
               <button @click="cancelDefect" class="btn btn-primary" type="button">Требует корректировки</button>
-              <button @click="confirmDefect" class="btn btn-primary" type="button">Принять дефект</button>
+              <button @click="acceptDefect" class="btn btn-primary" type="button">Принять дефект</button>
             </div>
           </form>
         </div>
@@ -1103,7 +1102,7 @@
               <td >{{ defect.defect_system.system_name }}</td>
               <td >{{ defect.defect_description }}</td>
               <td >{{ defect.defect_status.status_defect_name }}</td>
-              <td >{{ defect.defect_repair_manager }}</td>
+              <td >{{ defect.defect_repair_manager.user_surname ? defect.defect_repair_manager.user_surname : '' }}</td>
             </tr>
           </tbody>
         </table>
