@@ -139,8 +139,8 @@ const appVueUser = Vue.createApp({
             .then(response => {
                 console.log(response.data);
                 Swal.fire({html:"<b>Данные пользователя изменены!</b>", heightAuto: false}); 
-                document.getElementById('closeModalEditUser').click();
-                
+                document.getElementById('closeModalCardUser').click();
+                this.updateTableUser();
                   })
             .catch(err => {
                 Swal.fire({html:"<b>Произошла ошибка при изменении данных пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 

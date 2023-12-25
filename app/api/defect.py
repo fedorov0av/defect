@@ -75,7 +75,8 @@ async def get_defects(session: AsyncSession = Depends(get_db)):
                 'defect_registrar': defect.defect_registrar.user_surname,
                 'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
                 'defect_owner': defect.defect_system.system_name,
-                'defect_repair_manager': defect.defect_repair_manager,
+                'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else ''
+                                          } ,
                 'defect_worker': defect.defect_worker,
                 'defect_planned_finish_date': defect.defect_planned_finish_date,
                 "defect_description": defect.defect_description,

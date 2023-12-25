@@ -6,7 +6,6 @@ const appVueDefect = Vue.createApp({
         defect_divisions: {},
         defect_type_defects: {},
         defects: {},
-
       }
     },
     mounted() {
@@ -29,7 +28,7 @@ const appVueDefect = Vue.createApp({
         console.log(event.target.parentNode.childNodes[0].textContent) 
         defect_id = event.target.parentNode.childNodes[0].textContent
         status_name = event.target.parentNode.childNodes[7].textContent
-        if (status_name == "Зарегистрирован") {
+        if (status_name == "Зарегистрирован" || status_name == "Требует корректировки") {
           console.log(defect_id);
           appConfirmDefect.defect_id = defect_id;
           appConfirmDefect.updateTables()

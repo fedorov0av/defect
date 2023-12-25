@@ -57,6 +57,7 @@ async def update_user(user_update: User_update, session: AsyncSession = Depends(
     role = await Role.get_role_by_rolename(session, user_update.user_role)
     user: User = await User.update_user(
         session=session,
+        user_id=user_update.user_id,
         user_name=user_update.user_name,
         user_fathername=user_update.user_fathername,
         user_surname=user_update.user_surname,

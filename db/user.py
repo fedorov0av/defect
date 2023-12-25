@@ -60,7 +60,7 @@ class User(Base):
         user.user_fathername = user_fathername
         user.user_surname = user_surname
         user.user_position = user_position
-        user.user_division_id = user_division
+        user.user_division_id = user_division.division_id
         user.user_email = user_email
         if user_role:
             user.user_role.clear()
