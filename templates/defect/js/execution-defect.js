@@ -135,9 +135,9 @@ const appExecutionDefect = Vue.createApp({
             this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
             this.cardRegistrator = this.cardDefect.defect_registrar;
             this.cardDateRegistration = this.cardDefect.defect_created_at;
-            this.cardRepairManager = this.cardDefect.defect_repair_manager;
+            this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
-            this.cardWorker = this.cardDefect.defect_worker;
+            this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
 
                 })
           .catch(err => {

@@ -18,12 +18,12 @@ from sqlalchemy.exc import NoResultFound
 from app.schemas.user import User_p
 from app.schemas.defect import Defect_id
 from app.schemas.status_defect import StatusDefect_name
-
+from app.schemas.other import Сomment
 
 status_defect_router = APIRouter()
 
 @status_defect_router.post("/update_status_defect/")
-async def update_status_defects(defect_id: Defect_id, status_name: StatusDefect_name, request: Request, session: AsyncSession = Depends(get_db)):
+async def update_status_defects(defect_id: Defect_id, status_name: StatusDefect_name, request: Request, comment: Сomment = None, session: AsyncSession = Depends(get_db)):
     token_dec = await decode_token(request.cookies['jwt_access_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
@@ -40,7 +40,7 @@ async def update_status_defects(defect_id: Defect_id, status_name: StatusDefect_
         defect=defect,
         user=user,
         status=status_defect,
-        comment=status_name.status_defect_name
+        comment=comment,
         )
     return defect
 

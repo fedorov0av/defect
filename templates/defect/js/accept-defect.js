@@ -37,7 +37,7 @@ const appAcceptDefect = Vue.createApp({
       cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
       cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
-      newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
+      newWorker_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
 
       cardHistorys: [{
         "history_id": 0,
@@ -62,10 +62,17 @@ const appAcceptDefect = Vue.createApp({
 
     }
   },
-  /* mounted() {
-    this.updateTables()
-  }, */
+  mounted() {
+    var myModalEl = document.getElementById('AcceptModalWindow')
+      myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        console.log(event);
+        appAcceptDefect.clearData();
+    })
+  },
   methods: {
+    clearData() {
+      this.newWorker_id = 0;
+    },
     updateTables() {
       this.updateTableDivision();
       this.updateTableTypeDefect();
@@ -135,7 +142,7 @@ const appAcceptDefect = Vue.createApp({
           this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
           this.cardRegistrator = this.cardDefect.defect_registrar;
           this.cardDateRegistration = this.cardDefect.defect_created_at;
-          this.cardRepairManager = this.cardDefect.defect_repair_manager;
+          this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
           this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
           this.cardWorker = this.cardDefect.defect_worker;
 
@@ -160,8 +167,8 @@ const appAcceptDefect = Vue.createApp({
             }) /* axios */
     }, /* updateTableHistory */
     acceptDefect() {
-      if (this.cardWorker == '') {
-        Swal.fire({html:"<b>ИСПОЛНИТЕЛЬ РЕМОНТА!</b>", heightAuto: false}); 
+      if (this.newWorker_id == 0) {
+        Swal.fire({html:"<b>Не назначен исполнитель ремонта!</b>", heightAuto: false}); 
         return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
       }
       Swal.fire({
@@ -172,9 +179,19 @@ const appAcceptDefect = Vue.createApp({
       }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[3].status_defect_name}}
+          data = {
+          "defect_id": {
+            "defect_id": parseInt(this.defect_id)
+          },
+          "status_name": {
+            "status_defect_name": this.statuses_defect[3].status_defect_name
+          },
+          "worker_id": {
+            "user_id": this.newWorker_id
+          },
+          }
           axios
-          .post('/update_status_defect', data)
+          .post('/accept_defect', data)
           .then(response => {
               document.getElementById('closeAcceptModalWindow').click();
               appVueDefect.updateTables()
@@ -203,7 +220,7 @@ const appAcceptDefect = Vue.createApp({
           .post('/update_status_defect', data)
           .then(response => {
               document.getElementById('closeAcceptModalWindow').click();
-              appVueDefect.updateTables()
+              appVueDefect.updateTables();
               console.log(response.data);
               Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ!", "", "success");
                 }) /* axios */

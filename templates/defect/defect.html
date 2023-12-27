@@ -16,7 +16,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="Fedorov A., Baibekov V., Petrov T.">
 	<meta name="generator" content="Hugo 0.118.2">
-	<title>Журнал учета дефектов</title>
+	<title><Журнал учета дефектов></title>
 
 	<link rel="stylesheet" href="{{ url_for('static_css', path='defect-styles.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static_css', path='mystyles.css') }}">
@@ -36,10 +36,11 @@
 		{% include "defect/_execution-defect.html" %} <!-- Модальное окно "Исполнение" -->
 		{% include "defect/_finish-work-defect.html" %} <!-- Модальное окно "Завершение работ" -->
 		{% include "defect/_check-defect.html" %} <!-- Модальное окно "Проверка работ по дефекту" -->
+		{% include "defect/_close-defect.html" %} <!-- Модальное окно "Закрытие дефекта" -->
+		{% include "defect/_card-defect.html" %} <!-- Модальное окно "История закрытого дефекта" -->
 		{% include "defect/_main-table.html" %} <!-- Модальное окно "Главное окно дефектов" --> 
 	{% endblock content %}
 </body>
-
 
 <script src="{{ url_for('static_js', path='defect-bootstrap.bundle.min.js') }}" crossorigin="anonymous"></script>
 <script src="{{ url_for('static_js', path='chart.umd.js') }}" crossorigin="anonymous"></script>

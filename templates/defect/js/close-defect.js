@@ -1,4 +1,4 @@
-const appFinishWorkDefect = Vue.createApp({
+const appCloseDefect = Vue.createApp({
     data() {
       return {
         defect_id: 0,
@@ -13,6 +13,7 @@ const appFinishWorkDefect = Vue.createApp({
                  'Не устранен', # 7
                  'Требует корректировки', # 8
                  'Отменен',  # 9
+                 'Закрыт',  #10
                  ] */
         repair_managers: {},
         workers: {},
@@ -135,9 +136,9 @@ const appFinishWorkDefect = Vue.createApp({
             this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
             this.cardRegistrator = this.cardDefect.defect_registrar;
             this.cardDateRegistration = this.cardDefect.defect_created_at;
-            this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
+            this.cardRepairManager = this.cardDefect.defect_repair_manager;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
-            this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            this.cardWorker = this.cardDefect.defect_worker;
 
                 })
           .catch(err => {
@@ -159,69 +160,34 @@ const appFinishWorkDefect = Vue.createApp({
                   console.log(err);
               }) /* axios */
       }, /* updateTableHistory */
-      finishworkDefect() {
-        if (this.cardWorkerDescription == '') {
-          Swal.fire({html:"<b>Не заполнен комментарий о выполненных работах!</b>", heightAuto: false}); 
+      closeDefect() {
+        if (this.cardWorker == '') {
+          Swal.fire({html:"<b>ИСПОЛНИТЕЛЬ РЕМОНТА!</b>", heightAuto: false}); 
           return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
         }
         Swal.fire({
-          title: "Вы подверждаете, что работы завершены?",
+          title: "Закрыть дефект?",
           showDenyButton: true,
           confirmButtonText: "ПОДТВЕРЖДАЮ!",
           denyButtonText: `ОТМЕНА!`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            data = {
-              "defect_id": {
-                "defect_id": parseInt(this.defect_id)
-              },
-              "status_name": {
-                "status_defect_name": this.statuses_defect[4].status_defect_name
-              },
-              "worker_description": {
-                "comment": this.cardWorkerDescription
-              }
-            }
+            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[9].status_defect_name}}
             axios
-            .post('/finish_work_defect', data)
+            .post('/update_status_defect', data)
             .then(response => {
-                document.getElementById('closeFinishWorkModalWindow').click();
+                document.getElementById('closeCloseModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("ДЕФЕКТ ПРИНЯТ В РАБОТУ", "", "success");
+                Swal.fire("ДЕФЕКТ ЗАКРЫТ", "", "success");
                   }) /* axios */
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    Swal.fire({html:"<b>Произошла ошибка при ЗАКРЫТИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
                     console.log(err);
                 }) /* axios */
           }
         });
       },/* executionDefect */
-      cancelDefect() {
-        Swal.fire({
-          title: "Вы действительно хотите отправить дефект на корректировку?",
-          showDenyButton: true,
-          confirmButtonText: "ДА!",
-          denyButtonText: `НЕТ!`
-        }).then((result) => {
-          /* Read more about isAccepted, isDenied below */
-          if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[7].status_defect_name}}
-            axios
-            .post('/update_status_defect', data)
-            .then(response => {
-                document.getElementById('closeFinishWorkModalWindow').click();
-                appVueDefect.updateTables()
-                console.log(response.data);
-                Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ!", "", "success");
-                  }) /* axios */
-            .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 
-                    console.log(err);
-                }) /* axios */
-            }
-        });
-      },/* cancelDefect */
       },
-    }).mount('#vueFinishWorkDefect')
+    }).mount('#vueCloseDefect')

@@ -73,6 +73,24 @@ const appVueDefect = Vue.createApp({
           })
           myModal.show()
         }
+        if (status_name == "Устранен") {
+          console.log(defect_id);
+          appCloseDefect.defect_id = defect_id;
+          appCloseDefect.updateTables()
+          var myModal = new bootstrap.Modal(document.getElementById('CloseModalWindow'), {
+            keyboard: false
+          })
+          myModal.show()
+        }
+        if (status_name == "Закрыт") {
+          console.log(defect_id);
+          appCardDefect.defect_id = defect_id;
+          appCardDefect.updateTables()
+          var myModal = new bootstrap.Modal(document.getElementById('CardModalWindow'), {
+            keyboard: false
+          })
+          myModal.show()
+        }
         
       }, /* handleDoubleClick */
       },

@@ -88,6 +88,12 @@
   margin-right: 5px;
 }
 
+.lastcheckbox {
+  margin-left: auto;
+  margin-right: 5px;
+  padding-top: 5px;
+}
+
 @media screen and (max-width: 1550px) {
     .button-text {
         display: none;
@@ -190,8 +196,13 @@
 }
 
 .status_finish_work_defect {
-  background-color: #088a2f;
+  background-color: #081b8a;
   color: #fff;
+}
+
+.card_defect {
+  background-color: #ffffff;
+  color: #000;
 }
 
 .status_check_defect {
@@ -202,6 +213,11 @@
   #465298 10px,
   #465298 20px
 );
+  color: #fff;
+}
+
+.status_close_defect {
+  background-color: #088a2f;
   color: #fff;
 }
 
@@ -231,4 +247,27 @@
 
 .block_theme {
   margin-right: 20px;
+}
+
+.pagination {
+  list-style-type: none;
+}
+
+.pagination-item {
+  display: inline-block;
+}
+
+.active {
+  background-color: #4AAE9B;
+  color: #ffffff;
+}
+
+.block-pagination {
+  height: 30px;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
 }

@@ -6,3 +6,6 @@ class Date_p(BaseModel):
 
 class Division_id(BaseModel):
     division_id: Optional[int]
+
+class Сomment(BaseModel):
+    comment: Optional[str]

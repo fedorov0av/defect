@@ -1,13 +1,13 @@
 {% raw %}
-<!----------------------------------------Модальное окно "Завершение работ"------------------------------------------>
-<div id="vueFinishWorkDefect">
-  <div class="modal fade" id="FinishWorkModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!----------------------------------------Модальное окно "История закрытого дефекта"------------------------------------------>
+<div id="vueCardDefect">
+  <div class="modal fade" id="CardModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header status_finish_work_defect">
-          <h2 class="modal-title" id="exampleModalLabel">Завершение работ по дефекту №</h2>
+        <div class="modal-header card_defect">
+          <h2 class="modal-title" id="exampleModalLabel">История закрытого дефекта №</h2>
           <h2 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h2>
-          <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="closeFinishWorkModalWindow"></button>
+          <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="closeCheckModalWindow"></button>
         </div>
         <div class="modal-body">
           <form method="post">
@@ -76,25 +76,31 @@
             </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Руководитель ремонта</b></div>
-                  <input type="text" class="form-control" placeholder="Руководитель ремонта"  aria-label="readonly input example" v-model="cardRepairManager" disabled>
+                  <select class="form-select" aria-label="Default select example" v-model="newRepairManager_id" disabled>
+                    <option selected disabled>Выберите руководителя ремонта</option>
+                    <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name }}</option>
+                  </select> 
               </div>
             </div>
 
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Срок устранения</b></div>
-                <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled>
+                  <input class="form-control" type="date" disabled>
               </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Исполнитель ремонта</b></div>
-                  <input type="text" class="form-control" placeholder="Исполнитель ремонта"  aria-label="readonly input example" v-model="cardWorker" disabled>
+                  <select class="form-select" aria-label="Default select example" v-model="cardWorker" disabled>
+                    <option selected disabled>Выберите исполнителя ремонта</option>
+                    <option v-for="worker in workers">{{ worker.user_surname + ' ' + worker.user_name }}</option>
+                  </select> 
               </div>
             </div>
 
             <div class="block_row">
               <div class="block_data4">
                 <div class="block_input_data"><b>Выполненные работы</b></div>
-                <textarea class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription"></textarea>
+                <textarea class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" disabled></textarea>
               </div>
             </div>
             
@@ -110,7 +116,7 @@
                 <div class="block_input_data">
                   <b>Результат проверки</b>
                 </div>
-                <input type="text" class="form-control" placeholder="Результат проверки"  disabled>
+                <input type="text" class="form-control" placeholder="Результат проверки" disabled>
               </div>
             </div>
 
@@ -140,8 +146,9 @@
             </div>
 
             <div class="modal-footer">
-              <button @click="cancelDefect" class="btn btn-warning" type="button">Требует корректировки</button>
-              <button @click="finishworkDefect" class="btn btn-primary" type="button">Работы завершены</button>
+              <!-- <button @click="dangerDefect" class="btn btn-danger" type="button">Дефект не устранен</button> -->
+              <!-- <button @click="closeDefect" class="btn btn-success" type="button">Закрыть дефект</button> -->
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
             </div>
           </form>
         </div>
@@ -151,4 +158,4 @@
 </div>
 
 {% endraw %}
-<script src="{{ url_for('defect_js', path='finish-work-defect.js') }}"></script>
+<script src="{{ url_for('defect_js', path='card-defect.js') }}"></script>

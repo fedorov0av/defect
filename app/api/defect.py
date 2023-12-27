@@ -23,7 +23,7 @@ from sqlalchemy.exc import NoResultFound, MissingGreenlet, IntegrityError
 from app.schemas.user import User_p, User_id
 from app.schemas.defect import New_defect_p, Defect_id
 from app.schemas.status_defect import StatusDefect_name
-from app.schemas.other import Date_p, Division_id
+from app.schemas.other import Date_p, Division_id, Сomment
 
 STATUS_REGISTRATION = 1
 STATUS_CONFIRM = 2
@@ -102,7 +102,7 @@ async def get_defects(defect_id: Defect_id, session: AsyncSession = Depends(get_
                 'defect_owner': defect.defect_system.system_name,
                 'defect_repair_manager': defect.defect_repair_manager,
                 'defect_worker': defect.defect_worker,
-                'defect_planned_finish_date': defect.defect_planned_finish_date,
+                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%Y-%m-%d") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
@@ -140,5 +140,56 @@ async def get_defects(defect_id: Defect_id,
         defect=defect,
         user=user,
         status=status_defect,
+        )
+    return defect
+
+@defect_router.post("/accept_defect/")
+async def get_defects(defect_id: Defect_id,
+                      status_name: StatusDefect_name,
+                      worker_id: User_id,
+                      request: Request,
+                      session: AsyncSession = Depends(get_db)):
+    token_dec = await decode_token(request.cookies['jwt_access_token'])
+    user_id = await decrypt_user_id(token_dec['subject']['userId'])
+    user: User = await User.get_user_by_id(session, int(user_id))
+    worker: User = await User.get_user_by_id(session, int(worker_id.user_id))
+    defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
+    status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
+
+    defect = await Defect.update_defect_by_id(session = session,
+                                            defect_id = defect_id.defect_id,
+                                            defect_status_id = status_defect.status_defect_id,
+                                            defect_worker_id = worker.user_id,
+                                            )
+    history = await History.add_history(
+        session=session,
+        defect=defect,
+        user=user,
+        status=status_defect,
+        )
+    return defect
+
+@defect_router.post("/finish_work_defect/")
+async def get_defects(defect_id: Defect_id,
+                      status_name: StatusDefect_name,
+                      worker_description: Сomment,
+                      request: Request,
+                      session: AsyncSession = Depends(get_db)):
+    token_dec = await decode_token(request.cookies['jwt_access_token'])
+    user_id = await decrypt_user_id(token_dec['subject']['userId'])
+    user: User = await User.get_user_by_id(session, int(user_id))
+    defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
+    status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
+
+    defect = await Defect.update_defect_by_id(session = session,
+                                            defect_id = defect_id.defect_id,
+                                            defect_status_id = status_defect.status_defect_id,
+                                            )
+    history = await History.add_history(
+        session=session,
+        defect=defect,
+        user=user,
+        status=status_defect,
+        comment=worker_description.comment,
         )
     return defect

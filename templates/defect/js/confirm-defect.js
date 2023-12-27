@@ -57,10 +57,19 @@ const appConfirmDefect = Vue.createApp({
 
       }
     },
-    /* mounted() {
-      this.updateTables()
-    }, */
+    mounted() {
+      var myModalEl = document.getElementById('ConfirmDefectModalWindow')
+      myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        console.log(event);
+        appConfirmDefect.clearData();
+    })
+    },
     methods: {
+      clearData() {
+        this.newDivisionOwner_id = 0;
+        this.newDate ='';
+        this.newRepairManager_id = 0;
+      }, /* clearData */
       updateTables() {
         this.updateTableDivision();
         this.updateTableTypeDefect();

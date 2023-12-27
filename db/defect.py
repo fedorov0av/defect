@@ -100,7 +100,8 @@ class Defect(Base):
             defect.defect_repair_manager_id = defect_repair_manager_id
         if defect_repair_manager_id:
             defect.defect_division_id = defect_division_id
-
+        if defect_worker_id:
+            defect.defect_worker_id = defect_worker_id
         session.add(defect)
         await session.commit() 
         return defect

@@ -1,9 +1,9 @@
 const app = Vue.createApp({
   data() {
     return {
-      typeButton: Vue.ref('button'),
-      email: Vue.ref('Email'),
-      password: Vue.ref('Пароль'),
+      typeButton: '',
+      email: '',
+      password: '',
       postData: {email: 'login', password: 'password'},
     }
   },
