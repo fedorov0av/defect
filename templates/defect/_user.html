@@ -1,0 +1,160 @@
+{% raw %}
+<!----------------------------------------Модальное окно "Пользователи"------------------------------------------>
+
+<div id="vueUser">
+	<div class="modal fade" id="UserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Пользователи</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		  </div>
+		  <div class="modal-body">
+			<div class="table-responsive small">
+			  <table class="table table-striped table-sm">
+				<thead>
+				  <tr>
+					<th v-for="colunmName in colunmsName">{{ colunmName }}</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <!--<button id="show-modal" @click="showModalUsers" class="btn btn-outline-success me-2" 
+					data-bs-toggle="modal" data-bs-target="#UserModalWindow" type="button">Пользователи</button>-->
+				  <tr @dblclick="handleDoubleClick" data-bs-target="#CardUserModalWindow" v-for="user in users">
+					<td >{{ user.user_id }}</td>
+					<td >{{ user.user_surname }}</td>
+					<td >{{ user.user_name }}</td>
+					<td >{{ user.user_fathername }}</td>
+					<td >{{ user.user_position }}</td>
+					<td >{{ user.user_division }}</td>
+					<td >{{ user.user_role }}</td>
+					<td >{{ user.user_email }}</td>
+				  </tr>
+				</tbody>
+			  </table>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button id="show-modal1" @click="updateTableRole" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUserModalWindow" type="button">Добавить</button>
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  
+   <!--  <marquee direction="right" scrollamount="10">Nasdaq +2,34%, Nyse +1,75, DowJons -0,5%</marquee> -->
+  
+  
+	<!----------------------------------------Модальное окно "Добавить пользователя"------------------------------------------>
+	<div id="AddUserModalWindow" class="modal fade"  ref="vueAddUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Добавление пользователя</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalAddUser"></button>
+		  </div>
+		  <div class="modal-body">
+			<form method="post">
+				<input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Фамилия</b></div>
+					<input type="text" class="form-control" name="surname" v-model="newUserSurname" placeholder="Фамилия">
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Имя</b></div>
+				  <input type="text" class="form-control" name="name" v-model="newUserName" placeholder="Имя">
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Отчество</b></div>
+					<input type="text" class="form-control" name="fathername" v-model="newUserFathername" placeholder="Отчество">
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Должность</b></div>
+					<input type="text" class="form-control" name="position" v-model="newUserPosition" placeholder="Должность">
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Отдел</b></div>
+					<select class="form-select" aria-label="Default select example" v-model="newUserDivision">
+					  <option disabled selected>Выберите подразделение</option>
+					  <option v-for="division in divisions">{{ division.division_name }}</option>
+					</select> 
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Роль пользователя</b></div>
+					<select class="form-select" aria-label="Default select example" v-model="newUserRole">
+					  <option disabled selected>Выберите роль пользователя</option>
+					  <option v-for="role in roles">{{ role.role_name }}</option>
+					</select>
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>E-mail</b></div>
+					<input type="email" class="form-control" name="email" v-model="newUserEmail" placeholder="E-mail">
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Временный пароль</b></div>
+					<input type="text" class="form-control" name="password" v-model="newUserTempPassword" placeholder="Временный пароль">
+				</div>
+				<div class="modal-footer">
+				  <button @click="addNewUser" class="btn btn-primary" type="button">Сохранить</button>
+				</div>
+			  </form>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<!----------------------------------------Модальное окно "Карточка пользователя"------------------------------------------>
+	<div class="modal fade" id="CardUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-target="#myModal">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Карточка пользователя</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalCardUser"></button>
+		  </div>
+		  <div class="modal-body">
+			<form method="post">
+				<input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Фамилия</b></div>
+					<input type="text" class="form-control" name="surname" v-model="cardUserSurname" placeholder="Фамилия">
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Имя</b></div>
+				  <input type="text" class="form-control" name="name" v-model="cardUserName" placeholder="Имя">
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Отчество</b></div>
+					<input type="text" class="form-control" name="fathername" v-model="cardUserFathername" placeholder="Отчество">
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Должность</b></div>
+					<input type="text" class="form-control" name="position" v-model="cardUserPosition" placeholder="Должность">
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Отдел</b></div>
+					<select class="form-select" aria-label="Default select example" v-model="cardUserDivision">
+					  <option disabled selected>Выберите подразделение</option>
+					  <option v-for="division in divisions">{{ division.division_name }}</option>
+					</select> 
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>Роль пользователя</b></div>
+					<select class="form-select" aria-label="Default select example" v-model="cardUserRole">
+					  <option disabled selected>Выберите роль пользователя</option>
+					  <option v-for="role in roles">{{ role.role_name }}</option>
+					</select>
+				</div>
+				<div class="block_data1">
+				  <div class="block_input_data"><b>E-mail</b></div>
+					<input type="email" class="form-control" name="email" v-model="cardUserEmail" placeholder="E-mail">
+				</div>
+				<div class="modal-footer">
+				  <button @click="editUser" class="btn btn-primary" type="button">Изменить</button>
+				</div>
+			  </form>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>
+{% endraw %}
+<script src="{{ url_for('defect_js', path='user.js') }}"></script>

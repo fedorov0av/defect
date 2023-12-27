@@ -1,0 +1,234 @@
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+}
+
+.b-example-divider {
+  width: 100%;
+  height: 3rem;
+  background-color: rgba(0, 0, 0, .1);
+  border: solid rgba(0, 0, 0, .15);
+  border-width: 1px 0;
+  box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+}
+
+.b-example-vr {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 100vh;
+}
+
+.bi {
+  vertical-align: -.125em;
+  fill: currentColor;
+}
+
+.nav-scroller {
+  position: relative;
+  z-index: 2;
+  height: 2.75rem;
+  overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  padding-bottom: 1rem;
+  margin-top: -1px;
+  overflow-x: auto;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.btn-bd-primary {
+  --bd-violet-bg: #712cf9;
+  --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+  --bs-btn-font-weight: 600;
+  --bs-btn-color: var(--bs-white);
+  --bs-btn-bg: var(--bd-violet-bg);
+  --bs-btn-border-color: var(--bd-violet-bg);
+  --bs-btn-hover-color: var(--bs-white);
+  --bs-btn-hover-bg: #6528e0;
+  --bs-btn-hover-border-color: #6528e0;
+  --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+  --bs-btn-active-color: var(--bs-btn-hover-color);
+  --bs-btn-active-bg: #5a23c8;
+  --bs-btn-active-border-color: #5a23c8;
+}
+
+.bd-mode-toggle {
+  z-index: 1500;
+}
+
+.bd-mode-toggle .dropdown-menu .active .bi {
+  display: block !important;
+}
+
+.navbar-nav1 {
+  display: none;
+}
+
+.btn-group {
+  margin: 5px 5px;
+}
+
+.lastbutton {
+  margin-left: auto;
+  margin-right: 5px;
+}
+
+@media screen and (max-width: 1550px) {
+    .button-text {
+        display: none;
+    }
+}
+
+.rr {
+  margin-left: 10px;
+
+}
+
+.type-defect {
+  width: 200px;
+}
+
+.mylabel {
+  padding: 5px;
+  margin: 0;
+  
+}
+
+.block_filter {
+  padding: 5px 15px;
+  max-height: 50px;
+  background-color: rgb(204, 227, 253);
+}
+
+.mydatechoise {
+  display: flex;
+  flex-direction: row;
+}
+
+.block_data {
+  width: 150px;
+  margin: 0px 15px 0px 0px;
+}
+
+.modal {
+  --bs-modal-width: 80%;
+}
+
+.block_data1 {
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+}
+
+.block_data2 {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  margin: 3px;
+}
+
+.block_data3 {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  min-height: 80px;
+  margin: 3px;
+}
+
+.block_data4 {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin: 3px;
+}
+
+.block_input_data {
+  min-width: 230px;
+  padding: 5px;
+  text-align: left;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.form-select1 {
+  margin-right: 15px;
+}
+
+.status_add_defect {
+  background-color: #ee4545;
+  color: #fff;
+}
+
+.status_confirm_defect {
+  background-color: #f3da25;
+  color: #000;
+}
+
+.status_accept_defect {
+  background-color: #8bd2e7;
+  color: #000;
+}
+
+.status_execution_defect {
+  background-color: #d438d4;
+  color: #fff;
+}
+
+.status_finish_work_defect {
+  background-color: #088a2f;
+  color: #fff;
+}
+
+.status_check_defect {
+  background: repeating-linear-gradient(
+  45deg,
+  #606dbc,
+  #606dbc 10px,
+  #465298 10px,
+  #465298 20px
+);
+  color: #fff;
+}
+
+.head_table {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.block_row {
+  display: flex;
+  flex-direction: row;
+}
+
+.block-history{
+  margin: 5px;
+}
+
+.demotable {
+  counter-reset: schetchik; /* счётчик с названием "schetchik" работает в рамках класса .demotable */ 
+}
+.demotable tr {
+  counter-increment: schetchik;  /* при встрече тега tr счётчик с названием "schetchik" увеличивается на единицу */ 
+}
+.demotable tr:before {
+  content: counter(schetchik);  /* значение счётчика с названием "schetchik" записывается в первую клетку строки */ 
+}
+
+.block_theme {
+  margin-right: 20px;
+}

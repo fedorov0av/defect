@@ -1,4 +1,4 @@
-const appExecutionDefect = Vue.createApp({
+const appCheckDefect = Vue.createApp({
     data() {
       return {
         defect_id: 0,
@@ -159,27 +159,27 @@ const appExecutionDefect = Vue.createApp({
                   console.log(err);
               }) /* axios */
       }, /* updateTableHistory */
-      executionDefect() {
+      successDefect() {
         if (this.cardWorker == '') {
           Swal.fire({html:"<b>ИСПОЛНИТЕЛЬ РЕМОНТА!</b>", heightAuto: false}); 
           return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
         }
         Swal.fire({
-          title: "Вы действительно хотите принять дефект в ремонт?",
+          title: "Вы подвтерждаете, что дефект устранен?",
           showDenyButton: true,
-          confirmButtonText: "ПРИНИМАЮ!",
+          confirmButtonText: "ПОДТВЕРЖДАЮ!",
           denyButtonText: `ОТМЕНА!`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[2].status_defect_name}}
+            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[5].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {
-                document.getElementById('closeExecutionModalWindow').click();
+                document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("ДЕФЕКТ ПРИНЯТ В РАБОТУ", "", "success");
+                Swal.fire("ДЕФЕКТ УСТРАНЕН", "", "success");
                   }) /* axios */
             .catch(err => {
                     Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -188,23 +188,23 @@ const appExecutionDefect = Vue.createApp({
           }
         });
       },/* executionDefect */
-      cancelDefect() {
+      dangerDefect() {
         Swal.fire({
-          title: "Вы действительно хотите отправить дефект на корректировку?",
+          title: "Вы подвтерждаете, что дефект не устранен?",
           showDenyButton: true,
           confirmButtonText: "ДА!",
           denyButtonText: `НЕТ!`
         }).then((result) => {
           /* Read more about isAccepted, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[7].status_defect_name}}
+            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[6].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {
-                document.getElementById('closeExecutionModalWindow').click();
+                document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ!", "", "success");
+                Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА УСТРАНЕНИЕ ЗАНОВО!", "", "success");
                   }) /* axios */
             .catch(err => {
                     Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -214,4 +214,4 @@ const appExecutionDefect = Vue.createApp({
         });
       },/* cancelDefect */
       },
-    }).mount('#vueExecutionDefect')
+    }).mount('#vueCheckDefect')

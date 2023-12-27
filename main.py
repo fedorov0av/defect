@@ -61,3 +61,8 @@ async def favicon():
 async def get_defects(request:Request):
     #print(request.cookies)
     return templates.TemplateResponse("defect/defect.html",context={"request":request})
+
+@app.get("/test_defect/",response_class=HTMLResponse)
+async def get_defects(request:Request):
+    #print(request.cookies)
+    return templates.TemplateResponse("defect/test_defect.html",context={"request":request})

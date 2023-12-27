@@ -130,6 +130,7 @@ const appVueUser = Vue.createApp({
                     "user_id": this.cardUserID,
                     "user_surname": this.cardUserSurname,
                     "user_name": this.cardUserName,
+                    "user_fathername": this.cardUserFathername != '' ? this.cardUserFathername : this.cardUserFathername,
                     "user_position": this.cardUserPosition,
                     "user_division": this.cardUserDivision,
                     "user_role": this.cardUserRole,

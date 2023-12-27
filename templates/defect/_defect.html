@@ -1,0 +1,140 @@
+{% raw %}
+<div id="vueAddDefect">
+    <div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header status_add_defect">
+            <h2 class="modal-title" id="exampleModalLabel">Регистрация дефекта</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalAddDefect"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post">
+                <input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
+  
+                <div class="block_row">
+                  <div class="block_data2">
+                    <div class="block_input_data"><b>Тип дефекта</b></div>
+                      <select class="form-select" aria-label="Default select example" v-model="newTypeDefect">
+                        <option disabled selected>Выберите тип дефекта</option>
+                        <option v-for="defect_type_defect in defect_type_defects">{{ defect_type_defect.type_defect_name }}</option>
+                      </select>
+                  </div>
+                  <div class="block_data2">
+                      <div class="block_input_data"><b>Статус дефекта</b></div>
+                        <select class="form-select" v-model="newTypeDefect" aria-label="Disabled select example" disabled>
+                          <option disabled selected>Выберите тип дефекта</option>
+                          <option v-for="defect_type_defect in defect_type_defects"></option>
+                        </select>
+                  </div>
+                </div>
+  
+                <div class="block_row">
+                  <div class="block_data2">
+                    <div class="block_input_data">
+                      <b>KKS</b>
+                    </div>
+                    <input type="text" class="form-control" v-model="newSystemKKS" placeholder="xxxx xxxx xxxx xxxx"
+                    data-hs-mask-options='{
+                      "template": "0000 0000 0000 0000"
+                    }'>
+                  </div>
+                  <div class="block_data2">
+                      <div class="block_input_data">
+                        <b>Оборудование</b>
+                      </div>
+                      <input type="text" class="form-control" v-model="newSystemName" placeholder="Оборудование">
+                  </div>
+                </div>
+  
+                <div class="block_row">
+                  <div class="block_data3">
+                    <div class="block_input_data"><b>Описание дефекта</b></div>
+                    <textarea class="form-control" v-model="newDefectNotes" placeholder="Описание дефекта"></textarea>
+                  </div>
+                  <div class="block_data3">
+                    <div class="block_input_data"><b>Местоположение</b></div>
+                    <textarea class="form-control" v-model="newLocation" placeholder="Местоположение"></textarea>
+                  </div>
+                </div>
+  
+                <div class="block_row">
+                  <div class="block_data2">
+                    <div class="block_input_data"><b>Подразделение-владелец</b></div>
+                      <select class="form-select" aria-label="Default select example" v-model="newDivisionOwner" disabled>
+                        <option disabled selected>Выберите подразделение</option>
+                        <option v-for="division in defect_divisions">{{ division.division_name }}</option>
+                      </select> 
+                  </div>
+                  <div class="block_data2">
+                    <div class="block_input_data"><b>Обнаружил дефект</b></div>
+                      <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
+                        <option disabled selected>Выберите подразделение</option>
+                        <option v-for="division in defect_divisions"></option>
+                      </select> 
+                  </div>
+                </div>
+  
+                <div class="block_row">
+                  <div class="block_data2">
+                    <div class="block_input_data">
+                      <b>Дата регистрации</b>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Дата регистрации"  aria-label="readonly input example" disabled>
+                </div>
+                  <div class="block_data2">
+                    <div class="block_input_data"><b>Руководитель ремонта</b></div>
+                      <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
+                        <option disabled selected>Выберите подразделение</option>
+                        <option v-for="division in defect_divisions"></option>
+                      </select> 
+                  </div>
+                </div>
+  
+                <div class="block_row">
+                  <div class="block_data2">
+                    <div class="block_input_data"><b>Срок устранения</b></div>
+                      <input class="form-control" type="date" disabled>
+                  </div>
+                  <div class="block_data2">
+                    <div class="block_input_data"><b>Исполнитель ремонта</b></div>
+                      <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
+                        <option disabled selected>Выберите подразделение</option>
+                        <option v-for="division in defect_divisions"></option>
+                      </select> 
+                  </div>
+                </div>
+  
+                <div class="block_row">
+                  <div class="block_data4">
+                    <div class="block_input_data"><b>Выполненные работы</b></div>
+                    <textarea class="form-control" placeholder="Комментарий исполнителя" aria-label="Disabled input example" disabled readonly></textarea>
+                  </div>
+                </div>
+  
+                <div class="block_row">
+                  <div class="block_data2">
+                    <div class="block_input_data"><b>Выполнил проверку</b></div>
+                      <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
+                        <option disabled selected>Выберите подразделение</option>
+                        <option v-for="division in defect_divisions"></option>
+                      </select> 
+                  </div>
+                  <div class="block_data2">
+                    <div class="block_input_data">
+                      <b>Результат проверки</b>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Результат проверки"  aria-label="readonly input example" disabled>
+                  </div>
+                </div>
+                
+                <div class="modal-footer">
+                  <button @click="addNewDefect" class="btn btn-primary" type="button">Зарегистрировать</button>
+                </div>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endraw %}
+  <script src="{{ url_for('defect_js', path='defect.js') }}"></script>

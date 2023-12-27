@@ -1,5 +1,5 @@
 from sqlalchemy import String, select
-from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy.orm import Mapped, mapped_column, validates, selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.base import Base
@@ -17,6 +17,13 @@ class Division(Base):
         division = result.one()
         return division
 
+    @staticmethod
+    async def get_division_by_id(session: AsyncSession, division_id: int): # получение пользователя по RFID коду
+        query = select(Division).where(Division.division_id == division_id)
+        result = await session.scalars(query)
+        user = result.one()
+        return user
+    
     @staticmethod
     async def add_division(session: AsyncSession, division_name: str): # добавление системы в БД
         division = Division(division_name=division_name)

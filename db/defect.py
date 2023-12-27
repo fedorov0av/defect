@@ -98,6 +98,8 @@ class Defect(Base):
             defect.defect_planned_finish_date = defect_planned_finish_date
         if defect_repair_manager_id:
             defect.defect_repair_manager_id = defect_repair_manager_id
+        if defect_repair_manager_id:
+            defect.defect_division_id = defect_division_id
 
         session.add(defect)
         await session.commit() 

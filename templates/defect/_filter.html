@@ -1,0 +1,56 @@
+{% raw %}
+<div id='vueFilter'>
+	<div class="d-flex justify-content-start block_filter">
+		<div>
+			<p class="mylabel">Фильтры:</p>
+		</div>
+		<select class="form-select form-select1 type-defect" aria-label="Default select example">
+			<option disabled selected>Подразделение</option>
+			<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
+		</select>
+		
+		<div class="mydatechoise justify-content-center">
+			<div><p class="mylabel">Начало:</p></div>
+			<div class="block_data col-lg-3 col-sm-6">
+				<input id="startDate" class="form-control" type="date" />
+				<!-- <span id="startDateSelected"></span> -->
+			</div>
+			<div><p class="mylabel">Конец:</p></div>
+			<div class="block_data col-lg-3 col-sm-6">
+				<input id="endDate" class="form-control" type="date" />
+				<!-- <span id="endDateSelected"></span> -->
+			</div>
+		</div>
+
+		<select class="form-select form-select1 type-defect" aria-label="Default select example">
+			<option selected>Статус дефекта</option>
+			<option value="1">Зарегистрирован</option>
+			<option value="2">Подтвержден</option>
+			<option value="3">Адресован</option>
+			<option value="4">Требует корректировки</option>
+			<option value="5">Принят к исполнению</option>
+			<option value="6">Работы завершены</option>
+			<option value="7">Устранен</option>
+			<option value="8">Не устранен</option>
+			<option value="9">Закрыт</option>
+			<option value="9">Отменен</option>
+		</select>
+
+		<select class="form-select form-select1 type-defect" aria-label="Default select example">
+			<option selected>Ответственный</option>
+			<option value="1">Владелец оборудования</option>
+			<option value="2">Руководитель ремонта</option>
+			<option value="3">Исполнитель ремонта</option>
+			<option value="4">Оперативный персонал</option>
+		</select>
+
+		<div><button type="submit" class="btn btn-primary">Применить</button></div>
+		<div class="lastbutton">
+			<button type="submit" class="btn btn-primary button-text">
+				<span class="button-text">Скрыть закрытые дефекты</span>
+			</button>
+		</div>
+	</div>
+</div>
+{% endraw %}
+<script src="{{ url_for('defect_js', path='filter.js') }}"></script>

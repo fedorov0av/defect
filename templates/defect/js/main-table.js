@@ -37,11 +37,38 @@ const appVueDefect = Vue.createApp({
           })
           myModal.show()
         } 
-        if (status_name == "Подтвержден") {
+        if (status_name == "Подтвержден" || status_name == "Не устранен") {
           console.log(defect_id);
           appAcceptDefect.defect_id = defect_id;
           appAcceptDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('AcceptModalWindow'), {
+            keyboard: false
+          })
+          myModal.show()
+        }
+        if (status_name == "Назначен исполнитель") {
+          console.log(defect_id);
+          appExecutionDefect.defect_id = defect_id;
+          appExecutionDefect.updateTables()
+          var myModal = new bootstrap.Modal(document.getElementById('ExecutionModalWindow'), {
+            keyboard: false
+          })
+          myModal.show()
+        }
+        if (status_name == "Принят в работу") {
+          console.log(defect_id);
+          appFinishWorkDefect.defect_id = defect_id;
+          appFinishWorkDefect.updateTables()
+          var myModal = new bootstrap.Modal(document.getElementById('FinishWorkModalWindow'), {
+            keyboard: false
+          })
+          myModal.show()
+        }
+        if (status_name == "Работы завершены") {
+          console.log(defect_id);
+          appCheckDefect.defect_id = defect_id;
+          appCheckDefect.updateTables()
+          var myModal = new bootstrap.Modal(document.getElementById('CheckModalWindow'), {
             keyboard: false
           })
           myModal.show()

@@ -20,7 +20,6 @@ const appConfirmDefect = Vue.createApp({
         cardSystemName: '', /* Для отображения НАЗВАНИЯ ОБОРУДОВАНИЯ в карточке  */
         cardDescription: '', /* Для отображения ОПИСАНИЕ ДЕФЕКТА в карточке  */
         cardLocation: '', /* Для отображения МЕСТОПОЛОЖЕНИЕ в карточке  */
-        cardDivisionOwner: {}, /* Для отображения ПОДРАЗДЕЛЕНИЕ-ВЛАДЕЛЕЦ в карточке  */
         cardRegistrator: {}, /* Для отображения РЕГИСТРАТОР ДЕФЕКТА в карточке  */
         cardDateRegistration: '', /* Для отображения ДАТА РЕГИСТРАЦИИ в карточке  */
         cardRepairManager: {}, /* Для отображения РУКОВОДИТЕЛЬ РЕМОНТА в карточке  */
@@ -31,6 +30,8 @@ const appConfirmDefect = Vue.createApp({
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
+        newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
+
         newDate: '', /* Для хранения ДАТЫ РЕМОНТА  в карточке  */
 
         cardHistorys: [{
@@ -126,7 +127,6 @@ const appConfirmDefect = Vue.createApp({
             this.cardSystemName = this.cardDefect.defect_system.system_name; 
             this.cardDescription = this.cardDefect.defect_description;
             this.cardLocation = this.cardDefect.defect_location;
-            this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
             this.cardRegistrator = this.cardDefect.defect_registrar;
             this.cardDateRegistration = this.cardDefect.defect_created_at;
             this.cardRepairManager = this.cardDefect.defect_repair_manager;
@@ -154,7 +154,7 @@ const appConfirmDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       confirmDefect() {
-        if (this.newDate =='' || this.newRepairManager_id == 0) {
+        if (this.newDate =='' || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0) {
           Swal.fire({html:"<b>Не все поля заполнены!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
@@ -178,6 +178,9 @@ const appConfirmDefect = Vue.createApp({
               },
               "defect_planned_finish_date_str": {
                 "date": this.newDate
+              },
+              "division_id": {
+                "division_id": parseInt(this.newDivisionOwner_id)
               }
             }
             axios

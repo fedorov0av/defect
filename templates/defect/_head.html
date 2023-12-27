@@ -1,0 +1,16 @@
+{% raw %}
+<div id='vueHead'>
+	<header class="p-3 text-bg-dark">
+		<div class="container">
+			<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+				<h2 class="" href="#" >Журнал учета дефектов</h2>
+				<div class="text-end lastbutton">
+					<a class="navbar-brand  col-lg-2 rr px-3 fs-6 text-white" href="#">{{ userFioEmail }}</a>
+					<button @click="logOut" type="button" class="btn btn-warning me-2">LogOut</button>
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
+{% endraw %}
+<script src="{{ url_for('defect_js', path='head.js') }}"></script>

@@ -24,6 +24,14 @@ ROOT = {
     'password': 'toor',
 }
 
+USERS = {'Регистратор': {'user_name': 'Иван', 'user_fathername': 'Иванович', 'user_surname': 'Иванов', 'password': '123', 'user_email': 'ivanov@akkuyu.com', 'division_name': 'СДТУ'},
+         'Владелец': {'user_name': 'Петр', 'user_fathername': 'Петрович', 'user_surname': 'Петров', 'password': '123', 'user_email': 'petrov@akkuyu.com', 'division_name': 'ЦИКТ'},
+         'Руководитель': {'user_name': 'Николай', 'user_fathername': 'Николаевич', 'user_surname': 'Николаев', 'password': '123', 'user_email': 'nikolay@akkuyu.com', 'division_name': 'ОУР'},
+         'Исполнитель': {'user_name': 'Сергей', 'user_fathername': 'Сергеевич', 'user_surname': 'Сергеев', 'password': '123', 'user_email': 'sergey@akkuyu.com', 'division_name': 'ОЯР'},
+         'Инспектор': {'user_name': 'Андрей', 'user_fathername': 'Андреевич', 'user_surname': 'Андреев', 'password': '123', 'user_email': 'andrey@akkuyu.com', 'division_name': 'ЦТАЙ'},
+         'Администратор': {'user_name': 'Олег', 'user_fathername': 'Олегович', 'user_surname': 'Олегов', 'password': '123', 'user_email': 'oleg@akkuyu.com', 'division_name': 'ХЗ'},
+         }
+
 TYPES_DEFECT = ['ЖД основного оборудования', 'ЖД по строительным конструкциям', 'ЖД по освещению', 'ЖД по систем пожаротушения']
 
 STATUS_DEFECT = ['Зарегистрирован', # 1
@@ -37,7 +45,7 @@ STATUS_DEFECT = ['Зарегистрирован', # 1
                  'Отменен',  # 9
                  ]
 
-DIVISIONS = ['ОС','СДТУ','АДМИНИСТРАЦИЯ']
+DIVISIONS = ['ОС','СДТУ','ЦИКТ', 'ОУР', 'ОЯР', 'ЦТАЙ', 'ХЗ', 'АДМИНИСТРАЦИЯ']
 
 DATABASE_USER = 'postgres'
 DATABASE_PASSWORD = 'defect0'
@@ -136,5 +144,32 @@ async def create_tables():
         )
         root_user.user_role.append(role_admin)
         session.add(root_user)
+
         await session.commit()
 
+    ########### добавление ROOT пользователя в БД #######
+    async with async_session() as session:
+        for user in USERS:
+            hash_salt: tuple[str, str] = security.get_hash_salt(USERS[user]['password'])
+            user_password_hash, user_salt_for_password = hash_salt
+            result_role = await Role.get_role_by_rolename(session, role_name=user)
+            result_division = await Division.get_division_by_name(session, division_name=USERS[user]['division_name'])
+            role = result_role
+            division = result_division
+
+            user = User(
+                user_name = USERS[user]['user_name'],
+                user_fathername = USERS[user]['user_fathername'],
+                user_surname = USERS[user]['user_surname'],
+                user_position = user,
+                user_password_hash = user_password_hash,
+                user_salt_for_password = user_salt_for_password,
+                user_temp_password = False,
+                user_division_id = division.division_id,
+                user_email = USERS[user]['user_email']
+            )
+            user.user_role.append(role)
+            session.add(user)
+            session.add(root_user)
+            
+        await session.commit()

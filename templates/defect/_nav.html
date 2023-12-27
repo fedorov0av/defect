@@ -1,0 +1,23 @@
+{% raw %}
+<nav id="vueNav" class="navbar">
+	<form class="container-fluid justify-content-start">
+	  <div class="btn-group">
+		<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#AddDefectModalWindow">
+		  Зарегистрировать дефект
+		</button>
+	  </div>
+	  <div class="lastbutton">
+		<button id="show-modal" @click="showModalUsers" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#UserModalWindow" type="button">
+		  Пользователи
+		</button>
+		<transition name="modal">
+		<modal v-if="showModal" @close="showModal = false">
+	  </div> 
+	  <div> 
+		<button class="btn btn-primary me-2" type="button">Экспорт в Excel</button>
+  <!--       <button @click="logOut" class="btn btn-outline-primary me-2" type="button">LogOut</button> -->
+	  </div>
+	</form>
+  </nav>
+{% endraw %}
+<script src="{{ url_for('defect_js', path='nav.js') }}"></script>

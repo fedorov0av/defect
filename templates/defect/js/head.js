@@ -5,6 +5,17 @@ const appVueHead = Vue.createApp({
         userFioEmail: '',
       }
     },
+    methods: {
+      logOut(event = NaN) {
+          document.cookie = 'jwt_access_token=;jwt_refresh_token=;path=/';
+          console.log(document.cookie);
+          window.location.replace("/");
+          /* window.location.href = "/"; */
+        },
+      showModalUsers(){
+          appVueUser.updateAllTables();
+      },
+    },
     mounted() {
         axios
         .post('/user/me')
