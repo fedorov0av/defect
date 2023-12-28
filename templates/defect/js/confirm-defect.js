@@ -141,7 +141,9 @@ const appConfirmDefect = Vue.createApp({
             this.cardRepairManager = this.cardDefect.defect_repair_manager;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker;
-
+            this.newDivisionOwner_id = this.cardDefect.defect_division ? this.cardDefect.defect_division.division_id : 0;
+            this.newRepairManager_id = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_id : 0;
+            this.newDate = this.cardDefect.defect_planned_finish_date ? this.cardDefect.defect_planned_finish_date : null;
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -166,6 +168,10 @@ const appConfirmDefect = Vue.createApp({
         if (this.newDate =='' || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0) {
           Swal.fire({html:"<b>Не все поля заполнены!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
+        }
+        if (this.newDate <= this.cardDateRegistration ) {
+          Swal.fire({html:"<b>Планируемя дата завершения должна быть позже даты регистрации!</b>", heightAuto: false}); 
+          return;  /* Если планируемая дата меньше даты то выходим из функции */
         }
         Swal.fire({
           title: "Вы действительно хотите подтвердить дефект?",

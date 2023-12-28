@@ -6,7 +6,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 from utils import security
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
-from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
 from fastapi import Depends
 from db.database import get_db
 
@@ -104,7 +103,3 @@ class User(Base):
 
         
         
-    
-
-async def get_user_db(session: AsyncSession = Depends(get_db)):
-    yield SQLAlchemyUserDatabase(session, User)

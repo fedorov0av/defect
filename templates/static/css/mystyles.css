@@ -163,6 +163,14 @@
   margin: 3px;
 }
 
+.block_data5 {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin: 3px;
+  margin-bottom: 15px;
+}
+
 .block_input_data {
   min-width: 230px;
   padding: 5px;
@@ -219,6 +227,11 @@
 .status_close_defect {
   background-color: #088a2f;
   color: #fff;
+}
+
+.status_correction_defect {
+  background-color: rgba(255, 255, 128, .5);
+  color: #000;
 }
 
 .head_table {

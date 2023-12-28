@@ -199,29 +199,13 @@ const appFinishWorkDefect = Vue.createApp({
         });
       },/* executionDefect */
       cancelDefect() {
-        Swal.fire({
-          title: "Вы действительно хотите отправить дефект на корректировку?",
-          showDenyButton: true,
-          confirmButtonText: "ДА!",
-          denyButtonText: `НЕТ!`
-        }).then((result) => {
-          /* Read more about isAccepted, isDenied below */
-          if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[7].status_defect_name}}
-            axios
-            .post('/update_status_defect', data)
-            .then(response => {
-                document.getElementById('closeFinishWorkModalWindow').click();
-                appVueDefect.updateTables()
-                console.log(response.data);
-                Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ!", "", "success");
-                  }) /* axios */
-            .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 
-                    console.log(err);
-                }) /* axios */
-            }
-        });
+        console.log(defect_id);
+        appCorrectionDefect.defect_id = defect_id;
+        appCorrectionDefect.parent_button_close_modal_name = 'closeFinishWorkModalWindow';
+        var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
+          keyboard: false
+        })
+        myModal.show()
       },/* cancelDefect */
       },
     }).mount('#vueFinishWorkDefect')

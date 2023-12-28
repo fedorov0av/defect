@@ -40,7 +40,7 @@ async def update_status_defects(defect_id: Defect_id, status_name: StatusDefect_
         defect=defect,
         user=user,
         status=status_defect,
-        comment=comment,
+        comment=comment.comment if comment else None,
         )
     return defect
 

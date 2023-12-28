@@ -177,7 +177,7 @@ const appCloseDefect = Vue.createApp({
             axios
             .post('/update_status_defect', data)
             .then(response => {
-                document.getElementById('closeCloseModalWindow').click();
+                document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
                 Swal.fire("ДЕФЕКТ ЗАКРЫТ", "", "success");

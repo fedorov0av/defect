@@ -145,7 +145,7 @@ const appAcceptDefect = Vue.createApp({
           this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
           this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
           this.cardWorker = this.cardDefect.defect_worker;
-
+          this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
               })
         .catch(err => {
             Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -206,14 +206,23 @@ const appAcceptDefect = Vue.createApp({
       });
     },/* acceptDefect */
     cancelDefect() {
-      
-      Swal.fire({
+        console.log(defect_id);
+        appCorrectionDefect.defect_id = defect_id;
+        appCorrectionDefect.parent_button_close_modal_name = 'closeAcceptModalWindow';
+        var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
+          keyboard: false
+        })
+        myModal.show()
+      }
+/*
+
+       Swal.fire({
         title: "Вы действительно хотите отправить дефект на корректировку?",
         showDenyButton: true,
         confirmButtonText: "ДА!",
         denyButtonText: `НЕТ!`
       }).then((result) => {
-        /* Read more about isAccepted, isDenied below */
+
         if (result.isConfirmed) {
           data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[7].status_defect_name}}
           axios
@@ -223,16 +232,16 @@ const appAcceptDefect = Vue.createApp({
               appVueDefect.updateTables();
               console.log(response.data);
               Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ!", "", "success");
-                }) /* axios */
+                }) 
           .catch(err => {
                   Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 
                   console.log(err);
-              }) /* axios */
+              }) 
           }
-      });
+      }); 
 
 
 
-    },/* cancelDefect */
+    }, */
     },
   }).mount('#vueAcceptDefect')

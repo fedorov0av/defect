@@ -33,5 +33,5 @@ async def encrypt_user_id(user_id: str) -> str:
 
 async def decrypt_user_id(token: str) -> str:
     f = Fernet(SECRET_KEY.encode())
-    user_id = f.decrypt(token)
+    user_id = f.decrypt(token.encode())
     return user_id.decode()
