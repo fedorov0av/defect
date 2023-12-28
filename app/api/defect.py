@@ -125,7 +125,7 @@ async def get_defects(defect_id: Defect_id,
     user: User = await User.get_user_by_id(session, int(user_id))
     repair_manager: User = await User.get_user_by_id(session, int(repair_manager_id.user_id))
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
-    defect_planned_finish_date = datetime.strptime(defect_planned_finish_date_str.date, "%Y-%m-%d").date() #    2023-12-23
+    defect_planned_finish_date = datetime.strptime(defect_planned_finish_date_str.date, "%Y-%m-пше").date() #    2023-12-23
     division: Division = await Division.get_division_by_id(session, division_id.division_id)
     status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
 
