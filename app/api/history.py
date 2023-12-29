@@ -28,7 +28,7 @@ async def get_history_by_defect(defect_id: Defect_id, session: AsyncSession = De
         history_l.append(
             {
                 'history_id': history.history_id,
-                'history_date': history.history_created_at,
+                'history_date': history.history_created_at.strftime("%d.%m.%Y %H:%M:%S"),
                 'history_status': history.history_status.status_defect_name,
                 'history_user': history.history_user,
                 'history_comment': history.history_comment,

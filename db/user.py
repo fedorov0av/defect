@@ -13,6 +13,7 @@ from db.base import Base
 from db.role import Role
 from db.division import Division
 from db.assoc_table import user_role
+from db.utils import get_time
 
 class User(Base):
     __tablename__ = "user" # пользователь
@@ -28,9 +29,7 @@ class User(Base):
     user_salt_for_password: Mapped[str] = mapped_column(String(60)) # соль для хеширования пароля пользователя в системе
     user_temp_password: Mapped[bool] = mapped_column(Boolean, default=True) # в данный момент используется временный пароль?
     user_email: Mapped[str] = mapped_column(String(50)) # хешированный пароль пользователя в системе
-    user_created_at: Mapped[datetime.datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    ) # таймштамп создания записи
+    user_created_at: Mapped[datetime.datetime]
     ########################### fix me
     """ def __str__(self) -> str:
         return f"User(id={self.id!r}, name={self.user_name!r}, user_fathername={self.user_fathername}, user_surname={self.user_surname!r},)"
@@ -41,10 +40,11 @@ class User(Base):
     @staticmethod
     async def add_user(session: AsyncSession, user_name: str, user_fathername: str, user_surname: str, user_position: str,
                  user_division: Division, user_password: str, user_email:str, user_role: Role=None) -> None: # добавление пользователя в БД
+        now_time = get_time()  
         hash_salt: tuple[str, str] = security.get_hash_salt(user_password)
         user_password_hash, user_salt_for_password = hash_salt
         user = User(user_name=user_name, user_fathername=user_fathername, user_surname=user_surname, user_position=user_position, user_division_id=user_division.division_id,
-                    user_password_hash=user_password_hash, user_salt_for_password=user_salt_for_password, user_email=user_email)
+                    user_password_hash=user_password_hash, user_salt_for_password=user_salt_for_password, user_email=user_email, user_created_at=now_time)
         if user_role:
             user.user_role.append(user_role)
         session.add(user)

@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import ForeignKey, Integer, Text, String, func, select, Boolean
+from sqlalchemy import ForeignKey, Integer, Text, String, func, select, Boolean, or_
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 from sqlalchemy.sql import func
@@ -13,13 +13,13 @@ from db.status_defect import StatusDefect
 from db.division import Division
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from db.utils import get_time
+
 
 class Defect(Base):
     __tablename__ = "defect" # процесс учета средств оснащения
     defect_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
-    defect_created_at: Mapped[datetime.datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )# таймштамп создания записи дефекта FIX ME
+    defect_created_at: Mapped[datetime.datetime]
     #defect_created_at: Mapped[datetime.datetime] = mapped_column(DateTime('Europe/Moscow'), server_default=func.now(), onupdate=func.now())# таймштамп вноса предмета
     defect_registrator_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - регистратор дефекта.
     defect_registrar: Mapped["User"] = relationship(foreign_keys=[defect_registrator_id]) #  для работы с таблицей User как с объектом
@@ -40,8 +40,6 @@ class Defect(Base):
     defect_division: Mapped["Division"] = relationship(foreign_keys=[defect_division_id]) #  для работы с таблицей User как с объектом
     defect_system_id: Mapped[int] = mapped_column(ForeignKey("system.system_id")) # вид дефекта
     defect_system: Mapped["System"] = relationship(foreign_keys=[defect_system_id]) #  для работы с таблицей System как с объектом
-    #defect_status_id: Mapped[int] = mapped_column(ForeignKey("status_defect.id")) # статус (Этап) дефекта
-    #defect_status: Mapped["StatusDefect"] = relationship(foreign_keys=[defect_status_id]) #  для работы с таблицей StatusDefect как с объектом
     
 
     @staticmethod
@@ -58,7 +56,8 @@ class Defect(Base):
     @staticmethod
     async def add_defect(session: AsyncSession, defect_registrator: User, defect_description: str, defect_system: System,
                           defect_location: str, defect_type: TypeDefect, defect_status: StatusDefect, defect_division: Division): # добавление системы в БД
-        defect = Defect(defect_registrator_id=defect_registrator.user_id, defect_description=defect_description, defect_division_id=defect_division.division_id,
+        now_time = get_time()
+        defect = Defect(defect_registrator_id=defect_registrator.user_id, defect_description=defect_description, defect_division_id=defect_division.division_id, defect_created_at=now_time,
                         defect_location=defect_location, defect_type_id=defect_type.type_defect_id, defect_status_id=defect_status.status_defect_id, defect_system_id=defect_system.system_id)
         session.add(defect)
         await session.commit()
@@ -110,3 +109,20 @@ class Defect(Base):
     async def del_defect_by_defect(session: AsyncSession, defect):
         session.delete(defect)
         await session.commit() 
+
+
+    @staticmethod
+    async def get_defects_by_filter(session: AsyncSession, division: Division = None, date_start: str = None,
+                                     date_end: str = None, status_defect: StatusDefect = None,):
+        query = select(Defect).filter(or_(Defect.defect_division_id.like(division.division_id,),
+                                        Defect.defect_status_id.like(status_defect.status_defect_id),
+                                        Defect.defect_created_at).between(date_start, date_end)
+                                        ).order_by(Defect.defect_id)\
+                .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
+                .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
+                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                .options(selectinload(Defect.defect_system)) # запрос к БД
+        result = await session.scalars(query)
+        defects = result.all()
+        return defects
+        

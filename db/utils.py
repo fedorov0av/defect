@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from db.base import Base
+import datetime
 import asyncpg
 
 DATABASE_USER = 'postgres'
@@ -13,6 +14,10 @@ DATABASE_URL = f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@0.0.0.
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+def get_time():
+    now_datetime =  datetime.datetime.strptime(datetime.datetime.now().isoformat(sep=" ", timespec="seconds"), "%Y-%m-%d %H:%M:%S")
+    return now_datetime
 
 async def create_tables():
     try:

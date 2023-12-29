@@ -15,6 +15,7 @@ from db.defect import Defect
 from db.history_defect import History
 from db.type_defect import TypeDefect
 from db.status_defect import StatusDefect
+from db.utils import get_time
 
 #from constants import ROLES, ROOT, GROUP_REESTR_SO, ENERGOBLOCKS
 
@@ -131,6 +132,7 @@ async def create_tables():
         result_divisions = await Division.get_all_division(session)
         role_admin = result_roles[-1]
         division_admin = result_divisions[-1]
+        now_time = get_time()  
 
         root_user = User(
             user_name = 'root',
@@ -141,7 +143,8 @@ async def create_tables():
             user_salt_for_password = user_salt_for_password,
             user_temp_password = False,
             user_division_id = division_admin.division_id,
-            user_email = 'root@root.root'
+            user_email = 'root@root.root',
+            user_created_at=now_time,
         )
         root_user.user_role.append(role_admin)
         session.add(root_user)
@@ -151,6 +154,7 @@ async def create_tables():
     ########### добавление ROOT пользователя в БД #######
     async with async_session() as session:
         for user in USERS:
+            now_time = get_time()  
             hash_salt: tuple[str, str] = security.get_hash_salt(USERS[user]['password'])
             user_password_hash, user_salt_for_password = hash_salt
             result_role = await Role.get_role_by_rolename(session, role_name=user)
@@ -167,7 +171,8 @@ async def create_tables():
                 user_salt_for_password = user_salt_for_password,
                 user_temp_password = False,
                 user_division_id = division.division_id,
-                user_email = USERS[user]['user_email']
+                user_email = USERS[user]['user_email'],
+                user_created_at=now_time,
             )
             user.user_role.append(role)
             session.add(user)

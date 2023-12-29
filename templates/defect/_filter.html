@@ -4,8 +4,8 @@
 		<div>
 			<p class="mylabel">Фильтры:</p>
 		</div>
-		<select class="form-select form-select1 type-defect" aria-label="Default select example">
-			<option disabled selected>Подразделение</option>
+		<select class="form-select form-select1 type-defect" aria-label="Default select example" v-model="filterDivision">
+			<option selected value=0>Подразделение</option>
 			<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
 		</select>
 		
@@ -22,29 +22,20 @@
 			</div>
 		</div>
 
-		<select class="form-select form-select1 type-defect" aria-label="Default select example">
-			<option selected>Статус дефекта</option>
-			<option value="1">Зарегистрирован</option>
-			<option value="2">Подтвержден</option>
-			<option value="3">Адресован</option>
-			<option value="4">Требует корректировки</option>
-			<option value="5">Принят к исполнению</option>
-			<option value="6">Работы завершены</option>
-			<option value="7">Устранен</option>
-			<option value="8">Не устранен</option>
-			<option value="9">Закрыт</option>
-			<option value="9">Отменен</option>
+		<select class="form-select form-select1 type-defect" aria-label="Default select example" v-model="filterStatusDefect">
+			<option selected value=0>Статус</option>
+			<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
 		</select>
 
-		<select class="form-select form-select1 type-defect" aria-label="Default select example">
+		<!-- <select class="form-select form-select1 type-defect" aria-label="Default select example">
 			<option selected>Ответственный</option>
 			<option value="1">Владелец оборудования</option>
 			<option value="2">Руководитель ремонта</option>
 			<option value="3">Исполнитель ремонта</option>
 			<option value="4">Оперативный персонал</option>
-		</select>
+		</select> -->
 
-		<div><button type="submit" class="btn btn-primary">Применить</button></div>
+		<div><button type="button" @click="useFilter" class="btn btn-primary lastbutton" >Применить</button></div>
 
 
 		<!-- <div class="lastbutton">

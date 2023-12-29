@@ -3,13 +3,11 @@ from sqlalchemy import ForeignKey, Integer, Text, String, DateTime, func, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
-
 from db.base import Base
 from db.user import User
 from db.defect import Defect
-from db.type_defect import TypeDefect
 from db.status_defect import StatusDefect
-from typing import List, AsyncGenerator
+from db.utils import get_time
 
 
 class History(Base):
@@ -22,18 +20,22 @@ class History(Base):
     history_status_id: Mapped[int] = mapped_column(ForeignKey("status_defect.status_defect_id")) # статус (Этап) дефекта
     history_status: Mapped["StatusDefect"] = relationship(foreign_keys=[history_status_id]) #  для работы с таблицей StatusDefect как с объектом
     history_comment: Mapped[str] = mapped_column(String(500), nullable=True) # Коммент.
-    history_created_at: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now()) # Дата создания
+    history_created_at: Mapped[datetime.datetime]
 
     @staticmethod
     async def add_history(session: AsyncSession, defect: Defect, user: User, status: StatusDefect, comment: str = None) -> None: # добавление истории в дефект в БД
+        now_time = get_time()  
         history = History(
                         history_defect_id=defect.defect_id,
                         history_user_id=user.user_id,
                         history_status_id=status.status_defect_id,
+                        history_created_at=now_time,
                           )
         if comment:
             history.history_comment = comment
+          
         session.add(history)
+
         await session.commit()
         return history
     

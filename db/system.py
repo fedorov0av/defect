@@ -4,13 +4,14 @@ from sqlalchemy.orm import Mapped, mapped_column, validates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.base import Base
+from db.utils import get_time
 
 class System(Base):
     __tablename__ = "system" # система
     system_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
     system_name: Mapped[str] = mapped_column(String(150)) # название системы или оборудования
     system_kks: Mapped[str] = mapped_column(String(100), unique=True, nullable=True) # kks кодировка системы или оборудования
-    system_created_at: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now())  # таймштамп создания записи
+    system_created_at: Mapped[datetime.datetime]
 
 
     @staticmethod
@@ -31,8 +32,9 @@ class System(Base):
 
     @staticmethod
     async def add_system(session: AsyncSession, system_name: str, system_kks: str,): # добавление системы в БД
+        now_time = get_time()  
         system_kks_up = system_kks.upper()
-        system = System(system_name=system_name, system_kks=system_kks_up)
+        system = System(system_name=system_name, system_kks=system_kks_up, system_created_at=now_time)
         session.add(system)
         await session.commit()
 

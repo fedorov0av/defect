@@ -165,11 +165,13 @@ const appConfirmDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       confirmDefect() {
-        if (this.newDate =='' || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0) {
+        if (this.newDate == null || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0 || this.newDate == '' ) {
           Swal.fire({html:"<b>Не все поля заполнены!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
-        if (this.newDate <= this.cardDateRegistration ) {
+        tempDate = this.cardDateRegistration.split(' ')[0].split('-')
+        cardDateRegistration = tempDate[2] + '-'+tempDate[1]+'-'+tempDate[0]
+        if (this.newDate <= cardDateRegistration ) {
           Swal.fire({html:"<b>Планируемя дата завершения должна быть позже даты регистрации!</b>", heightAuto: false}); 
           return;  /* Если планируемая дата меньше даты то выходим из функции */
         }
