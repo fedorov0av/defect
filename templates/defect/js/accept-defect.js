@@ -17,6 +17,7 @@ const appAcceptDefect = Vue.createApp({
       repair_managers: {},
       workers: {},
 
+      isDisabledAcceptDefect: false,
 
       cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -61,6 +62,17 @@ const appAcceptDefect = Vue.createApp({
       
 
     }
+  },
+  beforeMount() {
+    axios
+    .post('/user/user_role')
+    .then(response => {
+        this.currentUser = response.data;
+        this.currentUserRole = this.currentUser.user_role;
+        if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Руководитель') {
+          this.isDisabledAcceptDefect = true;
+        }
+      })
   },
   mounted() {
     var myModalEl = document.getElementById('AcceptModalWindow')
@@ -174,8 +186,8 @@ const appAcceptDefect = Vue.createApp({
       Swal.fire({
         title: "Вы действительно хотите назначить исполнителя?",
         showDenyButton: true,
-        confirmButtonText: "ДА!",
-        denyButtonText: `ОТМЕНА!`
+        confirmButtonText: "ДА",
+        denyButtonText: `ОТМЕНА`
       }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
@@ -231,7 +243,7 @@ const appAcceptDefect = Vue.createApp({
               document.getElementById('closeAcceptModalWindow').click();
               appVueDefect.updateTables();
               console.log(response.data);
-              Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ!", "", "success");
+              Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ", "", "success");
                 }) 
           .catch(err => {
                   Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 

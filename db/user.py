@@ -28,7 +28,7 @@ class User(Base):
     user_password_hash: Mapped[str] = mapped_column(String(100)) # хешированный пароль пользователя в системе
     user_salt_for_password: Mapped[str] = mapped_column(String(60)) # соль для хеширования пароля пользователя в системе
     user_temp_password: Mapped[bool] = mapped_column(Boolean, default=True) # в данный момент используется временный пароль?
-    user_email: Mapped[str] = mapped_column(String(50)) # хешированный пароль пользователя в системе
+    user_email: Mapped[str] = mapped_column(String(50), unique=True) # логин пользователя в системе (уникальное значение)
     user_created_at: Mapped[datetime.datetime]
     ########################### fix me
     """ def __str__(self) -> str:

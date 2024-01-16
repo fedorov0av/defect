@@ -15,8 +15,10 @@ const appCheckDefect = Vue.createApp({
                  'Отменен',  # 9
                  ] */
         repair_managers: {},
+        registrators: {},
         workers: {},
 
+        isDisabledCheckDefect: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -38,6 +40,7 @@ const appCheckDefect = Vue.createApp({
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
+        newRegistrator_id: 0, /* Для хранения ID РЕГИСТРАТОРА в карточке  */
 
         cardHistorys: [{
           "history_id": 0,
@@ -65,6 +68,17 @@ const appCheckDefect = Vue.createApp({
     /* mounted() {
       this.updateTables()
     }, */
+    beforeMount() {
+      axios
+      .post('/user/user_role')
+      .then(response => {
+          this.currentUser = response.data;
+          this.currentUserRole = this.currentUser.user_role;
+          if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Регистратор') {
+            this.isDisabledCheckDefect = true;
+          }
+        })
+    }, 
     methods: {
       updateTables() {
         this.updateTableDivision();
@@ -74,6 +88,7 @@ const appCheckDefect = Vue.createApp({
         this.updateTableHistory();
         this.updateTableRepairManagers();
         this.updateTableWorkers();
+        this.updateTableRegistrators();
       }, /* updateTables */
       updateTableWorkers() {
         axios
@@ -91,6 +106,14 @@ const appCheckDefect = Vue.createApp({
             console.log(this.repair_managers);
               }) /* axios */
       }, /* updateTableRepairManagers */
+      updateTableRegistrators() {
+        axios
+        .post('/user/registrators',)
+        .then(response => {
+            this.registrators = response.data;
+            console.log(this.registrators);
+              }) /* axios */
+      }, /* updateTableRegistrators */
       updateTableDivision() {
         axios
         .post('/divisions',)
@@ -138,7 +161,7 @@ const appCheckDefect = Vue.createApp({
             this.cardRepairManager = this.cardDefect.defect_repair_manager;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker;
-
+            this.newRegistrator_id = this.cardDefect.defect_registrar ? this.cardDefect.defect_registrar.user_id : 0;
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -160,12 +183,12 @@ const appCheckDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       successDefect() {
-        if (this.cardWorker == '') {
-          Swal.fire({html:"<b>ИСПОЛНИТЕЛЬ РЕМОНТА!</b>", heightAuto: false}); 
-          return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
+        if (this.newRegistrator_id == '' || this.newRegistrator_id == 0) {
+          Swal.fire({html:"<b>НЕ ВЫБРАН РЕГИСТРАТОР!</b>", heightAuto: false}); 
+          return;  /* Если РЕГИСТРАТОР не заполнен, то выходим из функции */
         }
         Swal.fire({
-          title: "Вы подвтерждаете, что дефект устранен?",
+          title: "Вы подтверждаете, что дефект устранен?",
           showDenyButton: true,
           confirmButtonText: "ПОДТВЕРЖДАЮ!",
           denyButtonText: `ОТМЕНА!`
@@ -190,10 +213,10 @@ const appCheckDefect = Vue.createApp({
       },/* executionDefect */
       dangerDefect() {
         Swal.fire({
-          title: "Вы подвтерждаете, что дефект не устранен?",
+          title: "Вы подтверждаете, что дефект не устранен?",
           showDenyButton: true,
-          confirmButtonText: "ДА!",
-          denyButtonText: `НЕТ!`
+          confirmButtonText: "ДА",
+          denyButtonText: `НЕТ`
         }).then((result) => {
           /* Read more about isAccepted, isDenied below */
           if (result.isConfirmed) {
@@ -204,7 +227,7 @@ const appCheckDefect = Vue.createApp({
                 document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА УСТРАНЕНИЕ ЗАНОВО!", "", "success");
+                Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА УСТРАНЕНИЕ ЗАНОВО", "", "success");
                   }) /* axios */
             .catch(err => {
                     Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 

@@ -4,7 +4,10 @@
 	<!-- Подключиение js-файла фреймворка Bootstrap 3 -->
 	<link href="{{ url_for('static_css', path='bootstrap.min.css') }}" rel="stylesheet" crossorigin="anonymous">
 	<script src="{{ url_for('static_js', path='jquery.min.js') }}"></script>
-	
+
+	<script src="{{ url_for('static_js', path='vue-tailwind-pagination.umd.min.js') }}"></script>
+	<script src="{{ url_for('static_js', path='v-page.js') }}"></script>
+
 	<script src="{{ url_for('static_js', path='sweetalert2.js') }}"></script>
 	<script src="{{ url_for('static_js', path='defect-color-modes.js') }}"></script>
 	<script src="{{ url_for('static_js', path='vue3.js') }}"></script>
@@ -14,10 +17,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
-	<meta name="author" content="Fedorov A., Baibekov V., Petrov T.">
+	<meta name="author" content="Fedorov A., Baibekov V., Petrov T., Leskov S., Rykov A.">
 	<meta name="generator" content="Hugo 0.118.2">
-	<title><Журнал учета дефектов></title>
+	<title>Журнал учета дефектов</title>
 
+	<!--<link rel="stylesheet" href="{{ url_for('static_css', path='style.min.css') }}">  Стили для пагинации -->
 	<link rel="stylesheet" href="{{ url_for('static_css', path='defect-styles.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static_css', path='mystyles.css') }}">
 
@@ -28,7 +32,7 @@
 	{% include "defect/_head.html" %} <!-- Заголовок -->
 	{% include "defect/_nav.html" %} <!-- Меню навигации -->
 	{% block content %}
-		{% include "defect/_filter.html" %} <!--Модальное окно "Пользователи" -->
+		{% include "defect/_filter.html" %} <!--Модальное окно "Фильтры" -->
 		{% include "defect/_user.html" %} <!--Модальное окно "Пользователи" -->
 		{% include "defect/_defect.html" %} <!-- Модальное окно "Добавить дефект" --> 
 		{% include "defect/_confirm-defect.html" %} <!-- Модальное окно "Подтвердить дефект" --> 

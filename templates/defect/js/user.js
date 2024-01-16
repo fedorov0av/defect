@@ -5,6 +5,7 @@ const appVueUser = Vue.createApp({
         users: {},
         roles: {},
         divisions: {},
+        emails: [],
         
         newUserSurname: Vue.ref(),
         newUserFathername: '',
@@ -66,6 +67,14 @@ const appVueUser = Vue.createApp({
                 console.log(this.users);
                   }) /* axios */
           }, /* updateTableUser */
+        updateTableEmails() {
+            axios
+            .post('/users/emails',)
+            .then(response => {
+                this.emails = response.data;
+                /* console.log(Object.values(this.emails)); */
+                  }) /* axios */
+          }, /* updateTableEmails */
         updateTableRole() {
             axios
             .post('/roles',)
@@ -86,11 +95,15 @@ const appVueUser = Vue.createApp({
           this.updateTableUser();
           this.updateTableRole();
           this.updateTableDivision();
+          this.updateTableEmails()
         }, /* updateAllTables */
         addNewUser() {
           if (this.newUserSurname == '' || this.newUserName == '' || this.newUserPosition == ''
               || this.newUserDivision == '' || this.newUserRole == '' || this.newUserEmail == '' || this.newUserTempPassword == ''){
                 Swal.fire({html:"<b>Все значения (кроме отчества) должны быть заполнены!</b>", heightAuto: false}); 
+          }  /* if */
+          if (Object.values(this.emails).includes(this.newUserEmail)) {
+            Swal.fire({html:"<b>Такой логин уже существует!</b>", heightAuto: false}); 
           } /* if */
           else {
             axios
@@ -108,12 +121,12 @@ const appVueUser = Vue.createApp({
             )
             .then(response => {
                 console.log(response.data);
-                Swal.fire({html:"<b>Пользователь добавлен!</b>", heightAuto: false}); 
+                Swal.fire({html:"<b>Пользователь добавлен</b>", heightAuto: false}); 
                 document.getElementById('closeModalAddUser').click();
                 
                   })
             .catch(err => {
-                Swal.fire({html:"<b>Произошла ошибка при добавлении пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
+                Swal.fire({html:"<b>Произошла ошибка при добавлении пользователя. Обратитесь к администратору.</b>", heightAuto: false}); 
                 console.log(err);
             }) /* axios */
           } /* else */
@@ -121,7 +134,7 @@ const appVueUser = Vue.createApp({
         editUser() {
           if (this.cardUserSurname == '' || this.cardUserName == '' || this.cardUserPosition == ''
               || this.cardUserDivision == '' || this.cardUserRole == '' || this.cardUserEmail == ''){
-                Swal.fire({html:"<b>Все значения (кроме отчества) должны быть заполнены!</b>", heightAuto: false}); 
+                Swal.fire({html:"<b>Все значения (кроме отчества) должны быть заполнены</b>", heightAuto: false}); 
           } /* if */
           else {
             axios
@@ -139,7 +152,7 @@ const appVueUser = Vue.createApp({
             )
             .then(response => {
                 console.log(response.data);
-                Swal.fire({html:"<b>Данные пользователя изменены!</b>", heightAuto: false}); 
+                Swal.fire({html:"<b>Данные пользователя изменены</b>", heightAuto: false}); 
                 document.getElementById('closeModalCardUser').click();
                 this.updateTableUser();
                   })

@@ -17,6 +17,7 @@ const appFinishWorkDefect = Vue.createApp({
         repair_managers: {},
         workers: {},
 
+        isDisabledFinishDefect: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -65,6 +66,17 @@ const appFinishWorkDefect = Vue.createApp({
     /* mounted() {
       this.updateTables()
     }, */
+    beforeMount() {
+      axios
+      .post('/user/user_role')
+      .then(response => {
+          this.currentUser = response.data;
+          this.currentUserRole = this.currentUser.user_role;
+          if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Исполнитель') {
+            this.isDisabledFinishDefect = true;
+          }
+        })
+    },
     methods: {
       updateTables() {
         this.updateTableDivision();

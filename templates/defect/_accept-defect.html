@@ -83,13 +83,19 @@
               <div class="block_row">
                 <div class="block_data2">
                   <div class="block_input_data"><b>Срок устранения</b></div>
-                    <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled>
+                    <input class="form-control form-control1" type="date" v-model="cardDatePlannedFinish" disabled>
+                    <div class="block-checkbox">
+                      <input class="form-check-input el-checkbox" type="checkbox" value="" id="flexCheckChecked" disabled="disabled">
+                      <label class="form-check-label el-checkbox" for="flexCheckChecked"> 
+                        Устранить в ППР
+                      </label>
+                    </div>
                 </div>
                 <div class="block_data2">
                   <div class="block_input_data"><b>Исполнитель ремонта</b></div>
                     <select class="form-select" aria-label="Default select example" v-model="newWorker_id">
                       <option selected disabled :value=0>Выберите исполнителя ремонта</option>
-                      <option v-for="worker in workers" :value="worker.user_id">{{ worker.user_surname + ' ' + worker.user_name }}</option>
+                      <option v-for="worker in workers" :disabled='isDisabledAcceptDefect' :value="worker.user_id">{{ worker.user_surname + ' ' + worker.user_name }}</option>
                     </select> 
                 </div>
               </div>
@@ -117,35 +123,42 @@
                 </div>
               </div>
   
+              <div class="modal-footer">
+                <button @click="cancelDefect" :disabled='isDisabledAcceptDefect' class="btn btn-warning" data-bs-target="#CorrectionDefectModalWindow" type="button">Требует корректировки</button>
+                <button @click="acceptDefect" :disabled='isDisabledAcceptDefect' class="btn btn-primary" type="button">Назначить исполнителя</button>
+              </div>
+              <div class="modal-footer"></div>
+
               <div class="block-history">
-                <h3>История дефекта</h3>
+                <h4>История дефекта</h4>
                 <div class="table-responsive small">
                   <table class="table table-striped table-sm">
                     <thead>
                       <tr >
                         <th scope="col">#</th>
-                        <th scope="col">Дата</th>
-                        <th scope="col">Статус</th>
-                        <th scope="col">Ответственное лицо</th>
-                        <th scope="col">Комментарий</th>
+                        <th class="column1" scope="col">Дата</th>
+                        <th class="column2" scope="col">Статус</th>
+                        <th class="column3" scope="col">Ответственное лицо</th>
+                        <th class="column4" scope="col">Комментарий</th>
                       </tr>
                     </thead>
-                    <tbody class="demotable">
-                        <tr v-for="cardHistory in cardHistorys">
-                          <td >{{ cardHistory.history_date }}</td>
-                          <td >{{ cardHistory.history_status }}</td>
-                          <td >{{ cardHistory.history_user.user_surname }}</td>
-                          <td >{{ cardHistory.history_comment }}</td>
-                        </tr>
-                    </tbody>
                   </table>
+                    <div class="scroll-table-body">
+                      <table class="table table-striped table-sm">
+                        <tbody class="demotable">
+                            <tr v-for="cardHistory in cardHistorys">
+                              <td class="column1">{{ cardHistory.history_date }}</td>
+                              <td class="column2">{{ cardHistory.history_status }}</td>
+                              <td class="column3">{{ cardHistory.history_user.user_surname }}</td>
+                              <td class="column4">{{ cardHistory.history_comment }}</td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
                 </div>
               </div>
   
-              <div class="modal-footer">
-                <button @click="cancelDefect" class="btn btn-warning" data-bs-target="#CorrectionDefectModalWindow" type="button">Требует корректировки</button>
-                <button @click="acceptDefect" class="btn btn-primary" type="button">Назначить исполнителя</button>
-              </div>
+              
             </form>
           </div>
         </div>

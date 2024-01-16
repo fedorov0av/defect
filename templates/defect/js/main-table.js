@@ -1,17 +1,40 @@
 
 const appVueDefect = Vue.createApp({
+  /* components: {
+    VueTailwindPagination,
+  }, */
     data() {
       return {
         colunmsName: ['№', 'Дата регистрации', 'Срок устранения', 'Подразделение-владелец', 'KKS', 'Оборудование', 'Описание дефекта', 'Статус',  'Ответственный'],
         defect_divisions: {},
         defect_type_defects: {},
         defects: {},
+/*         currentPage: 1,
+        perPage: 2,
+        total: 100, */
       }
     },
+
     mounted() {
-      this.updateTableDefect()
+      this.updateTableDefect();
+      this.currentPage = 1;
+      /* this.getData(this.currentPage); */
     },  /* mounted */
-    methods: {
+    methods: {    
+/*       async getData(pageNumber) {
+        var response = await axios.get(
+          `/defects=${pageNumber}`
+        );
+        var responseData = response.defects;
+        this.currentPage = responseData.page;
+        this.perPage = responseData.per_page;
+        this.total = responseData.total;
+        this.data = response.defects.defects;
+      },
+      onPageClick(event){
+        this.currentPage = event;
+        this.getData(this.currentPage);
+      },   */
       updateTables(){
         this.updateTableDefect()
       },
@@ -20,7 +43,7 @@ const appVueDefect = Vue.createApp({
         .post('/defects',)
         .then(response => {
             this.defects = response.data;
-            console.log(this.defects);
+            /* console.log(this.defects); */
               }) /* axios */
       }, /* updateTableDefect */
       handleDoubleClick (event){
@@ -93,6 +116,6 @@ const appVueDefect = Vue.createApp({
         }
         
       }, /* handleDoubleClick */
-      },
-      },
-    ).mount('#vueDefect')
+    },
+  },
+).mount('#vueDefect')

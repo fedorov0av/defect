@@ -8,7 +8,7 @@ const app = Vue.createApp({
     }
   },
   methods: {
-    createPost(event = NaN) {
+    createPost(event = NaN) { 
       this.postData.email = this.email;
       this.postData.password = this.password;
       console.log(this.postData);
@@ -23,10 +23,10 @@ const app = Vue.createApp({
       })
       .catch(err => {
       if (err.request.status == 401) {
-        Swal.fire({html:"<b>Неправильный логин или пароль!</b>", heightAuto: false}); 
+        Swal.fire({html:"<b>Неправильный логин или пароль</b>", heightAuto: false}); 
       }
       if (err.request.status == 403) {
-        Swal.fire({html:"<b>Неправильный пароль!</b>", heightAuto: false}); 
+        Swal.fire({html:"<b>Неправильный пароль</b>", heightAuto: false}); 
       }
       });
       console.log(this.responseData)

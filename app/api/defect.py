@@ -23,7 +23,7 @@ from sqlalchemy.exc import NoResultFound, MissingGreenlet, IntegrityError
 from app.schemas.user import User_p, User_id
 from app.schemas.defect import New_defect_p, Defect_id
 from app.schemas.status_defect import StatusDefect_name
-from app.schemas.other import Date_p, Division_id, Сomment, Status_id
+from app.schemas.other import Date_p, Division_id, Сomment, Status_id, Filter
 
 STATUS_REGISTRATION = 1
 STATUS_CONFIRM = 2
@@ -74,7 +74,7 @@ async def get_defects(session: AsyncSession = Depends(get_db)):
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                 'defect_registrar': defect.defect_registrar.user_surname,
                 'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
-                'defect_owner': defect.defect_system.system_name,
+                'defect_owner': defect.defect_division.division_name,
                 'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
                                           'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
                                           } ,
@@ -99,7 +99,7 @@ async def get_defects(defect_id: Defect_id, session: AsyncSession = Depends(get_
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                 'defect_registrar': defect.defect_registrar.user_surname,
                 'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
-                'defect_owner': defect.defect_system.system_name,
+                'defect_owner': defect.defect_division.division_name,
                 'defect_repair_manager': defect.defect_repair_manager,
                 'defect_worker': defect.defect_worker,
                 'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
@@ -125,7 +125,15 @@ async def get_defects(defect_id: Defect_id,
     user: User = await User.get_user_by_id(session, int(user_id))
     repair_manager: User = await User.get_user_by_id(session, int(repair_manager_id.user_id))
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
-    defect_planned_finish_date = datetime.strptime(defect_planned_finish_date_str.date, "%d.%m.%Y").date() #    2023-12-23
+    #'defect_created_at':         defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
+    #defect_planned_finish_date = datetime.strptime(defect_planned_finish_date_str.date, "%d.%m.%Y").date() #    2023-12-23
+    defect_planned_finish_date = datetime.strptime(defect_planned_finish_date_str.date, "%Y-%m-%d").date() #    2023-12-23
+    #defect_planned_finish_date = datetime.strptime(defect_planned_finish_date_str.date, "%Y-%m-%d").date() #    2023-12-23
+    #defect_planned_finish_date = datetime.strftime(defect_planned_finish_date_str, "%d-%m-%Y")
+    #defect_planned_finish_date = defect_planned_finish_date_str.strptime("%Y-%m-%d").date()
+
+
+
     division: Division = await Division.get_division_by_id(session, division_id.division_id)
     status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
 
@@ -195,17 +203,21 @@ async def get_defects(defect_id: Defect_id,
     return defect
 
 @defect_router.post("/get_defect_by_filter/")
-async def get_defects(division_id: Division_id = None, date_start: Date_p = None, date_end: Date_p = None, status_id: Status_id = None, session: AsyncSession = Depends(get_db)):
-
-
-
-    return  {
+async def get_defects(  filter: Filter, 
+                        session: AsyncSession = Depends(get_db)):
+    result: list[Defect] = await Defect.get_defects_by_filter(session,filter.division_id, filter.date_start, filter.date_end, filter.status_id)
+    defects_with_filters = list()
+    for defect in result:
+        defects_with_filters.append(
+            {
                 "defect_id": defect.defect_id,
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                 'defect_registrar': defect.defect_registrar.user_surname,
                 'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
-                'defect_owner': defect.defect_system.system_name,
-                'defect_repair_manager': defect.defect_repair_manager,
+                'defect_owner': defect.defect_division.division_name,
+                'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
+                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
+                                          } ,
                 'defect_worker': defect.defect_worker,
                 'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
                 "defect_description": defect.defect_description,
@@ -216,3 +228,5 @@ async def get_defects(division_id: Division_id = None, date_start: Date_p = None
                 "defect_system": defect.defect_system,
                 "defect_system_kks": defect.defect_system.system_kks,
             }
+        )
+    return defects_with_filters

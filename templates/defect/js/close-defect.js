@@ -18,6 +18,7 @@ const appCloseDefect = Vue.createApp({
         repair_managers: {},
         workers: {},
 
+        isDisabledCloseDefect: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -66,6 +67,17 @@ const appCloseDefect = Vue.createApp({
     /* mounted() {
       this.updateTables()
     }, */
+    beforeMount() {
+      axios
+      .post('/user/user_role')
+      .then(response => {
+          this.currentUser = response.data;
+          this.currentUserRole = this.currentUser.user_role;
+          if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Владелец') {
+            this.isDisabledCloseDefect = true;
+          }
+        })
+    },
     methods: {
       updateTables() {
         this.updateTableDivision();
@@ -161,15 +173,11 @@ const appCloseDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       closeDefect() {
-        if (this.cardWorker == '') {
-          Swal.fire({html:"<b>ИСПОЛНИТЕЛЬ РЕМОНТА!</b>", heightAuto: false}); 
-          return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
-        }
         Swal.fire({
           title: "Закрыть дефект?",
           showDenyButton: true,
-          confirmButtonText: "ПОДТВЕРЖДАЮ!",
-          denyButtonText: `ОТМЕНА!`
+          confirmButtonText: "ПОДТВЕРЖДАЮ",
+          denyButtonText: `ОТМЕНА`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
@@ -177,7 +185,7 @@ const appCloseDefect = Vue.createApp({
             axios
             .post('/update_status_defect', data)
             .then(response => {
-                document.getElementById('closeCheckModalWindow').click();
+                document.getElementById('closeCloseDefectModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
                 Swal.fire("ДЕФЕКТ ЗАКРЫТ", "", "success");

@@ -1,12 +1,32 @@
 const appVueNav = Vue.createApp({
-    data() {
-      return {
-        currentUser: {},
-      }
+  data() {
+    return {
+      currentUserRole: '',
+      isDisabledAddDefect: false,
+      isHiddenUsers: false 
+    }
+  },
+  methods: { 
+    showModalUsers(){
+      appVueUser.updateAllTables();
     },
-    methods: {
-      showModalUsers(){
-          appVueUser.updateAllTables();
-      },
-    },
-  }).mount('#vueNav')
+  },
+  beforeMount() {
+    axios
+    .post('/user/user_role')
+    .then(response => {
+        this.currentUser = response.data;
+        this.currentUserRole = this.currentUser.user_role;
+        if (this.currentUserRole != 'Администратор') {
+          this.isHiddenUsers = true;
+        }
+        if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Регистратор') {
+          this.isDisabledAddDefect = true;
+        }
+        console.log('Роль пользователя в системе: ' + this.currentUser.user_role);
+      })
+  },
+}).mount('#vueNav');
+
+
+/* ['Регистратор', 'Владелец', 'Руководитель', 'Исполнитель', 'Инспектор', 'Администратор'] */

@@ -42,7 +42,7 @@ const appVueAddDefect = Vue.createApp({
         .post('/divisions',)
         .then(response => {
             this.defect_divisions = response.data;
-            console.log(this.defect_divisions);
+            /* console.log(this.defect_divisions); */
               }) /* axios */
       }, /* updateTableDivision */
       updateTableTypeDefect() {
@@ -50,12 +50,12 @@ const appVueAddDefect = Vue.createApp({
         .post('/type_defect',)
         .then(response => {
             this.defect_type_defects = response.data;
-            console.log(this.defect_type_defects);
+            /* console.log(this.defect_type_defects); */
               }) /* axios */
       }, /* updateTableTypeDefect */
       addNewDefect() {
-        if (this.newSystemName == '' || this.newDefectNotes == '' || this.newTypeDefect == '' || this.newLocation == ''){
-              Swal.fire({html:"<b>Все значения (кроме KSS) должны быть заполнены!</b>", heightAuto: false}); 
+        if (this.newSystemName == '' || this.newDefectNotes == '' || this.newTypeDefect == ''){
+              Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены</b>", heightAuto: false}); 
         } /* if */
         else {
           axios
@@ -70,12 +70,12 @@ const appVueAddDefect = Vue.createApp({
           )
           .then(response => {
               console.log(response.data);
-              Swal.fire({html:"<b>Дефект добавлен!</b>", heightAuto: false}); 
+              Swal.fire({html:"<b>Дефект добавлен</b>", heightAuto: false}); 
               document.getElementById('closeModalAddDefect').click();
               
                 })
           .catch(err => {
-              Swal.fire({html:"<b>Произошла ошибка при добавлении дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+              Swal.fire({html:"<b>Произошла ошибка при добавлении дефекта. Обратитесь к администратору.</b>", heightAuto: false}); 
               console.log(err);
           }) /* axios */
         } /* else */

@@ -12,15 +12,22 @@
 		<div class="mydatechoise justify-content-center">
 			<div><p class="mylabel">Начало:</p></div>
 			<div class="block_data col-lg-3 col-sm-6">
-				<input id="startDate" class="form-control" type="date" />
+				<input id="startDate" class="form-control" type="date" v-model="startDate"/>
 				<!-- <span id="startDateSelected"></span> -->
 			</div>
 			<div><p class="mylabel">Конец:</p></div>
 			<div class="block_data col-lg-3 col-sm-6">
-				<input id="endDate" class="form-control" type="date" />
+				<input id="endDate" class="form-control" type="date" v-model="endDate"/>
 				<!-- <span id="endDateSelected"></span> -->
 			</div>
 		</div>
+
+		<div class="form-select1 block-checkbox1">
+			<input class="form-check-input el-checkbox el-checkbox1" type="checkbox" value="" id="flexCheckChecked" :disabled='isDisabledConfirmDefect'>
+			<label class="form-check-label el-checkbox" for="flexCheckChecked"> 
+			  Устранить в ППР
+			</label>
+		  </div>
 
 		<select class="form-select form-select1 type-defect" aria-label="Default select example" v-model="filterStatusDefect">
 			<option selected value=0>Статус</option>
@@ -36,7 +43,7 @@
 		</select> -->
 
 		<div><button type="button" @click="useFilter" class="btn btn-primary lastbutton" >Применить</button></div>
-
+		<div class="lastbutton"><button type="button" @click="nouseFilter" class="btn btn-primary" >Очистить фильтры</button></div>
 
 		<!-- <div class="lastbutton">
 			<button @click="hintCloseDefect" type="submit" class="btn btn-primary button-text">

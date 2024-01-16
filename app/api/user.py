@@ -33,6 +33,16 @@ async def read_current_user(request: Request, session: AsyncSession = Depends(ge
             "user_email": user.user_email
             }
 
+@user_router.post("/user/user_role")
+async def read_current_user(request: Request, session: AsyncSession = Depends(get_db)):  
+    token_dec = await decode_token(request.cookies['jwt_access_token'])
+    user_id = await decrypt_user_id(token_dec['subject']['userId'])
+    user: User = await User.get_user_by_id(session, int(user_id))
+    return {
+            "user_id": user.user_id,
+            "user_role": user.user_role[-1].role_name,
+            }
+
 @user_router.post("/user/add")
 async def add_new_user(user_p: User_p, session: AsyncSession = Depends(get_db)):
     division = await Division.get_division_by_name(session, user_p.user_division)
@@ -140,5 +150,35 @@ async def get_worker(session: AsyncSession = Depends(get_db)):
                 'user_role': user.user_role[-1].role_name,
                 "user_email": user.user_email
             }
+        )
+    return user_l
+
+@user_router.post("/user/registrators")
+async def get_registrators(session: AsyncSession = Depends(get_db)):
+    role_registrator: Role = await Role.get_role_by_rolename(session, "Регистратор")
+    result: list[User] = await User.get_user_by_role(session, role_registrator)
+    user_l = list()
+    for user in result:
+        user_l.append(
+            {
+                "user_id": user.user_id,
+                'user_surname': user.user_surname,
+                'user_name': user.user_name,
+                'user_fathername': user.user_fathername,
+                'user_position': user.user_position,
+                'user_division': user.user_division.division_name,
+                'user_role': user.user_role[-1].role_name,
+                "user_email": user.user_email
+            }
+        )
+    return user_l
+
+@user_router.post("/users/emails")
+async def get_users_emails(session: AsyncSession = Depends(get_db)):
+    result: list[User] = await User.get_all_users(session)
+    user_l = list()
+    for user in result:
+        user_l.append(
+            user.user_email
         )
     return user_l

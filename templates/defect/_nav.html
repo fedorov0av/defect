@@ -2,20 +2,29 @@
 <nav id="vueNav" class="navbar">
 	<form class="container-fluid justify-content-start">
 	  <div class="btn-group">
-		<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#AddDefectModalWindow">
+		<button type="button" :disabled='isDisabledAddDefect' class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#AddDefectModalWindow">
 		  Зарегистрировать дефект
 		</button>
 	  </div>
+	  <!-- <div style="width: 700px;"><marquee direction="right" scrollamount="10">Nasdaq +2,34%, Nyse +1,75%, DowJons -0,5%</marquee></div> -->
 	  <div class="lastbutton">
-		<button id="show-modal" @click="showModalUsers" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#UserModalWindow" type="button">
+		<button id="show-modal" :hidden='isHiddenUsers' @click="showModalUsers" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#UserModalWindow" type="button">
 		  Пользователи
 		</button>
 		<transition name="modal">
 		<modal v-if="showModal" @close="showModal = false">
 	  </div> 
-	  <div> 
+<!-- 	  <div> 
 		<button class="btn btn-primary me-2" type="button">Экспорт в Excel</button>
-  <!--       <button @click="logOut" class="btn btn-outline-primary me-2" type="button">LogOut</button> -->
+	  </div> -->
+	  <div class="btn-group">
+		<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+		  Экспорт данных
+		</button>
+		<ul class="dropdown-menu">
+		  <li><a class="dropdown-item" href="#">Экспорт в Excel</a></li>
+		  <li><a class="dropdown-item" href="#">Экспорт в PDF</a></li>
+		</ul>
 	  </div>
 	</form>
   </nav>

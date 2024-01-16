@@ -31,7 +31,7 @@ class Defect(Base):
     defect_worker: Mapped["User"] = relationship(foreign_keys=[defect_worker_id]) #  для работы с таблицей User как с объектом
     defect_planned_finish_date: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=True)  # планируемая дата завершения ремонта
     defect_description: Mapped[str] = mapped_column(String(500)) # Описание дефекта.
-    defect_location: Mapped[str] = mapped_column(String(500)) # Местоположение дефекта.
+    defect_location: Mapped[str] = mapped_column(String(500), nullable=True) # Местоположение дефекта.
     defect_type_id: Mapped[int] = mapped_column(ForeignKey("type_defect.type_defect_id")) # вид дефекта
     defect_type: Mapped["TypeDefect"] = relationship(foreign_keys=[defect_type_id]) #  для работы с таблицей TypeDefect как с объектом
     defect_status_id: Mapped[int] = mapped_column(ForeignKey("status_defect.status_defect_id")) # статус (Этап) дефекта
@@ -111,7 +111,7 @@ class Defect(Base):
         await session.commit() 
 
 
-    @staticmethod
+    """ @staticmethod
     async def get_defects_by_filter(session: AsyncSession, division: Division = None, date_start: str = None,
                                      date_end: str = None, status_defect: StatusDefect = None,):
         query = select(Defect).filter(or_(Defect.defect_division_id.like(division.division_id,),
@@ -124,5 +124,33 @@ class Defect(Base):
                 .options(selectinload(Defect.defect_system)) # запрос к БД
         result = await session.scalars(query)
         defects = result.all()
+        return defects """
+    
+    @staticmethod
+    async def get_defects_by_filter(session: AsyncSession, division_id = None, date_start: str = None, 
+                                date_end: str = None, status_id = None):
+        conditions = []
+
+        if division_id is not None and division_id !=0:
+            conditions.append(Defect.defect_division_id == division_id)
+        if status_id is not None and status_id !=0:
+            conditions.append(Defect.defect_status_id == status_id)
+        if date_start:
+            start_date = datetime.datetime.strptime(date_start, "%Y-%m-%d")
+            conditions.append(Defect.defect_created_at >= start_date)
+        if date_end:
+            end_date = datetime.datetime.strptime(date_end, "%Y-%m-%d")
+            conditions.append(Defect.defect_created_at <= end_date)
+
+        query = select(Defect)
+        if conditions:
+            query = query.filter(*conditions)
+
+        query = query.order_by(Defect.defect_id)\
+                     .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
+                     .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
+                     .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                     .options(selectinload(Defect.defect_system))
+        result = await session.scalars(query)
+        defects = result.all()
         return defects
-        

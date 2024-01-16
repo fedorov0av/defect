@@ -9,6 +9,8 @@ const appConfirmDefect = Vue.createApp({
         repair_managers: {},
         workers: {},
 
+        isDisabledConfirmDefect: false,
+
         modalConfirmDefectModalWindow: Vue.ref('modalConfirmDefectModalWindow'),
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
@@ -57,11 +59,22 @@ const appConfirmDefect = Vue.createApp({
 
       }
     },
+    beforeMount() {
+      axios
+      .post('/user/user_role')
+      .then(response => {
+          this.currentUser = response.data;
+          this.currentUserRole = this.currentUser.user_role;
+          if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Владелец') {
+            this.isDisabledConfirmDefect = true;
+          }
+        })
+    },
     mounted() {
       var myModalEl = document.getElementById('ConfirmDefectModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         console.log(event);
-        appConfirmDefect.clearData();
+        this.clearData();
     })
     },
     methods: {
@@ -120,14 +133,15 @@ const appConfirmDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableTypeDefect */
       updateCardDefect() {
+        
         axios
           .post('/get_defect/',{
             "defect_id": parseInt(this.defect_id),
           })
           .then(response => {
             this.cardDefect = response.data;
-            console.log('this.cardDefect', this.cardDefect);
-
+            console.log('this.cardDefect1111111111111111111111111111', this.cardDefect);
+            console.log('newDate newDate newDate', this.newDate);
             this.cardDefectID = this.cardDefect.defect_id; 
             this.cardStatusDefectName = this.cardDefect.defect_status.status_defect_name; 
             this.cardTypeDefectName = this.cardDefect.defect_type.type_defect_name; 
@@ -140,10 +154,12 @@ const appConfirmDefect = Vue.createApp({
             this.cardDateRegistration = this.cardDefect.defect_created_at;
             this.cardRepairManager = this.cardDefect.defect_repair_manager;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
+            console.log('111', this.cardDefect.defect_planned_finish_date);
+            console.log('222', this.cardDatePlannedFinish);
             this.cardWorker = this.cardDefect.defect_worker;
             this.newDivisionOwner_id = this.cardDefect.defect_division ? this.cardDefect.defect_division.division_id : 0;
             this.newRepairManager_id = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_id : 0;
-            this.newDate = this.cardDefect.defect_planned_finish_date ? this.cardDefect.defect_planned_finish_date : null;
+            this.newDate = this.cardDefect.defect_planned_finish_date ? this.cardDefect.defect_planned_finish_date  : null;
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -165,21 +181,28 @@ const appConfirmDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       confirmDefect() {
-        if (this.newDate == null || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0 || this.newDate == '' ) {
-          Swal.fire({html:"<b>Не все поля заполнены!</b>", heightAuto: false}); 
+        console.log('333' + this.newDate); 
+        //this.newDate = this.cardDatePlannedFinish ? this.cardDatePlannedFinish  : null;
+        console.log('334' + this.cardDatePlannedFinish); 
+        if (this.cardDatePlannedFinish == null || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0 || this.cardDatePlannedFinish == '' ) {
+          console.log('444' + this.cardDatePlannedFinish)
+          Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
         tempDate = this.cardDateRegistration.split(' ')[0].split('-')
+        console.log("551" + this.cardDateRegistration)
+        console.log("552" + tempDate)
         cardDateRegistration = tempDate[2] + '-'+tempDate[1]+'-'+tempDate[0]
-        if (this.newDate <= cardDateRegistration ) {
-          Swal.fire({html:"<b>Планируемя дата завершения должна быть позже даты регистрации!</b>", heightAuto: false}); 
+        console.log("553" + cardDateRegistration)
+        if (this.cardDatePlannedFinish <= cardDateRegistration ) {
+          Swal.fire({html:"<b>Срок устранения должен быть позже даты регистрации дефекта</b>", heightAuto: false}); 
           return;  /* Если планируемая дата меньше даты то выходим из функции */
         }
         Swal.fire({
           title: "Вы действительно хотите подтвердить дефект?",
           showDenyButton: true,
-          confirmButtonText: "ПОДТВЕРЖДАЮ!",
-          denyButtonText: `ОТМЕНА!`
+          confirmButtonText: "ПОДТВЕРЖДАЮ",
+          denyButtonText: `ОТМЕНА`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
@@ -194,23 +217,23 @@ const appConfirmDefect = Vue.createApp({
                 "user_id": parseInt(this.newRepairManager_id)
               },
               "defect_planned_finish_date_str": {
-                "date": this.newDate
+                "date": this.cardDatePlannedFinish
               },
               "division_id": {
                 "division_id": parseInt(this.newDivisionOwner_id)
               }
             }
-            axios
+            
             axios
             .post('/confirm_defect', data)
             .then(response => {
                 document.getElementById('closeConfirmDefectModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("ДЕФЕКТ ПОДТВЕРЖДЕН!", "", "success");
+                Swal.fire("Дефект подтвержден", "", "success");
                   }) /* axios */
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ПОДТВЕРЖДЕНИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    Swal.fire({html:"<b>Произошла ошибка при ПОДТВЕРЖДЕНИИ ДЕФЕКТА. Обратитесь к администратору.</b>", heightAuto: false}); 
                     console.log(err);
                 }) /* axios */
           }
@@ -220,8 +243,8 @@ const appConfirmDefect = Vue.createApp({
         Swal.fire({
           title: "Вы действительно хотите отменить дефект?",
           showDenyButton: true,
-          confirmButtonText: "ДА!",
-          denyButtonText: `НЕТ!`
+          confirmButtonText: "ДА",
+          denyButtonText: `НЕТ`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
@@ -232,7 +255,7 @@ const appConfirmDefect = Vue.createApp({
                 document.getElementById('closeConfirmDefectModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("ДЕФЕКТ ОТМЕНЕН!", "", "success");
+                Swal.fire("ДЕФЕКТ ОТМЕНЕН", "", "success");
                   }) /* axios */
             .catch(err => {
                     Swal.fire({html:"<b>Произошла ошибка при ОТМЕНЫ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 

@@ -17,6 +17,7 @@ const appExecutionDefect = Vue.createApp({
         repair_managers: {},
         workers: {},
 
+        isDisabledExecutionDefect: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -65,6 +66,17 @@ const appExecutionDefect = Vue.createApp({
     /* mounted() {
       this.updateTables()
     }, */
+    beforeMount() {
+      axios
+      .post('/user/user_role')
+      .then(response => {
+          this.currentUser = response.data;
+          this.currentUserRole = this.currentUser.user_role;
+          if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Исполнитель') {
+            this.isDisabledExecutionDefect = true;
+          }
+        })
+    },
     methods: {
       updateTables() {
         this.updateTableDivision();

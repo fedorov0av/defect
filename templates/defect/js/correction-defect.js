@@ -44,14 +44,14 @@ const appCorrectionDefect = Vue.createApp({
         }, /* updateTableStatusDefect */
         cancelDefect(event) {
           if (this.cardComment == '') {
-            Swal.fire({html:"<b>Отсутствует комментарий!</b>", heightAuto: false}); 
+            Swal.fire({html:"<b>Отсутствует комментарий</b>", heightAuto: false}); 
             return;  /* Если комментарий не заполнен, то выходим из функции */
           }
           Swal.fire({
             title: "Вы действительно хотите отправить дефект на корректировку?",
             showDenyButton: true,
-            confirmButtonText: "ДА!",
-            denyButtonText: `НЕТ!`
+            confirmButtonText: "ДА",
+            denyButtonText: `НЕТ`
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
@@ -72,7 +72,7 @@ const appCorrectionDefect = Vue.createApp({
                   document.getElementById('closeCorrectionDefectModalWindow').click();
                   appVueDefect.updateTables()
                   console.log(response.data);
-                  Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ!", "", "success");
+                  Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ", "", "success");
                   document.getElementById(this.parent_button_close_modal_name).click();
                     }) /* axios */
               .catch(err => {
