@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request
-from fastapi_jwt import JwtAccessBearerCookie, JwtAuthorizationCredentials, JwtRefreshBearer, JwtAccessBearer
+from fastapi import APIRouter, Depends, Request
 from utils.jwt import access_security, refresh_security, encrypt_user_id, decrypt_user_id, decode_token
-
+from fastapi_pagination import Page, add_pagination
+from fastapi_pagination.ext.sqlalchemy import paginate
+from sqlalchemy import ForeignKey, Integer, Text, String, func, select, Boolean, or_
+from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 
 from datetime import timedelta, datetime
 from typing import Union, Optional
@@ -21,7 +23,7 @@ from db.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound, MissingGreenlet, IntegrityError
 from app.schemas.user import User_p, User_id
-from app.schemas.defect import New_defect_p, Defect_id
+from app.schemas.defect import New_defect_p, Defect_id, Defects_output
 from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Date_p, Division_id, Сomment, Status_id, Filter
 
@@ -63,7 +65,7 @@ async def add_new_defect(defect_p: New_defect_p, request: Request, session: Asyn
     return defect
 
 
-@defect_router.post("/defects/")
+@defect_router.post("/defects_temp/")
 async def get_defects(session: AsyncSession = Depends(get_db)):
     result: list[Defect] = await Defect.get_all_defect(session)
     defect_l = list()
@@ -79,7 +81,7 @@ async def get_defects(session: AsyncSession = Depends(get_db)):
                                           'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
                                           } ,
                 'defect_worker': defect.defect_worker,
-                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
+                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%Y-%m-%d") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
@@ -102,7 +104,7 @@ async def get_defects(defect_id: Defect_id, session: AsyncSession = Depends(get_
                 'defect_owner': defect.defect_division.division_name,
                 'defect_repair_manager': defect.defect_repair_manager,
                 'defect_worker': defect.defect_worker,
-                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
+                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%Y-%m-%d") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
@@ -230,3 +232,36 @@ async def get_defects(  filter: Filter,
             }
         )
     return defects_with_filters
+
+
+
+##############################################################
+@defect_router.post("/defects/" , response_model=Page[Defects_output]) # для тестирования пагинации
+async def get_defects(session: AsyncSession = Depends(get_db)):
+    return await paginate(
+        session,
+        select(Defect).order_by(Defect.defect_id)\
+                .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
+                .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
+                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                .options(selectinload(Defect.defect_system)),
+        transformer=lambda defects: [{"defect_id": defect.defect_id,
+                'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
+                'defect_registrar': defect.defect_registrar.user_surname,
+                'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
+                'defect_owner': defect.defect_division.division_name,
+                'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
+                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
+                                          } ,
+                'defect_worker': defect.defect_worker,
+                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
+                "defect_description": defect.defect_description,
+                "defect_location": defect.defect_location,
+                "defect_type": defect.defect_type,
+                "defect_status": defect.defect_status,
+                "defect_division": defect.defect_division,
+                "defect_system": defect.defect_system,
+                "defect_system_kks": defect.defect_system.system_kks,} for defect in defects],
+    )
+
+##############################################################

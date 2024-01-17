@@ -205,6 +205,7 @@ const appConfirmDefect = Vue.createApp({
           denyButtonText: `ОТМЕНА`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
+          console.log('557'+this.cardDatePlannedFinish);
           if (result.isConfirmed) {
             data = {
               "defect_id": {
@@ -218,6 +219,7 @@ const appConfirmDefect = Vue.createApp({
               },
               "defect_planned_finish_date_str": {
                 "date": this.cardDatePlannedFinish
+                
               },
               "division_id": {
                 "division_id": parseInt(this.newDivisionOwner_id)

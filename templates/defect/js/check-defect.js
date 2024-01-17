@@ -190,8 +190,8 @@ const appCheckDefect = Vue.createApp({
         Swal.fire({
           title: "Вы подтверждаете, что дефект устранен?",
           showDenyButton: true,
-          confirmButtonText: "ПОДТВЕРЖДАЮ!",
-          denyButtonText: `ОТМЕНА!`
+          confirmButtonText: "ПОДТВЕРЖДАЮ",
+          denyButtonText: `ОТМЕНА`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {

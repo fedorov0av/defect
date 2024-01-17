@@ -179,8 +179,8 @@ const appExecutionDefect = Vue.createApp({
         Swal.fire({
           title: "Вы действительно хотите принять дефект в ремонт?",
           showDenyButton: true,
-          confirmButtonText: "ПРИНИМАЮ!",
-          denyButtonText: `ОТМЕНА!`
+          confirmButtonText: "ПРИНИМАЮ",
+          denyButtonText: `ОТМЕНА`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {

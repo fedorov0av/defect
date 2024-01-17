@@ -43,6 +43,7 @@ const appVueFilter = Vue.createApp({
             )
             .then(response => {
               appVueDefect.defects = response.data;
+              appVueDefect.pages = 0;
               console.log(appVueDefect.defects);
                 }) /* axios */
         }, /* useFilter */
@@ -52,7 +53,7 @@ const appVueFilter = Vue.createApp({
           axios
           .post('/defects',)
           .then(response => {
-              appVueDefect.defects = response.data;
+              appVueDefect.updateTables();
               console.log(appVueDefect.defects);
                 }) /* axios */
         }, /* nouseFilter */

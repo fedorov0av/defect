@@ -155,7 +155,11 @@ const appAcceptDefect = Vue.createApp({
           this.cardRegistrator = this.cardDefect.defect_registrar;
           this.cardDateRegistration = this.cardDefect.defect_created_at;
           this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
+          this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date.replace(/-/g, ".");
+          /* let dateString = this.cardDefect.defect_planned_finish_date;
+          parts = dateString.split("-"); */
           this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
+          console.log('666'+this.cardDatePlannedFinish);
           this.cardWorker = this.cardDefect.defect_worker;
           this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
               })
@@ -180,7 +184,7 @@ const appAcceptDefect = Vue.createApp({
     }, /* updateTableHistory */
     acceptDefect() {
       if (this.newWorker_id == 0) {
-        Swal.fire({html:"<b>Не назначен исполнитель ремонта!</b>", heightAuto: false}); 
+        Swal.fire({html:"<b>Не назначен исполнитель ремонта</b>", heightAuto: false}); 
         return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
       }
       Swal.fire({

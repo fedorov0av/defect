@@ -22,11 +22,13 @@ from app.api.defect import defect_router
 from app.api.type_defect import type_defect_router
 from app.api.history import history_router
 from app.api.status_defect import status_defect_router
-
+from fastapi_pagination import add_pagination
 
 from app.middleware.auth import auth_required
 
 app = FastAPI()
+add_pagination(app)
+
 router = APIRouter()
 router.include_router(auth_router)
 app.include_router(router)

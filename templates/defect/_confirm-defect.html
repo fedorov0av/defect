@@ -90,7 +90,6 @@
                 <div class="block_data2">
                   <div class="block_input_data"><b>Срок устранения</b></div>
                     <input class="form-control form-control1" type="date" v-model="cardDatePlannedFinish">
-                    <input class="form-control form-control1" type="date" v-model="cardDatePlannedFinish">
                     <div class="block-checkbox">
                       <input class="form-check-input el-checkbox" type="checkbox" value="" id="flexCheckChecked" :disabled='isDisabledConfirmDefect'>
                       <label class="form-check-label el-checkbox" for="flexCheckChecked"> 
@@ -151,7 +150,7 @@
                     </thead>
                   </table>
                     <div class="scroll-table-body">
-                      <table class="table table-striped table-sm">
+                      <table class="table table-striped table-sm table-hover">
                         <tbody class="demotable">
                             <tr v-for="cardHistory in cardHistorys">
                               <td class="column1">{{ cardHistory.history_date }}</td>

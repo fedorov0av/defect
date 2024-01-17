@@ -1,6 +1,5 @@
 import datetime
 from sqlalchemy import ForeignKey, Integer, Text, String, func, select, Boolean, or_
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 from sqlalchemy.sql import func
 from sqlalchemy.types import TypeDecorator, DateTime

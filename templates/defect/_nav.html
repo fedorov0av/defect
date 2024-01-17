@@ -1,14 +1,16 @@
 {% raw %}
-<nav id="vueNav" class="navbar">
+<nav id="vueNav" class="navbar block-img">
 	<form class="container-fluid justify-content-start">
 	  <div class="btn-group">
-		<button type="button" :disabled='isDisabledAddDefect' class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#AddDefectModalWindow">
-		  Зарегистрировать дефект
-		</button>
+		<span class="d-inline-block" tabindex="0" data-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Регистратор">
+			<button id="add-button" type="button" :disabled='isDisabledAddDefect' class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#AddDefectModalWindow">
+			Зарегистрировать дефект
+			</button>
+		</span>	
 	  </div>
 	  <!-- <div style="width: 700px;"><marquee direction="right" scrollamount="10">Nasdaq +2,34%, Nyse +1,75%, DowJons -0,5%</marquee></div> -->
 	  <div class="lastbutton">
-		<button id="show-modal" :hidden='isHiddenUsers' @click="showModalUsers" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#UserModalWindow" type="button">
+		<button id="show-modal" :hidden='isHiddenUsers' @click="showModalUsers" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#UserModalWindow" style="width: 190px;" type="button">
 		  Пользователи
 		</button>
 		<transition name="modal">
@@ -18,7 +20,7 @@
 		<button class="btn btn-primary me-2" type="button">Экспорт в Excel</button>
 	  </div> -->
 	  <div class="btn-group">
-		<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+		<button type="button" class="btn btn-primary dropdown-toggle w190" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 4px;">
 		  Экспорт данных
 		</button>
 		<ul class="dropdown-menu">
@@ -30,3 +32,13 @@
   </nav>
 {% endraw %}
 <script src="{{ url_for('defect_js', path='nav.js') }}"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		if($("#add-button").is(":disabled")){
+			$('[data-toggle="popover"]').popover({
+			placement : 'top'
+	  });
+		}
+	});
+</script>

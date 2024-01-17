@@ -11,7 +11,7 @@
 		  </div>
 		  <div class="modal-body">
 			<div class="table-responsive small">
-			  <table class="table table-striped table-sm">
+			  <table class="table table-striped table-sm table-hover">
 				<thead>
 				  <tr>
 					<th v-for="colunmName in colunmsName">{{ colunmName }}</th>
@@ -35,8 +35,8 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button id="show-modal1" @click="updateTableRole" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUserModalWindow" type="button">Добавить</button>
-			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+			<button id="show-modal1" @click="updateTableRole" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUserModalWindow" style="width: 200px" type="button">Добавить</button>
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width: 200px">Закрыть</button>
 		  </div>
 		</div>
 	  </div>
@@ -103,7 +103,7 @@
 	  </div>
 	</div>
 	<!----------------------------------------Модальное окно "Карточка пользователя"------------------------------------------>
-	<div class="modal fade" id="CardUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-target="#myModal">
+	<div class="modal modal1 fade" id="CardUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-target="#myModal">
 	  <div class="modal-dialog">
 		<div class="modal-content">
 		  <div class="modal-header">

@@ -24,17 +24,37 @@
             </tr>
           </tbody>
         </table>
-<!--         <VueTailwindPagination
-          :current="currentPage"
-          :total="total"
-          :per-page="perPage"
-          @page-changed="onPageClick($event)" 
-        /> -->
       </div>
-      <p>Selected page: {{page}}</p>
     </main>
   </div>
+
+  <div class="footer">
+    <div class="footer-left">
+      <select class="form-select" aria-label="Default select example">
+        <option selected>Кол-во записей на странице</option>
+        <option value="1">15</option>
+        <option value="2">30</option>
+        <option value="3">45</option>
+      </select>
+    </div>
+
+    <ul class="pagination justify-content-center" v-if="pages > 1">
+      <li class="page-item" :class="{ disabled: pageNumber == 1 }" @click="changePage">
+        <a class="page-link">Назад</a>
+      </li>
+      <li class="page-item" v-for="n in pages"><a class="page-link" :class="{ active: n == pageNumber }" @click="changePage" :value="n">{{ n }}</a></li>
+      <li class="page-item" :class="{ disabled: pageNumber == pages }">
+        <a class="page-link" @click="changePage">Вперед</a>
+      </li>
+    </ul>
+
+    <div class="footer-right">
+      <span>Разработано ЦИКТ АККУЮ НУКЛЕАР</span>
+    </div>
+
+  </div>
 </div>
+
 
 {% endraw %}
 

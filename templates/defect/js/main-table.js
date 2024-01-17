@@ -9,6 +9,11 @@ const appVueDefect = Vue.createApp({
         defect_divisions: {},
         defect_type_defects: {},
         defects: {},
+        pageNumber: 1,
+        pageSize: 10,
+        pages: 0,
+        temp_resp: {},
+        nextPageNumber: 0,
 /*         currentPage: 1,
         perPage: 2,
         total: 100, */
@@ -40,9 +45,13 @@ const appVueDefect = Vue.createApp({
       },
       updateTableDefect() {
         axios
-        .post('/defects',)
+        .post('/defects', null, { params:{'page': 1, 'size': 10}})
         .then(response => {
-            this.defects = response.data;
+            this.temp_resp = response.data;
+            this.pageNumber = response.data.page;
+            this.pageSize = response.data.size;
+            this.pages = response.data.pages;
+            this.defects = response.data.items;
             /* console.log(this.defects); */
               }) /* axios */
       }, /* updateTableDefect */
@@ -105,7 +114,7 @@ const appVueDefect = Vue.createApp({
           })
           myModal.show()
         }
-        if (status_name == "Закрыт") {
+        if (status_name == "Закрыт" || status_name == "Отменен") {
           console.log(defect_id);
           appCardDefect.defect_id = defect_id;
           appCardDefect.updateTables()
@@ -116,6 +125,27 @@ const appVueDefect = Vue.createApp({
         }
         
       }, /* handleDoubleClick */
+      changePage (event){
+        console.log(event)
+        if (event.target.text == 'Вперед'){
+          this.nextPageNumber = this.pageNumber + 1;
+        }
+        else if (event.target.text == 'Назад'){
+          this.nextPageNumber = this.pageNumber - 1;
+        } else {
+          this.nextPageNumber = parseInt(event.target.text);
+        }
+        axios
+        .post('/defects', null, { params:{'page': this.nextPageNumber, 'size': 10}})
+        .then(response => {
+            this.temp_resp = response.data;
+            this.pageNumber = response.data.page;
+            this.pageSize = response.data.size;
+            this.pages = response.data.pages;
+            this.defects = response.data.items;
+            /* console.log(this.defects); */
+              }) /* axios */
+      }, /* changePage */
     },
   },
 ).mount('#vueDefect')

@@ -173,14 +173,14 @@ const appFinishWorkDefect = Vue.createApp({
       }, /* updateTableHistory */
       finishworkDefect() {
         if (this.cardWorkerDescription == '') {
-          Swal.fire({html:"<b>Не заполнен комментарий о выполненных работах!</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Не заполнен комментарий о выполненных работах</b>", heightAuto: false}); 
           return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
         }
         Swal.fire({
           title: "Вы подверждаете, что работы завершены?",
           showDenyButton: true,
-          confirmButtonText: "ПОДТВЕРЖДАЮ!",
-          denyButtonText: `ОТМЕНА!`
+          confirmButtonText: "ПОДТВЕРЖДАЮ",
+          denyButtonText: `ОТМЕНА`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
@@ -201,7 +201,7 @@ const appFinishWorkDefect = Vue.createApp({
                 document.getElementById('closeFinishWorkModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("РАБОТЫ ПО ДЕФЕКТУ ЗАВЕРШЕНЫ!", "", "success");
+                Swal.fire("РАБОТЫ ПО ДЕФЕКТУ ЗАВЕРШЕНЫ", "", "success");
                   }) /* axios */
             .catch(err => {
                     Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 

@@ -2,17 +2,16 @@
 <html lang="ru" data-bs-theme="auto">
 <head>
 	<!-- Подключиение js-файла фреймворка Bootstrap 3 -->
+	<script src="{{ url_for('static_js', path='popper.min.js') }}"></script>
 	<link href="{{ url_for('static_css', path='bootstrap.min.css') }}" rel="stylesheet" crossorigin="anonymous">
 	<script src="{{ url_for('static_js', path='jquery.min.js') }}"></script>
-
-	<script src="{{ url_for('static_js', path='vue-tailwind-pagination.umd.min.js') }}"></script>
-	<script src="{{ url_for('static_js', path='v-page.js') }}"></script>
 
 	<script src="{{ url_for('static_js', path='sweetalert2.js') }}"></script>
 	<script src="{{ url_for('static_js', path='defect-color-modes.js') }}"></script>
 	<script src="{{ url_for('static_js', path='vue3.js') }}"></script>
 	<script src="{{ url_for('static_js', path='axios.min.js') }}"></script>
 	<script src="{{ url_for('static_js', path='moment.min.js') }}"></script>
+	
 	
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,19 +49,5 @@
 <script src="{{ url_for('static_js', path='defect-bootstrap.bundle.min.js') }}" crossorigin="anonymous"></script>
 <script src="{{ url_for('static_js', path='chart.umd.js') }}" crossorigin="anonymous"></script>
 
-<!-- <script>
-	let startDate = document.getElementById('startDate')
-	let endDate = document.getElementById('endDate')
-
-	startDate.addEventListener('change',(e)=>{
-		let startDateVal = e.target.value
-		document.getElementById('startDateSelected').innerText = startDateVal
-	})
-
-	endDate.addEventListener('change',(e)=>{
-		let endDateVal = e.target.value
-		document.getElementById('endDateSelected').innerText = endDateVal
-	})  
-</script>-->
 </html>
 
