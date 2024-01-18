@@ -1,4 +1,3 @@
-
 const appVueDefect = Vue.createApp({
   /* components: {
     VueTailwindPagination,
@@ -10,46 +9,28 @@ const appVueDefect = Vue.createApp({
         defect_type_defects: {},
         defects: {},
         pageNumber: 1,
-        pageSize: 10,
+        pageSize: 15,
         pages: 0,
         temp_resp: {},
         nextPageNumber: 0,
-/*         currentPage: 1,
-        perPage: 2,
-        total: 100, */
       }
     },
 
     mounted() {
       this.updateTableDefect();
       this.currentPage = 1;
-      /* this.getData(this.currentPage); */
+      
     },  /* mounted */
     methods: {    
-/*       async getData(pageNumber) {
-        var response = await axios.get(
-          `/defects=${pageNumber}`
-        );
-        var responseData = response.defects;
-        this.currentPage = responseData.page;
-        this.perPage = responseData.per_page;
-        this.total = responseData.total;
-        this.data = response.defects.defects;
-      },
-      onPageClick(event){
-        this.currentPage = event;
-        this.getData(this.currentPage);
-      },   */
       updateTables(){
         this.updateTableDefect()
       },
       updateTableDefect() {
         axios
-        .post('/defects', null, { params:{'page': 1, 'size': 10}})
+        .post('/defects', null, { params:{'page': 1, 'size': parseInt(this.pageSize)}})
         .then(response => {
             this.temp_resp = response.data;
             this.pageNumber = response.data.page;
-            this.pageSize = response.data.size;
             this.pages = response.data.pages;
             this.defects = response.data.items;
             /* console.log(this.defects); */
@@ -132,18 +113,19 @@ const appVueDefect = Vue.createApp({
         }
         else if (event.target.text == 'Назад'){
           this.nextPageNumber = this.pageNumber - 1;
+        }
+        else if (event.target.tagName == 'SELECT'){
+          this.nextPageNumber = 1;
         } else {
           this.nextPageNumber = parseInt(event.target.text);
         }
         axios
-        .post('/defects', null, { params:{'page': this.nextPageNumber, 'size': 10}})
+        .post('/defects', null, { params:{'page': this.nextPageNumber, 'size': parseInt(this.pageSize)}})
         .then(response => {
             this.temp_resp = response.data;
             this.pageNumber = response.data.page;
-            this.pageSize = response.data.size;
             this.pages = response.data.pages;
             this.defects = response.data.items;
-            /* console.log(this.defects); */
               }) /* axios */
       }, /* changePage */
     },

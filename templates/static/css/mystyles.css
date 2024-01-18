@@ -365,8 +365,20 @@
 }
 
 .footer-left {
-  max-width: 300px;
+  display: flex;
+  flex-direction: row;
   margin-left: 25px;
+}
+
+.footer-left-span {
+  width: 220px;
+  height: 38px;
+  padding-top: 5px;
+}
+
+.footer-left-select {
+  width: 80px;
+  height: 38px;
 }
 
 .footer-right {

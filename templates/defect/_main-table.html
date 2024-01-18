@@ -30,11 +30,11 @@
 
   <div class="footer">
     <div class="footer-left">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Кол-во записей на странице</option>
-        <option value="1">15</option>
-        <option value="2">30</option>
-        <option value="3">45</option>
+      <span class="footer-left-span">Кол-во записей на странице:</span>
+      <select class="form-select footer-left-select" aria-label="Default select example" v-model="pageSize" @change="changePage">
+        <option value=15>15</option>
+        <option value=30>30</option>
+        <option value=45>45</option>
       </select>
     </div>
 

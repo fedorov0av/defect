@@ -5,12 +5,24 @@ const appVueNav = Vue.createApp({
       isDisabledAddDefect: false,
       isHiddenUsers: false 
     }
-  },
+  }, 
+  mounted() {
+    this.setPopover();
+  },  /* mounted */
   methods: { 
     showModalUsers(){
       appVueUser.updateAllTables();
     },
-  },
+    setPopover(){
+      $(document).ready(function(){
+        if($("#add-button").is(":disabled")){
+          $('[data-toggle="popover"]').popover({
+          placement : 'top'
+        });
+        }
+      });
+    } /* setPopover */
+  },  
   beforeMount() {
     axios
     .post('/user/user_role')

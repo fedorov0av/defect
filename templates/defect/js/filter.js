@@ -70,9 +70,9 @@ const appVueFilter = Vue.createApp({
         }, /* methods */
         
     mounted() {
-        this.useFilter()
-        this.updateAllTables()
-        this.updateTableStatusDefect()
+      this.useFilter()
+      this.updateAllTables()
+      this.updateTableStatusDefect()
     }, /* mounted */
       },
   ).mount('#vueFilter')

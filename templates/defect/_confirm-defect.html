@@ -89,9 +89,9 @@
               <div class="block_row">
                 <div class="block_data2">
                   <div class="block_input_data"><b>Срок устранения</b></div>
-                    <input class="form-control form-control1" type="date" v-model="cardDatePlannedFinish">
+                    <input id="date" class="form-control form-control1" :class="{ hidden: toggle == 'true' }" type="date" v-model="cardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='toggle == "true"'>
                     <div class="block-checkbox">
-                      <input class="form-check-input el-checkbox" type="checkbox" value="" id="flexCheckChecked" :disabled='isDisabledConfirmDefect'>
+                      <input class="form-check-input el-checkbox" type="checkbox" id="changeCheckbox" v-model="toggle" true-value=true false-value=false :disabled='isDisabledConfirmDefect'>
                       <label class="form-check-label el-checkbox" for="flexCheckChecked"> 
                         Устранить в ППР
                       </label>
@@ -130,10 +130,13 @@
               </div>
   
               <div class="modal-footer">
-                <button @click="cancelDefect" :disabled='isDisabledConfirmDefect' class="btn btn-primary" type="button">Отменить дефект</button>
-                <button @click="confirmDefect" :disabled='isDisabledConfirmDefect' class="btn btn-primary" type="button">Подтвердить дефект</button>
+                <span class="d-inline-block" tabindex="0" data-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
+                  <button @click="cancelDefect" :disabled='isDisabledConfirmDefect' class="btn btn-primary" type="button">Отменить дефект</button>
+                </span>
+                <span class="d-inline-block" tabindex="0" data-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
+                  <button @click="confirmDefect" :disabled='isDisabledConfirmDefect' class="btn btn-primary" type="button">Подтвердить дефект</button>
+                </span>
               </div>
-              <div class="modal-footer"></div>
               
               <div class="block-history">
                 <h4>История дефекта</h4>
@@ -159,7 +162,7 @@
                               <td class="column4">{{ cardHistory.history_comment }}</td>
                             </tr>
                         </tbody>
-                      </table>
+                      </table> 
                     </div>
                 </div>
               </div>
@@ -170,16 +173,20 @@
         </div>
       </div>
     </div>
+
   </div>
   {% endraw %}
   <script src="{{ url_for('defect_js', path='confirm-defect.js') }}"></script>
 
-  <script>
-  /*   $('#flexCheckChecked').change(function() {
-    $('#date').prop("disabled", this.checked);
+  <!-- <script type="text/javascript">
+    $(document).ready(function() {
+      $('#flexCheckChecked').change(function() {
+        console.log('SDSDSDSDSD')
+        if ($(this).is(":checked")) {
+          $('.block_input_data input[id="date"]').prop("disabled", true);
+        } else {
+          $('.block_input_data input[id="date"]').prop("disabled", false);
+        }
+      });
     });
-
-
-    if($("#flexCheckChecked").is(":checked")){
-      $('#date').attr("disabled", true);} */
-  </script>
+  </script>  -->

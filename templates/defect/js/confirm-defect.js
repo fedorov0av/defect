@@ -8,8 +8,9 @@ const appConfirmDefect = Vue.createApp({
         statuses_defect:{},
         repair_managers: {},
         workers: {},
-
+        toggle: 'false',
         isDisabledConfirmDefect: false,
+        isHiddenDate: false,
 
         modalConfirmDefectModalWindow: Vue.ref('modalConfirmDefectModalWindow'),
 
@@ -75,9 +76,19 @@ const appConfirmDefect = Vue.createApp({
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         console.log(event);
         this.clearData();
+        this.setPopover();
     })
     },
     methods: {
+      setPopover(){
+        $(document).ready(function(){
+          if($("#add-button").is(":disabled")){
+            $('[data-toggle="popover"]').popover({
+            placement : 'top'
+          });
+          }
+        });
+      }, /* setPopover */
       clearData() {
         this.newDivisionOwner_id = 0;
         this.newDate ='';

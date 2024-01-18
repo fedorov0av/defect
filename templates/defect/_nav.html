@@ -32,13 +32,3 @@
   </nav>
 {% endraw %}
 <script src="{{ url_for('defect_js', path='nav.js') }}"></script>
-
-<script type="text/javascript">
-	$(document).ready(function(){
-		if($("#add-button").is(":disabled")){
-			$('[data-toggle="popover"]').popover({
-			placement : 'top'
-	  });
-		}
-	});
-</script>

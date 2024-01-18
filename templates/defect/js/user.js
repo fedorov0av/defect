@@ -179,7 +179,7 @@ const appVueUser = Vue.createApp({
               this.cardUserPosition = user.user_position;
               this.cardUserDivision = user.user_division;
               this.cardUserRole = user.user_role;
-              this.cardUserEmail = user.user_email;
+              this.cardUserEmail = user.user_email; 
 
               var myModal = new bootstrap.Modal(document.getElementById('CardUserModalWindow'), {
                 keyboard: false
