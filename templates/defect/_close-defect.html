@@ -123,10 +123,9 @@
             
 
             <div class="modal-footer">
-              <!-- <button @click="dangerDefect" class="btn btn-danger" type="button">Дефект не устранен</button> -->
-              
-              <button @click="closeDefect" :disabled='isDisabledCloseDefect' class="btn btn-success" type="button" id="closeCloseModalWindow1">Закрыть дефект</button>
-              
+              <span class="d-inline-block" tabindex="0" data-toggle="popover_close" data-bs-trigger="hover focus" data-bs-content="Закрыть дефект может только владелец обордования">
+                <button @click="closeDefect" id="closeCloseDefectButton" :disabled='isDisabledCloseDefect' class="btn btn-success" type="button">Закрыть дефект</button>
+              </span>
             </div>
             <div class="modal-footer"></div>
 

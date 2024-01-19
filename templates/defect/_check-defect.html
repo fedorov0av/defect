@@ -107,8 +107,8 @@
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Выполнил проверку</b></div>
-                  <select class="form-select" v-model="newRegistrator_id">
-                    <option selected disabled :value=0 >Выберите регистратора</option>
+                  <select class="form-select" v-model="newCheckerId">
+                    <option selected disabled :value=0 >Выберите проверяющего</option>
                     <option v-for="registrator in registrators" :value="registrator.user_id" :disabled='isDisabledCheckDefect'>{{ registrator.user_surname + ' ' + registrator.user_name }}</option>
                   </select> 
               </div>
@@ -121,8 +121,12 @@
             </div>
 
             <div class="modal-footer">
-              <button @click="dangerDefect" :disabled='isDisabledCheckDefect' class="btn btn-danger" type="button">Дефект не устранен</button>
-              <button @click="successDefect" :disabled='isDisabledCheckDefect' class="btn btn-success" type="button">Дефект устранен</button>
+              <span class="d-inline-block" tabindex="0" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Регистратор дефекта">
+                <button @click="dangerDefect" id="checkDangerDefectButton" :disabled='isDisabledCheckDefect' class="btn btn-danger" type="button">Дефект не устранен</button>
+              </span>
+              <span class="d-inline-block" tabindex="0" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Регистратор дефекта">
+                <button @click="successDefect" id="checkSuccessDefectButton" :disabled='isDisabledCheckDefect' class="btn btn-success" type="button">Дефект устранен</button>
+              </span>
             </div>
             <div class="modal-footer"></div>
 

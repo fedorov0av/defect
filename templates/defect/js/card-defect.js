@@ -1,7 +1,7 @@
 const appCardDefect = Vue.createApp({
     data() {
       return {
-        defect_id: 0,
+        defect_id: '0',
         defect_divisions: {},
         defect_type_defects: {},
         statuses_defect:{}, /* ['Зарегистрирован', # 1
@@ -119,7 +119,7 @@ const appCardDefect = Vue.createApp({
       updateCardDefect() {
         axios
           .post('/get_defect/',{
-            "defect_id": parseInt(this.defect_id),
+            "defect_id": this.defect_id,
           })
           .then(response => {
             this.cardDefect = response.data;
@@ -149,7 +149,7 @@ const appCardDefect = Vue.createApp({
       updateTableHistory() {
           axios
           .post('/history_by_defect',{
-            "defect_id": parseInt(this.defect_id),
+            "defect_id": this.defect_id,
           })
           .then(response => {
               this.cardHistorys = response.data;

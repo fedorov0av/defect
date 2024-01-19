@@ -89,9 +89,9 @@
               <div class="block_row">
                 <div class="block_data2">
                   <div class="block_input_data"><b>Срок устранения</b></div>
-                    <input id="date" class="form-control form-control1" :class="{ hidden: toggle == 'true' }" type="date" v-model="cardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='toggle == "true"'>
+                    <input id="date" class="form-control form-control1" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="cardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
                     <div class="block-checkbox">
-                      <input class="form-check-input el-checkbox" type="checkbox" id="changeCheckbox" v-model="toggle" true-value=true false-value=false :disabled='isDisabledConfirmDefect'>
+                      <input class="form-check-input el-checkbox" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false :disabled='isDisabledConfirmDefect'>
                       <label class="form-check-label el-checkbox" for="flexCheckChecked"> 
                         Устранить в ППР
                       </label>
@@ -130,11 +130,11 @@
               </div>
   
               <div class="modal-footer">
-                <span class="d-inline-block" tabindex="0" data-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
-                  <button @click="cancelDefect" :disabled='isDisabledConfirmDefect' class="btn btn-primary" type="button">Отменить дефект</button>
+                <span class="d-inline-block" tabindex="0" data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
+                  <button @click="cancelDefect" id="confirmCancelDefectButton" :disabled='isDisabledConfirmDefect' class="btn btn-primary" type="button">Отменить дефект</button>
                 </span>
-                <span class="d-inline-block" tabindex="0" data-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
-                  <button @click="confirmDefect" :disabled='isDisabledConfirmDefect' class="btn btn-primary" type="button">Подтвердить дефект</button>
+                <span class="d-inline-block" tabindex="0" data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
+                  <button @click="confirmDefect" id="confirmConfirmDefectButton" :disabled='isDisabledConfirmDefect' class="btn btn-primary" type="button">Подтвердить дефект</button>
                 </span>
               </div>
               

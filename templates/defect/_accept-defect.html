@@ -83,9 +83,9 @@
               <div class="block_row">
                 <div class="block_data2">
                   <div class="block_input_data"><b>Срок устранения</b></div>
-                    <input class="form-control form-control1" type="date" v-model="cardDatePlannedFinish" disabled>
-                    <div class="block-checkbox">
-                      <input class="form-check-input el-checkbox" type="checkbox" value="" id="flexCheckChecked" disabled="disabled">
+                    <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
+                    <div class="block-checkbox" :hidden='cardDatePlannedFinish'>
+                      <input class="form-check-input el-checkbox" type="checkbox" value="" id="flexCheckChecked" disabled="disabled" :hidden='cardPPR'>
                       <label class="form-check-label el-checkbox" for="flexCheckChecked"> 
                         Устранить в ППР
                       </label>
@@ -124,8 +124,12 @@
               </div>
   
               <div class="modal-footer">
-                <button @click="cancelDefect" :disabled='isDisabledAcceptDefect' class="btn btn-warning" data-bs-target="#CorrectionDefectModalWindow" type="button">Требует корректировки</button>
-                <button @click="acceptDefect" :disabled='isDisabledAcceptDefect' class="btn btn-primary" type="button">Назначить исполнителя</button>
+                <span class="d-inline-block" tabindex="0" data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
+                  <button @click="cancelDefect" id="acceptCancelDefectButton" :disabled='isDisabledAcceptDefect' class="btn btn-warning" data-bs-target="#CorrectionDefectModalWindow" type="button">Требует корректировки</button>
+                </span>
+                <span class="d-inline-block" tabindex="0" data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
+                  <button @click="acceptDefect" id="acceptAcceptDefectButton" :disabled='isDisabledAcceptDefect' class="btn btn-primary" type="button">Назначить исполнителя</button>
+                </span>
               </div>
               <div class="modal-footer"></div>
 

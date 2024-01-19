@@ -1,7 +1,7 @@
 const appCheckDefect = Vue.createApp({
     data() {
       return {
-        defect_id: 0,
+        defect_id: '0',
         defect_divisions: {},
         defect_type_defects: {},
         statuses_defect:{}, /* ['Зарегистрирован', # 1
@@ -40,7 +40,7 @@ const appCheckDefect = Vue.createApp({
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
-        newRegistrator_id: 0, /* Для хранения ID РЕГИСТРАТОРА в карточке  */
+        newCheckerId: 0, /* Для хранения ID РЕГИСТРАТОРА в карточке  */
 
         cardHistorys: [{
           "history_id": 0,
@@ -79,7 +79,19 @@ const appCheckDefect = Vue.createApp({
           }
         })
     }, 
+    mounted() {
+      this.setPopover();
+    },
     methods: {
+      setPopover(){
+        $(document).ready(function(){
+          if($("#checkDangerDefectButton").is(":disabled") && $("#checkSuccessDefectButton").is(":disabled"))  {
+            $('[data-toggle="popover_check"]').popover({
+            placement : 'top'
+          });
+          }
+        });
+      }, /* setPopover */
       updateTables() {
         this.updateTableDivision();
         this.updateTableTypeDefect();
@@ -141,7 +153,7 @@ const appCheckDefect = Vue.createApp({
       updateCardDefect() {
         axios
           .post('/get_defect/',{
-            "defect_id": parseInt(this.defect_id),
+            "defect_id": this.defect_id,
           })
           .then(response => {
             this.cardDefect = response.data;
@@ -161,7 +173,7 @@ const appCheckDefect = Vue.createApp({
             this.cardRepairManager = this.cardDefect.defect_repair_manager;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker;
-            this.newRegistrator_id = this.cardDefect.defect_registrar ? this.cardDefect.defect_registrar.user_id : 0;
+            this.newCheckerId = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_id : 0;
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -171,7 +183,7 @@ const appCheckDefect = Vue.createApp({
       updateTableHistory() {
           axios
           .post('/history_by_defect',{
-            "defect_id": parseInt(this.defect_id),
+            "defect_id": this.defect_id,
           })
           .then(response => {
               this.cardHistorys = response.data;
@@ -183,9 +195,9 @@ const appCheckDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       successDefect() {
-        if (this.newRegistrator_id == '' || this.newRegistrator_id == 0) {
-          Swal.fire({html:"<b>НЕ ВЫБРАН РЕГИСТРАТОР!</b>", heightAuto: false}); 
-          return;  /* Если РЕГИСТРАТОР не заполнен, то выходим из функции */
+        if (this.newCheckerId == 0) {
+          Swal.fire({html:"<b>НЕ ВЫБРАН ПРОВЕРЯЮЩИЙ!</b>", heightAuto: false}); 
+          return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
         }
         Swal.fire({
           title: "Вы подтверждаете, что дефект устранен?",
@@ -195,7 +207,7 @@ const appCheckDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[5].status_defect_name}}
+            data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[5].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {
@@ -220,7 +232,7 @@ const appCheckDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isAccepted, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[6].status_defect_name}}
+            data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[6].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {

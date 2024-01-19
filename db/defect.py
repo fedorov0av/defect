@@ -17,9 +17,8 @@ from db.utils import get_time
 
 class Defect(Base):
     __tablename__ = "defect" # процесс учета средств оснащения
-    defect_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
+    defect_id: Mapped[str] = mapped_column(String(10), primary_key=True) # первичный ключ '23-0000175'
     defect_created_at: Mapped[datetime.datetime]
-    #defect_created_at: Mapped[datetime.datetime] = mapped_column(DateTime('Europe/Moscow'), server_default=func.now(), onupdate=func.now())# таймштамп вноса предмета
     defect_registrator_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - регистратор дефекта.
     defect_registrar: Mapped["User"] = relationship(foreign_keys=[defect_registrator_id]) #  для работы с таблицей User как с объектом
     defect_owner_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - владелец оборудования.
@@ -28,8 +27,12 @@ class Defect(Base):
     defect_repair_manager: Mapped["User"] = relationship(foreign_keys=[defect_repair_manager_id]) #  для работы с таблицей User как с объектом
     defect_worker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - руководитель ремонта.
     defect_worker: Mapped["User"] = relationship(foreign_keys=[defect_worker_id]) #  для работы с таблицей User как с объектом
+    defect_checker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - выполняющий ОП проверку.
+    defect_checker: Mapped["User"] = relationship(foreign_keys=[defect_checker_id]) #  для работы с таблицей User как с объектом
     defect_planned_finish_date: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=True)  # планируемая дата завершения ремонта
+    defect_ppr: Mapped[bool] = mapped_column(Boolean, default=False) # Устранить в ППР?
     defect_description: Mapped[str] = mapped_column(String(500)) # Описание дефекта.
+    defect_check_result: Mapped[str] = mapped_column(String(500), nullable=True) # Результат проверки.
     defect_location: Mapped[str] = mapped_column(String(500), nullable=True) # Местоположение дефекта.
     defect_type_id: Mapped[int] = mapped_column(ForeignKey("type_defect.type_defect_id")) # вид дефекта
     defect_type: Mapped["TypeDefect"] = relationship(foreign_keys=[defect_type_id]) #  для работы с таблицей TypeDefect как с объектом
@@ -55,8 +58,20 @@ class Defect(Base):
     @staticmethod
     async def add_defect(session: AsyncSession, defect_registrator: User, defect_description: str, defect_system: System,
                           defect_location: str, defect_type: TypeDefect, defect_status: StatusDefect, defect_division: Division): # добавление системы в БД
+        defects = await Defect.get_all_defect(session)
+        now_year = str(datetime.datetime.now().date().year)[2:]
+        if len(defects):
+            defect_last = defects[-1]
+            defect_last_year = defect_last.defect_id.split('-')[0]
+            if now_year == defect_last_year:
+                last_defect_id = int(defect_last.defect_id.split('-')[-1])
+            else:
+                last_defect_id = 0
+        else:
+            last_defect_id = 0
+        new_defect_id = now_year + '-' + ('0'*(7-len(str(last_defect_id + 1))) + str(last_defect_id + 1))
         now_time = get_time()
-        defect = Defect(defect_registrator_id=defect_registrator.user_id, defect_description=defect_description, defect_division_id=defect_division.division_id, defect_created_at=now_time,
+        defect = Defect(defect_id=new_defect_id, defect_registrator_id=defect_registrator.user_id, defect_description=defect_description, defect_division_id=defect_division.division_id, defect_created_at=now_time,
                         defect_location=defect_location, defect_type_id=defect_type.type_defect_id, defect_status_id=defect_status.status_defect_id, defect_system_id=defect_system.system_id)
         session.add(defect)
         await session.commit()
@@ -87,6 +102,8 @@ class Defect(Base):
                                   defect_status_id: int=None, # OK
                                   defect_division_id: int=None,
                                   defect_system_id: int=None,
+                                  defect_ppr: bool=None,
+                                  confirm_defect: bool=False,
                                   ): # обновление дефект в БД (там где нет ОК, значит обновление тех полей еще не реализовано)
         defect:Defect = await Defect.get_defect_by_id(session, defect_id)
         if defect_status_id:
@@ -100,6 +117,11 @@ class Defect(Base):
             defect.defect_division_id = defect_division_id
         if defect_worker_id:
             defect.defect_worker_id = defect_worker_id
+        if defect_ppr:
+            defect.defect_ppr = defect_ppr
+        if confirm_defect:
+            defect.defect_planned_finish_date = defect_planned_finish_date
+            defect.defect_ppr = defect_ppr
         session.add(defect)
         await session.commit() 
         return defect

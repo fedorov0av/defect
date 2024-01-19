@@ -25,12 +25,12 @@ ROOT = {
     'password': 'toor',
 }
 
-USERS = {'Регистратор': {'user_name': 'Иван', 'user_fathername': 'Иванович', 'user_surname': 'Иванов', 'password': '123', 'user_email': 'ivanov@akkuyu.com', 'division_name': 'СДТУ'},
-         'Владелец': {'user_name': 'Петр', 'user_fathername': 'Петрович', 'user_surname': 'Петров', 'password': '123', 'user_email': 'petrov@akkuyu.com', 'division_name': 'ЦИКТ'},
-         'Руководитель': {'user_name': 'Николай', 'user_fathername': 'Николаевич', 'user_surname': 'Николаев', 'password': '123', 'user_email': 'nikolay@akkuyu.com', 'division_name': 'ОУР'},
-         'Исполнитель': {'user_name': 'Сергей', 'user_fathername': 'Сергеевич', 'user_surname': 'Сергеев', 'password': '123', 'user_email': 'sergey@akkuyu.com', 'division_name': 'ОЯР'},
-         'Инспектор': {'user_name': 'Андрей', 'user_fathername': 'Андреевич', 'user_surname': 'Андреев', 'password': '123', 'user_email': 'andrey@akkuyu.com', 'division_name': 'ЦТАЙ'},
-         'Администратор': {'user_name': 'Олег', 'user_fathername': 'Олегович', 'user_surname': 'Олегов', 'password': '123', 'user_email': 'oleg@akkuyu.com', 'division_name': 'ХЗ'},
+USERS = {'Регистратор': {'user_name': 'Иван', 'user_fathername': 'Иванович', 'user_surname': 'Иванов', 'password': '123', 'user_email': 'registrator@akkuyu.com', 'division_name': 'СДТУ'},
+         'Владелец': {'user_name': 'Петр', 'user_fathername': 'Петрович', 'user_surname': 'Петров', 'password': '123', 'user_email': 'owner@akkuyu.com', 'division_name': 'ЦИКТ'},
+         'Руководитель': {'user_name': 'Николай', 'user_fathername': 'Николаевич', 'user_surname': 'Николаев', 'password': '123', 'user_email': 'manager@akkuyu.com', 'division_name': 'ОУР'},
+         'Исполнитель': {'user_name': 'Сергей', 'user_fathername': 'Сергеевич', 'user_surname': 'Сергеев', 'password': '123', 'user_email': 'worker@akkuyu.com', 'division_name': 'ОЯР'},
+         'Инспектор': {'user_name': 'Андрей', 'user_fathername': 'Андреевич', 'user_surname': 'Андреев', 'password': '123', 'user_email': 'inspector@akkuyu.com', 'division_name': 'ЦТАЙ'},
+         'Администратор': {'user_name': 'Олег', 'user_fathername': 'Олегович', 'user_surname': 'Олегов', 'password': '123', 'user_email': 'admin@akkuyu.com', 'division_name': 'ХЗ'},
          }
 
 TYPES_DEFECT = ['ЖД основного оборудования', 'ЖД по строительным конструкциям', 'ЖД по освещению', 'ЖД по системам пожаротушения']

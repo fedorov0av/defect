@@ -1,7 +1,7 @@
 const appExecutionDefect = Vue.createApp({
     data() {
       return {
-        defect_id: 0,
+        defect_id: '0',
         defect_divisions: {},
         defect_type_defects: {},
         statuses_defect:{}, /* ['Зарегистрирован', # 1
@@ -77,7 +77,19 @@ const appExecutionDefect = Vue.createApp({
           }
         })
     },
+    mounted() {
+      this.setPopover();
+    },
     methods: {
+      setPopover(){
+        $(document).ready(function(){
+          if($("#executionCancelDefectButton").is(":disabled") && $("#executionExecutionDefectButton").is(":disabled"))  {
+            $('[data-toggle="popover_execution"]').popover({
+            placement : 'top'
+          });
+          }
+        });
+      }, /* setPopover */
       updateTables() {
         this.updateTableDivision();
         this.updateTableTypeDefect();
@@ -130,7 +142,7 @@ const appExecutionDefect = Vue.createApp({
       updateCardDefect() {
         axios
           .post('/get_defect/',{
-            "defect_id": parseInt(this.defect_id),
+            "defect_id": this.defect_id,
           })
           .then(response => {
             this.cardDefect = response.data;
@@ -160,7 +172,7 @@ const appExecutionDefect = Vue.createApp({
       updateTableHistory() {
           axios
           .post('/history_by_defect',{
-            "defect_id": parseInt(this.defect_id),
+            "defect_id": this.defect_id,
           })
           .then(response => {
               this.cardHistorys = response.data;
@@ -184,7 +196,7 @@ const appExecutionDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)}, "status_name": {"status_defect_name": this.statuses_defect[2].status_defect_name}}
+            data = {"defect_id": {"defect_id": this.defect_id}, "status_name": {"status_defect_name": this.statuses_defect[2].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {

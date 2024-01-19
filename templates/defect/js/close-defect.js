@@ -1,7 +1,7 @@
 const appCloseDefect = Vue.createApp({
     data() {
       return {
-        defect_id: 0,
+        defect_id: '0',
         defect_divisions: {},
         defect_type_defects: {},
         statuses_defect:{}, /* ['Зарегистрирован', # 1
@@ -78,7 +78,19 @@ const appCloseDefect = Vue.createApp({
           }
         })
     },
+    mounted() {
+      this.setPopover();
+    },
     methods: {
+      setPopover(){
+        $(document).ready(function(){
+          if($("#closeCloseDefectButton").is(":disabled")) {
+            $('[data-toggle="popover_close"]').popover({
+            placement : 'top'
+          });
+          }
+        });
+      }, /* setPopover */
       updateTables() {
         this.updateTableDivision();
         this.updateTableTypeDefect();
@@ -131,7 +143,7 @@ const appCloseDefect = Vue.createApp({
       updateCardDefect() {
         axios
           .post('/get_defect/',{
-            "defect_id": parseInt(this.defect_id),
+            "defect_id": this.defect_id,
           })
           .then(response => {
             this.cardDefect = response.data;
@@ -161,7 +173,7 @@ const appCloseDefect = Vue.createApp({
       updateTableHistory() {
           axios
           .post('/history_by_defect',{
-            "defect_id": parseInt(this.defect_id),
+            "defect_id": this.defect_id,
           })
           .then(response => {
               this.cardHistorys = response.data;
@@ -181,7 +193,7 @@ const appCloseDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": parseInt(this.defect_id)},"status_name": {"status_defect_name": this.statuses_defect[9].status_defect_name}}
+            data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[9].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {

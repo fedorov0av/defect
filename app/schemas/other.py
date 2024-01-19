@@ -13,6 +13,9 @@ class Status_id(BaseModel):
 class Сomment(BaseModel):
     comment: Optional[str]
 
+class Ppr(BaseModel):
+    ppr: Optional[bool]
+
 class Filter(BaseModel):
     division_id: Optional[int] = 0 
     status_id: Optional[int] = 0 

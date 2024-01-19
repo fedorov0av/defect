@@ -1,7 +1,7 @@
 const appCorrectionDefect = Vue.createApp({
     data() {
         return {
-          defect_id: 0,
+          defect_id: '0',
           parent_button_close_modal_name: '', 
           statuses_defect:{}, /* ['Зарегистрирован', # 1
           'Подтвержден', # 2
@@ -30,7 +30,7 @@ const appCorrectionDefect = Vue.createApp({
       },
       methods: {
         clearData() {
-          this.defect_id = 0;
+          this.defect_id = '0';
           this.cardComment = '';
           this.parent_button_close_modal_name = '';
         }, /* clearData */
@@ -57,7 +57,7 @@ const appCorrectionDefect = Vue.createApp({
             if (result.isConfirmed) {
               data = {
                 "defect_id": {
-                  "defect_id": parseInt(this.defect_id)
+                  "defect_id": this.defect_id
                 },
                 "status_name": {
                   "status_defect_name": this.statuses_defect[7].status_defect_name

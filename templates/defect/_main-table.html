@@ -12,15 +12,15 @@
               </tr>
             </thead>
             <tr  @dblclick="handleDoubleClick" data-bs-target="#ConfirmDefectModalWindow" v-for="defect in defects" v-bind:key="defect.defect_id">
-              <td >{{ defect.defect_id }}</td>
-              <td >{{ defect.defect_created_at }}</td>
-              <td >{{ defect.defect_planned_finish_date }}</td>
-              <td >{{ defect.defect_owner }}</td>
-              <td >{{ defect.defect_system.system_kks }}</td>
-              <td >{{ defect.defect_system.system_name }}</td>
-              <td >{{ defect.defect_description }}</td>
-              <td >{{ defect.defect_status.status_defect_name }}</td>
-              <td >{{ defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name}}</td>
+              <td class="main-table_td95">{{ defect.defect_id }}</td>
+              <td class="main-table_td150">{{ defect.defect_created_at }}</td>
+              <td class="main-table_td95">{{ defect.defect_planned_finish_date }}</td>
+              <td class="main-table_td150">{{ defect.defect_owner }}</td>
+              <td class="main-table_td150">{{ defect.defect_system.system_kks }}</td>
+              <td>{{ defect.defect_system.system_name }}</td>
+              <td>{{ defect.defect_description }}</td>
+              <td class="main-table_td180">{{ defect.defect_status.status_defect_name }}</td>
+              <td class="main-table_td180">{{ defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name}}</td>
             </tr>
           </tbody>
         </table>
@@ -29,7 +29,7 @@
   </div>
 
   <div class="footer">
-    <div class="footer-left">
+    <div class="footer-left" v-if="pages > 1">
       <span class="footer-left-span">Кол-во записей на странице:</span>
       <select class="form-select footer-left-select" aria-label="Default select example" v-model="pageSize" @change="changePage">
         <option value=15>15</option>

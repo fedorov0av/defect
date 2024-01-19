@@ -23,13 +23,13 @@ class New_defect_p(BaseModel):
     defect_location: Optional[str]
 
 class Defect_id(BaseModel):
-    defect_id: Optional[int]
+    defect_id: Optional[str]
 
 class User_id(BaseModel):
     user_id: Optional[int]
 
 class Defects_output(BaseModel):
-    defect_id: Optional[int]
+    defect_id: Optional[str]
     defect_created_at: Optional[str]
     defect_registrar: Optional[str]
     defect_owner_surname: Optional[str]

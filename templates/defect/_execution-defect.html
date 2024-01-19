@@ -118,8 +118,12 @@
             </div>
 
             <div class="modal-footer">
-              <button @click="cancelDefect" :disabled='isDisabledExecutionDefect' class="btn btn-warning" type="button">Требует корректировки</button>
-              <button @click="executionDefect" :disabled='isDisabledExecutionDefect' class="btn btn-primary" type="button">Принят в ремонт</button>
+              <span class="d-inline-block" tabindex="0" data-toggle="popover_execution" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Исполнитель ремонта">
+                <button @click="cancelDefect" id="executionCancelDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-warning" type="button">Требует корректировки</button>
+              </span>
+              <span class="d-inline-block" tabindex="0" data-toggle="popover_execution" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Исполнитель ремонта">
+                <button @click="executionDefect" id="executionExecutionDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-primary" type="button">Принят в ремонт</button>
+              </span>
             </div>
             <div class="modal-footer"></div>
 
