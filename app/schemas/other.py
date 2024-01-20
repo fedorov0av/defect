@@ -21,3 +21,5 @@ class Filter(BaseModel):
     status_id: Optional[int] = 0 
     date_start: Optional[str] = None
     date_end: Optional[str] = None
+    ppr: Optional[bool] = None
+

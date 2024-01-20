@@ -1,24 +1,16 @@
 from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request
-from fastapi_jwt import JwtAccessBearerCookie, JwtAuthorizationCredentials, JwtRefreshBearer, JwtAccessBearer
 from utils.jwt import access_security, refresh_security, encrypt_user_id, decrypt_user_id, decode_token
-
-from datetime import timedelta
-from typing import Union, Optional
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.user import User
 from db.history_defect import History
 from db.defect import Defect
 from db.status_defect import StatusDefect
-
-from db.type_defect import TypeDefect
 from db.database import get_db
-
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import NoResultFound
-from app.schemas.user import User_p
 from app.schemas.defect import Defect_id
 from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Сomment
+
 
 status_defect_router = APIRouter()
 

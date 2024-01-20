@@ -1,11 +1,9 @@
-from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request
-from utils.jwt import access_security, refresh_security, encrypt_user_id, decrypt_user_id, decode_token
-
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.division import Division
 from db.database import get_db
 
-from sqlalchemy.ext.asyncio import AsyncSession
 
 division_router = APIRouter()
 

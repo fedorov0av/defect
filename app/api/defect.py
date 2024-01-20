@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Depends, Request
-from utils.jwt import access_security, refresh_security, encrypt_user_id, decrypt_user_id, decode_token
-from fastapi_pagination import Page, add_pagination
-from fastapi_pagination.ext.sqlalchemy import paginate
-from sqlalchemy import ForeignKey, Integer, Text, String, func, select, Boolean, or_
-from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import NoResultFound, MissingGreenlet, IntegrityError
-
 from datetime import datetime
+from fastapi import APIRouter, Depends, Request
+from utils.jwt import decrypt_user_id, decode_token
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import IntegrityError
 
+from db.database import get_db
 from db.user import User
 from db.defect import Defect
 from db.division import Division
@@ -17,19 +17,16 @@ from db.status_defect import StatusDefect
 from db.type_defect import TypeDefect
 from db.history_defect import History
 
-from db.database import get_db
-
-from app.schemas.user import User_p, User_id
+from app.schemas.user import User_id
 from app.schemas.defect import New_defect_p, Defect_id, Defects_output
 from app.schemas.status_defect import StatusDefect_name
-from app.schemas.other import Date_p, Division_id, Сomment, Status_id, Filter, Ppr
+from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr
+
 
 STATUS_REGISTRATION = 1
 STATUS_CONFIRM = 2
 
-
 defect_router = APIRouter()
-
 
 @defect_router.post("/defect/add")
 async def add_new_defect(defect_p: New_defect_p, request: Request, session: AsyncSession = Depends(get_db)):
@@ -79,7 +76,8 @@ async def get_defects(session: AsyncSession = Depends(get_db)):
                                           'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
                                           } ,
                 'defect_worker': defect.defect_worker,
-                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
+                'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
+                                             if not defect.defect_ppr else 'Устр. в ППР',
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
@@ -124,15 +122,12 @@ async def confirm_defect(defect_id: Defect_id,
                       defect_planned_finish_date_str: Date_p = None,
                       defect_ppr: Ppr = None,
                       session: AsyncSession = Depends(get_db)):
-    print('defect_ppr == = ', defect_ppr)
-    print('defect_planned_finish_date_str == = ', defect_planned_finish_date_str)
     token_dec = await decode_token(request.cookies['jwt_access_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
     repair_manager: User = await User.get_user_by_id(session, int(repair_manager_id.user_id))
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
     #defect_planned_finish_date = datetime.strptime(defect_planned_finish_date_str.date, "%d.%m.%Y").date() #    2023-12-23
-    print('!!!!!!!!!!!!!!!!', type(defect_planned_finish_date_str.date))
     if defect_planned_finish_date_str.date:
         if defect_ppr.ppr:
             defect_planned_finish_date = None
@@ -212,7 +207,7 @@ async def finish_work_defect(defect_id: Defect_id,
 @defect_router.post("/get_defect_by_filter/")
 async def get_defect_by_filter(  filter: Filter, 
                         session: AsyncSession = Depends(get_db)):
-    result: list[Defect] = await Defect.get_defects_by_filter(session,filter.division_id, filter.date_start, filter.date_end, filter.status_id)
+    result: list[Defect] = await Defect.get_defects_by_filter(session, filter.division_id, filter.date_start, filter.date_end, filter.status_id, filter.ppr)
     defects_with_filters = list()
     for defect in result:
         defects_with_filters.append(
@@ -226,7 +221,8 @@ async def get_defect_by_filter(  filter: Filter,
                                           'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
                                           } ,
                 'defect_worker': defect.defect_worker,
-                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
+                'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
+                                        if not defect.defect_ppr else 'Устр. в ППР',
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,

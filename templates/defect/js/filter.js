@@ -9,6 +9,7 @@ const appVueFilter = Vue.createApp({
         startDate: null,
         endDate: null,
         filterStatusDefect: 0,
+        ppr: 'false'
       }
     },
     methods: {
@@ -19,19 +20,23 @@ const appVueFilter = Vue.createApp({
               this.divisions = response.data;
                 }) /* axios */
         }, /* updateTableDivision */
-
         updateAllTables() {
           this.updateTableDivision();
         }, /* updateAllTables */
-        
-        
         useFilter() {
+          if (this.endDate !== null && this.startDate !== null) {
+            if (this.startDate>this.endDate){
+              Swal.fire({html:"<b>Дата окончания раньше даты начала!</b>", heightAuto: false}); 
+              return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
+            }
+          }
           axios
             .post('/get_defect_by_filter/', 
               {"date_start": this.startDate,
                "date_end": this.endDate,
                "division_id":  this.filterDivision,
-               "status_id":  this.filterStatusDefect
+               "status_id":  this.filterStatusDefect,
+               "ppr": this.ppr === 'true' ? true : null,
               //  "division_id": {
               //     "division_id": this.filterDivision !== 0 ? this.filterDivision : 0
               //   },
@@ -45,8 +50,6 @@ const appVueFilter = Vue.createApp({
               appVueDefect.pages = 0;
                 }) /* axios */
         }, /* useFilter */
-        
-        
         nouseFilter() {
           axios
           .post('/defects',)
@@ -54,8 +57,6 @@ const appVueFilter = Vue.createApp({
               appVueDefect.updateTables();
                 }) /* axios */
         }, /* nouseFilter */
-        
-        
         updateTableStatusDefect() {
           axios
           .post('/statuses_defect',)
@@ -64,7 +65,6 @@ const appVueFilter = Vue.createApp({
                 }) /* axios */
         }, /* updateTableStatusDefect */
         }, /* methods */
-        
     mounted() {
       this.updateAllTables()
       this.updateTableStatusDefect()

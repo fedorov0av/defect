@@ -1,7 +1,8 @@
+from datetime import timedelta
 from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request
 from fastapi_jwt import JwtAccessBearerCookie, JwtAuthorizationCredentials, JwtRefreshBearer, JwtAccessBearer
-
-from datetime import timedelta
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import NoResultFound
 
 from app.schemas.auth import AuthData
 from utils.jwt import access_security, refresh_security, encrypt_user_id, decrypt_user_id
@@ -10,9 +11,6 @@ from utils.security import check_password
 from db.user import User
 from db.database import get_db
 
-
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import NoResultFound
 
 auth_router = APIRouter()
 
@@ -32,7 +30,6 @@ async def auth(auth_data:AuthData, response: Response, session: AsyncSession = D
     refresh_token = refresh_security.create_refresh_token(subject=subject)
     response.set_cookie(key="jwt_access_token", value=access_token,)
     response.set_cookie(key="jwt_refresh_token", value=refresh_token,)
-
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 @auth_router.post("/refresh")
@@ -45,5 +42,3 @@ async def refresh(
     refresh_token = refresh_security.create_refresh_token(subject=credentials.subject, expires_delta=timedelta(days=2))
 
     return {"access_token": access_token, "refresh_token": refresh_token}
-
-

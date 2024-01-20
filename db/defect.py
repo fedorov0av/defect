@@ -149,13 +149,15 @@ class Defect(Base):
     
     @staticmethod
     async def get_defects_by_filter(session: AsyncSession, division_id = None, date_start: str = None, 
-                                date_end: str = None, status_id = None):
+                                date_end: str = None, status_id = None, ppr = None):
         conditions = []
 
         if division_id is not None and division_id !=0:
             conditions.append(Defect.defect_division_id == division_id)
         if status_id is not None and status_id !=0:
             conditions.append(Defect.defect_status_id == status_id)
+        if ppr is not None:
+            conditions.append(Defect.defect_ppr == ppr)
         if date_start:
             start_date = datetime.datetime.strptime(date_start, "%Y-%m-%d")
             conditions.append(Defect.defect_created_at >= start_date)

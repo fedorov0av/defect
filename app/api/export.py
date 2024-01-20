@@ -1,18 +1,14 @@
 import pandas as pd
+from io import BytesIO
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
-from io import BytesIO
-
-from db.division import Division
-from db.database import get_db
-from db.defect import Defect
-
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.styles import Alignment
 from app.schemas.export import Defect_list_ids
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from openpyxl import Workbook
-from openpyxl.utils.dataframe import dataframe_to_rows
-from openpyxl.styles import Border, Side, PatternFill, Font, Alignment, Color
+from db.database import get_db
+from db.defect import Defect
 
 
 export_router = APIRouter()
@@ -28,7 +24,8 @@ async def export_excel_defect(defect_list_ids: Defect_list_ids, session: AsyncSe
         df_defect = pd.DataFrame(
                                 [[defect.defect_id,
                                  defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
-                                 defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '',
+                                 (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '')
+                                  if not defect.defect_ppr else 'Устр. в ППР',
                                  defect.defect_division.division_name,
                                  defect.defect_system.system_kks if defect.defect_system else '',
                                  defect.defect_system.system_name,
@@ -62,17 +59,3 @@ async def export_excel_defect(defect_list_ids: Defect_list_ids, session: AsyncSe
         media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         headers={"Content-Disposition": f"attachment; filename=e.xlsx"}
         )
-
-
-
-
-    result: list[Division] = await Division.get_all_division(session)
-    division_l = list()
-    for division in result:
-        division_l.append(
-            {
-                'division_id': division.division_id,
-                'division_name': division.division_name,
-            }
-        )
-    return division_l
