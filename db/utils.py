@@ -1,4 +1,3 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from db.base import Base
@@ -8,9 +7,7 @@ import asyncpg
 DATABASE_USER = 'postgres'
 DATABASE_PASSWORD = 'defect0'
 DATABASE_NAME = 'defectdb'
-
 DATABASE_URL = f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@0.0.0.0:5432/{DATABASE_NAME}"
-
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 async_session = async_sessionmaker(engine, expire_on_commit=False)

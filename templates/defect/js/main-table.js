@@ -33,16 +33,12 @@ const appVueDefect = Vue.createApp({
             this.pageNumber = response.data.page;
             this.pages = response.data.pages;
             this.defects = response.data.items;
-            /* console.log(this.defects); */
               }) /* axios */
       }, /* updateTableDefect */
       handleDoubleClick (event){
-        console.log(event)
-        console.log(event.target.parentNode.childNodes[0].textContent) 
         defect_id = event.target.parentNode.childNodes[0].textContent
         status_name = event.target.parentNode.childNodes[7].textContent
         if (status_name == "Зарегистрирован" || status_name == "Требует корректировки") {
-          console.log(defect_id);
           appConfirmDefect.defect_id = defect_id;
           appConfirmDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('ConfirmDefectModalWindow'), {
@@ -51,7 +47,6 @@ const appVueDefect = Vue.createApp({
           myModal.show()
         } 
         if (status_name == "Подтвержден" || status_name == "Не устранен") {
-          console.log(defect_id);
           appAcceptDefect.defect_id = defect_id;
           appAcceptDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('AcceptModalWindow'), {
@@ -60,7 +55,6 @@ const appVueDefect = Vue.createApp({
           myModal.show()
         }
         if (status_name == "Назначен исполнитель") {
-          console.log(defect_id);
           appExecutionDefect.defect_id = defect_id;
           appExecutionDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('ExecutionModalWindow'), {
@@ -69,7 +63,6 @@ const appVueDefect = Vue.createApp({
           myModal.show()
         }
         if (status_name == "Принят в работу") {
-          console.log(defect_id);
           appFinishWorkDefect.defect_id = defect_id;
           appFinishWorkDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('FinishWorkModalWindow'), {
@@ -78,7 +71,6 @@ const appVueDefect = Vue.createApp({
           myModal.show()
         }
         if (status_name == "Работы завершены") {
-          console.log(defect_id);
           appCheckDefect.defect_id = defect_id;
           appCheckDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('CheckModalWindow'), {
@@ -87,7 +79,6 @@ const appVueDefect = Vue.createApp({
           myModal.show()
         }
         if (status_name == "Устранен") {
-          console.log(defect_id);
           appCloseDefect.defect_id = defect_id;
           appCloseDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('CloseModalWindow'), {
@@ -96,7 +87,6 @@ const appVueDefect = Vue.createApp({
           myModal.show()
         }
         if (status_name == "Закрыт" || status_name == "Отменен") {
-          console.log(defect_id);
           appCardDefect.defect_id = defect_id;
           appCardDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('CardModalWindow'), {
@@ -107,7 +97,6 @@ const appVueDefect = Vue.createApp({
         
       }, /* handleDoubleClick */
       changePage (event){
-        console.log(event)
         if (event.target.text == 'Вперед'){
           this.nextPageNumber = this.pageNumber + 1;
         }

@@ -19,14 +19,12 @@ const appVueAddDefect = Vue.createApp({
       this.updateTableTypeDefect()
       var myModalEl = document.getElementById('AddDefectModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
-        console.log(event);
         appVueAddDefect.clearData();
         appVueDefect.updateTables();
     })
     },
     methods: {
       closeAddDefectModalWindow() {
-        console.log('closeAddDefectModalWindow');
         this.clearData();
       }, /* closeAddDefectModalWindow */
       clearData() {
@@ -42,7 +40,6 @@ const appVueAddDefect = Vue.createApp({
         .post('/divisions',)
         .then(response => {
             this.defect_divisions = response.data;
-            /* console.log(this.defect_divisions); */
               }) /* axios */
       }, /* updateTableDivision */
       updateTableTypeDefect() {
@@ -50,7 +47,6 @@ const appVueAddDefect = Vue.createApp({
         .post('/type_defect',)
         .then(response => {
             this.defect_type_defects = response.data;
-            /* console.log(this.defect_type_defects); */
               }) /* axios */
       }, /* updateTableTypeDefect */
       addNewDefect() {
@@ -69,10 +65,9 @@ const appVueAddDefect = Vue.createApp({
               }
           )
           .then(response => {
-              console.log(response.data);
+              /* console.log(response.data); */
               Swal.fire({html:"<b>Дефект добавлен</b>", heightAuto: false}); 
               document.getElementById('closeModalAddDefect').click();
-              
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при добавлении дефекта. Обратитесь к администратору.</b>", heightAuto: false}); 

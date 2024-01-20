@@ -17,7 +17,6 @@ const appVueFilter = Vue.createApp({
           .post('/divisions',)
           .then(response => {
               this.divisions = response.data;
-              /* console.log(this.divisions); */
                 }) /* axios */
         }, /* updateTableDivision */
 
@@ -44,7 +43,6 @@ const appVueFilter = Vue.createApp({
             .then(response => {
               appVueDefect.defects = response.data;
               appVueDefect.pages = 0;
-              console.log(appVueDefect.defects);
                 }) /* axios */
         }, /* useFilter */
         
@@ -54,7 +52,6 @@ const appVueFilter = Vue.createApp({
           .post('/defects',)
           .then(response => {
               appVueDefect.updateTables();
-              console.log(appVueDefect.defects);
                 }) /* axios */
         }, /* nouseFilter */
         
@@ -64,7 +61,6 @@ const appVueFilter = Vue.createApp({
           .post('/statuses_defect',)
           .then(response => {
               this.statuses_defect = response.data;
-              /* console.log(this.statuses_defect); */
                 }) /* axios */
         }, /* updateTableStatusDefect */
         }, /* methods */

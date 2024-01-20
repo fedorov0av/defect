@@ -1,9 +1,6 @@
 from utils import security
-from sqlalchemy import create_engine, inspect
-from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
-import ctypes
 import asyncpg
 
 from db.base import Base
@@ -81,16 +78,6 @@ async def create_tables():
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-    """ ########### добавление списка групп СО в БД #######
-    for group in GROUP_REESTR_SO:
-        group_so = Group_object(
-            group_name=group[0], # название группы СО
-            group_code=group[1], # числовой код группы
-            group_ind=group[2], # символьный код группы
-        )
-        session.add(group_so)
-    ################################################ """
-
     ########### добавление типов дефектов в БД #######
     async with async_session() as session:
         for type_defect in TYPES_DEFECT:
@@ -122,7 +109,6 @@ async def create_tables():
             session.add(division)
             await session.commit()
     ################################################
-
 
     ########### добавление ROOT пользователя в БД #######
     async with async_session() as session:

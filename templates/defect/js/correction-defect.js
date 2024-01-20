@@ -24,7 +24,6 @@ const appCorrectionDefect = Vue.createApp({
         this.updateTableStatusDefect()
         var myModal = document.getElementById('CorrectionDefectModalWindow')
         myModal.addEventListener('hidden.bs.modal', function (event) {
-          console.log(event);
           appCorrectionDefect.clearData();
       })
       },
@@ -39,7 +38,6 @@ const appCorrectionDefect = Vue.createApp({
           .post('/statuses_defect',)
           .then(response => {
               this.statuses_defect = response.data;
-              console.log(this.statuses_defect);
                 }) /* axios */
         }, /* updateTableStatusDefect */
         cancelDefect(event) {
@@ -71,7 +69,7 @@ const appCorrectionDefect = Vue.createApp({
               .then(response => {
                   document.getElementById('closeCorrectionDefectModalWindow').click();
                   appVueDefect.updateTables()
-                  console.log(response.data);
+                  /* console.log(response.data); */
                   Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ", "", "success");
                   document.getElementById(this.parent_button_close_modal_name).click();
                     }) /* axios */

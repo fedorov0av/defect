@@ -79,7 +79,7 @@ const appAcceptDefect = Vue.createApp({
     this.setPopover();
     var myModalEl = document.getElementById('AcceptModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
-        console.log(event);
+        /* console.log(event); */
         appAcceptDefect.clearData();
     })
   },
@@ -110,7 +110,6 @@ const appAcceptDefect = Vue.createApp({
       .post('/user/workers',)
       .then(response => {
           this.workers = response.data;
-          console.log(this.workers);
             }) /* axios */
     }, /* updateTableWorkers */
     updateTableRepairManagers() {
@@ -118,7 +117,6 @@ const appAcceptDefect = Vue.createApp({
       .post('/user/repair_managers',)
       .then(response => {
           this.repair_managers = response.data;
-          console.log(this.repair_managers);
             }) /* axios */
     }, /* updateTableRepairManagers */
     updateTableDivision() {
@@ -126,7 +124,6 @@ const appAcceptDefect = Vue.createApp({
       .post('/divisions',)
       .then(response => {
           this.defect_divisions = response.data;
-          console.log(this.defect_divisions);
             }) /* axios */
     }, /* updateTableDivision */
     updateTableStatusDefect() {
@@ -134,7 +131,6 @@ const appAcceptDefect = Vue.createApp({
       .post('/statuses_defect',)
       .then(response => {
           this.statuses_defect = response.data;
-          console.log(this.statuses_defect);
             }) /* axios */
     }, /* updateTableStatusDefect */
     updateTableTypeDefect() {
@@ -142,7 +138,6 @@ const appAcceptDefect = Vue.createApp({
       .post('/type_defect',)
       .then(response => {
           this.defect_type_defects = response.data;
-          console.log(this.defect_type_defects);
             }) /* axios */
     }, /* updateTableTypeDefect */
     updateCardDefect() {
@@ -152,12 +147,10 @@ const appAcceptDefect = Vue.createApp({
         })
         .then(response => {
           this.cardDefect = response.data;
-          console.log('this.cardDefect', this.cardDefect);
 
           this.cardDefectID = this.cardDefect.defect_id; 
           this.cardStatusDefectName = this.cardDefect.defect_status.status_defect_name; 
           this.cardTypeDefectName = this.cardDefect.defect_type.type_defect_name; 
-
           this.cardKKS = this.cardDefect.defect_system.system_kks; 
           this.cardSystemName = this.cardDefect.defect_system.system_name; 
           this.cardDescription = this.cardDefect.defect_description;
@@ -184,7 +177,6 @@ const appAcceptDefect = Vue.createApp({
         })
         .then(response => {
             this.cardHistorys = response.data;
-            console.log(this.cardHistorys);
               }) /* axios */
         .catch(err => {
                 Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -220,7 +212,7 @@ const appAcceptDefect = Vue.createApp({
           .then(response => {
               document.getElementById('closeAcceptModalWindow').click();
               appVueDefect.updateTables()
-              console.log(response.data);
+              /* console.log(response.data); */
               Swal.fire("НАЗНАЧЕН ИСПОЛНИТЕЛЬ!", "", "success");
                 }) /* axios */
           .catch(err => {
@@ -231,7 +223,6 @@ const appAcceptDefect = Vue.createApp({
       });
     },/* acceptDefect */
     cancelDefect() {
-        console.log(defect_id);
         appCorrectionDefect.defect_id = defect_id;
         appCorrectionDefect.parent_button_close_modal_name = 'closeAcceptModalWindow';
         var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {

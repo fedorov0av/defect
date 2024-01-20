@@ -4,6 +4,8 @@ from fastapi_pagination import Page, add_pagination
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import ForeignKey, Integer, Text, String, func, select, Boolean, or_
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import NoResultFound, MissingGreenlet, IntegrityError
 
 from datetime import datetime
 
@@ -17,8 +19,6 @@ from db.history_defect import History
 
 from db.database import get_db
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import NoResultFound, MissingGreenlet, IntegrityError
 from app.schemas.user import User_p, User_id
 from app.schemas.defect import New_defect_p, Defect_id, Defects_output
 from app.schemas.status_defect import StatusDefect_name
@@ -89,34 +89,6 @@ async def get_defects(session: AsyncSession = Depends(get_db)):
                 "defect_system_kks": defect.defect_system.system_kks,} for defect in defects],
     )
 
-""" 
-@defect_router.post("/defects_temp/")
-async def get_defects(session: AsyncSession = Depends(get_db)):
-    result: list[Defect] = await Defect.get_all_defect(session)
-    defect_l = list()
-    for defect in result:
-        defect_l.append(
-            {
-                "defect_id": defect.defect_id,
-                'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
-                'defect_registrar': defect.defect_registrar.user_surname,
-                'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
-                'defect_owner': defect.defect_division.division_name,
-                'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
-                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
-                                          } ,
-                'defect_worker': defect.defect_worker,
-                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%Y-%m-%d") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
-                "defect_description": defect.defect_description,
-                "defect_location": defect.defect_location,
-                "defect_type": defect.defect_type,
-                "defect_status": defect.defect_status,
-                "defect_division": defect.defect_division,
-                "defect_system": defect.defect_system,
-                "defect_system_kks": defect.defect_system.system_kks,
-            }
-        )
-    return defect_l """
 
 @defect_router.post("/get_defect/")
 async def get_defect(defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
@@ -176,7 +148,8 @@ async def confirm_defect(defect_id: Defect_id,
                                             defect_repair_manager_id=repair_manager.user_id,
                                             defect_planned_finish_date = defect_planned_finish_date if defect_planned_finish_date_str.date else None,
                                             defect_ppr = defect_ppr.ppr,
-                                            defect_division_id = division.division_id)
+                                            defect_division_id = division.division_id,
+                                            confirm_defect=True)
     history = await History.add_history(
         session=session,
         defect=defect,
@@ -186,7 +159,7 @@ async def confirm_defect(defect_id: Defect_id,
     return defect
 
 @defect_router.post("/accept_defect/")
-async def get_defects(defect_id: Defect_id,
+async def accept_defect(defect_id: Defect_id,
                       status_name: StatusDefect_name,
                       worker_id: User_id,
                       request: Request,
@@ -212,7 +185,7 @@ async def get_defects(defect_id: Defect_id,
     return defect
 
 @defect_router.post("/finish_work_defect/")
-async def get_defects(defect_id: Defect_id,
+async def finish_work_defect(defect_id: Defect_id,
                       status_name: StatusDefect_name,
                       worker_description: Сomment,
                       request: Request,
@@ -237,7 +210,7 @@ async def get_defects(defect_id: Defect_id,
     return defect
 
 @defect_router.post("/get_defect_by_filter/")
-async def get_defects(  filter: Filter, 
+async def get_defect_by_filter(  filter: Filter, 
                         session: AsyncSession = Depends(get_db)):
     result: list[Defect] = await Defect.get_defects_by_filter(session,filter.division_id, filter.date_start, filter.date_end, filter.status_id)
     defects_with_filters = list()
@@ -264,3 +237,32 @@ async def get_defects(  filter: Filter,
             }
         )
     return defects_with_filters
+
+""" 
+@defect_router.post("/defects_temp/")
+async def get_defects(session: AsyncSession = Depends(get_db)):
+    result: list[Defect] = await Defect.get_all_defect(session)
+    defect_l = list()
+    for defect in result:
+        defect_l.append(
+            {
+                "defect_id": defect.defect_id,
+                'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
+                'defect_registrar': defect.defect_registrar.user_surname,
+                'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
+                'defect_owner': defect.defect_division.division_name,
+                'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
+                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
+                                          } ,
+                'defect_worker': defect.defect_worker,
+                'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%Y-%m-%d") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
+                "defect_description": defect.defect_description,
+                "defect_location": defect.defect_location,
+                "defect_type": defect.defect_type,
+                "defect_status": defect.defect_status,
+                "defect_division": defect.defect_division,
+                "defect_system": defect.defect_system,
+                "defect_system_kks": defect.defect_system.system_kks,
+            }
+        )
+    return defect_l """

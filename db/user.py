@@ -1,13 +1,9 @@
 import datetime
-from typing import List, AsyncGenerator
-from sqlalchemy import String, Boolean, func, DateTime, select, or_, ForeignKey
-from sqlalchemy.engine import row
+from typing import List
+from sqlalchemy import String, Boolean, select, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 from utils import security
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-
-from fastapi import Depends
-from db.database import get_db
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.base import Base
 from db.role import Role

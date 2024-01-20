@@ -30,7 +30,6 @@ const appVueUser = Vue.createApp({
     mounted() {
       var myModalEl = document.getElementById('AddUserModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
-        console.log(event);
         appVueUser.clearData();
     })
     },
@@ -45,9 +44,7 @@ const appVueUser = Vue.createApp({
           this.newUserEmail = '';
           this.newUserTempPassword = '';
         }, /* clearData */
-        closeCardUserModalWindow() {
-          console.log('closeCardUserModalWindow');
-          
+        closeCardUserModalWindow() {          
           this.clearData();
         }, /* closeCardUserModalWindow */
         clearData2() {
@@ -64,7 +61,6 @@ const appVueUser = Vue.createApp({
             .post('/users',)
             .then(response => {
                 this.users = response.data;
-                console.log(this.users);
                   }) /* axios */
           }, /* updateTableUser */
         updateTableEmails() {
@@ -72,7 +68,6 @@ const appVueUser = Vue.createApp({
             .post('/users/emails',)
             .then(response => {
                 this.emails = response.data;
-                /* console.log(Object.values(this.emails)); */
                   }) /* axios */
           }, /* updateTableEmails */
         updateTableRole() {
@@ -80,7 +75,6 @@ const appVueUser = Vue.createApp({
             .post('/roles',)
             .then(response => {
                 this.roles = response.data;
-                console.log(this.roles);
                   }) /* axios */
         }, /* updateTableRole */
         updateTableDivision() {
@@ -88,7 +82,6 @@ const appVueUser = Vue.createApp({
           .post('/divisions',)
           .then(response => {
               this.divisions = response.data;
-              console.log(this.divisions);
                 }) /* axios */
         }, /* updateTableDivision */
         updateAllTables() {
@@ -120,7 +113,6 @@ const appVueUser = Vue.createApp({
                   }
             )
             .then(response => {
-                console.log(response.data);
                 Swal.fire({html:"<b>Пользователь добавлен</b>", heightAuto: false}); 
                 document.getElementById('closeModalAddUser').click();
                 
@@ -151,7 +143,6 @@ const appVueUser = Vue.createApp({
                   }
             )
             .then(response => {
-                console.log(response.data);
                 Swal.fire({html:"<b>Данные пользователя изменены</b>", heightAuto: false}); 
                 document.getElementById('closeModalCardUser').click();
                 this.updateTableUser();
@@ -163,7 +154,6 @@ const appVueUser = Vue.createApp({
           } /* else */
         }, /* editUser */
         handleDoubleClick (event){
-          console.log(event.target.parentNode.childNodes[0].textContent)
           id_user = event.target.parentNode.childNodes[0].textContent
           axios
             .post('/user/',{
@@ -171,7 +161,6 @@ const appVueUser = Vue.createApp({
             })
             .then(response => {
               user = response.data;
-              console.log(user);
               this.cardUserID = user.user_id;
               this.cardUserSurname = user.user_surname;
               this.cardUserFathername = user.user_fathername;

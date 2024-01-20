@@ -1,4 +1,3 @@
-from typing import List
 from sqlalchemy import String, select
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.ext.asyncio import AsyncSession

@@ -1,6 +1,5 @@
-import datetime
-from sqlalchemy import func, DateTime, String, Boolean, select, or_
-from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy import String, select
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.base import Base

@@ -104,7 +104,6 @@ const appExecutionDefect = Vue.createApp({
         .post('/user/workers',)
         .then(response => {
             this.workers = response.data;
-            console.log(this.workers);
               }) /* axios */
       }, /* updateTableWorkers */
       updateTableRepairManagers() {
@@ -112,7 +111,6 @@ const appExecutionDefect = Vue.createApp({
         .post('/user/repair_managers',)
         .then(response => {
             this.repair_managers = response.data;
-            console.log(this.repair_managers);
               }) /* axios */
       }, /* updateTableRepairManagers */
       updateTableDivision() {
@@ -120,7 +118,6 @@ const appExecutionDefect = Vue.createApp({
         .post('/divisions',)
         .then(response => {
             this.defect_divisions = response.data;
-            console.log(this.defect_divisions);
               }) /* axios */
       }, /* updateTableDivision */
       updateTableStatusDefect() {
@@ -128,7 +125,6 @@ const appExecutionDefect = Vue.createApp({
         .post('/statuses_defect',)
         .then(response => {
             this.statuses_defect = response.data;
-            console.log(this.statuses_defect);
               }) /* axios */
       }, /* updateTableStatusDefect */
       updateTableTypeDefect() {
@@ -136,7 +132,6 @@ const appExecutionDefect = Vue.createApp({
         .post('/type_defect',)
         .then(response => {
             this.defect_type_defects = response.data;
-            console.log(this.defect_type_defects);
               }) /* axios */
       }, /* updateTableTypeDefect */
       updateCardDefect() {
@@ -146,12 +141,10 @@ const appExecutionDefect = Vue.createApp({
           })
           .then(response => {
             this.cardDefect = response.data;
-            console.log('this.cardDefect', this.cardDefect);
 
             this.cardDefectID = this.cardDefect.defect_id; 
             this.cardStatusDefectName = this.cardDefect.defect_status.status_defect_name; 
             this.cardTypeDefectName = this.cardDefect.defect_type.type_defect_name; 
-
             this.cardKKS = this.cardDefect.defect_system.system_kks; 
             this.cardSystemName = this.cardDefect.defect_system.system_name; 
             this.cardDescription = this.cardDefect.defect_description;
@@ -162,7 +155,6 @@ const appExecutionDefect = Vue.createApp({
             this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
-
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -176,7 +168,6 @@ const appExecutionDefect = Vue.createApp({
           })
           .then(response => {
               this.cardHistorys = response.data;
-              console.log(this.cardHistorys);
                 }) /* axios */
           .catch(err => {
                   Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -202,7 +193,6 @@ const appExecutionDefect = Vue.createApp({
             .then(response => {
                 document.getElementById('closeExecutionModalWindow').click();
                 appVueDefect.updateTables()
-                console.log(response.data);
                 Swal.fire("ДЕФЕКТ ПРИНЯТ В РАБОТУ", "", "success");
                   }) /* axios */
             .catch(err => {
@@ -213,7 +203,6 @@ const appExecutionDefect = Vue.createApp({
         });
       },/* executionDefect */
       cancelDefect() {
-        console.log(defect_id);
         appCorrectionDefect.defect_id = defect_id;
         appCorrectionDefect.parent_button_close_modal_name = 'closeExecutionModalWindow';
         var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {

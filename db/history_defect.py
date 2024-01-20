@@ -1,7 +1,7 @@
 import datetime
-from sqlalchemy import ForeignKey, Integer, Text, String, DateTime, func, select, Boolean
+from sqlalchemy import ForeignKey, String, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.base import Base
 from db.user import User

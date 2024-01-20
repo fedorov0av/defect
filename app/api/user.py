@@ -17,7 +17,7 @@ from app.schemas.user import User_p, User_id, User_update
 user_router = APIRouter()
 
 @user_router.post("/user/me")
-async def read_current_user(request: Request, session: AsyncSession = Depends(get_db)):  
+async def get_current_user(request: Request, session: AsyncSession = Depends(get_db)):  
     token_dec = await decode_token(request.cookies['jwt_access_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
@@ -34,7 +34,7 @@ async def read_current_user(request: Request, session: AsyncSession = Depends(ge
             }
 
 @user_router.post("/user/user_role")
-async def read_current_user(request: Request, session: AsyncSession = Depends(get_db)):  
+async def get_current_user_role(request: Request, session: AsyncSession = Depends(get_db)):  
     token_dec = await decode_token(request.cookies['jwt_access_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))

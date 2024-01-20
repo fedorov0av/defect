@@ -45,7 +45,7 @@ async def update_status_defects(defect_id: Defect_id, status_name: StatusDefect_
     return defect
 
 @status_defect_router.post("/statuses_defect/")
-async def get_divisions(session: AsyncSession = Depends(get_db)):
+async def get_statuses_defect(session: AsyncSession = Depends(get_db)):
     result: list[StatusDefect] = await StatusDefect.get_all_status_defect(session)
     statuses_l = list()
     for status in result:
@@ -58,6 +58,6 @@ async def get_divisions(session: AsyncSession = Depends(get_db)):
     return statuses_l
 
 @status_defect_router.post("/get_status_defect/")
-async def get_divisions(status_name: StatusDefect_name, session: AsyncSession = Depends(get_db)):
+async def get_status_defect(status_name: StatusDefect_name, session: AsyncSession = Depends(get_db)):
     result: StatusDefect = await StatusDefect.get_status_defect_by_name(session, status_name.status_defect_name)
     return result
