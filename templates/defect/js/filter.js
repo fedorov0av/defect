@@ -13,6 +13,13 @@ const appVueFilter = Vue.createApp({
       }
     },
     methods: {
+        clearData() {
+          this.filterDivision = 0;
+          this.startDate = null;
+          this.endDate = null;
+          this.filterStatusDefect = 0;
+          this.ppr = 'false';
+        }, /* clearData */
         updateTableDivision() {
           axios
           .post('/divisions',)
@@ -51,6 +58,7 @@ const appVueFilter = Vue.createApp({
                 }) /* axios */
         }, /* useFilter */
         nouseFilter() {
+          this.clearData();
           axios
           .post('/defects',)
           .then(response => {

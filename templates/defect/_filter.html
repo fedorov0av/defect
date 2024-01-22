@@ -2,23 +2,38 @@
 <div id='vueFilter'>
 	<div class="d-flex justify-content-start block_filter">
 		<div>
-			<p class="mylabel">Фильтры:</p>
+			<p class="mylabel mylabel1">Фильтры:</p>
 		</div>
-		<select class="form-select form-select1 type-defect" aria-label="Default select example" v-model="filterDivision">
-			<option selected value=0>Подразделение</option>
-			<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
-		</select>
+		<div class="block_filter_flex">
+			<select class="form-select form-select1 type-defect" aria-label="Default select example" v-model="filterDivision">
+				<option selected value=0>Подразделение</option>
+				<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
+			</select>
+	
+			<select class="form-select form-select1 type-defect" aria-label="Default select example" v-model="filterStatusDefect">
+				<option selected value=0>Статус дефекта</option>
+				<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
+			</select>
+		</div>
 		
-		<div class="mydatechoise justify-content-center">
-			<div><p class="mylabel">Начало:</p></div>
-			<div class="block_data col-lg-3 col-sm-6">
-				<input id="startDate" class="form-control" type="date" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" v-model="startDate"/>
-				<!-- <span id="startDateSelected"></span> -->
+		<div class="block_filter_flex">
+			<div class="mydatechoise justify-content-center">
+				<div class="block_filter_label">
+					<p class="mylabel">Начало:</p>
+				</div>
+				<div class="block_data col-lg-3 col-sm-6">
+					<input id="startDate" class="form-control type-defect" type="date" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" v-model="startDate"/>
+					<!-- <span id="startDateSelected"></span> -->
+				</div>
 			</div>
-			<div><p class="mylabel">Конец:</p></div>
-			<div class="block_data col-lg-3 col-sm-6">
-				<input id="endDate" class="form-control" type="date" v-model="endDate"/>
-				<!-- <span id="endDateSelected"></span> -->
+			<div class="mydatechoise justify-content-center">
+				<div class="block_filter_label">
+					<p class="mylabel">Конец:</p>
+				</div>
+				<div class="block_data col-lg-3 col-sm-6">
+					<input id="endDate" class="form-control type-defect" type="date" v-model="endDate"/>
+					<!-- <span id="endDateSelected"></span> -->
+				</div>
 			</div>
 		</div>
 
@@ -27,18 +42,15 @@
 			<label class="form-check-label el-checkbox" for="flexCheckChecked"> 
 			  Устранить в ППР
 			</label>
-		  </div>
-
-		<select class="form-select form-select1 type-defect" aria-label="Default select example" v-model="filterStatusDefect">
-			<option selected value=0>Статус</option>
-			<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
-		</select>
-
-		<div>
-			<button type="button" @click="useFilter" class="btn btn-primary lastbutton w190">Применить</button>
 		</div>
-		<div class="lastbutton">
-			<button type="button" @click="nouseFilter" class="btn btn-primary w190">Очистить фильтры</button>
+
+		<div class="block_filter_flex lastbutton">
+			<div class="type-defect1">
+				<button type="button" @click="useFilter" class="btn btn-primary w190">Применить</button>
+			</div>
+			<div class="lastbutton">
+				<button type="button" @click="nouseFilter" class="btn btn-primary w190">Очистить фильтры</button>
+			</div>
 		</div>
 	</div>
 </div>

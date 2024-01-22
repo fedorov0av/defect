@@ -15,8 +15,8 @@
                   <div class="block_data2">
                     <div class="block_input_data"><b>Тип дефекта</b></div>
                       <select class="form-select" aria-label="Default select example" v-model="newTypeDefect">
-                        <option disabled selected>Выберите тип дефекта</option>
-                        <option v-for="defect_type_defect in defect_type_defects">{{ defect_type_defect.type_defect_name }}</option>
+                        <option disabled selected :value=0>Выберите тип дефекта</option>
+                        <option v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
                       </select>
                   </div>
                   <div class="block_data2">
@@ -33,10 +33,16 @@
                     <div class="block_input_data">
                       <b>KKS</b>
                     </div>
-                    <input type="text" class="form-control" v-model="newSystemKKS" placeholder="xxxx xxxx xxxx xxxx"
-                    data-hs-mask-options='{
-                      "template": "0000 0000 0000 0000"
-                    }'>
+                    <div class="block_data8">
+                      <div class="block_data7">
+                        <input type="text" class="form-control" v-maska :data-maska="placeholders[newTypeDefect]" 
+                        data-maska-tokens="X:[A-Z]|0:[0-9]|N:[0-9A-F]:multiple" v-model="newSystemKKS" :placeholder="placeholders[newTypeDefect]"
+                        data-hs-mask-options='{
+                          "template": "0000 0000 0000 0000"
+                        }' :disabled="newTypeDefect==='0'" />
+                        <small class="text-muted"><b>0</b>-Цифра; <b>X</b>-Буква; <b>N</b>-цифра/буква</small>
+                      </div>
+                    </div>
                   </div>
                   <div class="block_data2">
                       <div class="block_input_data">
