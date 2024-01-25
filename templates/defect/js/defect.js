@@ -1,23 +1,37 @@
-const { Mask, MaskInput, vMaska } = Maska
 const appVueAddDefect = Vue.createApp({
+    directives: {'maska': Maska.vMaska},
     data() {
       return {
-        
+        tempMask: '####-##',
+
         defect_divisions: {},
         defect_type_defects: {},
         vueAddUserModalWindow: Vue.ref('vueAddUserModalWindow'),
         placeholders: {
-          'ЖД основного оборудования': '00XXX00XX000',
-          'ЖД по строительным конструкциям': '00XXX00XN00/XX0000',
+          'ЖД основного оборудования': '##XXX##XX###',
           'ЖД по строительным конструкциям': '00XXX00XN00/XX0000',
           'ЖД по освещению': '00XXX00XX000',
           'ЖД по системам пожаротушения': '00XXX00',
           },
-        
+        options: {
+            mask: "0-0",
+            eager: true,
+            tokens: {
+              /* 'X': {
+                pattern: /[A-Z]/,
+                multiple: true,
+                transform: chr => chr.toUpperCase()
+              }, */
+              
+              'N': {
+                pattern: /[0-9A-F]/,
+                multiple: true,
+              },
+            }
+          },
         popovers: {
             'ЖД основного оборудования': '00 - Номер блока (00, 10, 20, 30, 40)',
-            'ЖД по строительным конструкциям': '00XXX00XN00 /XX0000',
-            'ЖД по строительным конструкциям': '00XXX00XN00 /XX0000',
+            'ЖД по строительным конструкциям': '00XXX00XN00/XX0000',
             'ЖД по освещению': '00XXX00XX000',
             'ЖД по системам пожаротушения': '00XXX00',
             },
@@ -42,11 +56,9 @@ const appVueAddDefect = Vue.createApp({
         appVueDefect.updateTables();
     })
     },
-    directives: { maska: vMaska },
     methods: {
       setMask() {
-        new MaskInput("[data-maska]") // for masked input
-        const mask = new Mask({ mask: "#-#" }) // for programmatic use
+        console.log()
       }, /* closeAddDefectModalWindow */
       closeAddDefectModalWindow() {
         this.clearData();

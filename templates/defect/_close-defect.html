@@ -76,24 +76,19 @@
             </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Руководитель ремонта</b></div>
-                  <select class="form-select" aria-label="Default select example" v-model="newRepairManager_id" disabled>
-                    <option selected disabled>Выберите руководителя ремонта</option>
-                    <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name }}</option>
-                  </select> 
+                  <input type="text" class="form-control" placeholder="Руководитель ремонта"  aria-label="readonly input example" v-model="cardRepairManager" disabled>
               </div>
             </div>
 
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Срок устранения</b></div>
-                  <input class="form-control" type="date" disabled>
+                  <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
+                  <input type="text" class="form-control" placeholder="Устранить в ППР" for="flexCheckChecked" disabled :hidden='cardDatePlannedFinish'>
               </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Исполнитель ремонта</b></div>
-                  <select class="form-select" aria-label="Default select example" v-model="cardWorker" disabled>
-                    <option selected disabled>Выберите исполнителя ремонта</option>
-                    <option v-for="worker in workers">{{ worker.user_surname + ' ' + worker.user_name }}</option>
-                  </select> 
+                    <input type="text" class="form-control" placeholder="Исполнитель ремонта"  aria-label="readonly input example" v-model="cardWorker" disabled>
               </div>
             </div>
 
@@ -107,9 +102,9 @@
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Выполнил проверку</b></div>
-                  <select class="form-select" aria-label="Disabled select example" v-model="cardChecker" disabled>
-                    <option disabled selected>Выберите подразделение</option>
-                    <option v-for="division in defect_divisions"></option>
+                  <select class="form-select" aria-label="Default select example" v-model="newChecker_id">
+                    <option selected disabled :value=0>Выполнил проверку</option>
+                    <option v-for="checker in checkers" :disabled='isDisabledCloseDefect' :value="checker.user_id">{{ checker.user_surname + ' ' + checker.user_name }}</option>
                   </select> 
               </div>
               <div class="block_data2">

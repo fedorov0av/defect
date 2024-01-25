@@ -35,11 +35,8 @@
                     </div>
                     <div class="block_data8">
                       <div class="block_data7">
-                        <input type="text" class="form-control" v-maska :data-maska="placeholders[newTypeDefect]" 
-                        data-maska-tokens="X:[A-Z]|0:[0-9]|N:[0-9A-F]:multiple" v-model="newSystemKKS" :placeholder="placeholders[newTypeDefect]"
-                        data-hs-mask-options='{
-                          "template": "0000 0000 0000 0000"
-                        }' :disabled="newTypeDefect==='0'" />
+                        <input type="text" class="form-control"  v-maska :data-maska="placeholders[newTypeDefect]" data-maska-tokens="{'X': { 'pattern': '[A-Z]' }, 'N': { 'pattern': '[A-Z]' }}"
+                        v-model="newSystemKKS" :disabled="newTypeDefect==='0'" :placeholder="placeholders[newTypeDefect]" />
                         <small class="text-muted"><b>0</b>-Цифра; <b>X</b>-Буква; <b>N</b>-цифра/буква</small>
                       </div>
                     </div>

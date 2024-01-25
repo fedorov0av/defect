@@ -469,4 +469,12 @@
     --bs-modal-width: 95%;
   }
 
+  .placeholder::placeholder {
+    color: #c90000;
+    }
+
+  .form-control::placeholder {
+    color: #c90000;
+    }
+
 }

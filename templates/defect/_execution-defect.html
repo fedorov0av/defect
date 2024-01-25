@@ -81,12 +81,13 @@
                 <div class="block_input_data"><b>Руководитель ремонта</b></div>
                   <input type="text" class="form-control" placeholder="Руководитель ремонта"  aria-label="readonly input example" v-model="cardRepairManager" disabled>
               </div>
-            </div>
+            </div> 
 
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Срок устранения</b></div>
-                <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled>
+                  <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
+                  <input type="text" class="form-control" placeholder="Устранить в ППР" for="flexCheckChecked" disabled :hidden='cardDatePlannedFinish'>
               </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Исполнитель ремонта</b></div>

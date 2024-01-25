@@ -94,7 +94,7 @@ async def get_defect(defect_id: Defect_id, session: AsyncSession = Depends(get_d
     return  {
                 "defect_id": defect.defect_id,
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
-                'defect_registrar': defect.defect_registrar.user_surname,
+                'defect_registrar': defect.defect_registrar,
                 'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
                 'defect_owner': defect.defect_division.division_name,
                 'defect_repair_manager': defect.defect_repair_manager,

@@ -13,7 +13,7 @@ from db.utils import get_time
 class History(Base):
     __tablename__ = "history" # процесс учета средств оснащения
     history_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
-    history_defect_id: Mapped[int] = mapped_column(ForeignKey("defect.defect_id")) # id поста из таблицы Defect
+    history_defect_id: Mapped[str] = mapped_column(ForeignKey("defect.defect_id")) # id поста из таблицы Defect
     history_defect: Mapped["Defect"] = relationship(foreign_keys=[history_defect_id]) #  для работы с таблицей Defect как с объектом
     history_user_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - пользователь
     history_user: Mapped["User"] = relationship(foreign_keys=[history_user_id]) #  для работы с таблицей User как с объектом

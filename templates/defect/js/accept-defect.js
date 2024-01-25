@@ -82,7 +82,7 @@ const appAcceptDefect = Vue.createApp({
         /* console.log(event); */
         appAcceptDefect.clearData();
     })
-  },
+  }, 
   methods: {
     setPopover(){
       $(document).ready(function(){
@@ -143,10 +143,10 @@ const appAcceptDefect = Vue.createApp({
     updateCardDefect() {
       axios
         .post('/get_defect/',{
-          "defect_id": this.defect_id,
+          "defect_id": this.defect_id, 
         })
         .then(response => {
-          this.cardDefect = response.data;
+          this.cardDefect = response.data; 
 
           this.cardDefectID = this.cardDefect.defect_id; 
           this.cardStatusDefectName = this.cardDefect.defect_status.status_defect_name; 
@@ -156,7 +156,7 @@ const appAcceptDefect = Vue.createApp({
           this.cardDescription = this.cardDefect.defect_description;
           this.cardLocation = this.cardDefect.defect_location;
           this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
-          this.cardRegistrator = this.cardDefect.defect_registrar;
+          this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name;
           this.cardDateRegistration = this.cardDefect.defect_created_at;
           this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
           /* this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date != null ? this.cardDefect.defect_planned_finish_date.replace(/-/g, ".") : null; */

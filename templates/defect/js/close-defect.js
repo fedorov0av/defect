@@ -17,14 +17,14 @@ const appCloseDefect = Vue.createApp({
                  ] */
         repair_managers: {},
         workers: {},
-
+        toggle: 'false',
         isDisabledCloseDefect: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
         cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
         cardStatusDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
-        cardTypeDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
+        cardTypeDefectName: '', /* Для отображения ТИПА ДЕФЕКТА карточке  */
         cardKKS: '', /* Для отображения KKS в карточке  */
         cardSystemName: '', /* Для отображения НАЗВАНИЯ ОБОРУДОВАНИЯ в карточке  */
         cardDescription: '', /* Для отображения ОПИСАНИЕ ДЕФЕКТА в карточке  */
@@ -34,6 +34,7 @@ const appCloseDefect = Vue.createApp({
         cardDateRegistration: '', /* Для отображения ДАТА РЕГИСТРАЦИИ в карточке  */
         cardRepairManager: {}, /* Для отображения РУКОВОДИТЕЛЬ РЕМОНТА в карточке  */
         cardDatePlannedFinish: '', /* Для отображения СРОК УСТРАНЕНИЯ в карточке  */
+        cardPPR: false,
         cardWorker: {}, /* Для отображения ИСПОЛНИТЕЛЬ РЕМОНТА в карточке  */
         cardWorkerDescription: '', /* Для отображения ВЫПОЛНЕННЫЕ РАБОТЫ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !!  */
         cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
@@ -151,12 +152,12 @@ const appCloseDefect = Vue.createApp({
             this.cardDescription = this.cardDefect.defect_description;
             this.cardLocation = this.cardDefect.defect_location;
             this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
-            this.cardRegistrator = this.cardDefect.defect_registrar;
+            this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name;
             this.cardDateRegistration = this.cardDefect.defect_created_at;
-            this.cardRepairManager = this.cardDefect.defect_repair_manager;
+            this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
-            this.cardWorker = this.cardDefect.defect_worker;
-
+            this.cardPPR = this.cardDefect.defect_ppr;
+            this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 

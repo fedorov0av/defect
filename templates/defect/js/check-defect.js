@@ -17,7 +17,7 @@ const appCheckDefect = Vue.createApp({
         repair_managers: {},
         registrators: {},
         workers: {},
-
+        toggle: 'false',
         isDisabledCheckDefect: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
@@ -34,6 +34,7 @@ const appCheckDefect = Vue.createApp({
         cardDateRegistration: '', /* Для отображения ДАТА РЕГИСТРАЦИИ в карточке  */
         cardRepairManager: {}, /* Для отображения РУКОВОДИТЕЛЬ РЕМОНТА в карточке  */
         cardDatePlannedFinish: '', /* Для отображения СРОК УСТРАНЕНИЯ в карточке  */
+        cardPPR: false,
         cardWorker: {}, /* Для отображения ИСПОЛНИТЕЛЬ РЕМОНТА в карточке  */
         cardWorkerDescription: '', /* Для отображения ВЫПОЛНЕННЫЕ РАБОТЫ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !!  */
         cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
@@ -160,11 +161,12 @@ const appCheckDefect = Vue.createApp({
             this.cardDescription = this.cardDefect.defect_description;
             this.cardLocation = this.cardDefect.defect_location;
             this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
-            this.cardRegistrator = this.cardDefect.defect_registrar;
+            this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name;
             this.cardDateRegistration = this.cardDefect.defect_created_at;
-            this.cardRepairManager = this.cardDefect.defect_repair_manager;
+            this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
-            this.cardWorker = this.cardDefect.defect_worker;
+            this.cardPPR = this.cardDefect.defect_ppr;
+            this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
             this.newCheckerId = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_id : 0;
                 })
           .catch(err => {

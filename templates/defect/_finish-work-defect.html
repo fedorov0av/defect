@@ -1,5 +1,5 @@
 {% raw %}
-<!----------------------------------------Модальное окно "Завершение работ"------------------------------------------>
+<!----------------------------------------Модальное окно "Завершение работ"------------------------------------------> 
 <div id="vueFinishWorkDefect">
   <div class="modal fade" id="FinishWorkModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -83,7 +83,8 @@
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Срок устранения</b></div>
-                <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled>
+                  <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
+                  <input type="text" class="form-control" placeholder="Устранить в ППР" for="flexCheckChecked" disabled :hidden='cardDatePlannedFinish'>
               </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Исполнитель ремонта</b></div>
