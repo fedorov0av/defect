@@ -2,32 +2,15 @@ const appVueAddDefect = Vue.createApp({
     directives: {'maska': Maska.vMaska},
     data() {
       return {
-        tempMask: '####-##',
 
         defect_divisions: {},
         defect_type_defects: {},
         vueAddUserModalWindow: Vue.ref('vueAddUserModalWindow'),
         placeholders: {
           'ЖД основного оборудования': '##XXX##XX###',
-          'ЖД по строительным конструкциям': '00XXX00XN00/XX0000',
-          'ЖД по освещению': '00XXX00XX000',
-          'ЖД по системам пожаротушения': '00XXX00',
-          },
-        options: {
-            mask: "0-0",
-            eager: true,
-            tokens: {
-              /* 'X': {
-                pattern: /[A-Z]/,
-                multiple: true,
-                transform: chr => chr.toUpperCase()
-              }, */
-              
-              'N': {
-                pattern: /[0-9A-F]/,
-                multiple: true,
-              },
-            }
+          'ЖД по строительным конструкциям': '##XXX##XN##/XX####',
+          'ЖД по освещению': '##XXX##XX###',
+          'ЖД по системам пожаротушения': '##XXX##',
           },
         popovers: {
             'ЖД основного оборудования': '00 - Номер блока (00, 10, 20, 30, 40)',
@@ -42,6 +25,8 @@ const appVueAddDefect = Vue.createApp({
         newLocation: '',
         newTypeDefect: '0',
         newDivisionOwner: '',
+
+        maskObject: {}
       }
     },
     beforeMount(){
@@ -60,6 +45,9 @@ const appVueAddDefect = Vue.createApp({
       setMask() {
         console.log()
       }, /* closeAddDefectModalWindow */
+      onChangeTypeDefect(event) {
+        this.newSystemKKS = '';
+      },
       closeAddDefectModalWindow() {
         this.clearData();
       }, /* closeAddDefectModalWindow */
@@ -89,6 +77,9 @@ const appVueAddDefect = Vue.createApp({
         if (this.newSystemName == '' || this.newDefectNotes == '' || this.newTypeDefect == '0'){
               Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены</b>", heightAuto: false}); 
         } /* if */
+        else if (!this.maskObject.completed) {
+          Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false}); 
+        }
         else {
           axios
           .post('/defect/add', 

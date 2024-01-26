@@ -11,15 +11,11 @@
         </div>
         <div class="modal-body">
           <form method="post">
-            <input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
-
+            
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Тип дефекта</b></div>
-                  <select class="form-select" aria-label="Default select example" v-model="cardTypeDefectName" disabled>
-                    <option disabled selected>Выберите тип дефекта</option>
-                    <option v-for="defect_type_defect in defect_type_defects">{{ defect_type_defect.type_defect_name }}</option>
-                  </select>
+                <input type="text" class="form-control"  aria-label="readonly input example" v-model="cardTypeDefectName" disabled>
               </div>
               <div class="block_data2">
                   <div class="block_input_data"><b>Статус дефекта</b></div>
@@ -32,16 +28,14 @@
                 <div class="block_input_data">
                   <b>KKS</b>
                 </div>
-                <input type="text" class="form-control" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx"
-                data-hs-mask-options='{
-                  "template": "0000 0000 0000 0000"
-                }' disabled>
+                <input type="text" class="form-control" v-model="cardKKS" disabled>
               </div>
               <div class="block_data2">
                   <div class="block_input_data">
                     <b>Оборудование</b>
                   </div>
-                  <input type="text" class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled>
+                  <!-- <input type="text" class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled> -->
+                  <textarea class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled></textarea>
               </div>
             </div>
 
@@ -66,7 +60,7 @@
                   <input type="text" class="form-control" placeholder="Обнаружил дефект"  aria-label="readonly input example" v-model="cardRegistrator" disabled>
               </div>
             </div>
-
+ 
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data">
@@ -84,7 +78,7 @@
               <div class="block_data2">
                 <div class="block_input_data"><b>Срок устранения</b></div>
                   <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
-                  <input type="text" class="form-control placeholder" placeholder="Устранить в ППР" for="flexCheckChecked" disabled :hidden='cardDatePlannedFinish'>
+                  <input type="text" class="form-control" placeholder="Устранить в ППР" for="flexCheckChecked" disabled :hidden='cardDatePlannedFinish'>
               </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Исполнитель ремонта</b></div>
@@ -142,7 +136,7 @@
                           <tr v-for="cardHistory in cardHistorys">
                             <td class="column1">{{ cardHistory.history_date }}</td>
                             <td class="column2">{{ cardHistory.history_status }}</td>
-                            <td class="column3">{{ cardHistory.history_user.user_surname }}</td>
+                            <td class="column3">{{ cardHistory.history_user.user_surname + ' ' + cardHistory.history_user.user_name }}</td>
                             <td class="column4">{{ cardHistory.history_comment }}</td>
                           </tr>
                       </tbody>

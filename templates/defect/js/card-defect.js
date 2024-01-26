@@ -130,10 +130,10 @@ const appCardDefect = Vue.createApp({
             this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
             this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name;
             this.cardDateRegistration = this.cardDefect.defect_created_at;
-            this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
+            this.cardRepairManager = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name : '';
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardPPR = this.cardDefect.defect_ppr;
-            this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            this.cardWorker = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name : '';
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 

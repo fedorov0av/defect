@@ -41,7 +41,8 @@
                   <div class="block_input_data">
                     <b>Оборудование</b>
                   </div>
-                  <input type="text" class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled>
+                  <textarea class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled></textarea>
+                  <!-- <input type="text" class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled> -->
               </div>
             </div>
 
@@ -148,7 +149,7 @@
                           <tr v-for="cardHistory in cardHistorys">
                             <td class="column1">{{ cardHistory.history_date }}</td>
                             <td class="column2">{{ cardHistory.history_status }}</td>
-                            <td class="column3">{{ cardHistory.history_user.user_surname }}</td>
+                            <td class="column3">{{ cardHistory.history_user.user_surname + ' ' + cardHistory.history_user.user_name }}</td>
                             <td class="column4">{{ cardHistory.history_comment }}</td>
                           </tr>
                       </tbody>

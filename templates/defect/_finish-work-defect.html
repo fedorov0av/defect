@@ -11,15 +11,11 @@
         </div>
         <div class="modal-body">
           <form method="post">
-            <input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
 
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Тип дефекта</b></div>
-                  <select class="form-select" aria-label="Default select example" v-model="cardTypeDefectName" disabled>
-                    <option disabled selected>Выберите тип дефекта</option>
-                    <option v-for="defect_type_defect in defect_type_defects">{{ defect_type_defect.type_defect_name }}</option>
-                  </select>
+                <input type="text" class="form-control"  aria-label="readonly input example" v-model="cardTypeDefectName" disabled>
               </div>
               <div class="block_data2">
                   <div class="block_input_data"><b>Статус дефекта</b></div>
@@ -41,7 +37,8 @@
                   <div class="block_input_data">
                     <b>Оборудование</b>
                   </div>
-                  <input type="text" class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled>
+                  <!-- <input type="text" class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled> -->
+                  <textarea class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled></textarea>
               </div>
             </div>
 
@@ -95,14 +92,15 @@
             <div class="block_row">
               <div class="block_data4">
                 <div class="block_input_data"><b>Выполненные работы</b></div>
-                <textarea class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" :disabled='isDisabledFinishDefect'></textarea>
+                <textarea id="my-text" class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" :disabled='isDisabledFinishDefect'></textarea>
+                <p id="result"></p>
               </div>
             </div>
             
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Выполнил проверку</b></div>
-                  <select class="form-select" aria-label="Disabled select example" v-model="cardChecker" disabled>
+                  <select class="form-select"  aria-label="Disabled select example" v-model="cardChecker" disabled>
                     <option disabled selected>Выберите подразделение</option>
                     <option v-for="division in defect_divisions"></option>
                   </select> 
@@ -145,7 +143,7 @@
                           <tr v-for="cardHistory in cardHistorys">
                             <td class="column1">{{ cardHistory.history_date }}</td>
                             <td class="column2">{{ cardHistory.history_status }}</td>
-                            <td class="column3">{{ cardHistory.history_user.user_surname }}</td>
+                            <td class="column3">{{ cardHistory.history_user.user_surname + ' ' + cardHistory.history_user.user_name }}</td>
                             <td class="column4">{{ cardHistory.history_comment }}</td>
                           </tr>
                       </tbody>
@@ -164,3 +162,25 @@
 
 {% endraw %}
 <script src="{{ url_for('defect_js', path='finish-work-defect.js') }}"></script>
+
+    <!--Script-->
+    <script>
+      var myText = document.getElementById("my-text");
+      var result = document.getElementById("result");
+      var limit = 50;
+      result.textContent = 0 + "/" + limit;
+
+      myText.addEventListener("input",function(){
+      var textLength = myText.value.length;
+      result.textContent = textLength + "/" + limit;
+
+      if(textLength > limit){
+          myText.style.borderColor = "#ff2851";
+          result.style.color = "#ff2851";
+      }
+      else{
+          myText.style.borderColor = "#31821b";
+          result.style.color = "#31821b";
+        }
+      });
+    </script>

@@ -1,4 +1,5 @@
 const appConfirmDefect = Vue.createApp({
+    directives: {'maska': Maska.vMaska},
     data() {
       return {
         defect_id: '0',
@@ -10,6 +11,13 @@ const appConfirmDefect = Vue.createApp({
         toggle: 'false',
         isDisabledConfirmDefect: false,
         isHiddenDate: 'false',
+        
+        placeholders: {
+          'ЖД основного оборудования': '##XXX##XX###',
+          'ЖД по строительным конструкциям': '##XXX##XN##/XX####',
+          'ЖД по освещению': '##XXX##XX###',
+          'ЖД по системам пожаротушения': '##XXX##',
+          },
 
         modalConfirmDefectModalWindow: Vue.ref('modalConfirmDefectModalWindow'),
 
@@ -31,6 +39,7 @@ const appConfirmDefect = Vue.createApp({
         cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
+        newCardKSS: '',
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
 
@@ -55,8 +64,8 @@ const appConfirmDefect = Vue.createApp({
           },
           "history_comment": ""
         }], /* ОБЩИЙ ОБЪЕКТ для храненения данных истории дефекта !!! ЕСЛИ ПОМЕНЯЕТСЯ API ТО ЗАМЕНИТЬ НА АКТУАЛЬНЫЕ ЗНАЧЕНИЯ */
-        
 
+        maskObject: {},
       }
     },
     beforeMount() {
@@ -88,6 +97,7 @@ const appConfirmDefect = Vue.createApp({
         });
       }, /* setPopover */
       clearData() {
+        this.newCardKSS = 0;
         this.newDivisionOwner_id = 0;
         this.newDate ='';
         this.newRepairManager_id = 0;
@@ -148,7 +158,7 @@ const appConfirmDefect = Vue.createApp({
             this.cardDefectID = this.cardDefect.defect_id; 
             this.cardStatusDefectName = this.cardDefect.defect_status.status_defect_name; 
             this.cardTypeDefectName = this.cardDefect.defect_type.type_defect_name; 
-            this.cardKKS = this.cardDefect.defect_system.system_kks; 
+            this.cardKKS = this.cardDefect.defect_system.system_kks;
             this.cardSystemName = this.cardDefect.defect_system.system_name; 
             this.cardDescription = this.cardDefect.defect_description;
             this.cardLocation = this.cardDefect.defect_location;
@@ -157,8 +167,15 @@ const appConfirmDefect = Vue.createApp({
             this.cardRepairManager = this.cardDefect.defect_repair_manager;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker;
+            this.repairManager_id = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_id : 0;
+
+            this.newRepairManager_id = this.repairManager_id; //
+            this.newCardDatePlannedFinish = this.cardDatePlannedFinish; //
+            this.newCardSystemName = this.cardSystemName; //
+            this.newCardLocation = this.cardDefect; //
+            this.newCardTypeDefectName = this.cardTypeDefectName; //
+            this.newCardKSS = this.cardKKS;
             this.newDivisionOwner_id = this.cardDefect.defect_division ? this.cardDefect.defect_division.division_id : 0;
-            this.newRepairManager_id = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_id : 0;
             this.newDate = this.cardDefect.defect_planned_finish_date ? this.cardDefect.defect_planned_finish_date  : null;
                 })
           .catch(err => {
