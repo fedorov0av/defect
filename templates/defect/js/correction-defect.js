@@ -1,6 +1,7 @@
 const appCorrectionDefect = Vue.createApp({
     data() {
         return {
+          textLength: 0,
           defect_id: '0',
           parent_button_close_modal_name: '', 
           statuses_defect:{}, /* ['Зарегистрирован', # 1
@@ -21,6 +22,8 @@ const appCorrectionDefect = Vue.createApp({
         }
       },
       mounted() {
+        this.clearData()
+        this.setLimit()
         this.updateTableStatusDefect()
         var myModal = document.getElementById('CorrectionDefectModalWindow')
         myModal.addEventListener('hidden.bs.modal', function (event) {
@@ -28,7 +31,28 @@ const appCorrectionDefect = Vue.createApp({
       })
       },
       methods: {
+        changeTextCorrection(event){
+          if (event.target.value.length > 200){
+            event.target.value = event.target.value.slice(0, 200);
+          }
+        }, /* changeTextWork */
+        setLimit(){
+          var myText = document.getElementById("correction-text");
+          var result = document.getElementById("correction-result");
+          var limit = 200;
+          result.textContent = 0 + "/" + limit;
+    
+          myText.addEventListener('keypress',function(){
+          result.textContent = this.textLength + 1 + "/" + limit;
+          if(this.textLength > limit -1){
+              myText.style.borderColor = "#ff2851";
+              result.style.color = "#ff2851"; 
+          }
+          });
+        }, /* setlimit*/
         clearData() {
+          this.textLength = 0;
+          this.setLimit()
           this.defect_id = '0';
           this.cardComment = '';
           this.parent_button_close_modal_name = '';

@@ -21,6 +21,13 @@ class New_defect_p(BaseModel):
     defect_system_kks: Optional[str]
     defect_type_defect_name: Optional[str]
     defect_location: Optional[str]
+    defect_user_division_id: Optional[int] = None
+
+class Defect_description_p(BaseModel):
+    defect_description: Optional[str] = None
+
+class Defect_location_p(BaseModel):
+    defect_location: Optional[str] = None
 
 class Defect_id(BaseModel):
     defect_id: Optional[str]

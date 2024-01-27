@@ -10,10 +10,11 @@
           </div>
           <div class="modal-body">
             <form method="post">
-               <div class="block_row">
-                  <div class="block_data5">
+               <div class="block_row pos_r">
+                  <div class="block_data5 correction_area">
                     <div class="block_input_data"><b>Комментарий при корректировке</b></div>
-                    <textarea class="form-control" placeholder="Комментарий" v-model="cardComment"></textarea>
+                    <textarea id="correction-text" @input="changeTextCorrection" class="form-control" placeholder="Комментарий" v-model="cardComment"></textarea>
+                    <p id="correction-result" class="pos_a"></p>
                   </div>
                 </div>
                 <div class="modal-footer">

@@ -37,10 +37,10 @@
                     </div>
                     <div class="block_data8">
                       <div class="form-floating">
-                        <input type="text" id="inputKKS" class="form-control" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newTypeDefect]" data-maska-tokens="{'X': { 'pattern': '[a-zA-Z]' }, 'N': { 'pattern': '[a-zA-Z0-9]' }}"
+                        <input type="text" id="inputKKS" class="form-control" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newTypeDefect]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
                         v-model="newSystemKKS" :disabled="newTypeDefect==='0'" :placeholder="placeholders[newTypeDefect]" />
                         <label for="inputKKS" :hidden="newTypeDefect==='0'">{{ placeholders[newTypeDefect] }}</label>
-                        <p class="text-muted text_center"><b>#</b>-Цифра; <b>X</b>-Буква; <b>N</b>-цифра/буква</p>
+                        <p class="text-muted text_center"><b>#</b>-Цифра; <b>X</b>-Буква; <b>N</b>-цифра/буква; <b>A</b>-(необязательные)</p>
                       </div>
                     </div>
                   </div>
@@ -71,9 +71,9 @@
                 <div class="block_row">
                   <div class="block_data2">
                     <div class="block_input_data"><b>Подразделение-владелец</b></div>
-                      <select class="form-select" aria-label="Default select example" v-model="newDivisionOwner" disabled>
-                        <option disabled selected>Выберите подразделение</option>
-                        <option v-for="division in defect_divisions">{{ division.division_name }}</option>
+                      <select class="form-select" v-model="newDivisionOwner_id">
+                        <option disabled selected :value=0>Выберите подразделение</option>
+                        <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
                       </select> 
                   </div>
                   <div class="block_data2">

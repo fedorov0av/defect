@@ -39,11 +39,15 @@ const appConfirmDefect = Vue.createApp({
         cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
-        newCardKSS: '',
+        newCardKKS: '',
+        newCardLocation: '',
+        newCardSystemName: '',
+        newCardDescription: '',
+        newCardDatePlannedFinish: '',
+        newCardTypeDefectName: '',
+
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
-
-        newDate: '', /* Для хранения ДАТЫ РЕМОНТА  в карточке  */
 
         cardHistorys: [{
           "history_id": 0,
@@ -97,9 +101,8 @@ const appConfirmDefect = Vue.createApp({
         });
       }, /* setPopover */
       clearData() {
-        this.newCardKSS = 0;
+        this.newCardKKS = 0;
         this.newDivisionOwner_id = 0;
-        this.newDate ='';
         this.newRepairManager_id = 0;
         this.isHiddenDate = 'false';
 
@@ -168,15 +171,16 @@ const appConfirmDefect = Vue.createApp({
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker;
             this.repairManager_id = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_id : 0;
+            this.divisionOwner_id = this.cardDefect.defect_division ? this.cardDefect.defect_division.division_id : 0;
 
+            this.newCardLocation = this.cardLocation;
+            this.newCardSystemName = this.cardSystemName; 
+            this.newCardDescription = this.cardDescription;
             this.newRepairManager_id = this.repairManager_id; //
             this.newCardDatePlannedFinish = this.cardDatePlannedFinish; //
-            this.newCardSystemName = this.cardSystemName; //
-            this.newCardLocation = this.cardDefect; //
             this.newCardTypeDefectName = this.cardTypeDefectName; //
-            this.newCardKSS = this.cardKKS;
-            this.newDivisionOwner_id = this.cardDefect.defect_division ? this.cardDefect.defect_division.division_id : 0;
-            this.newDate = this.cardDefect.defect_planned_finish_date ? this.cardDefect.defect_planned_finish_date  : null;
+            this.newCardKKS = this.cardKKS;
+            this.newDivisionOwner_id = this.divisionOwner_id;
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -198,13 +202,14 @@ const appConfirmDefect = Vue.createApp({
       }, /* updateTableHistory */
       confirmDefect() {
         //this.newDate = this.cardDatePlannedFinish ? this.cardDatePlannedFinish  : null;
-        if ((this.cardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0 || this.cardDatePlannedFinish == '') {
+        if ((this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0 || this.newCardDatePlannedFinish == '') {
           Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
+        
         tempDate = this.cardDateRegistration.split(' ')[0].split('-')
         cardDateRegistration = tempDate[2] + '-'+tempDate[1]+'-'+tempDate[0]
-        if (this.cardDatePlannedFinish <= cardDateRegistration ) {
+        if (this.newCardDatePlannedFinish <= cardDateRegistration ) {
           Swal.fire({html:"<b>Срок устранения должен быть позже даты регистрации дефекта</b>", heightAuto: false}); 
           return;  /* Если планируемая дата меньше даты то выходим из функции */
         }
@@ -216,7 +221,30 @@ const appConfirmDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
+            textHistory = ''
+            if (this.newCardTypeDefectName !== this.cardTypeDefectName){
+              textHistory = textHistory+'Тип дефекта изменился с "'+this.cardTypeDefectName+'" на "'+this.newCardTypeDefectName+'"\n';
+            }
+            if (this.newCardKKS !== this.cardKKS){
+              textHistory = textHistory+'KKS изменился с "'+this.cardKKS+'" на "'+this.newCardKKS+'"\n';
+            }
+            if (this.newCardLocation !== this.cardLocation){
+              textHistory = textHistory+'Местоположение изменилось с "'+this.cardLocation+'" на "'+this.newCardLocation+'"\n';
+            }
+            if (this.newCardDescription !== this.cardDescription){
+              textHistory = textHistory+'Описание дефекта изменилось с "'+this.cardDescription+'" на "'+this.newCardDescription+'"\n';
+            }
+            if (this.newDivisionOwner_id !== this.divisionOwner_id){
+              textHistory = textHistory+'Подразделение-владелец изменилось с "'+this.defect_divisions[this.divisionOwner_id-1]+'" на "'+this.defect_divisions[this.newDivisionOwner_id-1]+'"\n';
+            }
+            if (this.newCardSystemName !== this.cardSystemName){
+              textHistory = textHistory+'Оборудование изменилось с "'+this.cardSystemName+'" на "'+this.newCardSystemName+'"\n';
+            }
+            if (this.newRepairManager_id !== this.repairManager_id){
+              textHistory = textHistory+'Руководитель ремонта изменился с "'+this.repair_managers[this.repairManager_id-1]+'" на "'+this.repair_managers[this.newRepairManager_id-1]+'"\n';
+            }
             data = {
+
               "defect_id": {
                 "defect_id": this.defect_id
               },
@@ -227,13 +255,31 @@ const appConfirmDefect = Vue.createApp({
                 "user_id": parseInt(this.newRepairManager_id)
               },
               "defect_planned_finish_date_str": {
-                "date": this.isHiddenDate == 'false' ? this.cardDatePlannedFinish : null
+                "date": this.isHiddenDate == 'false' ? this.newCardDatePlannedFinish : null
               },
               "defect_ppr": {
                 "ppr": this.isHiddenDate == 'true' ? true : false
               },
               "division_id": {
                 "division_id": parseInt(this.newDivisionOwner_id)
+              },
+              "system_kks": {
+                "system_kks": this.newCardKKS !== this.cardKKS ? this.newCardKKS : this.cardKKS
+              },
+              "system_name": {
+                "system_name": this.newCardSystemName !== this.cardSystemName ? this.newCardSystemName : this.cardSystemName
+              },
+              "location": {
+                "defect_location": this.newCardLocation !== this.cardLocation ? this.newCardLocation : null
+              },
+              "defect_description": {
+                "defect_description": this.newCardDescription !== this.cardDescription ? this.newCardDescription : null
+              },
+              "type_defect_name": {
+                "type_defect_name": this.newCardTypeDefectName !== this.cardTypeDefectName ? this.newCardTypeDefectName : null
+              },
+              "comment": {
+                "comment": textHistory !== '' ? textHistory : null
               }
             }
             axios

@@ -8,7 +8,7 @@ const appVueAddDefect = Vue.createApp({
         vueAddUserModalWindow: Vue.ref('vueAddUserModalWindow'),
         placeholders: {
           'ЖД основного оборудования': '##XXX##XX###',
-          'ЖД по строительным конструкциям': '##XXX##XN##/XX####',
+          'ЖД по строительным конструкциям': '##XXX##XN##AAAAAA',
           'ЖД по освещению': '##XXX##XX###',
           'ЖД по системам пожаротушения': '##XXX##',
           },
@@ -25,6 +25,7 @@ const appVueAddDefect = Vue.createApp({
         newLocation: '',
         newTypeDefect: '0',
         newDivisionOwner: '',
+        newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
 
         maskObject: {}
       }
@@ -33,6 +34,7 @@ const appVueAddDefect = Vue.createApp({
       this.setMask();
     },
     mounted() {
+      this.getDivision();
       this.updateTableDivision();
       this.updateTableTypeDefect();
       var myModalEl = document.getElementById('AddDefectModalWindow');
@@ -58,13 +60,32 @@ const appVueAddDefect = Vue.createApp({
         this.newLocation = '';
         this.newTypeDefect = '0';
         this.newDivisionOwner = '';
+        this.newDivisionOwner_id = 0;
       }, /* clearData */
+      getDivision() {
+        axios
+          .post('/user/me',{
+          })
+          .then(response => {
+            this.currentUser = response.data;
+            this.newDivisionOwner = this.currentUser.user_division;
+          })
+          .catch(err => {
+              Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+              console.log(err);
+          }) /* axios */
+      }, /* getDivision */
       updateTableDivision() {
         axios
         .post('/divisions',)
         .then(response => {
             this.defect_divisions = response.data;
-              }) /* axios */
+            for (i in this.defect_divisions){
+               if (this.defect_divisions[i].division_name == this.currentUser.user_division) {
+                this.newDivisionOwner_id = this.defect_divisions[i].division_id} 
+            console.log(this.newDivisionOwner_id)
+            }
+          }) /* axios */
       }, /* updateTableDivision */
       updateTableTypeDefect() {
         axios
@@ -73,12 +94,22 @@ const appVueAddDefect = Vue.createApp({
             this.defect_type_defects = response.data;
               }) /* axios */
       }, /* updateTableTypeDefect */
+      
+      checkMask(){
+        this.maskObject.completed = this.newSystemKKS.length >= this.placeholders[this.newTypeDefect].slice(0,11).length
+      },
       addNewDefect() {
+        if (this.placeholders[this.newTypeDefect] = '##XXX##XN##AAAAAA') {
+          this.checkMask()
+        }
         if (this.newSystemName == '' || this.newDefectNotes == '' || this.newTypeDefect == '0'){
               Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены</b>", heightAuto: false}); 
         } /* if */
-        else if (!this.maskObject.completed) {
-          Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false}); 
+        else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
+          Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
+        }
+        else if (!this.maskObject.completed && (this.placeholders[this.newTypeDefect] = '##XXX##XN##AAAAAA' ?  this.newSystemKKS.length > this.placeholders[this.newTypeDefect].slice(0,10).length : true)) {
+          Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
         }
         else {
           axios
@@ -86,9 +117,10 @@ const appVueAddDefect = Vue.createApp({
               {
                 "defect_description": this.newDefectNotes,
                 "defect_system_name": this.newSystemName,
-                "defect_system_kks": this.newSystemKKS,
+                "defect_system_kks": this.newSystemKKS !== '' ? this.newSystemKKS : null,
                 "defect_type_defect_name": this.newTypeDefect,
-                "defect_location": this.newLocation
+                "defect_location": this.newLocation,
+                "defect_user_division_id": parseInt(this.newDivisionOwner_id),
               }
           )
           .then(response => {

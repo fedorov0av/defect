@@ -18,6 +18,7 @@ const appFinishWorkDefect = Vue.createApp({
         workers: {},
         toggle: 'false',
         isDisabledFinishDefect: false,
+        limit: 20,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -80,6 +81,7 @@ const appFinishWorkDefect = Vue.createApp({
     },
     mounted() {
       this.setPopover();
+      this.setLimit();
     },
     methods: {
       setPopover(){
@@ -91,6 +93,31 @@ const appFinishWorkDefect = Vue.createApp({
           }
         });
       }, /* setPopover */
+      changeTextWork(event){
+        if (event.target.value.length > 200){
+          event.target.value = event.target.value.slice(0, 200);
+        }
+      }, /* changeTextWork */
+      setLimit(){
+        var myText = document.getElementById("my-text");
+        var result = document.getElementById("result");
+        var limit = 200;
+        result.textContent = 0 + "/" + limit;
+  
+        myText.addEventListener('keypress',function(){
+        var textLength = myText.value.length;
+        result.textContent = textLength + 1 + "/" + limit;
+  
+        if(textLength > limit -1){
+            myText.style.borderColor = "#ff2851";
+            result.style.color = "#ff2851"; 
+        }
+        else{
+            myText.style.borderColor = "#31821b";
+            result.style.color = "#31821b";
+          }
+        });
+      }, /* setlimit*/
       updateTables() {
         this.updateTableDivision();
         this.updateTableTypeDefect();

@@ -93,11 +93,11 @@ class Defect(Base):
                                   defect_id: int,
                                   defect_registrator_id: int=None,
                                   defect_owner_id: int=None,
-                                  defect_repair_manager_id: int=None,
-                                  defect_worker_id: int=None,
+                                  defect_repair_manager_id: int=None, # OK
+                                  defect_worker_id: int=None, # OK
                                   defect_planned_finish_date: datetime.datetime=None, # OK
-                                  defect_description: str=None,
-                                  defect_location: str=None,
+                                  defect_description: str=None, # OK
+                                  defect_location: str=None, # OK
                                   defect_type_id: int=None,
                                   defect_status_id: int=None, # OK
                                   defect_division_id: int=None,
@@ -106,6 +106,9 @@ class Defect(Base):
                                   confirm_defect: bool=False,
                                   ): # обновление дефект в БД (там где нет ОК, значит обновление тех полей еще не реализовано)
         defect:Defect = await Defect.get_defect_by_id(session, defect_id)
+        if defect_system_id:
+            system: System = await System.get_system_by_id(session, defect_system_id)
+            defect.defect_system_id = system.system_id
         if defect_status_id:
             status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, defect_status_id)
             defect.defect_status_id = status.status_defect_id
@@ -113,12 +116,17 @@ class Defect(Base):
             defect.defect_planned_finish_date = defect_planned_finish_date
         if defect_repair_manager_id:
             defect.defect_repair_manager_id = defect_repair_manager_id
-        if defect_repair_manager_id:
+        if defect_division_id:
             defect.defect_division_id = defect_division_id
         if defect_worker_id:
             defect.defect_worker_id = defect_worker_id
         if defect_ppr:
             defect.defect_ppr = defect_ppr
+        if defect_location:
+            defect.defect_location = defect_location
+        if defect_description:
+            defect.defect_description = defect_description
+
         if confirm_defect:
             defect.defect_planned_finish_date = defect_planned_finish_date
             defect.defect_ppr = defect_ppr

@@ -89,11 +89,11 @@
               </div>
             </div>
 
-            <div class="block_row">
+            <div class="block_row pos_r">
               <div class="block_data4">
                 <div class="block_input_data"><b>Выполненные работы</b></div>
-                <textarea id="my-text" class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" :disabled='isDisabledFinishDefect'></textarea>
-                <p id="result"></p>
+                <textarea id="my-text" @input="changeTextWork" class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" :disabled='isDisabledFinishDefect'></textarea>
+                <p id="result" class="pos_a"></p>
               </div>
             </div>
             
@@ -115,7 +115,7 @@
 
             <div class="modal-footer">
               <span class="d-inline-block" tabindex="0" data-toggle="popover_finish" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна для пользователя с ролью Исполнитель ремонта">
-                <button @click="cancelDefect" id="finishCancelDefectButton" :disabled='isDisabledFinishDefect' class="btn btn-warning" type="button">Требует корректировки</button>
+                <button @click="cancelDefect" id="finishCancelDefectButton" :disabled='isDisabledFinishDefect' class="btn btn-warning" type="button">Требует решения</button>
               </span>
               <span class="d-inline-block" tabindex="0" data-toggle="popover_finish" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна для пользователя с ролью Исполнитель ремонта">
                 <button @click="finishworkDefect" id="finishFinishDefectButton" :disabled='isDisabledFinishDefect' class="btn btn-primary" type="button">Работы завершены</button>
@@ -162,25 +162,3 @@
 
 {% endraw %}
 <script src="{{ url_for('defect_js', path='finish-work-defect.js') }}"></script>
-
-    <!--Script-->
-    <script>
-      var myText = document.getElementById("my-text");
-      var result = document.getElementById("result");
-      var limit = 50;
-      result.textContent = 0 + "/" + limit;
-
-      myText.addEventListener("input",function(){
-      var textLength = myText.value.length;
-      result.textContent = textLength + "/" + limit;
-
-      if(textLength > limit){
-          myText.style.borderColor = "#ff2851";
-          result.style.color = "#ff2851";
-      }
-      else{
-          myText.style.borderColor = "#31821b";
-          result.style.color = "#31821b";
-        }
-      });
-    </script>

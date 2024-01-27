@@ -16,7 +16,7 @@
               <div class="block_row">
                 <div class="block_data2">
                   <div class="block_input_data"><b>Тип дефекта</b></div>
-                    <select class="form-select" aria-label="Default select example" v-model="cardTypeDefectName">
+                    <select class="form-select" aria-label="Default select example" v-model="newCardTypeDefectName">
                       <option disabled selected :value=0>Выберите тип дефекта</option>
                       <option v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name" :disabled='isDisabledConfirmDefect'>{{ defect_type_defect.type_defect_name }}</option>
                     </select>
@@ -35,8 +35,8 @@
                   <div class="block_data8">
                     <div class="form-floating">
                       <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject"
-                      :data-maska="placeholders[cardTypeDefectName]" data-maska-tokens="{'X': { 'pattern': '[a-zA-Z]' }, 'N': { 'pattern': '[a-zA-Z0-9]' }}" v-model="newCardKSS" :placeholder="placeholders[cardTypeDefectName]" >
-                      <label for="inputConfirmKKS" :hidden="newTypeDefect==='0'">{{ placeholders[cardTypeDefectName] }}</label>
+                      :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="{'X': { 'pattern': '[a-zA-Z]' }, 'N': { 'pattern': '[a-zA-Z0-9]' }}" v-model="newCardKKS" :placeholder="placeholders[newCardTypeDefectName]" >
+                      <label for="inputConfirmKKS" :hidden="newCardTypeDefectName==='0'">{{ placeholders[newCardTypeDefectName] }}</label>
                       <p class="text-muted text_center"><b>#</b>-Цифра; <b>X</b>-Буква; <b>N</b>-цифра/буква</p>
                     </div>
                   </div>
@@ -45,19 +45,19 @@
                     <div class="block_input_data">
                       <b>Оборудование</b>
                     </div>
-                    <!-- <input type="text" class="form-control" v-model="cardSystemName" placeholder="Оборудование" :disabled='isDisabledConfirmDefect'> -->
-                    <textarea class="form-control" v-model="cardSystemName" placeholder="Оборудование" :disabled='isDisabledConfirmDefect'></textarea>
+                    <!-- <input type="text" class="form-control" v-model="newCardSystemName" placeholder="Оборудование" :disabled='isDisabledConfirmDefect'> -->
+                    <textarea class="form-control" v-model="newCardSystemName" placeholder="Оборудование" :disabled='isDisabledConfirmDefect'></textarea>
                 </div>
               </div>
   
               <div class="block_row">
                 <div class="block_data3">
                   <div class="block_input_data"><b>Описание дефекта</b></div>
-                  <textarea class="form-control" v-model="cardDescription" placeholder="Описание дефекта" :disabled='isDisabledConfirmDefect'></textarea>
+                  <textarea class="form-control" v-model="newCardDescription" placeholder="Описание дефекта" :disabled='isDisabledConfirmDefect'></textarea>
                 </div>
                 <div class="block_data3">
                   <div class="block_input_data"><b>Местоположение</b></div>
-                  <textarea class="form-control" v-model="cardLocation" placeholder="Местоположение" :disabled='isDisabledConfirmDefect'></textarea>
+                  <textarea class="form-control" v-model="newCardLocation" placeholder="Местоположение" :disabled='isDisabledConfirmDefect'></textarea>
                 </div>
               </div>
   
@@ -100,7 +100,7 @@
                     <b>Срок устранения</b>
                     <b class="zvezda"> &nbsp * </b>
                   </div>
-                    <input id="date" class="form-control form-control1" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="cardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
+                    <input id="date" class="form-control form-control1" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
                     <div class="block-checkbox">
                       <input class="form-check-input el-checkbox" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false :disabled='isDisabledConfirmDefect'>
                       <label class="form-check-label el-checkbox" for="flexCheckChecked"> 
@@ -194,16 +194,3 @@
   </div>
   {% endraw %}
   <script src="{{ url_for('defect_js', path='confirm-defect.js') }}"></script>
-
-  <!-- <script type="text/javascript">
-    $(document).ready(function() {
-      $('#flexCheckChecked').change(function() {
-        console.log('SDSDSDSDSD')
-        if ($(this).is(":checked")) {
-          $('.block_input_data input[id="date"]').prop("disabled", true);
-        } else {
-          $('.block_input_data input[id="date"]').prop("disabled", false);
-        }
-      });
-    });
-  </script>  -->
