@@ -14,7 +14,7 @@ const appConfirmDefect = Vue.createApp({
         
         placeholders: {
           'ЖД основного оборудования': '##XXX##XX###',
-          'ЖД по строительным конструкциям': '##XXX##XN##/XX####',
+          'ЖД по строительным конструкциям': '##XXX##XN##AAAAAA',
           'ЖД по освещению': '##XXX##XX###',
           'ЖД по системам пожаротушения': '##XXX##',
           },
@@ -39,7 +39,7 @@ const appConfirmDefect = Vue.createApp({
         cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
-        newCardKKS: '',
+        newCardKKS: null,
         newCardLocation: '',
         newCardSystemName: '',
         newCardDescription: '',
@@ -206,7 +206,10 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
-        
+        if (this.newCardSystemName == '' || this.newCardLocation == '' || this.newCardDescription == '') {
+          Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
+          return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
+        }
         tempDate = this.cardDateRegistration.split(' ')[0].split('-')
         cardDateRegistration = tempDate[2] + '-'+tempDate[1]+'-'+tempDate[0]
         if (this.newCardDatePlannedFinish <= cardDateRegistration ) {
@@ -220,16 +223,19 @@ const appConfirmDefect = Vue.createApp({
           denyButtonText: `ОТМЕНА`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
+          repairManager = this.repairManager_id != 0 ? this.repair_managers[this.repair_managers.findIndex(p => p.user_id == this.repairManager_id)].user_surname+' '+this.repair_managers[this.repair_managers.findIndex(p => p.user_id == this.repairManager_id)].user_name : ''
+          newRepairManager = this.newRepairManager_id != 0 ? this.repair_managers[this.repair_managers.findIndex(p => p.user_id == this.newRepairManager_id)].user_surname+' '+this.repair_managers[this.repair_managers.findIndex(p => p.user_id == this.newRepairManager_id)].user_name : ''
+
           if (result.isConfirmed) {
             textHistory = ''
             if (this.newCardTypeDefectName !== this.cardTypeDefectName){
               textHistory = textHistory+'Тип дефекта изменился с "'+this.cardTypeDefectName+'" на "'+this.newCardTypeDefectName+'"\n';
             }
             if (this.newCardKKS !== this.cardKKS){
-              textHistory = textHistory+'KKS изменился с "'+this.cardKKS+'" на "'+this.newCardKKS+'"\n';
+              textHistory = textHistory+'KKS изменился с "'+(this.cardKKS ? this.cardKKS : "")+'" на "'+(this.newCardKKS ? this.newCardKKS : "")+'"\n';
             }
             if (this.newCardLocation !== this.cardLocation){
-              textHistory = textHistory+'Местоположение изменилось с "'+this.cardLocation+'" на "'+this.newCardLocation+'"\n';
+              textHistory = textHistory+'Местоположение изменилось с "'+(this.cardLocation ? this.cardLocation : "")+'" на "'+(this.newCardLocation ? this.newCardLocation : "")+'"\n';
             }
             if (this.newCardDescription !== this.cardDescription){
               textHistory = textHistory+'Описание дефекта изменилось с "'+this.cardDescription+'" на "'+this.newCardDescription+'"\n';
@@ -240,8 +246,8 @@ const appConfirmDefect = Vue.createApp({
             if (this.newCardSystemName !== this.cardSystemName){
               textHistory = textHistory+'Оборудование изменилось с "'+this.cardSystemName+'" на "'+this.newCardSystemName+'"\n';
             }
-            if (this.newRepairManager_id !== this.repairManager_id){
-              textHistory = textHistory+'Руководитель ремонта изменился с "'+this.repair_managers[this.repairManager_id-1]+'" на "'+this.repair_managers[this.newRepairManager_id-1]+'"\n';
+            if (this.newRepairManager_id !== this.repairManager_id || this.repairManager_id !== 0){
+              textHistory = textHistory+'Руководитель ремонта изменился с "'+repairManager+'" на "'+newRepairManager+'"\n';
             }
             data = {
 

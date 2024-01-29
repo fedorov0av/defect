@@ -11,15 +11,15 @@
         </div>
         <div class="modal-body">
           <form method="post">
-            <input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
 
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Тип дефекта</b></div>
-                  <select class="form-select" aria-label="Default select example" v-model="cardTypeDefectName" disabled>
+                  <!-- <select class="form-select" aria-label="Default select example" v-model="cardTypeDefectName" disabled>
                     <option disabled selected>Выберите тип дефекта</option>
                     <option v-for="defect_type_defect in defect_type_defects">{{ defect_type_defect.type_defect_name }}</option>
-                  </select>
+                  </select> -->
+                  <input type="text" class="form-control"  aria-label="readonly input example" v-model="cardTypeDefectName" disabled>
               </div>
               <div class="block_data2">
                   <div class="block_input_data"><b>Статус дефекта</b></div>
@@ -117,10 +117,10 @@
             </div>
 
             <div class="modal-footer">
-              <span class="d-inline-block" tabindex="0" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Регистратор дефекта">
+              <span class="d-inline-block" tabindex="0" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна только для пользователя с ролью Регистратор дефекта">
                 <button @click="dangerDefect" id="checkDangerDefectButton" :disabled='isDisabledCheckDefect' class="btn btn-danger" type="button">Дефект не устранен</button>
               </span>
-              <span class="d-inline-block" tabindex="0" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Регистратор дефекта">
+              <span class="d-inline-block" tabindex="0" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна только для пользователя с ролью Регистратор дефекта">
                 <button @click="successDefect" id="checkSuccessDefectButton" :disabled='isDisabledCheckDefect' class="btn btn-success" type="button">Дефект устранен</button>
               </span>
             </div>

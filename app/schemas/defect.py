@@ -15,6 +15,7 @@ PydanticDivision = sqlalchemy_to_pydantic(Division)
 PydanticSystem = sqlalchemy_to_pydantic(System)
 
 
+
 class New_defect_p(BaseModel):
     defect_description: Optional[str]
     defect_system_name: Optional[str]
@@ -31,6 +32,9 @@ class Defect_location_p(BaseModel):
 
 class Defect_id(BaseModel):
     defect_id: Optional[str]
+
+class Showcloseddefect(BaseModel):
+    Showcloseddefect: Optional[bool]
 
 class User_id(BaseModel):
     user_id: Optional[int]

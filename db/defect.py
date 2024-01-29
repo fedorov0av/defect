@@ -33,6 +33,7 @@ class Defect(Base):
     defect_ppr: Mapped[bool] = mapped_column(Boolean, default=False) # Устранить в ППР?
     defect_description: Mapped[str] = mapped_column(String(500)) # Описание дефекта.
     defect_check_result: Mapped[str] = mapped_column(String(500), nullable=True) # Результат проверки.
+    defect_work_comment: Mapped[str] = mapped_column(String(500), nullable=True) # Описание дефекта.
     defect_location: Mapped[str] = mapped_column(String(500), nullable=True) # Местоположение дефекта.
     defect_type_id: Mapped[int] = mapped_column(ForeignKey("type_defect.type_defect_id")) # вид дефекта
     defect_type: Mapped["TypeDefect"] = relationship(foreign_keys=[defect_type_id]) #  для работы с таблицей TypeDefect как с объектом
@@ -177,7 +178,7 @@ class Defect(Base):
         if conditions:
             query = query.filter(*conditions)
 
-        query = query.order_by(Defect.defect_id)\
+        query = query.order_by(Defect.defect_id.desc())\
                      .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                      .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
                      .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\

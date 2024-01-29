@@ -44,10 +44,10 @@ const appCorrectionDefect = Vue.createApp({
     
           myText.addEventListener('keypress',function(){
           result.textContent = this.textLength + 1 + "/" + limit;
-          if(this.textLength > limit -1){
+          /* if(this.textLength > limit -1){
               myText.style.borderColor = "#ff2851";
               result.style.color = "#ff2851"; 
-          }
+          } */
           });
         }, /* setlimit*/
         clearData() {

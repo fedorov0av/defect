@@ -31,12 +31,13 @@ const appVueFilter = Vue.createApp({
           this.updateTableDivision();
         }, /* updateAllTables */
         useFilter() {
-          if (this.endDate !== null && this.startDate !== null) {
-            if (this.startDate>this.endDate){
+          if (this.startDate !== null && this.endDate !== null) {
+            if (this.startDate > this.endDate) {
               Swal.fire({html:"<b>Дата окончания раньше даты начала!</b>", heightAuto: false}); 
               return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
             }
           }
+
           axios
             .post('/get_defect_by_filter/', 
               {"date_start": this.startDate,

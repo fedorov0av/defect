@@ -100,24 +100,25 @@
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Выполнил проверку</b></div>
-                  <select class="form-select"  aria-label="Disabled select example" v-model="cardChecker" disabled>
+                  <!-- <select class="form-select"  aria-label="Disabled select example" v-model="cardChecker" disabled>
                     <option disabled selected>Выберите подразделение</option>
                     <option v-for="division in defect_divisions"></option>
-                  </select> 
+                  </select>  -->
+                  <input type="text" class="form-control" aria-label="readonly input example" disabled>
               </div>
               <div class="block_data2">
                 <div class="block_input_data">
                   <b>Результат проверки</b>
                 </div>
-                <input type="text" class="form-control" placeholder="Результат проверки"  disabled>
+                <input type="text" class="form-control" disabled>
               </div>
             </div>
 
             <div class="modal-footer">
-              <span class="d-inline-block" tabindex="0" data-toggle="popover_finish" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна для пользователя с ролью Исполнитель ремонта">
+              <span class="d-inline-block" tabindex="0" data-toggle="popover_finish" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна только для пользователя с ролью Исполнитель ремонта">
                 <button @click="cancelDefect" id="finishCancelDefectButton" :disabled='isDisabledFinishDefect' class="btn btn-warning" type="button">Требует решения</button>
               </span>
-              <span class="d-inline-block" tabindex="0" data-toggle="popover_finish" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна для пользователя с ролью Исполнитель ремонта">
+              <span class="d-inline-block" tabindex="0" data-toggle="popover_finish" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна только для пользователя с ролью Исполнитель ремонта">
                 <button @click="finishworkDefect" id="finishFinishDefectButton" :disabled='isDisabledFinishDefect' class="btn btn-primary" type="button">Работы завершены</button>
               </span>
             </div>

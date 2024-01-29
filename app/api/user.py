@@ -36,6 +36,7 @@ async def get_current_user_role(request: Request, session: AsyncSession = Depend
     return {
             "user_id": user.user_id,
             "user_role": user.user_role[-1].role_name,
+            "user_division": user.user_division.division_name,
             }
 
 @user_router.post("/user/add")

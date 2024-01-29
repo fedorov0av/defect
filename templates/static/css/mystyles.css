@@ -207,7 +207,7 @@
 .block_data9 {
   display: flex;
   flex-direction: row;
-}
+}block-checkbox1
 
 .zvezda {
   color: red;
@@ -229,6 +229,13 @@
   align-items: center;
 }
 
+.block-checkbox2 {
+  display: none;
+  min-width: 200px;
+  margin: 3px;
+  align-items: center;
+}
+
 .el-checkbox {
   margin: 3px;
 }
@@ -246,7 +253,7 @@
 }
 
 .form-select1 {
-  margin-right: 15px;
+  margin-right: 5px;
 }
 
 .status_add_defect {
@@ -279,7 +286,7 @@
   color: #000;
 }
 
-.status_check_defect {
+ .status_check_defect {
   background: repeating-linear-gradient(
   45deg,
   #606dbc,
@@ -289,6 +296,7 @@
 );
   color: #fff;
 }
+ 
 
 .status_close_defect {
   background-color: #088a2f;
@@ -475,7 +483,7 @@
 }
 
 
-@media screen and (min-width:200px) and (max-width:1530px) {
+@media screen and (min-width:200px) and (max-width:1700px) {
 
   .h2 {
     margin: auto;
@@ -491,6 +499,7 @@
 
   .block_filter_flex {
     flex-direction: column;
+    margin-right: 5px;
   }
 
   .type-defect {
@@ -509,12 +518,19 @@
   
   .block-checkbox1 {
     margin-top: 5px;
-    padding: 20px;
+    vertical-align: middle;
+  }
+
+  .block-checkbox2 {
+    display: none;
+    margin-top: 5px;
     vertical-align: middle;
   }
 
   .mylabel1 {
+    display: none;
     padding: 25px 15px 25px 0px;
+    
   }
 
   .modal {

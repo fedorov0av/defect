@@ -14,7 +14,7 @@
                   <div class="block_data2">
                     <div class="block_input_data block_data9">
                       <b>Тип дефекта </b>
-                      <b class="zvezda"> &nbsp * </b> 
+                      <b class="zvezda"> * </b> 
                     </div>
                     <select class="form-select" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect">
                       <option disabled selected :value=0>Выберите тип дефекта</option>
@@ -48,7 +48,7 @@
                   <div class="block_data2">
                       <div class="block_input_data">
                         <b>Оборудование</b> 
-                        <b class="zvezda"> &nbsp * </b>
+                        <b class="zvezda"> * </b>
                       </div>
                       <textarea class="form-control" v-model="newSystemName" placeholder="Оборудование"></textarea>
                   </div>
@@ -58,7 +58,7 @@
                   <div class="block_data3">
                     <div class="block_input_data">
                       <b>Описание дефекта</b> 
-                      <b class="zvezda"> &nbsp * </b> 
+                      <b class="zvezda"> * </b> 
                     </div>
                     <textarea class="form-control" v-model="newDefectNotes" placeholder="Описание дефекта"></textarea>
                   </div>
@@ -70,7 +70,10 @@
   
                 <div class="block_row">
                   <div class="block_data2">
-                    <div class="block_input_data"><b>Подразделение-владелец</b></div>
+                    <div class="block_input_data">
+                      <b>Подразделение-владелец</b>
+                      <b class="zvezda"> * </b>
+                    </div>
                       <select class="form-select" v-model="newDivisionOwner_id">
                         <option disabled selected :value=0>Выберите подразделение</option>
                         <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
@@ -90,7 +93,7 @@
                     <div class="block_input_data">
                       <b>Дата регистрации</b>
                     </div>
-                    <input type="text" class="form-control" placeholder="Дата регистрации"  aria-label="readonly input example" disabled>
+                    <input type="text" class="form-control" aria-label="readonly input example" disabled>
                 </div>
                   <div class="block_data2">
                     <div class="block_input_data"><b>Руководитель ремонта</b></div>
@@ -104,7 +107,7 @@
                 <div class="block_row">
                   <div class="block_data2">
                     <div class="block_input_data"><b>Срок устранения</b></div>
-                      <input class="form-control" type="date" disabled>
+                      <input class="form-control" disabled>
                   </div>
                   <div class="block_data2">
                     <div class="block_input_data"><b>Исполнитель ремонта</b></div>
@@ -118,7 +121,7 @@
                 <div class="block_row">
                   <div class="block_data4">
                     <div class="block_input_data"><b>Выполненные работы</b></div>
-                    <textarea class="form-control" placeholder="Комментарий исполнителя" aria-label="Disabled input example" disabled readonly></textarea>
+                    <textarea class="form-control" aria-label="Disabled input example" disabled readonly></textarea>
                   </div>
                 </div>
   
@@ -134,7 +137,7 @@
                     <div class="block_input_data">
                       <b>Результат проверки</b>
                     </div>
-                    <input type="text" class="form-control" placeholder="Результат проверки"  aria-label="readonly input example" disabled>
+                    <input type="text" class="form-control" aria-label="readonly input example" disabled>
                   </div>
                 </div>
                 

@@ -18,7 +18,7 @@ from db.type_defect import TypeDefect
 from db.history_defect import History
 
 from app.schemas.user import User_id
-from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_description_p, Defect_location_p
+from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_description_p, Defect_location_p, Showcloseddefect
 from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr
 from app.schemas.type_defect import TypeDefect_name
@@ -75,7 +75,7 @@ async def add_new_defect(defect_p: New_defect_p, request: Request, session: Asyn
 async def get_defects(session: AsyncSession = Depends(get_db)):
     return await paginate(
         session,
-        select(Defect).order_by(Defect.defect_id)\
+        select(Defect).order_by(Defect.defect_id.desc())\
                 .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                 .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
@@ -97,7 +97,7 @@ async def get_defects(session: AsyncSession = Depends(get_db)):
                 "defect_status": defect.defect_status,
                 "defect_division": defect.defect_division,
                 "defect_system": defect.defect_system,
-                "defect_system_kks": defect.defect_system.system_kks,} for defect in defects],
+                "defect_system_kks": defect.defect_system.system_kks,} for defect in defects if defect.defect_status_id != 10], # выводит дефекты у которых статус не "Закрыт"
     )
 
 
@@ -145,11 +145,6 @@ async def confirm_defect(
                         session: AsyncSession = Depends(get_db)):
     token_dec = await decode_token(request.cookies['jwt_access_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
-    user: User = await User.get_user_by_id(session, int(user_id))
-    if type_defect_name.type_defect_name:
-        type_defect: TypeDefect = await TypeDefect.get_defect_by_name(session, type_defect_name=type_defect_name.type_defect_name)
-        type_defect_id = type_defect.type_defect_id
-    else: type_defect_id = None
     try:
         if system_kks.system_kks:
             await System.add_system(session, system_name=system_name.system_name, system_kks=system_kks.system_kks)
@@ -163,8 +158,12 @@ async def confirm_defect(
     except (PendingRollbackError, IntegrityError):
         await session.rollback()
         system: System = await System.get_system_by_kks(session, system_kks=system_kks.system_kks)
-
-
+    if type_defect_name.type_defect_name:
+            type_defect: TypeDefect = await TypeDefect.get_defect_by_name(session, type_defect_name=type_defect_name.type_defect_name)
+            type_defect_id = type_defect.type_defect_id
+    else: type_defect_id = None
+    
+    user: User = await User.get_user_by_id(session, int(user_id))
     repair_manager: User = await User.get_user_by_id(session, int(repair_manager_id.user_id))
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
     #defect_planned_finish_date = datetime.strptime(defect_planned_finish_date_str.date, "%d.%m.%Y").date() #    2023-12-23

@@ -13,6 +13,7 @@ const appVueDefect = Vue.createApp({
         pages: 0,
         temp_resp: {},
         nextPageNumber: 0,
+        showcloseddefect: 'false',
       }
     },
 
@@ -22,12 +23,15 @@ const appVueDefect = Vue.createApp({
       
     },  /* mounted */
     methods: {    
+      clearData() {
+        this.showcloseddefect = 'false';
+      }, /* clearData */
       updateTables(){
         this.updateTableDefect()
       },
       updateTableDefect() {
         axios
-        .post('/defects', null, { params:{'page': 1, 'size': parseInt(this.pageSize)}})
+        .post('/defects', null, { "showcloseddefect": this.showcloseddefect === 'true' ? true : null, params:{'page': 1, 'size': parseInt(this.pageSize)}})
         .then(response => {
             this.temp_resp = response.data;
             this.pageNumber = response.data.page;
@@ -38,7 +42,7 @@ const appVueDefect = Vue.createApp({
       handleDoubleClick (event){
         defect_id = event.target.parentNode.childNodes[0].textContent
         status_name = event.target.parentNode.childNodes[7].textContent
-        if (status_name == "Зарегистрирован" || status_name == "Требует корректировки") {
+        if (status_name == "Зарегистрирован" || status_name == "Требует корректировки" || status_name == "Требует решения") {
           appConfirmDefect.defect_id = defect_id;
           appConfirmDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('ConfirmDefectModalWindow'), {

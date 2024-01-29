@@ -60,7 +60,7 @@ const appVueAddDefect = Vue.createApp({
         this.newLocation = '';
         this.newTypeDefect = '0';
         this.newDivisionOwner = '';
-        this.newDivisionOwner_id = 0;
+        this.updateTableDivision()
       }, /* clearData */
       getDivision() {
         axios
@@ -99,17 +99,17 @@ const appVueAddDefect = Vue.createApp({
         this.maskObject.completed = this.newSystemKKS.length >= this.placeholders[this.newTypeDefect].slice(0,11).length
       },
       addNewDefect() {
-        if (this.placeholders[this.newTypeDefect] = '##XXX##XN##AAAAAA') {
+        if (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA') {
           this.checkMask()
         }
-        if (this.newSystemName == '' || this.newDefectNotes == '' || this.newTypeDefect == '0'){
+        if (this.newSystemName == '' || this.newDefectNotes == '' || this.newTypeDefect == '0' || this.newDivisionOwner_id == '0' ){
               Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены</b>", heightAuto: false}); 
         } /* if */
         else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
           Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
         }
         else if (!this.maskObject.completed && (this.placeholders[this.newTypeDefect] = '##XXX##XN##AAAAAA' ?  this.newSystemKKS.length > this.placeholders[this.newTypeDefect].slice(0,10).length : true)) {
-          Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
+          Swal.fire({html:"<b>KKS введен не полностью!</b>", heightAuto: false});
         }
         else {
           axios

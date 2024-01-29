@@ -37,7 +37,7 @@
                       <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject"
                       :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="{'X': { 'pattern': '[a-zA-Z]' }, 'N': { 'pattern': '[a-zA-Z0-9]' }}" v-model="newCardKKS" :placeholder="placeholders[newCardTypeDefectName]" >
                       <label for="inputConfirmKKS" :hidden="newCardTypeDefectName==='0'">{{ placeholders[newCardTypeDefectName] }}</label>
-                      <p class="text-muted text_center"><b>#</b>-Цифра; <b>X</b>-Буква; <b>N</b>-цифра/буква</p>
+                      <p class="text-muted text_center"><b>#</b>-Цифра; <b>X</b>-Буква; <b>N</b>-цифра/буква; <b>A</b>-(необязательные)</p>
                     </div>
                   </div>
                 </div>
@@ -85,7 +85,7 @@
                 <div class="block_data2">
                   <div class="block_input_data">
                     <b>Руководитель ремонта</b>
-                    <b class="zvezda"> &nbsp * </b>
+                    <b class="zvezda"> * </b>
                   </div>
                     <select class="form-select" v-model="newRepairManager_id">
                       <option selected disabled :value=0>Выберите руководителя ремонта</option>
@@ -98,7 +98,7 @@
                 <div class="block_data2">
                   <div class="block_input_data">
                     <b>Срок устранения</b>
-                    <b class="zvezda"> &nbsp * </b>
+                    <b class="zvezda"> * </b>
                   </div>
                     <input id="date" class="form-control form-control1" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
                     <div class="block-checkbox">
@@ -120,7 +120,7 @@
               <div class="block_row">
                 <div class="block_data4">
                   <div class="block_input_data"><b>Выполненные работы</b></div>
-                  <textarea class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" disabled></textarea>
+                  <textarea class="form-control" v-model="cardWorkerDescription" disabled></textarea>
                 </div>
               </div>
               
@@ -136,7 +136,7 @@
                   <div class="block_input_data">
                     <b>Результат проверки</b>
                   </div>
-                  <input type="text" class="form-control" placeholder="Результат проверки"  disabled>
+                  <input type="text" class="form-control" disabled>
                 </div>
               </div>
   
