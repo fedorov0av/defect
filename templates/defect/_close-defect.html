@@ -101,18 +101,18 @@
             </div>
             
             <div class="block_row">
-              <div class="block_data2">
+              <!-- <div class="block_data2">
                 <div class="block_input_data"><b>Выполнил проверку</b></div>
                   <select class="form-select" aria-label="Default select example" v-model="newChecker_id">
                     <option selected disabled :value=0>Выполнил проверку</option>
                     <option v-for="checker in checkers" :disabled='isDisabledCloseDefect' :value="checker.user_id">{{ checker.user_surname + ' ' + checker.user_name }}</option>
                   </select> 
-              </div>
+              </div> -->
               <div class="block_data2">
                 <div class="block_input_data">
                   <b>Результат проверки</b>
                 </div>
-                <input type="text" class="form-control" placeholder="Результат проверки1" disabled>
+                <input type="text" class="form-control" placeholder="Результат проверки" v-model="cardCheckResult" disabled>
               </div>
             </div>
 

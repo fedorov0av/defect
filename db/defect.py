@@ -33,7 +33,7 @@ class Defect(Base):
     defect_ppr: Mapped[bool] = mapped_column(Boolean, default=False) # Устранить в ППР?
     defect_description: Mapped[str] = mapped_column(String(500)) # Описание дефекта.
     defect_check_result: Mapped[str] = mapped_column(String(500), nullable=True) # Результат проверки.
-    defect_work_comment: Mapped[str] = mapped_column(String(500), nullable=True) # Описание дефекта.
+    defect_work_comment: Mapped[str] = mapped_column(String(500), nullable=True) # Комментарий исполнителя после выполнения работ.
     defect_location: Mapped[str] = mapped_column(String(500), nullable=True) # Местоположение дефекта.
     defect_type_id: Mapped[int] = mapped_column(ForeignKey("type_defect.type_defect_id")) # вид дефекта
     defect_type: Mapped["TypeDefect"] = relationship(foreign_keys=[defect_type_id]) #  для работы с таблицей TypeDefect как с объектом
@@ -51,7 +51,7 @@ class Defect(Base):
                 .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                 .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
-                .options(selectinload(Defect.defect_system))
+                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker))
         result = await session.scalars(query)
         defects = result.all()
         return defects
@@ -84,27 +84,30 @@ class Defect(Base):
                 .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                 .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
-                .options(selectinload(Defect.defect_system))
+                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker))
         result = await session.scalars(query)
         defect = result.one()
         return defect
     
     @staticmethod
     async def update_defect_by_id(session: AsyncSession,
-                                  defect_id: int,
+                                  defect_id: int, # OK
                                   defect_registrator_id: int=None,
                                   defect_owner_id: int=None,
                                   defect_repair_manager_id: int=None, # OK
                                   defect_worker_id: int=None, # OK
+                                  defect_checker_id: int=None, # OK
+                                  defect_check_result: str=None, # OK
                                   defect_planned_finish_date: datetime.datetime=None, # OK
                                   defect_description: str=None, # OK
+                                  defect_work_comment: str=None,
                                   defect_location: str=None, # OK
-                                  defect_type_id: int=None,
+                                  defect_type_id: int=None, # OK
                                   defect_status_id: int=None, # OK
-                                  defect_division_id: int=None,
-                                  defect_system_id: int=None,
-                                  defect_ppr: bool=None,
-                                  confirm_defect: bool=False,
+                                  defect_division_id: int=None, # OK
+                                  defect_system_id: int=None, # OK
+                                  defect_ppr: bool=None, # OK
+                                  confirm_defect: bool=False, # OK
                                   ): # обновление дефект в БД (там где нет ОК, значит обновление тех полей еще не реализовано)
         defect:Defect = await Defect.get_defect_by_id(session, defect_id)
         if defect_system_id:
@@ -125,8 +128,16 @@ class Defect(Base):
             defect.defect_ppr = defect_ppr
         if defect_location:
             defect.defect_location = defect_location
+        if defect_type_id:
+            defect.defect_type_id = defect_type_id 
         if defect_description:
             defect.defect_description = defect_description
+        if defect_work_comment:
+            defect.defect_work_comment = defect_work_comment
+        if defect_checker_id:
+            defect.defect_checker_id = defect_checker_id
+        if defect_check_result:
+            defect.defect_check_result = defect_check_result
 
         if confirm_defect:
             defect.defect_planned_finish_date = defect_planned_finish_date

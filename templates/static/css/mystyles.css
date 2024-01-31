@@ -106,7 +106,7 @@
 }
 
 .type-defect {
-  max-width: 200px;
+  max-width: 214px;
   min-width: 170px;
   height: 38px;
   margin-right: 15px;
@@ -207,7 +207,19 @@
 .block_data9 {
   display: flex;
   flex-direction: row;
-}block-checkbox1
+}
+
+.orange {
+  background-color: orange;
+}
+
+.el-table .warning-row {
+  background: red;
+}
+
+.el-table .success-row {
+  background:  orange;
+}
 
 .zvezda {
   color: red;
@@ -380,6 +392,10 @@
 
 .column4 {
   width: 50%;
+}
+
+.table .demotable td.column4 {
+  white-space: pre-line;
 }
 
 .table-hover tbody tr:hover td {

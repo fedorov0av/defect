@@ -16,9 +16,9 @@
                       <b>Тип дефекта </b>
                       <b class="zvezda"> * </b> 
                     </div>
-                    <select class="form-select" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect">
+                    <select class="form-select" @change="changeTextCorrection" :style= "{'border-color': style_input_type}" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect">
                       <option disabled selected :value=0>Выберите тип дефекта</option>
-                      <option v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
+                      <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
                     </select>
                   </div>
                   <div class="block_data2">

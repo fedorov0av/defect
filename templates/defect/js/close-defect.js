@@ -41,7 +41,7 @@ const appCloseDefect = Vue.createApp({
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
-
+        cardCheckResult: '',
         cardHistorys: [{
           "history_id": 0,
           "history_date": "",
@@ -157,6 +157,8 @@ const appCloseDefect = Vue.createApp({
             this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardPPR = this.cardDefect.defect_ppr;
+            this.cardWorkerDescription = this.cardDefect.defect_work_comment;
+            this.cardCheckResult = this.cardDefect.defect_check_result;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
                 })
           .catch(err => {

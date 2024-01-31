@@ -115,13 +115,15 @@ async def get_defect(defect_id: Defect_id, session: AsyncSession = Depends(get_d
                 'defect_planned_finish_date': defect.defect_planned_finish_date.strftime("%Y-%m-%d") if defect.defect_planned_finish_date else defect.defect_planned_finish_date,
                 'defect_ppr': defect.defect_ppr,
                 "defect_description": defect.defect_description,
+                'defect_work_comment': defect.defect_work_comment,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
                 "defect_status": defect.defect_status,
                 "defect_division": defect.defect_division,
                 "defect_system": defect.defect_system,
                 "defect_system_kks": defect.defect_system.system_kks,
-                'defect_checker': { 'user_surname': defect.defect_checker.user_surname,
+                "defect_check_result": defect.defect_check_result,
+                "defect_checker": { 'user_surname': defect.defect_checker.user_surname,
                                     'user_id': defect.defect_checker.user_id,
                                    } if defect.defect_checker else None
             }
@@ -224,6 +226,32 @@ async def accept_defect(defect_id: Defect_id,
         )
     return defect
 
+@defect_router.post("/check_defect/")
+async def check_defect(defect_id: Defect_id,
+                      status_name: StatusDefect_name,
+                      defect_check_result: Сomment,
+                      request: Request,
+                      session: AsyncSession = Depends(get_db)):
+    token_dec = await decode_token(request.cookies['jwt_access_token'])
+    user_id = await decrypt_user_id(token_dec['subject']['userId'])
+    user: User = await User.get_user_by_id(session, int(user_id))
+    defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
+    status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
+
+    defect = await Defect.update_defect_by_id(session = session,
+                                            defect_id = defect_id.defect_id,
+                                            defect_status_id = status_defect.status_defect_id,
+                                            defect_checker_id = user.user_id,
+                                            defect_check_result = defect_check_result.comment,
+                                            )
+    history = await History.add_history(
+        session=session,
+        defect=defect,
+        user=user,
+        status=status_defect,
+        )
+    return defect
+
 @defect_router.post("/finish_work_defect/")
 async def finish_work_defect(defect_id: Defect_id,
                       status_name: StatusDefect_name,
@@ -239,13 +267,13 @@ async def finish_work_defect(defect_id: Defect_id,
     defect = await Defect.update_defect_by_id(session = session,
                                             defect_id = defect_id.defect_id,
                                             defect_status_id = status_defect.status_defect_id,
+                                            defect_work_comment = worker_description.comment,
                                             )
     history = await History.add_history(
         session=session,
         defect=defect,
         user=user,
         status=status_defect,
-        comment=worker_description.comment,
         )
     return defect
 

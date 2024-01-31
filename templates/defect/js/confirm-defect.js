@@ -26,7 +26,7 @@ const appConfirmDefect = Vue.createApp({
         cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
         cardStatusDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
         cardTypeDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
-        cardKKS: '', /* Для отображения KKS в карточке  */
+        cardKKS: null, /* Для отображения KKS в карточке  */
         cardSystemName: '', /* Для отображения НАЗВАНИЯ ОБОРУДОВАНИЯ в карточке  */
         cardDescription: '', /* Для отображения ОПИСАНИЕ ДЕФЕКТА в карточке  */
         cardLocation: '', /* Для отображения МЕСТОПОЛОЖЕНИЕ в карточке  */
@@ -88,7 +88,7 @@ const appConfirmDefect = Vue.createApp({
       var myModalEl = document.getElementById('ConfirmDefectModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appConfirmDefect.clearData();
-    })
+      })
     },
     methods: {
       setPopover(){
@@ -101,7 +101,7 @@ const appConfirmDefect = Vue.createApp({
         });
       }, /* setPopover */
       clearData() {
-        this.newCardKKS = 0;
+        this.newCardKKS = null;
         this.newDivisionOwner_id = 0;
         this.newRepairManager_id = 0;
         this.isHiddenDate = 'false';
@@ -173,6 +173,7 @@ const appConfirmDefect = Vue.createApp({
             this.repairManager_id = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_id : 0;
             this.divisionOwner_id = this.cardDefect.defect_division ? this.cardDefect.defect_division.division_id : 0;
 
+            this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
             this.newCardLocation = this.cardLocation;
             this.newCardSystemName = this.cardSystemName; 
             this.newCardDescription = this.cardDescription;
@@ -200,18 +201,31 @@ const appConfirmDefect = Vue.createApp({
                   console.log(err);
               }) /* axios */
       }, /* updateTableHistory */
+      checkMask(){
+        this.maskObject.completed = this.newCardKKS.length >= this.placeholders[this.newCardTypeDefectName].slice(0,11).length
+      },
       confirmDefect() {
         //this.newDate = this.cardDatePlannedFinish ? this.cardDatePlannedFinish  : null;
         if ((this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0 || this.newCardDatePlannedFinish == '') {
           Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
-        if (this.newCardSystemName == '' || this.newCardLocation == '' || this.newCardDescription == '') {
+        if (this.newCardSystemName == '' || this.newCardDescription == '') {
           Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
+
+        if (this.placeholders[this.newCardTypeDefectName] === '##XXX##XN##AAAAAA') {
+          this.checkMask()
+        }
+        if ((this.cardKKS !== '' && this.newCardKKS !== '' && this.newCardKKS !== null) && !this.maskObject.completed && (this.placeholders[this.newCardTypeDefectName] = '##XXX##XN##AAAAAA' ?  this.newCardKKS.length > this.placeholders[this.newCardTypeDefectName].slice(0,10).length : true)) {
+          Swal.fire({html:"<b>KKS введен не полностью!</b>", heightAuto: false});
+          return;
+        }
+
         tempDate = this.cardDateRegistration.split(' ')[0].split('-')
         cardDateRegistration = tempDate[2] + '-'+tempDate[1]+'-'+tempDate[0]
+        
         if (this.newCardDatePlannedFinish <= cardDateRegistration ) {
           Swal.fire({html:"<b>Срок устранения должен быть позже даты регистрации дефекта</b>", heightAuto: false}); 
           return;  /* Если планируемая дата меньше даты то выходим из функции */
@@ -246,9 +260,22 @@ const appConfirmDefect = Vue.createApp({
             if (this.newCardSystemName !== this.cardSystemName){
               textHistory = textHistory+'Оборудование изменилось с "'+this.cardSystemName+'" на "'+this.newCardSystemName+'"\n';
             }
-            if (this.newRepairManager_id !== this.repairManager_id || this.repairManager_id !== 0){
+            if (this.newRepairManager_id !== this.repairManager_id && this.cardStatusDefectName !== 'Зарегистрирован'){
               textHistory = textHistory+'Руководитель ремонта изменился с "'+repairManager+'" на "'+newRepairManager+'"\n';
             }
+            
+            if (this.cardDatePlannedFinish !== this.newCardDatePlannedFinish){
+              if (this.cardDatePlannedFinish === null){
+                textHistory = textHistory+'Срок устранения изменился с "Устранить в ППР" на "'+this.newCardDatePlannedFinish+'"\n';
+              } else {
+                textHistory = textHistory+'Срок устранения изменился с "'+this.cardDatePlannedFinish+'" на "'+this.newCardDatePlannedFinish+'"\n';
+              }
+            } else {
+              if (this.isHiddenDate === 'true' && this.cardDefect.defect_ppr !== true ) {
+                textHistory = textHistory+'Срок устранения изменился с "'+this.cardDatePlannedFinish+'" на "Устранить в ППР"\n';
+              }
+            }
+
             data = {
 
               "defect_id": {

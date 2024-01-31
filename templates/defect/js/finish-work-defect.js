@@ -82,8 +82,16 @@ const appFinishWorkDefect = Vue.createApp({
     mounted() {
       this.setPopover();
       this.setLimit();
+      var myModalEl = document.getElementById('FinishWorkModalWindow')
+      myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        appFinishWorkDefect.clearData();
+        appFinishWorkDefect.setLimit();
+      })
     },
     methods: {
+      clearData() {
+        this.cardWorkerDescription = '';
+      }, /* clearData */
       setPopover(){
         $(document).ready(function(){
           if($("#finishCancelDefectButton").is(":disabled") && $("#finishFinishDefectButton").is(":disabled"))  {

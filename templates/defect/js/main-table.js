@@ -13,25 +13,33 @@ const appVueDefect = Vue.createApp({
         pages: 0,
         temp_resp: {},
         nextPageNumber: 0,
-        showcloseddefect: 'false',
       }
     },
 
     mounted() {
       this.updateTableDefect();
       this.currentPage = 1;
-      
     },  /* mounted */
     methods: {    
-      clearData() {
-        this.showcloseddefect = 'false';
-      }, /* clearData */
+      tableRowClassName({row, rowIndex}) {
+        axios
+        .post('/user/user_role')
+        .then(response => {
+            this.currentUser = response.data;
+            this.currentUserRole = this.currentUser.user_role;
+            this.currentUserDivision = this.currentUser.user_division;
+            /* var stat_color = document.getElementById("stat_color"); */
+            if ( rowIndex === 1  /*row.defect.defect_owner ==  this.currentUserDivision  && this.status_name == 'Зарегистрирован' */) {
+              return 'success-row';
+            }
+          })
+      },
       updateTables(){
         this.updateTableDefect()
       },
       updateTableDefect() {
         axios
-        .post('/defects', null, { "showcloseddefect": this.showcloseddefect === 'true' ? true : null, params:{'page': 1, 'size': parseInt(this.pageSize)}})
+        .post('/defects', null, {params:{'page': 1, 'size': parseInt(this.pageSize)}})
         .then(response => {
             this.temp_resp = response.data;
             this.pageNumber = response.data.page;

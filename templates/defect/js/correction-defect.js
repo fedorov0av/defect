@@ -29,10 +29,10 @@ const appCorrectionDefect = Vue.createApp({
         myModal.addEventListener('hidden.bs.modal', function (event) {
           appCorrectionDefect.clearData();
       })
-      },
+      }, 
       methods: {
         changeTextCorrection(event){
-          if (event.target.value.length > 200){
+          if (event.target.value){
             event.target.value = event.target.value.slice(0, 200);
           }
         }, /* changeTextWork */

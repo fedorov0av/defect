@@ -3,7 +3,6 @@ from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 from fastapi import APIRouter, Depends, Security, HTTPException
-
 import os
 
 from datetime import timedelta

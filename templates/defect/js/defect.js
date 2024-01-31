@@ -27,7 +27,8 @@ const appVueAddDefect = Vue.createApp({
         newDivisionOwner: '',
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
 
-        maskObject: {}
+        maskObject: {},
+        style_input_type: ''
       }
     },
     beforeMount(){
@@ -40,10 +41,16 @@ const appVueAddDefect = Vue.createApp({
       var myModalEl = document.getElementById('AddDefectModalWindow');
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appVueAddDefect.clearData();
+        appVueAddDefect.style_input_type = "#dee2e6";
         appVueDefect.updateTables();
     })
     },
     methods: {
+      changeTextCorrection(event){
+        if (event.target.value){
+          this.style_input_type = "lime"
+        }
+      }, /* changeTextWork */
       setMask() {
         console.log()
       }, /* closeAddDefectModalWindow */
@@ -60,7 +67,7 @@ const appVueAddDefect = Vue.createApp({
         this.newLocation = '';
         this.newTypeDefect = '0';
         this.newDivisionOwner = '';
-        this.updateTableDivision()
+        this.updateTableDivision();
       }, /* clearData */
       getDivision() {
         axios
@@ -83,7 +90,6 @@ const appVueAddDefect = Vue.createApp({
             for (i in this.defect_divisions){
                if (this.defect_divisions[i].division_name == this.currentUser.user_division) {
                 this.newDivisionOwner_id = this.defect_divisions[i].division_id} 
-            console.log(this.newDivisionOwner_id)
             }
           }) /* axios */
       }, /* updateTableDivision */
@@ -93,7 +99,7 @@ const appVueAddDefect = Vue.createApp({
         .then(response => {
             this.defect_type_defects = response.data;
               }) /* axios */
-      }, /* updateTableTypeDefect */
+      }, /* updateTableTypeDefect */ 
       
       checkMask(){
         this.maskObject.completed = this.newSystemKKS.length >= this.placeholders[this.newTypeDefect].slice(0,11).length
@@ -102,9 +108,13 @@ const appVueAddDefect = Vue.createApp({
         if (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA') {
           this.checkMask()
         }
-        if (this.newSystemName == '' || this.newDefectNotes == '' || this.newTypeDefect == '0' || this.newDivisionOwner_id == '0' ){
-              Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены</b>", heightAuto: false}); 
+        if (this.newTypeDefect == '0'){
+          this.style_input_type = "#ff2851"
+          Swal.fire({html:"<b>Тип дефекта должен быть заполнен</b>", heightAuto: false}); 
         } /* if */
+        else if (this.newSystemName == '' || this.newDefectNotes == '' || this.newDivisionOwner_id == '0' ){
+              Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены</b>", heightAuto: false}); 
+        } /* else if */
         else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
           Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
         }

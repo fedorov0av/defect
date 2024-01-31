@@ -42,6 +42,7 @@ const appCheckDefect = Vue.createApp({
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         newCheckerId: 0, /* Для хранения ID РЕГИСТРАТОРА в карточке  */
+        cardCheckerDescription: '',
 
         cardHistorys: [{
           "history_id": 0,
@@ -82,8 +83,17 @@ const appCheckDefect = Vue.createApp({
     }, 
     mounted() {
       this.setPopover();
+      var myModalEl = document.getElementById('CheckModalWindow')
+      myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        appCheckDefect.clearData();
+      })
     },
     methods: {
+      clearData() {
+        this.newCheckerId = 0;
+        this.cardCheckerDescription = '';
+
+      }, /* clearData */
       setPopover(){
         $(document).ready(function(){
           if($("#checkDangerDefectButton").is(":disabled") && $("#checkSuccessDefectButton").is(":disabled"))  {
@@ -167,7 +177,9 @@ const appCheckDefect = Vue.createApp({
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardPPR = this.cardDefect.defect_ppr;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            this.cardWorkerDescription = this.cardDefect.defect_work_comment
             this.newCheckerId = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_id : 0;
+            
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
@@ -188,8 +200,8 @@ const appCheckDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       successDefect() {
-        if (this.newCheckerId == 0) {
-          Swal.fire({html:"<b>НЕ ВЫБРАН ПРОВЕРЯЮЩИЙ!</b>", heightAuto: false}); 
+        if (this.cardCheckerDescription == '') {
+          Swal.fire({html:"<b>Не заполнен результат проверки!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
         }
         Swal.fire({
@@ -200,9 +212,20 @@ const appCheckDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[5].status_defect_name}}
+            data =
+            {
+              "defect_id": {
+                "defect_id": this.defect_id
+              },
+              "status_name": {
+                "status_defect_name": this.statuses_defect[5].status_defect_name
+              },
+              "defect_check_result": {
+                "comment": this.cardCheckerDescription
+              }
+            } 
             axios
-            .post('/update_status_defect', data)
+            .post('/check_defect', data)
             .then(response => {
                 document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()

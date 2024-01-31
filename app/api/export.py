@@ -83,7 +83,7 @@ async def export_history_excel_defect(defect_id: Defect_id, session: AsyncSessio
 
     df_header_left_data = pd.DataFrame({"Data": [defect.defect_id, 
                                                  defect.defect_type.type_defect_name, 
-                                                 defect.defect_system.system_kks, 
+                                                 defect.defect_system.system_kks if defect.defect_system else '', 
                                                  defect.defect_description, 
                                                  defect.defect_division.division_name, 
                                                  defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
@@ -103,9 +103,9 @@ async def export_history_excel_defect(defect_id: Defect_id, session: AsyncSessio
     df_header_right_data = pd.DataFrame({"Data": [defect.defect_status.status_defect_name, 
                                                  defect.defect_system.system_name, 
                                                  defect.defect_location, 
-                                                 defect.defect_registrar.user_surname + ' ' + defect.defect_registrar.user_name + ' ' + defect.defect_registrar.user_fathername,
-                                                 defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name + ' ' + defect.defect_repair_manager.user_fathername,
-                                                 defect.defect_worker.user_surname + ' ' + defect.defect_worker.user_name + ' ' + defect.defect_worker.user_fathername,
+                                                 defect.defect_registrar.user_surname + ' ' + defect.defect_registrar.user_name + ' ' + defect.defect_registrar.user_fathername if defect.defect_registrar else '',
+                                                 defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name + ' ' + defect.defect_repair_manager.user_fathername if defect.defect_repair_manager else '',
+                                                 defect.defect_worker.user_surname + ' ' + defect.defect_worker.user_name + ' ' + defect.defect_worker.user_fathername if defect.defect_worker else '',
                                                  '', 
                                                  defect.defect_checker]})
      

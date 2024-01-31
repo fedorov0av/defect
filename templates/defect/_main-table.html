@@ -11,7 +11,7 @@
                 <th v-for="colunmName in colunmsName">{{ colunmName }}</th>
               </tr>
             </thead>
-            <tr  @dblclick="handleDoubleClick" data-bs-target="#ConfirmDefectModalWindow" v-for="defect in defects" v-bind:key="defect.defect_id">
+            <tr @dblclick="handleDoubleClick" data-bs-target="#ConfirmDefectModalWindow" v-for="defect in defects" v-bind:key="defect.defect_id">
               <td class="main-table_td95">{{ defect.defect_id }}</td>
               <td class="main-table_td150">{{ defect.defect_created_at }}</td>
               <td class="main-table_td95">{{ defect.defect_planned_finish_date }}</td>
@@ -19,7 +19,7 @@
               <td class="main-table_td95">{{ defect.defect_system.system_kks }}</td>
               <td>{{ defect.defect_system.system_name }}</td>
               <td>{{ defect.defect_description }}</td>
-              <td id='stat_color' class="main-table_td180">{{ defect.defect_status.status_defect_name }}</td>
+              <td class="main-table_td180">{{ defect.defect_status.status_defect_name }}</td>
               <td class="main-table_td180">{{ defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name}}</td>
             </tr>
           </tbody>
@@ -47,9 +47,12 @@
         <a class="page-link" @click="changePage">Вперед</a>
       </li>
     </ul>
-
+    <!-- <div style="width: 700px;"><marquee  scrollamount="10">
+      <img alt="Бегущая строка в html | Тег < marquee >" decoding="async" src="https://i0.wp.com/neonafm.ru/wp-content/uploads/2023/05/kot.gif?w=840&amp;ssl=1" style="width: 100px; height: 56px;" width="100" height="56">
+      </marquee>
+    </div>  -->
     <div class="footer-right">
-      <span >Разработано ЦИКТ. AKKUYU NÜKLEER A.Ş.</span>
+      <span style="margin-left: 5px;">Разработано ЦИКТ. AKKUYU NÜKLEER A.Ş.</span>
     </div>
 
   </div>

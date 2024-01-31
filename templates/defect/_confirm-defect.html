@@ -11,8 +11,7 @@
           </div>
           <div class="modal-body">
             <form method="post"> 
-              <input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
-  
+
               <div class="block_row">
                 <div class="block_data2">
                   <div class="block_input_data"><b>Тип дефекта</b></div>
@@ -35,7 +34,7 @@
                   <div class="block_data8">
                     <div class="form-floating">
                       <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject"
-                      :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="{'X': { 'pattern': '[a-zA-Z]' }, 'N': { 'pattern': '[a-zA-Z0-9]' }}" v-model="newCardKKS" :placeholder="placeholders[newCardTypeDefectName]" >
+                      :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional" v-model="newCardKKS" :placeholder="placeholders[newCardTypeDefectName]" >
                       <label for="inputConfirmKKS" :hidden="newCardTypeDefectName==='0'">{{ placeholders[newCardTypeDefectName] }}</label>
                       <p class="text-muted text_center"><b>#</b>-Цифра; <b>X</b>-Буква; <b>N</b>-цифра/буква; <b>A</b>-(необязательные)</p>
                     </div>
@@ -98,7 +97,7 @@
                 <div class="block_data2">
                   <div class="block_input_data">
                     <b>Срок устранения</b>
-                    <b class="zvezda"> * </b>
+                    <b class="zvezda" > * </b>
                   </div>
                     <input id="date" class="form-control form-control1" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
                     <div class="block-checkbox">
@@ -184,7 +183,6 @@
                 </div>
               </div>
   
-
             </form>
           </div>
         </div>
