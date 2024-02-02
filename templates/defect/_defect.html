@@ -2,7 +2,7 @@
 <div id="vueAddDefect">
     <div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content pos_r1">
           <div class="modal-header status_add_defect">
             <h2 class="modal-title" id="exampleModalLabel">Регистрация дефекта</h2>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalAddDefect"></button>
@@ -13,19 +13,23 @@
                 <div class="block_row">
                   <div class="block_data2">
                     <div class="block_input_data block_data9">
-                      <b>Тип дефекта </b>
-                      <b class="zvezda"> * </b> 
+                      <b>Тип дефекта</b>
+                      <b class="zvezda"> &nbsp * </b> 
                     </div>
-                    <select class="form-select" @change="changeTextCorrection" :style= "{'border-color': style_input_type}" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect">
+                    <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': check_defect_type === true & newTypeDefect === '0' }" @change="changeTextCorrection" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
                       <option disabled selected :value=0>Выберите тип дефекта</option>
                       <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
                     </select>
+                    <!-- <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': newTypeDefect === 'True' }" @change="changeTextCorrection" :style= "{'border-color': style_input_type}" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
+                      <option disabled selected :value=0>Выберите тип дефекта</option>
+                      <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
+                    </select> -->
                   </div>
                   <div class="block_data2">
                       <div class="block_input_data"><b>Статус дефекта</b></div>
-                        <select class="form-select" v-model="newTypeDefect" aria-label="Disabled select example" disabled>
-                          <option disabled selected>Выберите тип дефекта</option>
-                          <option v-for="defect_type_defect in defect_type_defects"></option>
+                        <select class="form-select" aria-label="Disabled select example" disabled>
+                          <!-- <option disabled selected>Выберите статус дефекта</option>
+                          <option v-for="defect_type_defect in defect_type_defects"></option> -->
                         </select>
                   </div>
                 </div>
@@ -45,12 +49,13 @@
                     </div>
                   </div>
 
-                  <div class="block_data2">
-                      <div class="block_input_data">
-                        <b>Оборудование</b> 
-                        <b class="zvezda"> * </b>
-                      </div>
-                      <textarea class="form-control" v-model="newSystemName" placeholder="Оборудование"></textarea>
+                  <div class="block_data2 ">
+                    <div class="block_input_data">
+                      <b>Оборудование</b> 
+                      <b class="zvezda"> * </b>
+                    </div>
+                    <textarea id="my-system" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': check_defect_system === true & newSystemName === '' }" v-model="newSystemName" placeholder="Оборудование" required></textarea>
+                    <p id="system" class="pos_a2"></p>
                   </div>
                 </div>
   
@@ -60,7 +65,8 @@
                       <b>Описание дефекта</b> 
                       <b class="zvezda"> * </b> 
                     </div>
-                    <textarea class="form-control" v-model="newDefectNotes" placeholder="Описание дефекта"></textarea>
+                    <textarea id="my-notes" @input="setLimitNotes" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': check_defect_notes === true & newDefectNotes === '' }" v-model="newDefectNotes" placeholder="Описание дефекта" required></textarea>
+                    <p id="notes" class="pos_a1"></p>
                   </div>
                   <div class="block_data3">
                     <div class="block_input_data"><b>Местоположение</b></div>
@@ -74,7 +80,7 @@
                       <b>Подразделение-владелец</b>
                       <b class="zvezda"> * </b>
                     </div>
-                      <select class="form-select" v-model="newDivisionOwner_id">
+                      <select class="form-select" :class="{ 'is-valid': newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }"  v-model="newDivisionOwner_id">
                         <option disabled selected :value=0>Выберите подразделение</option>
                         <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
                       </select> 
@@ -131,7 +137,7 @@
                       <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
                         <option disabled selected>Выберите подразделение</option>
                         <option v-for="division in defect_divisions"></option>
-                      </select> 
+                      </select>  
                   </div>
                   <div class="block_data2">
                     <div class="block_input_data">

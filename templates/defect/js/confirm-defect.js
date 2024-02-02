@@ -11,6 +11,7 @@ const appConfirmDefect = Vue.createApp({
         toggle: 'false',
         isDisabledConfirmDefect: false,
         isHiddenDate: 'false',
+        check_repair_manager: false,
         
         placeholders: {
           'ЖД основного оборудования': '##XXX##XX###',
@@ -105,6 +106,7 @@ const appConfirmDefect = Vue.createApp({
         this.newDivisionOwner_id = 0;
         this.newRepairManager_id = 0;
         this.isHiddenDate = 'false';
+        this.check_repair_manager = false;
 
       }, /* clearData */
       updateTables() {
@@ -206,8 +208,13 @@ const appConfirmDefect = Vue.createApp({
       },
       confirmDefect() {
         //this.newDate = this.cardDatePlannedFinish ? this.cardDatePlannedFinish  : null;
-        if ((this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newRepairManager_id == 0 || this.newDivisionOwner_id == 0 || this.newCardDatePlannedFinish == '') {
+        if ((this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newDivisionOwner_id == 0 || this.newCardDatePlannedFinish == '') {
           Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
+          return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
+        }
+        if (this.newRepairManager_id == 0) {
+          this.check_repair_manager = true;
+          Swal.fire({html:"<b>Поле Руководитель должно быть заполнено!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
         if (this.newCardSystemName == '' || this.newCardDescription == '') {
@@ -215,10 +222,10 @@ const appConfirmDefect = Vue.createApp({
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
 
-        if (this.placeholders[this.newCardTypeDefectName] === '##XXX##XN##AAAAAA') {
+        if ((this.cardKKS !== '' && this.newCardKKS !== '' && this.newCardKKS !== null) && this.placeholders[this.newCardTypeDefectName] === '##XXX##XN##AAAAAA') {
           this.checkMask()
         }
-        if ((this.cardKKS !== '' && this.newCardKKS !== '' && this.newCardKKS !== null) && !this.maskObject.completed && (this.placeholders[this.newCardTypeDefectName] = '##XXX##XN##AAAAAA' ?  this.newCardKKS.length > this.placeholders[this.newCardTypeDefectName].slice(0,10).length : true)) {
+        if ((this.cardKKS !== '' && this.newCardKKS !== '' && this.newCardKKS !== null) && !this.maskObject.completed) {
           Swal.fire({html:"<b>KKS введен не полностью!</b>", heightAuto: false});
           return;
         }

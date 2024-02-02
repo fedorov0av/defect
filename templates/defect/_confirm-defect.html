@@ -14,10 +14,13 @@
 
               <div class="block_row">
                 <div class="block_data2">
-                  <div class="block_input_data"><b>Тип дефекта</b></div>
-                    <select class="form-select" aria-label="Default select example" v-model="newCardTypeDefectName">
+                  <div class="block_input_data">
+                    <b>Тип дефекта</b>
+                    <b class="zvezda"> * </b>
+                  </div>
+                    <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardTypeDefectName !== '0', 'is-invalid': newCardTypeDefectName === '0' }" aria-label="Default select example" v-model="newCardTypeDefectName" :disabled='isDisabledConfirmDefect'>
                       <option disabled selected :value=0>Выберите тип дефекта</option>
-                      <option v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name" :disabled='isDisabledConfirmDefect'>{{ defect_type_defect.type_defect_name }}</option>
+                      <option v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
                     </select>
                 </div>
                 <div class="block_data2">
@@ -43,16 +46,20 @@
                 <div class="block_data2">
                     <div class="block_input_data">
                       <b>Оборудование</b>
+                      <b class="zvezda"> * </b>
                     </div>
                     <!-- <input type="text" class="form-control" v-model="newCardSystemName" placeholder="Оборудование" :disabled='isDisabledConfirmDefect'> -->
-                    <textarea class="form-control" v-model="newCardSystemName" placeholder="Оборудование" :disabled='isDisabledConfirmDefect'></textarea>
+                    <textarea class="form-control" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardSystemName !== '', 'is-invalid': newCardSystemName === '' }" v-model="newCardSystemName" placeholder="Оборудование должно быть заполнено!" :disabled='isDisabledConfirmDefect'></textarea>
                 </div>
               </div>
   
               <div class="block_row">
                 <div class="block_data3">
-                  <div class="block_input_data"><b>Описание дефекта</b></div>
-                  <textarea class="form-control" v-model="newCardDescription" placeholder="Описание дефекта" :disabled='isDisabledConfirmDefect'></textarea>
+                  <div class="block_input_data">
+                    <b>Описание дефекта</b>
+                    <b class="zvezda"> * </b>
+                  </div>
+                  <textarea class="form-control" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardDescription !== '', 'is-invalid': newCardDescription === '' }" v-model="newCardDescription" placeholder="Описание дефекта должно быть заполнено!" :disabled='isDisabledConfirmDefect'></textarea>
                 </div>
                 <div class="block_data3">
                   <div class="block_input_data"><b>Местоположение</b></div>
@@ -62,10 +69,13 @@
   
               <div class="block_row">
                 <div class="block_data2">
-                  <div class="block_input_data"><b>Подразделение-владелец</b></div>
-                    <select class="form-select" v-model="newDivisionOwner_id">
+                  <div class="block_input_data">
+                    <b>Подразделение-владелец</b>
+                    <b class="zvezda"> * </b>
+                  </div>
+                    <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }" v-model="newDivisionOwner_id" :disabled='isDisabledConfirmDefect'>
                       <option selected disabled :value=0>Выберите подразделение</option>
-                      <option v-for="division in defect_divisions" :value="division.division_id" :disabled='isDisabledConfirmDefect'>{{ division.division_name }}</option>
+                      <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
                     </select> 
                 </div>
                 <div class="block_data2">
@@ -86,25 +96,26 @@
                     <b>Руководитель ремонта</b>
                     <b class="zvezda"> * </b>
                   </div>
-                    <select class="form-select" v-model="newRepairManager_id">
+                    <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newRepairManager_id !== 0, 'is-invalid': check_repair_manager === true & newRepairManager_id === 0 }" v-model="newRepairManager_id" :disabled='isDisabledConfirmDefect'>
                       <option selected disabled :value=0>Выберите руководителя ремонта</option>
-                      <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id" :disabled='isDisabledConfirmDefect'>{{ repair_manager.user_surname + ' ' + repair_manager.user_name }}</option>
+                      <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name }}</option>
                     </select> 
                 </div>
               </div>
-  
+   
               <div class="block_row"> 
                 <div class="block_data2">
                   <div class="block_input_data">
                     <b>Срок устранения</b>
                     <b class="zvezda" > * </b>
                   </div>
-                    <input id="date" class="form-control form-control1" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
-                    <div class="block-checkbox">
+                    <input id="date" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardDatePlannedFinish !== null, 'is-invalid': newCardDatePlannedFinish === '' }" class="form-control form-control1" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
+                    <div class="block-checkbox" >
                       <input class="form-check-input el-checkbox" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false :disabled='isDisabledConfirmDefect'>
                       <label class="form-check-label el-checkbox" for="flexCheckChecked"> 
                         Устранить в ППР
                       </label>
+                      
                     </div>
                 </div>
                 <div class="block_data2">

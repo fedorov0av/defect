@@ -18,7 +18,7 @@ const appFinishWorkDefect = Vue.createApp({
         workers: {},
         toggle: 'false',
         isDisabledFinishDefect: false,
-        limit: 20,
+        check_worker_discription: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -91,6 +91,7 @@ const appFinishWorkDefect = Vue.createApp({
     methods: {
       clearData() {
         this.cardWorkerDescription = '';
+        this.check_worker_discription = false;
       }, /* clearData */
       setPopover(){
         $(document).ready(function(){
@@ -116,14 +117,14 @@ const appFinishWorkDefect = Vue.createApp({
         var textLength = myText.value.length;
         result.textContent = textLength + 1 + "/" + limit;
   
-        if(textLength > limit -1){
+        /*if(textLength > limit -1){
             myText.style.borderColor = "#ff2851";
             result.style.color = "#ff2851"; 
         }
         else{
             myText.style.borderColor = "#31821b";
             result.style.color = "#31821b";
-          }
+          } */
         });
       }, /* setlimit*/
       updateTables() {
@@ -212,8 +213,9 @@ const appFinishWorkDefect = Vue.createApp({
       }, /* updateTableHistory */
       finishworkDefect() {
         if (this.cardWorkerDescription == '') {
-          Swal.fire({html:"<b>Не заполнен комментарий о выполненных работах</b>", heightAuto: false}); 
-          return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
+          this.check_worker_discription = true
+          Swal.fire({html:"<b>Не заполнен комментарий о выполненных работах!</b>", heightAuto: false}); 
+          return;   /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
         }
         Swal.fire({
           title: "Вы подверждаете, что работы завершены?",

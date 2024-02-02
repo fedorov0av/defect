@@ -19,6 +19,7 @@ const appCheckDefect = Vue.createApp({
         workers: {},
         toggle: 'false',
         isDisabledCheckDefect: false,
+        check_checker_discription: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -92,6 +93,7 @@ const appCheckDefect = Vue.createApp({
       clearData() {
         this.newCheckerId = 0;
         this.cardCheckerDescription = '';
+        this.check_checker_discription = false;
 
       }, /* clearData */
       setPopover(){
@@ -201,6 +203,7 @@ const appCheckDefect = Vue.createApp({
       }, /* updateTableHistory */
       successDefect() {
         if (this.cardCheckerDescription == '') {
+          this.check_checker_discription = true;
           Swal.fire({html:"<b>Не заполнен результат проверки!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
         }
@@ -240,6 +243,11 @@ const appCheckDefect = Vue.createApp({
         });
       },/* executionDefect */
       dangerDefect() {
+        if (this.cardCheckerDescription == '') {
+          this.check_checker_discription = true;
+          Swal.fire({html:"<b>Не заполнен результат проверки!</b>", heightAuto: false}); 
+          return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
+        }
         Swal.fire({
           title: "Вы подтверждаете, что дефект не устранен?",
           showDenyButton: true,

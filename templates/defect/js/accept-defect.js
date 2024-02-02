@@ -18,6 +18,7 @@ const appAcceptDefect = Vue.createApp({
       workers: {},
       toggle: 'false',
       isDisabledAcceptDefect: false,
+      check_worker: false,
 
       cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -95,6 +96,7 @@ const appAcceptDefect = Vue.createApp({
     }, /* setPopover */
     clearData() {
       this.newWorker_id = 0;
+      this.check_worker = false;
     },
     updateTables() {
       this.updateTableDivision();
@@ -185,6 +187,7 @@ const appAcceptDefect = Vue.createApp({
     }, /* updateTableHistory */
     acceptDefect() {
       if (this.newWorker_id == 0) {
+        this.check_worker = true
         Swal.fire({html:"<b>Не назначен исполнитель ремонта</b>", heightAuto: false}); 
         return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
       }

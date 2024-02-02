@@ -88,8 +88,11 @@
                     </label> -->
                 </div>
                 <div class="block_data2">
-                  <div class="block_input_data"><b>Исполнитель ремонта</b></div>
-                    <select class="form-select" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledAcceptDefect' data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Исполнителя ремонта может выбрать только Руководитель ремонта">
+                  <div class="block_input_data">
+                    <b>Исполнитель ремонта</b>
+                    <b class="zvezda"> * </b> 
+                  </div>
+                    <select class="form-select" :class="{ 'is-valid': newWorker_id !== 0, 'is-invalid': check_worker === true & newWorker_id === 0 }" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledAcceptDefect' data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Исполнителя ремонта может выбрать только Руководитель ремонта">
                       <option selected disabled :value=0>Выберите исполнителя ремонта</option>
                       <option v-for="worker in workers"  :value="worker.user_id">{{ worker.user_surname + ' ' + worker.user_name }}</option>
                     </select> 
@@ -120,13 +123,19 @@
                 </div>
               </div>
   
-              <div class="modal-footer">
-                <span class="d-inline-block" tabindex="0" data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
-                  <button @click="cancelDefect" id="acceptCancelDefectButton" :disabled='isDisabledAcceptDefect' class="btn btn-warning" data-bs-target="#CorrectionDefectModalWindow" type="button">Требует решения</button>
-                </span>
-                <span class="d-inline-block" tabindex="0" data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
-                  <button @click="acceptDefect" id="acceptAcceptDefectButton" :disabled='isDisabledAcceptDefect' class="btn btn-primary" type="button">Назначить исполнителя</button>
-                </span>
+              <div class="modal-footer modal-footer1">
+                <div class="block_data9">
+                  <b class="zvezda"> &nbsp * &nbsp </b>
+                  <p>- обязательные элементы для заполнения</p>
+                </div>
+                <div>
+                  <span class="d-inline-block" tabindex="0" data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
+                    <button @click="cancelDefect" id="acceptCancelDefectButton" :disabled='isDisabledAcceptDefect' class="btn btn-warning margin-right" data-bs-target="#CorrectionDefectModalWindow" type="button">Требует решения</button>
+                  </span>
+                  <span class="d-inline-block" tabindex="0" data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
+                    <button @click="acceptDefect" id="acceptAcceptDefectButton" :disabled='isDisabledAcceptDefect' class="btn btn-primary" type="button">Назначить исполнителя</button>
+                  </span>
+                </div>
               </div>
               <div class="modal-footer"></div>
 

@@ -28,13 +28,18 @@ const appVueAddDefect = Vue.createApp({
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
 
         maskObject: {},
-        style_input_type: ''
+        style_input_type: '',
+        check_defect_type: false,
+        check_defect_notes: false,
+        check_defect_system: false
       }
     },
     beforeMount(){
       this.setMask();
     },
     mounted() {
+      this.setLimitNotes()
+      this.setLimitSystem()
       this.getDivision();
       this.updateTableDivision();
       this.updateTableTypeDefect();
@@ -43,9 +48,41 @@ const appVueAddDefect = Vue.createApp({
         appVueAddDefect.clearData();
         appVueAddDefect.style_input_type = "#dee2e6";
         appVueDefect.updateTables();
+        appVueAddDefect.setLimitNotes();
+        appVueAddDefect.setLimitSystem();
     })
     },
     methods: {
+      changeTextNotes(event){
+        if (event.target.value.length > 200){
+          event.target.value = event.target.value.slice(0, 200);
+        }
+      }, /* changeTextNotes */
+      setLimitNotes(){
+        var myText1 = document.getElementById("my-notes");
+        var result1 = document.getElementById("notes");
+        var limit1 = 100;
+        result1.textContent = 0 + "/" + limit1;
+  
+        myText1.addEventListener('input',function(){
+        var textLength1 = myText1.value.length;
+        result1.textContent = textLength1 + 1 + "/" + limit1;
+        });
+      }, /* setlimit*/
+      setLimitSystem(event){
+        var myText = document.getElementById("my-system");
+        var result = document.getElementById("system");
+        var limit = 100;
+        result.textContent = 0 + "/" + limit;
+  
+        myText.addEventListener('input',function(){
+        var textLength = myText.value.length;
+        result.textContent = textLength + "/" + limit;
+        if (event.target.value.length > 100){
+          event.target.value = event.target.value.slice(0, 100);
+        }
+        });
+      }, /* setlimit*/
       changeTextCorrection(event){
         if (event.target.value){
           this.style_input_type = "lime"
@@ -68,6 +105,9 @@ const appVueAddDefect = Vue.createApp({
         this.newTypeDefect = '0';
         this.newDivisionOwner = '';
         this.updateTableDivision();
+        this.check_defect_type = false;
+        this.check_defect_notes = false;
+        this.check_defect_system = false;
       }, /* clearData */
       getDivision() {
         axios
@@ -110,15 +150,24 @@ const appVueAddDefect = Vue.createApp({
         }
         if (this.newTypeDefect == '0'){
           this.style_input_type = "#ff2851"
-          Swal.fire({html:"<b>Тип дефекта должен быть заполнен</b>", heightAuto: false}); 
+          this.check_defect_type = true
+          Swal.fire({html:"<b>Тип дефекта должен быть заполнен!</b>", heightAuto: false}); 
         } /* if */
-        else if (this.newSystemName == '' || this.newDefectNotes == '' || this.newDivisionOwner_id == '0' ){
-              Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены</b>", heightAuto: false}); 
+        else if (this.newDefectNotes == ''){
+          this.check_defect_notes = true
+          Swal.fire({html:"<b>Описание дефекта должно быть заполнено!</b>", heightAuto: false}); 
+        } /* else if */
+        else if (this.newSystemName == ''){
+          this.check_defect_system = true
+          Swal.fire({html:"<b>Оборудование должно быть заполнено!</b>", heightAuto: false}); 
+        } /* else if */
+        else if (this.newDivisionOwner_id == '0' ){
+              Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены!</b>", heightAuto: false}); 
         } /* else if */
         else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
           Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
         }
-        else if (!this.maskObject.completed && (this.placeholders[this.newTypeDefect] = '##XXX##XN##AAAAAA' ?  this.newSystemKKS.length > this.placeholders[this.newTypeDefect].slice(0,10).length : true)) {
+        else if (!this.maskObject.completed && (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA' ?  this.newSystemKKS.length > this.placeholders[this.newTypeDefect].slice(0,10).length : true)) {
           Swal.fire({html:"<b>KKS введен не полностью!</b>", heightAuto: false});
         }
         else {

@@ -6,7 +6,7 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import PendingRollbackError, NoResultFound, IntegrityError, MultipleResultsFound
+from sqlalchemy.exc import PendingRollbackError, NoResultFound, IntegrityError
 
 from db.database import get_db
 from db.user import User
@@ -18,7 +18,7 @@ from db.type_defect import TypeDefect
 from db.history_defect import History
 
 from app.schemas.user import User_id
-from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_description_p, Defect_location_p, Showcloseddefect
+from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_description_p, Defect_location_p
 from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr
 from app.schemas.type_defect import TypeDefect_name
@@ -27,6 +27,7 @@ from app.schemas.system import System_kks, System_name
 
 STATUS_REGISTRATION = 1
 STATUS_CONFIRM = 2
+STATUS_CLOSE_DEFECT_ID = 10
 
 defect_router = APIRouter()
 
@@ -47,7 +48,8 @@ async def add_new_defect(defect_p: New_defect_p, request: Request, session: Asyn
     except (PendingRollbackError, IntegrityError):
         await session.rollback()
         system: System = await System.get_system_by_kks(session, defect_p.defect_system_kks)
-
+        if defect_p.defect_system_name:
+            system.system_name = defect_p.defect_system_name
     user: User = await User.get_user_by_id(session, int(user_id))
     defect_type: TypeDefect = await TypeDefect.get_defect_by_name(session, defect_p.defect_type_defect_name)
     defect_status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, STATUS_REGISTRATION)
@@ -75,11 +77,11 @@ async def add_new_defect(defect_p: New_defect_p, request: Request, session: Asyn
 async def get_defects(session: AsyncSession = Depends(get_db)):
     return await paginate(
         session,
-        select(Defect).order_by(Defect.defect_id.desc())\
+        select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID)\
                 .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                 .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
-                .options(selectinload(Defect.defect_system)),
+                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)),
         transformer=lambda defects: [{"defect_id": defect.defect_id,
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                 'defect_registrar': defect.defect_registrar.user_surname,
@@ -87,7 +89,7 @@ async def get_defects(session: AsyncSession = Depends(get_db)):
                 'defect_owner': defect.defect_division.division_name,
                 'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
                                           'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
-                                          } ,
+                                          },
                 'defect_worker': defect.defect_worker,
                 'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
                                              if not defect.defect_ppr else 'Устр. в ППР',
@@ -97,9 +99,8 @@ async def get_defects(session: AsyncSession = Depends(get_db)):
                 "defect_status": defect.defect_status,
                 "defect_division": defect.defect_division,
                 "defect_system": defect.defect_system,
-                "defect_system_kks": defect.defect_system.system_kks,} for defect in defects if defect.defect_status_id != 10], # выводит дефекты у которых статус не "Закрыт"
+                "defect_system_kks": defect.defect_system.system_kks,} for defect in defects if defect], # выводит дефекты у которых статус не "Закрыт"
     )
-
 
 @defect_router.post("/get_defect/")
 async def get_defect(defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
@@ -135,7 +136,6 @@ async def confirm_defect(
                         repair_manager_id: User_id,
                         division_id: Division_id,
                         request: Request,
-
                         defect_description: Defect_description_p = None,
                         location: Defect_location_p = None,
                         system_name: System_name = None,
@@ -160,6 +160,8 @@ async def confirm_defect(
     except (PendingRollbackError, IntegrityError):
         await session.rollback()
         system: System = await System.get_system_by_kks(session, system_kks=system_kks.system_kks)
+        if system_name.system_name:
+            system.system_name = system_name.system_name
     if type_defect_name.type_defect_name:
             type_defect: TypeDefect = await TypeDefect.get_defect_by_name(session, type_defect_name=type_defect_name.type_defect_name)
             type_defect_id = type_defect.type_defect_id

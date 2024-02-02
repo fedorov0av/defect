@@ -491,11 +491,35 @@
 .pos_a {
   position: absolute;
   top: 55%;
-  left: 95%;
+  left: 94%;
+}
+
+.pos_r1 {
+  position: relative;
+}
+
+.pos_a1 {
+  position: absolute;
+  top: 35%;
+  left: 45%;
+}
+
+.pos_r2 {
+  position: relative;
+}
+
+.pos_a2 {
+  position: absolute;
+  top: 20%;
+  left: 94%;
 }
 
 .correction_area {
   min-height: 90px;
+}
+
+.margin-right {
+  margin-right: 15px;;
 }
 
 
@@ -552,6 +576,12 @@
   .modal {
     --bs-modal-width: 95%;
   }
+
+  /* .pos_a1 {
+    position: absolute;
+    top: 33%;
+    left: 4%;
+  } */
 
   /* Внимание! CSS выше до @media относятся к адаптивности */
 

@@ -11,11 +11,9 @@ const app = Vue.createApp({
     createPost(event = NaN) { 
       this.postData.email = this.email;
       this.postData.password = this.password;
-      console.log(this.postData);
       axios
       .post('/auth', this.postData)
       .then(response => {
-        console.log(response.data);
         this.responseData = response;
         /* router.push({ path: '/defect' }) */
         window.location.replace("/defect")
@@ -29,7 +27,6 @@ const app = Vue.createApp({
         Swal.fire({html:"<b>Неправильный пароль</b>", heightAuto: false}); 
       }
       });
-      console.log(this.responseData)
     },
   },
 }).mount('#vueLogin')
