@@ -37,8 +37,8 @@ const appAcceptDefect = Vue.createApp({
       cardWorker: {}, /* Для отображения ИСПОЛНИТЕЛЬ РЕМОНТА в карточке  */
       cardPPR: false,
       cardWorkerDescription: '', /* Для отображения ВЫПОЛНЕННЫЕ РАБОТЫ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !!  */
-      cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
-      cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
+      cardChecker: '', /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
+      cardCheckerDescription: '', /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
       newWorker_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
 
@@ -112,15 +112,21 @@ const appAcceptDefect = Vue.createApp({
       .post('/user/workers',)
       .then(response => {
           this.workers = response.data;
+          axios
+          .post('/user/me',)
+          .then(response => {
+            this.currentUser = response.data;
+            this.workers = this.workers.concat(this.currentUser)
             }) /* axios */
+        }) /* axios */
     }, /* updateTableWorkers */
     updateTableRepairManagers() {
       axios
       .post('/user/repair_managers',)
       .then(response => {
           this.repair_managers = response.data;
-            }) /* axios */
-    }, /* updateTableRepairManagers */
+            }) 
+    }, 
     updateTableDivision() {
       axios
       .post('/divisions',)
@@ -165,6 +171,8 @@ const appAcceptDefect = Vue.createApp({
           this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date != null ? this.cardDefect.defect_planned_finish_date : null;
           this.cardPPR = this.cardDefect.defect_ppr;
           this.cardWorker = this.cardDefect.defect_worker;
+          this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name : '';
+          this.cardCheckerDescription = this.cardDefect.defect_check_result ? this.cardDefect.defect_check_result : '';
           this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
               })
         .catch(err => {

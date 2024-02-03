@@ -18,7 +18,8 @@ const appExecutionDefect = Vue.createApp({
         workers: {},
         toggle: 'false',
         isDisabledExecutionDefect: false,
-
+        isDisabledWorker: true,
+        
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
         cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
@@ -77,11 +78,14 @@ const appExecutionDefect = Vue.createApp({
             this.isDisabledExecutionDefect = true;
           }
         })
-    }, 
+    },  
     mounted() {
       this.setPopover();
     },
     methods: {
+      changeWorker() {
+        this.isDisabledWorker = false
+      },
       setPopover(){
         $(document).ready(function(){
           if($("#executionCancelDefectButton").is(":disabled") && $("#executionExecutionDefectButton").is(":disabled"))  {
@@ -99,6 +103,7 @@ const appExecutionDefect = Vue.createApp({
         this.updateTableHistory();
         this.updateTableRepairManagers();
         this.updateTableWorkers();
+        this.isDisabledWorker = true;
       }, /* updateTables */
       updateTableWorkers() {
         axios
@@ -157,6 +162,9 @@ const appExecutionDefect = Vue.createApp({
             this.cardPPR = this.cardDefect.defect_ppr;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            if (this.currentUser.user_role === 'Исполнитель' && this.currentUser.user_id !== this.cardDefect.defect_worker.user_id){
+              this.isDisabledExecutionDefect = true;
+            }
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 

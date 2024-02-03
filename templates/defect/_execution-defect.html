@@ -92,9 +92,21 @@
                   <input type="text" class="form-control" placeholder="Устранить в ППР" for="flexCheckChecked" disabled :hidden='cardDatePlannedFinish'>
               </div>
               <div class="block_data2">
-                <div class="block_input_data"><b>Исполнитель ремонта</b></div>
-                    <input type="text" class="form-control" placeholder="Исполнитель ремонта"  aria-label="readonly input example" v-model="cardWorker" disabled>
+                <div class="block_input_data">
+                  <b>Исполнитель ремонта</b>
+                </div>
+                <!-- <input type="text" class="form-control width60" placeholder="Исполнитель ремонта"  aria-label="readonly input example" v-model="cardWorker" disabled> -->
+                <select class="form-select width60" aria-label="Default select example" v-model="cardWorker" :disabled='isDisabledWorker'>
+                  <option selected disabled>Выберите исполнителя ремонта</option>
+                  <option v-for="worker in workers">{{ worker.user_surname + ' ' + worker.user_name }}</option>
+                </select> 
+                <div>
+                  <span class="d-inline-block" tabindex="0" data-toggle="popover_execution" data-bs-trigger="hover focus" data-bs-content="Эта кнопка только для пользователя с ролью Исполнитель ремонта">
+                    <button @click="changeWorker" class="btn btn-primary" type="button">Изменить</button>
+                  </span>
+                </div>
               </div>
+              
             </div>
 
             <div class="block_row">
@@ -121,6 +133,7 @@
               </div>
             </div>
 
+            
             <div class="modal-footer">
               <span class="d-inline-block" tabindex="0" data-toggle="popover_execution" data-bs-trigger="hover focus" data-bs-content="Эта кнопка только для пользователя с ролью Исполнитель ремонта">
                 <button @click="cancelDefect" id="executionCancelDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-warning" type="button">Требует решения</button>

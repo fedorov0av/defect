@@ -82,30 +82,28 @@
               </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Исполнитель ремонта</b></div>
-                    <input type="text" class="form-control" aria-label="readonly input example" v-model="cardWorker" disabled>
+                  <input type="text" class="form-control" aria-label="readonly input example" v-model="cardWorker" disabled>
               </div>
             </div>
 
             <div class="block_row">
               <div class="block_data4">
                 <div class="block_input_data"><b>Выполненные работы</b></div>
-                <textarea class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" disabled></textarea>
+                <textarea class="form-control" v-model="cardWorkerDescription" placeholder="Комментарий исполнителя" disabled></textarea>
+                <!-- <textarea class="form-control" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" disabled></textarea> -->
               </div>
             </div>
             
             <div class="block_row">
               <div class="block_data2">
                 <div class="block_input_data"><b>Выполнил проверку</b></div>
-                  <select class="form-select" aria-label="Disabled select example" v-model="cardChecker" disabled>
-                    <option disabled selected>Выберите подразделение</option>
-                    <option v-for="division in defect_divisions"></option>
-                  </select> 
+                  <input type="text" class="form-control" aria-label="readonly input example" v-model="cardChecker" disabled>
               </div>
               <div class="block_data2">
                 <div class="block_input_data"> 
                   <b>Результат проверки</b>
                 </div>
-                <input type="text" class="form-control" disabled>
+                <input type="text" class="form-control" aria-label="readonly input example" v-model="cardCheckerDescription" disabled>
               </div>
             </div>
             

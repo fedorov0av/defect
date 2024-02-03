@@ -69,15 +69,15 @@ const appCloseDefect = Vue.createApp({
       this.updateTables()
     }, */
     beforeMount() {
-      axios
+      /* axios
       .post('/user/user_role')
       .then(response => {
           this.currentUser = response.data;
           this.currentUserRole = this.currentUser.user_role;
           if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Владелец') {
             this.isDisabledCloseDefect = true;
-          }
-        })
+          }          
+        }) */
     },
     mounted() {
       this.setPopover();
@@ -160,6 +160,22 @@ const appCloseDefect = Vue.createApp({
             this.cardWorkerDescription = this.cardDefect.defect_work_comment;
             this.cardCheckResult = this.cardDefect.defect_check_result;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            axios
+            .post('/user/me')
+            .then(response => {
+                this.currentUser = response.data;
+                this.currentUserDivision = this.currentUser.user_division;
+                this.currentUserRole = this.currentUser.user_role;
+                if (this.currentUserRole != 'Владелец' ){
+                  this.isDisabledCloseDefect = true;
+                } else if (this.currentUserDivision !== this.cardDivisionOwner ) {
+                  this.isDisabledCloseDefect = true;
+                } else { this.isDisabledCloseDefect = false;}
+
+                if (this.currentUserRole == 'Администратор'){
+                  this.isDisabledCloseDefect = false;
+                }
+              })
                 })
           .catch(err => {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 

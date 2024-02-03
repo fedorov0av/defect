@@ -12,7 +12,18 @@ const appVueFilter = Vue.createApp({
         ppr: 'false'
       }
     },
+    mounted() {
+      this.updateAllTables()
+      this.updateTableStatusDefect()
+      this.setDivisionByUser()
+    }, /* mounted */
     methods: {
+        toggleApiOnSilent() {
+          document.getElementById('toggle-silent').switchButton('on', true);
+        },
+        toggleApiOffSilent() {
+          document.getElementById('toggle-silent').switchButton('off', true);
+        },
         clearData() {
           this.filterDivision = 0;
           this.startDate = null;
@@ -73,10 +84,16 @@ const appVueFilter = Vue.createApp({
               this.statuses_defect = response.data;
                 }) /* axios */
         }, /* updateTableStatusDefect */
+        setDivisionByUser(){
+          axios
+          .post('/user/me')
+          .then(response => {
+              this.currentUser = response.data;
+              if (this.currentUser.user_role !== 'Инспектор'){
+                this.filterDivision = this.currentUser.user_division_id;
+              }
+            })
+        }, /* setDivisionByUser */
         }, /* methods */
-    mounted() {
-      this.updateAllTables()
-      this.updateTableStatusDefect()
-    }, /* mounted */
       },
   ).mount('#vueFilter')

@@ -19,6 +19,7 @@ const appFinishWorkDefect = Vue.createApp({
         toggle: 'false',
         isDisabledFinishDefect: false,
         check_worker_discription: false,
+        isDisabledWorker: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -89,6 +90,9 @@ const appFinishWorkDefect = Vue.createApp({
       })
     },
     methods: {
+      changeWorker() {
+        this.isDisabledWorker = false
+      },
       clearData() {
         this.cardWorkerDescription = '';
         this.check_worker_discription = false;
@@ -135,6 +139,7 @@ const appFinishWorkDefect = Vue.createApp({
         this.updateTableHistory();
         this.updateTableRepairManagers();
         this.updateTableWorkers();
+        this.isDisabledWorker = true;
       }, /* updateTables */
       updateTableWorkers() {
         axios

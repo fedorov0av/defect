@@ -5,12 +5,12 @@
 			<p class="mylabel mylabel1">Фильтры:</p>
 		</div>
 		<div class="block_filter_flex">
-			<select class="form-select form-select1 type-defect" aria-label="Default select example" v-model="filterDivision">
+			<select class="form-select form-select1 type-defect" @change="useFilter" aria-label="Default select example" v-model="filterDivision">
 				<option selected value=0>Подразделение</option>
 				<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
 			</select>
 	
-			<select class="form-select form-select1 type-defect" aria-label="Default select example" v-model="filterStatusDefect">
+			<select class="form-select form-select1 type-defect" @change="useFilter" aria-label="Default select example" v-model="filterStatusDefect">
 				<option selected value=0>Статус дефекта</option>
 				<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
 			</select>
@@ -22,7 +22,7 @@
 					<p class="mylabel">Начало:</p>
 				</div>
 				<div class="block_data col-lg-3 col-sm-6">
-					<input id="startDate" class="form-control type-defect" type="date" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" v-model="startDate"/>
+					<input id="startDate" class="form-control type-defect" type="date" @change="useFilter" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" v-model="startDate"/>
 					<!-- <span id="startDateSelected"></span> -->
 				</div>
 			</div>
@@ -31,31 +31,66 @@
 					<p class="mylabel">Конец:</p>
 				</div>
 				<div class="block_data col-lg-3 col-sm-6">
-					<input id="endDate" class="form-control type-defect" type="date" v-model="endDate"/>
+					<input id="endDate" class="form-control type-defect form-select1" type="date" @change="useFilter" v-model="endDate"/>
 					<!-- <span id="endDateSelected"></span> -->
 				</div>
 			</div>
 		</div>
 
 		<div class="block_filter_flex">
-			<div class="form-select1 block-checkbox1">
-				<input class="form-check-input el-checkbox el-checkbox1" type="checkbox" value="" id="flexCheckChecked" v-model="ppr" true-value=true false-value=false>
+			<!-- <div class="form-select1 block-checkbox1">
+				<input class="form-check-input el-checkbox el-checkbox1" type="checkbox" @change="useFilter" value="" id="flexCheckChecked" v-model="ppr" true-value=true false-value=false>
 				<label class="form-check-label el-checkbox" for="flexCheckChecked"> 
 				В ППР
 				</label>
+			</div> -->
+			<div class="form-check form-switch block-checkbox1">
+				<input class="form-check-input" type="checkbox" @change="useFilter" id="flexCheckChecked" v-model="ppr" true-value=true false-value=false>
+				<label class="form-check-label margin-right" for="flexCheckChecked">В ППР</label>
 			</div>
-			<div class="form-select1 block-checkbox2">
+			
+			<div class="verticalLine"></div>
+
+			<div class="block_filter_flex1">
+				<div class = "form-check form-switch block-checkbox-left block-checkbox1">
+					<label class = "form-check-label" for = "defaultCheck1">
+						Эксплуатация
+					</label>
+				</div>
+				<div class = "form-check form-switch block-checkbox1">
+					<input class="form-check-input" type="checkbox">
+					<label class = "form-check-label margin-right1" for = "defaultCheck1">
+						ПНР
+					</label>
+				</div>
+			</div>
+
+			<div class="verticalLine"></div>
+
+			<!-- <div class="form-check block-checkbox1">
+				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+				<label class="form-check-label" for="flexRadioDefault1">
+				  Default radio
+				</label>
+			  </div>
+			  <div class="form-check block-checkbox1">
+				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+				<label class="form-check-label" for="flexRadioDefault2">
+				  Default checked radio
+				</label>
+			  </div> -->
+			<!-- <div class="form-select1 block-checkbox2">
 				<input class="form-check-input el-checkbox el-checkbox1" type="checkbox" value="" id="flexCheckChecked1" true-value=true false-value=false>
 				<label class="form-check-label el-checkbox" for="flexCheckChecked1"> 
 				Отобразить закрытые дефекты
 				</label>
-			</div>
+			</div> -->
 		</div>
 
 		<div class="block_filter_flex lastbutton">
-			<div class="type-defect1">
+			<!-- <div class="type-defect1">
 				<button type="button" @click="useFilter" class="btn btn-primary w190">Применить</button>
-			</div>
+			</div> -->
 			<div class="lastbutton">
 				<button type="button" @click="nouseFilter" class="btn btn-primary w190">Очистить фильтры</button>
 			</div>

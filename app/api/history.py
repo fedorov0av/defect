@@ -5,7 +5,7 @@ from db.history_defect import History
 from db.defect import Defect
 from db.database import get_db
 from app.schemas.defect import Defect_id
-
+ 
 
 history_router = APIRouter()
 

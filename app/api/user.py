@@ -25,6 +25,7 @@ async def get_current_user(request: Request, session: AsyncSession = Depends(get
             "user_temp_password": user.user_temp_password,
             "user_role": user.user_role[-1].role_name,
             "user_division": user.user_division.division_name,
+            "user_division_id": user.user_division.division_id,
             "user_email": user.user_email
             }
 

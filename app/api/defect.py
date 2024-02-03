@@ -125,6 +125,7 @@ async def get_defect(defect_id: Defect_id, session: AsyncSession = Depends(get_d
                 "defect_system_kks": defect.defect_system.system_kks,
                 "defect_check_result": defect.defect_check_result,
                 "defect_checker": { 'user_surname': defect.defect_checker.user_surname,
+                                    'user_name': defect.defect_checker.user_name,
                                     'user_id': defect.defect_checker.user_id,
                                    } if defect.defect_checker else None
             }

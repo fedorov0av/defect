@@ -20,6 +20,7 @@ const appCheckDefect = Vue.createApp({
         toggle: 'false',
         isDisabledCheckDefect: false,
         check_checker_discription: false,
+        isDisabledWorker: false,
 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
@@ -90,6 +91,9 @@ const appCheckDefect = Vue.createApp({
       })
     },
     methods: {
+      changeWorker() {
+        this.isDisabledWorker = false
+      },
       clearData() {
         this.newCheckerId = 0;
         this.cardCheckerDescription = '';
@@ -114,6 +118,7 @@ const appCheckDefect = Vue.createApp({
         this.updateTableRepairManagers();
         this.updateTableWorkers();
         this.updateTableRegistrators();
+        this.isDisabledWorker = true;
       }, /* updateTables */
       updateTableWorkers() {
         axios
@@ -256,9 +261,19 @@ const appCheckDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isAccepted, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[6].status_defect_name}}
+            data = 
+            {"defect_id": {
+                "defect_id": this.defect_id
+              },
+              "status_name": {
+                "status_defect_name": this.statuses_defect[6].status_defect_name
+              },
+              "defect_check_result": {
+                "comment": this.cardCheckerDescription
+              }
+            }
             axios
-            .post('/update_status_defect', data)
+            .post('/check_defect', data)
             .then(response => {
                 document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()

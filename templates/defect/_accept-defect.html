@@ -113,13 +113,13 @@
                       <option disabled selected>Выберите подразделение</option>
                       <option v-for="division in defect_divisions"></option>
                     </select>  -->
-                    <input type="text" class="form-control" aria-label="readonly input example" disabled>
+                    <input type="text" class="form-control" v-model="cardChecker" aria-label="readonly input example" disabled>
                 </div>
                 <div class="block_data2">
                   <div class="block_input_data">
                     <b>Результат проверки</b>
                   </div>
-                  <input type="text" class="form-control"  disabled>
+                  <input type="text" class="form-control" v-model="cardCheckerDescription" disabled>
                 </div>
               </div>
   

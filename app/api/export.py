@@ -88,8 +88,8 @@ async def export_history_excel_defect(defect_id: Defect_id, session: AsyncSessio
                                                  defect.defect_division.division_name, 
                                                  defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                                                  (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '') if not defect.defect_ppr else 'Устр. в ППР', 
-                                                 '?', 
-                                                 defect.defect_checker]})
+                                                 defect.defect_work_comment, 
+                                                 defect.defect_checker.user_surname + ' ' + defect.defect_checker.user_name + ' ' + defect.defect_checker.user_fathername]})
     
     df_header_right_title = pd.DataFrame({"Data": ['Статус дефекта', 
                                                   'Оборудование:',
@@ -107,7 +107,7 @@ async def export_history_excel_defect(defect_id: Defect_id, session: AsyncSessio
                                                  defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name + ' ' + defect.defect_repair_manager.user_fathername if defect.defect_repair_manager else '',
                                                  defect.defect_worker.user_surname + ' ' + defect.defect_worker.user_name + ' ' + defect.defect_worker.user_fathername if defect.defect_worker else '',
                                                  '', 
-                                                 defect.defect_checker]})
+                                                 defect.defect_check_result]})
      
     result: list[History] = await History.get_history_by_defect(session, defect)
     for count, history_defect in enumerate(result):

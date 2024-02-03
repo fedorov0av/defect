@@ -17,18 +17,21 @@
 		</button>
 		<transition name="modal">
 	  </div> 
-<!-- 	  <div> 
-		<button class="btn btn-primary me-2" type="button">Экспорт в Excel</button>
-	  </div> -->
 	  <div class="btn-group">
 		<button type="button" class="btn btn-primary dropdown-toggle w190" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 4px;">
 		  Экспорт данных
 		</button>
 		<ul class="dropdown-menu">
 		  <li><a class="dropdown-item" @click="exportExcel">Экспорт в Excel</a></li>
-		  <li><a class="dropdown-item" href="#">Экспорт в PDF</a></li>
+		  <li><a class="dropdown-item" @click="exportPDF">Экспорт в PDF</a></li>
 		</ul>
 	  </div>
+	  <div>
+		<button id="show-modal" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AboutModalWindow" style="width: 190px;" type="button">
+			О программе
+		  </button>
+	  </div>
+	  
 	</form>
   </nav>
 {% endraw %}

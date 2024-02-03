@@ -17,7 +17,7 @@ const appVueDefect = Vue.createApp({
     },
 
     mounted() {
-      this.updateTableDefect();
+      this.updateTableDefect(true);
       this.currentPage = 1;
     },  /* mounted */
     methods: {    
@@ -37,15 +37,20 @@ const appVueDefect = Vue.createApp({
       updateTables(){
         this.updateTableDefect()
       },
-      updateTableDefect() {
-        axios
-        .post('/defects', null, {params:{'page': 1, 'size': parseInt(this.pageSize)}})
-        .then(response => {
-            this.temp_resp = response.data;
-            this.pageNumber = response.data.page;
-            this.pages = response.data.pages;
-            this.defects = response.data.items;
-              }) /* axios */
+      updateTableDefect(start = false) {
+        if (start){ 
+          appVueFilter.useFilter(); 
+        }
+        else {
+          axios
+          .post('/defects', null, {params:{'page': 1, 'size': parseInt(this.pageSize)}})
+          .then(response => {
+              this.temp_resp = response.data;
+              this.pageNumber = response.data.page;
+              this.pages = response.data.pages;
+              this.defects = response.data.items;
+                }) /* axios */
+            } /* else */
       }, /* updateTableDefect */
       handleDoubleClick (event){
         defect_id = event.target.parentNode.childNodes[0].textContent

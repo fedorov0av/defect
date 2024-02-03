@@ -53,12 +53,13 @@ const appVueAddDefect = Vue.createApp({
     })
     },
     methods: {
-      changeTextNotes(event){
-        if (event.target.value.length > 200){
-          event.target.value = event.target.value.slice(0, 200);
+      changeTextWork(event){
+        if (event.target.value.length > 100){
+          event.target.value = event.target.value.slice(0, 100);
         }
-      }, /* changeTextNotes */
-      setLimitNotes(){
+      }, /* changeTextWork */
+      
+      setLimitNotes(event){
         var myText1 = document.getElementById("my-notes");
         var result1 = document.getElementById("notes");
         var limit1 = 100;
@@ -66,9 +67,10 @@ const appVueAddDefect = Vue.createApp({
   
         myText1.addEventListener('input',function(){
         var textLength1 = myText1.value.length;
-        result1.textContent = textLength1 + 1 + "/" + limit1;
+        result1.textContent = textLength1 + "/" + limit1;
         });
-      }, /* setlimit*/
+      }, /* setLimitNotes */
+
       setLimitSystem(event){
         var myText = document.getElementById("my-system");
         var result = document.getElementById("system");
@@ -78,25 +80,27 @@ const appVueAddDefect = Vue.createApp({
         myText.addEventListener('input',function(){
         var textLength = myText.value.length;
         result.textContent = textLength + "/" + limit;
-        if (event.target.value.length > 100){
-          event.target.value = event.target.value.slice(0, 100);
-        }
         });
-      }, /* setlimit*/
+      }, /* setLimitSystem */
+      
       changeTextCorrection(event){
         if (event.target.value){
           this.style_input_type = "lime"
         }
       }, /* changeTextWork */
+
       setMask() {
         console.log()
-      }, /* closeAddDefectModalWindow */
+      }, /* setMask */
+
       onChangeTypeDefect(event) {
         this.newSystemKKS = '';
-      },
+      }, /* onChangeTypeDefect */
+
       closeAddDefectModalWindow() {
         this.clearData();
       }, /* closeAddDefectModalWindow */
+
       clearData() {
         this.newSystemName = '';
         this.newSystemKKS = '';
@@ -109,6 +113,7 @@ const appVueAddDefect = Vue.createApp({
         this.check_defect_notes = false;
         this.check_defect_system = false;
       }, /* clearData */
+      
       getDivision() {
         axios
           .post('/user/me',{

@@ -182,7 +182,7 @@ class Defect(Base):
             start_date = datetime.datetime.strptime(date_start, "%Y-%m-%d")
             conditions.append(Defect.defect_created_at >= start_date)
         if date_end:
-            end_date = datetime.datetime.strptime(date_end, "%Y-%m-%d")
+            end_date = (datetime.datetime.strptime(date_end, "%Y-%m-%d") + datetime.timedelta(days=1))
             conditions.append(Defect.defect_created_at <= end_date)
 
         query = select(Defect)
