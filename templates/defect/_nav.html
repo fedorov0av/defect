@@ -1,5 +1,5 @@
 {% raw %}
-<nav id="vueNav" class="navbar block-img">
+<nav id="vueNav" class="navbar header-block">
 	<form class="container-fluid justify-content-start">
 	  <div class="btn-group">
 		<span class="d-inline-block" tabindex="0" data-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Регистратор">
@@ -18,7 +18,7 @@
 		<transition name="modal">
 	  </div> 
 	  <div class="btn-group">
-		<button type="button" class="btn btn-primary dropdown-toggle w190" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 4px;">
+		<button type="button" class="btn btn-primary dropdown-toggle w190 " data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 4px;">
 		  Экспорт данных
 		</button>
 		<ul class="dropdown-menu">
@@ -31,7 +31,20 @@
 			О программе
 		  </button>
 	  </div>
-	  
+	  <!-- <div class="lastbutton">
+		<ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-5 shadow-sm" id="pillNav2" role="tablist" style="--bs-nav-link-color: var(--bs-white); --bs-nav-pills-link-active-color: var(--bs-primary); --bs-nav-pills-link-active-bg: var(--bs-white);">
+			<li class="nav-item" role="presentation">
+			<button class="nav-link active rounded-5" id="home-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="true">Home</button>
+			</li>
+			<li class="nav-item" role="presentation">
+			<button class="nav-link rounded-5" id="profile-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Profile</button>
+			</li>
+			<li class="nav-item" role="presentation">
+			<button class="nav-link rounded-5" id="contact-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Contact</button>
+			</li>
+		</ul>
+	  </div> -->
+
 	</form>
   </nav>
 {% endraw %}

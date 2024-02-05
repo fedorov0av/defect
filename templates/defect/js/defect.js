@@ -172,9 +172,6 @@ const appVueAddDefect = Vue.createApp({
         else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
           Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
         }
-        else if (!this.maskObject.completed && (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA' ?  this.newSystemKKS.length > this.placeholders[this.newTypeDefect].slice(0,10).length : true)) {
-          Swal.fire({html:"<b>KKS введен не полностью!</b>", heightAuto: false});
-        }
         else {
           axios
           .post('/defect/add', 

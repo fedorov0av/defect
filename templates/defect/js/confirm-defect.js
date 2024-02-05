@@ -209,7 +209,7 @@ const appConfirmDefect = Vue.createApp({
       confirmDefect() {
         //this.newDate = this.cardDatePlannedFinish ? this.cardDatePlannedFinish  : null;
         if ((this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newDivisionOwner_id == 0 || this.newCardDatePlannedFinish == '') {
-          Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Заполните все необходимые поля. Укажите срок устранения и руководителя ремонта.</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
         if (this.newRepairManager_id == 0) {

@@ -41,6 +41,7 @@ const appExecutionDefect = Vue.createApp({
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
+        newWorker_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
 
         cardHistorys: [{
           "history_id": 0,
@@ -162,6 +163,7 @@ const appExecutionDefect = Vue.createApp({
             this.cardPPR = this.cardDefect.defect_ppr;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
             if (this.currentUser.user_role === 'Исполнитель' && this.currentUser.user_id !== this.cardDefect.defect_worker.user_id){
               this.isDisabledExecutionDefect = true;
             }
@@ -184,6 +186,46 @@ const appExecutionDefect = Vue.createApp({
                   console.log(err);
               }) /* axios */
       }, /* updateTableHistory */
+      saveChange() {
+        Swal.fire({
+          title: "Вы действительно хотите назначить другого исполнителя?",
+          showDenyButton: true,
+          confirmButtonText: "ДА",
+          denyButtonText: `ОТМЕНА`
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            new_worker = this.workers.filter(worker => Object.values(worker).some(value => value === this.newWorker_id))[0]
+            data = {
+            "defect_id": {
+              "defect_id": this.defect_id
+            },
+            "status_name": {
+              "status_defect_name": this.statuses_defect[3].status_defect_name
+            },
+            "worker_id": {
+              "user_id": this.newWorker_id
+            },
+            "comment": {
+              "comment": "Поменялся исполнитель с '"+this.cardWorker+"' на '"+new_worker.user_surname + " " + new_worker.user_name+"'"
+            }
+            }
+            axios
+            .post('/accept_defect', data)
+            .then(response => {
+                appVueDefect.updateTables()
+                /* console.log(response.data); */
+                Swal.fire("НАЗНАЧЕН НОВЫЙ ИСПОЛНИТЕЛЬ!", "", "success");
+                this.isDisabledWorker = true;
+                this.updateTableHistory();
+                  }) /* axios */
+            .catch(err => {
+                    Swal.fire({html:"<b>Произошла ошибка при НАЗНАЧЕНИИ ИСПОЛНИТЕЛЯ! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    console.log(err);
+                }) /* axios */
+          }
+        });
+      },/* saveChange */
       executionDefect() {
         if (this.cardWorker == '') {
           Swal.fire({html:"<b>ИСПОЛНИТЕЛЬ РЕМОНТА!</b>", heightAuto: false}); 
@@ -211,7 +253,7 @@ const appExecutionDefect = Vue.createApp({
                 }) /* axios */
           }
         });
-      },/* executionDefect */
+      },/* executionDefect */ 
       cancelDefect() {
         appCorrectionDefect.defect_id = defect_id;
         appCorrectionDefect.parent_button_close_modal_name = 'closeExecutionModalWindow';

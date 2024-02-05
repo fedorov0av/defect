@@ -217,6 +217,9 @@ const appAcceptDefect = Vue.createApp({
           "worker_id": {
             "user_id": this.newWorker_id
           },
+          "comment": {
+            "comment": null
+          }
           }
           axios
           .post('/accept_defect', data)

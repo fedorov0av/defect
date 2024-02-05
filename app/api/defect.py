@@ -208,6 +208,7 @@ async def accept_defect(defect_id: Defect_id,
                       status_name: StatusDefect_name,
                       worker_id: User_id,
                       request: Request,
+                      comment: Сomment = None,
                       session: AsyncSession = Depends(get_db)):
     token_dec = await decode_token(request.cookies['jwt_access_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
@@ -226,6 +227,7 @@ async def accept_defect(defect_id: Defect_id,
         defect=defect,
         user=user,
         status=status_defect,
+        comment=comment.comment if comment.comment else None,
         )
     return defect
 

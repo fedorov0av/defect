@@ -74,7 +74,7 @@
 .bd-mode-toggle .dropdown-menu .active .bi {
   display: block !important;
 }
-
+jpg
 .navbar-nav1 {
   display: none;
 }
@@ -97,6 +97,10 @@
 .width60 {
   max-width: 60%;
   margin-right: 5px;
+}
+
+.back{
+  background: no-repeat url("../img/fon.jpg");
 }
 
 @media screen and (max-width: 1550px) {
@@ -405,7 +409,7 @@
 }
 
 .table-hover tbody tr:hover td {
-  background: aqua;
+  background: rgb(204, 227, 253);
 }
 
 .form-control1 {
@@ -546,6 +550,10 @@
   border-left: thin dashed #726b6b;
 }
 
+.verticalLine1 {
+  border-left: 3px solid #ff0000;
+}
+
 .block-checkbox-left {
   padding-left: 0px;
 }
@@ -558,7 +566,13 @@
   text-align: center;
 }
 
+.header-block {
+  background-color: rgb(204, 227, 253);
+}
 
+.header-block1 {
+  background-color: rgb(141, 187, 240);
+}
 
 
 @media screen and (min-width:200px) and (max-width:1700px) {
