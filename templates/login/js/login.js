@@ -21,6 +21,7 @@ const app = Vue.createApp({
       })
       .catch(err => {
       if (err.request.status == 401) {
+        console.log(err.request.responseData)
         Swal.fire({html:"<b>Неправильный логин или пароль</b>", heightAuto: false}); 
       }
       if (err.request.status == 403) {

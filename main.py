@@ -27,6 +27,12 @@ from fastapi_pagination import add_pagination
 
 from app.middleware.auth import auth_required
 
+from fastapi_csrf_protect import CsrfProtect
+from fastapi_csrf_protect.exceptions import CsrfProtectError
+from fastapi.responses import JSONResponse
+from app.schemas.auth import CsrfSettings
+
+
 app = FastAPI()
 add_pagination(app)
 
@@ -50,9 +56,9 @@ app.mount("/defect_js", StaticFiles(directory="templates/defect/js"), name="defe
 
 templates = Jinja2Templates(directory="templates")
 
-@app.get("/",response_class=HTMLResponse)
+""" @app.get("/",response_class=HTMLResponse)
 async def signin(request:Request):
-    return templates.TemplateResponse("login/login.html",context={"request":request})
+    return templates.TemplateResponse("login/login.html",context={"request":request}) """
 
 @app.get('/favicon.ico')
 async def favicon():
@@ -70,3 +76,27 @@ async def get_defects(request:Request):
 async def get_defects(request:Request):
     #print(request.cookies)
     return templates.TemplateResponse("defect/test_defect.html",context={"request":request})
+
+
+#------------------------------------csrf-start------------------------------------#
+
+@CsrfProtect.load_config
+def get_csrf_config():
+  return CsrfSettings()
+
+@app.get("/")
+async def form(request: Request, csrf_protect: CsrfProtect = Depends()):
+  csrf_token, signed_token = csrf_protect.generate_csrf_tokens()
+  response = templates.TemplateResponse(
+    "login/login.html", {"request": request, "csrf_token": csrf_token}
+  )
+  print(response)
+  csrf_protect.set_csrf_cookie(signed_token, response)
+  return response
+
+
+@app.exception_handler(CsrfProtectError)
+def csrf_protect_exception_handler(request: Request, exc: CsrfProtectError):
+  return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})
+
+#-------------------------------------csrf-end-------------------------------------#

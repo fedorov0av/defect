@@ -74,7 +74,7 @@ async def update_user(user_update: User_update, session: AsyncSession = Depends(
         user_email=user_update.email
         )
     return user
-
+ 
 @user_router.post("/users/")
 async def get_users(session: AsyncSession = Depends(get_db)):
     result: list[User] = await User.get_all_users(session)
@@ -92,6 +92,7 @@ async def get_users(session: AsyncSession = Depends(get_db)):
                 "user_email": user.user_email
             }
         )
+    """ user_l  = sorted(user_l, key=lambda x: x[2], reverse=True) """
     return user_l
 
 @user_router.post("/user/")

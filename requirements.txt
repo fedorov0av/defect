@@ -15,3 +15,4 @@ fastapi-pagination==0.12.14
 sqlalchemy-to-pydantic==0.0.8
 openpyxl==3.1.2
 pandas==2.2.0
+fastapi-csrf-protect==0.3.3
