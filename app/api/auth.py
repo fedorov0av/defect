@@ -25,15 +25,14 @@ def get_csrf_config():
   return CsrfSettings()
 
 
-""" @auth_router.post("/auth", response_class=JSONResponse)
+@auth_router.post("/auth", response_class=JSONResponse)
 async def auth(request: Request, 
                auth_data: AuthData, 
                response: Response, 
                session: AsyncSession = Depends(get_db), 
                csrf_protect: CsrfProtect = Depends()):
-
+    print(request)
     await csrf_protect.validate_csrf(request)
-    response: JSONResponse = JSONResponse(status_code=200, content={"detail": "OK"})
     csrf_protect.unset_csrf_cookie(response)  # prevent token reuse
 
     try:
@@ -50,11 +49,11 @@ async def auth(request: Request,
     response.set_cookie(key="jwt_access_token", value=access_token,)
     response.set_cookie(key="jwt_refresh_token", value=refresh_token,)
     
-    return response """
+    return {"access_token": access_token, "refresh_token": refresh_token}
 
 #-------------------------------------csrf-end-------------------------------------#
 
-@auth_router.post("/auth")
+""" @auth_router.post("/auth")
 async def auth(auth_data:AuthData, response: Response, session: AsyncSession = Depends(get_db),):
     # subject (actual payload) is any json-able python dict
     try:
@@ -71,7 +70,7 @@ async def auth(auth_data:AuthData, response: Response, session: AsyncSession = D
     response.set_cookie(key="jwt_access_token", value=access_token,)
     response.set_cookie(key="jwt_refresh_token", value=refresh_token,)
     return {"access_token": access_token, "refresh_token": refresh_token}
-
+ """
 @auth_router.post("/refresh")
 async def refresh(
         credentials: JwtAuthorizationCredentials = Security(refresh_security)

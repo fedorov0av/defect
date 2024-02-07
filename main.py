@@ -54,6 +54,12 @@ app.mount("/img", StaticFiles(directory="templates/static/img"), name="static_im
 app.mount("/login_js", StaticFiles(directory="templates/login/js"), name="login_js")
 app.mount("/defect_js", StaticFiles(directory="templates/defect/js"), name="defect_js")
 
+#------------------------------------test_modal_page------------------------------------#
+app.mount("/temp_css_js", StaticFiles(directory="templates/temp/temp_modal_static"), name="temp_css_js")
+#----------------------------------------------------------------------------------------#
+
+
+
 templates = Jinja2Templates(directory="templates")
 
 """ @app.get("/",response_class=HTMLResponse)
@@ -72,10 +78,10 @@ async def get_defects(request:Request):
     #print(request.cookies)
     return templates.TemplateResponse("defect/defect.html",context={"request":request})
 
-@app.get("/test_defect/",response_class=HTMLResponse)
+
+@app.get("/test_modal/",response_class=HTMLResponse)
 async def get_defects(request:Request):
-    #print(request.cookies)
-    return templates.TemplateResponse("defect/test_defect.html",context={"request":request})
+    return templates.TemplateResponse("temp/temp_modal.html",context={"request":request})
 
 
 #------------------------------------csrf-start------------------------------------#
@@ -87,6 +93,7 @@ def get_csrf_config():
 @app.get("/")
 async def form(request: Request, csrf_protect: CsrfProtect = Depends()):
   csrf_token, signed_token = csrf_protect.generate_csrf_tokens()
+  print(csrf_token)
   response = templates.TemplateResponse(
     "login/login.html", {"request": request, "csrf_token": csrf_token}
   )

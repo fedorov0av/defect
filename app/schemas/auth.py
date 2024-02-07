@@ -1,12 +1,12 @@
 from typing import Optional
 from pydantic import BaseModel
+from pydantic import EmailStr, Field
 
 class AuthData(BaseModel):
-    email: Optional[str]
-    password: Optional[str]
+    email: EmailStr = Field(...)
+    password: str = Field(...)
 
 class CsrfSettings(BaseModel):
   secret_key: str = "trevorphilipsenterprises"
   cookie_samesite: str = "strict"
-  token_key: str = "csrf-token"
-  token_location: str = "body"
+  
