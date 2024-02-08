@@ -3,6 +3,7 @@ from sqlalchemy import ForeignKey, Integer, Text, String, func, select, Boolean,
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 from sqlalchemy.sql import func
 from sqlalchemy.types import TypeDecorator, DateTime
+from sqlalchemy.sql import false
 
 from db.base import Base
 from db.user import User
@@ -19,6 +20,7 @@ class Defect(Base):
     __tablename__ = "defect" # процесс учета средств оснащения
     defect_id: Mapped[str] = mapped_column(String(10), primary_key=True) # первичный ключ '23-0000175'
     defect_created_at: Mapped[datetime.datetime]
+
     defect_registrator_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - регистратор дефекта.
     defect_registrar: Mapped["User"] = relationship(foreign_keys=[defect_registrator_id]) #  для работы с таблицей User как с объектом
     defect_owner_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - владелец оборудования.
@@ -29,8 +31,15 @@ class Defect(Base):
     defect_worker: Mapped["User"] = relationship(foreign_keys=[defect_worker_id]) #  для работы с таблицей User как с объектом
     defect_checker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - выполняющий ОП проверку.
     defect_checker: Mapped["User"] = relationship(foreign_keys=[defect_checker_id]) #  для работы с таблицей User как с объектом
+
     defect_planned_finish_date: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=True)  # планируемая дата завершения ремонта
-    defect_ppr: Mapped[bool] = mapped_column(Boolean, default=False) # Устранить в ППР?
+
+    defect_ppr: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Устранить в ППР?
+    defect_safety: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Влияет на безопасность?
+    defect_load: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Влияет на нагрузку?
+    defect_exploitation: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # True - дефект в эксплуатации; False - дефект в ПНР?
+    defect_localized: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Дефект локализован? (В ЦС ТОИР данное значение назвается "Временно устранен")
+
     defect_description: Mapped[str] = mapped_column(String(500)) # Описание дефекта.
     defect_check_result: Mapped[str] = mapped_column(String(500), nullable=True) # Результат проверки.
     defect_work_comment: Mapped[str] = mapped_column(String(500), nullable=True) # Комментарий исполнителя после выполнения работ.

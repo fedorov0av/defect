@@ -4,6 +4,7 @@ from sqlalchemy import String, Boolean, select, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 from utils import security
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.sql import false
 
 from db.base import Base
 from db.role import Role
@@ -23,7 +24,7 @@ class User(Base):
     user_role: Mapped[List[Role]] = relationship(secondary=user_role) # роль пользователя в системе
     user_password_hash: Mapped[str] = mapped_column(String(100)) # хешированный пароль пользователя в системе
     user_salt_for_password: Mapped[str] = mapped_column(String(60)) # соль для хеширования пароля пользователя в системе
-    user_temp_password: Mapped[bool] = mapped_column(Boolean, default=True) # в данный момент используется временный пароль?
+    user_temp_password: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=True) # в данный момент используется временный пароль?
     user_email: Mapped[str] = mapped_column(String(50), unique=True) # логин пользователя в системе (уникальное значение)
     user_created_at: Mapped[datetime.datetime]
     ########################### fix me

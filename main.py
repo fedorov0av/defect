@@ -72,9 +72,9 @@ async def favicon():
     file_path = os.path.join(app.root_path, "templates/static/img", file_name)
     return FileResponse(path=file_path, headers={"Content-Disposition": "attachment; filename=" + file_name})
 
-@app.get("/defect/",response_class=HTMLResponse)
+@app.get("/defect/", response_class=HTMLResponse)
 @auth_required
-async def get_defects(request:Request):
+async def get_defects(request:Request,):
     #print(request.cookies)
     return templates.TemplateResponse("defect/defect.html",context={"request":request})
 
@@ -93,11 +93,9 @@ def get_csrf_config():
 @app.get("/")
 async def form(request: Request, csrf_protect: CsrfProtect = Depends()):
   csrf_token, signed_token = csrf_protect.generate_csrf_tokens()
-  print(csrf_token)
   response = templates.TemplateResponse(
     "login/login.html", {"request": request, "csrf_token": csrf_token}
   )
-  print(response)
   csrf_protect.set_csrf_cookie(signed_token, response)
   return response
 

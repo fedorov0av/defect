@@ -13,7 +13,7 @@ user_router = APIRouter()
 
 @user_router.post("/user/me")
 async def get_current_user(request: Request, session: AsyncSession = Depends(get_db)):  
-    token_dec = await decode_token(request.cookies['jwt_access_token'])
+    token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
     return {
@@ -31,7 +31,7 @@ async def get_current_user(request: Request, session: AsyncSession = Depends(get
 
 @user_router.post("/user/user_role")
 async def get_current_user_role(request: Request, session: AsyncSession = Depends(get_db)):  
-    token_dec = await decode_token(request.cookies['jwt_access_token'])
+    token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
     return {

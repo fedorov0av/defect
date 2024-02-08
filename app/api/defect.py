@@ -1,5 +1,5 @@
 from datetime import datetime
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Response
 from utils.jwt import decrypt_user_id, decode_token
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -73,8 +73,8 @@ async def add_new_defect(defect_p: New_defect_p, request: Request, session: Asyn
         )
     return defect
 
-@defect_router.post("/defects/" , response_model=Page[Defects_output]) # для тестирования пагинации
-async def get_defects(session: AsyncSession = Depends(get_db)):
+@defect_router.post("/defects/", response_model=Page[Defects_output])
+async def get_defects(response: Response, session: AsyncSession = Depends(get_db)):
     return await paginate(
         session,
         select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID)\

@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 import asyncpg
 
-from db.base import Base
 from db.user import User
 from db.role import Role
 from db.type_defect import TypeDefect
@@ -12,6 +11,7 @@ from db.defect import Defect
 from db.history_defect import History
 from db.type_defect import TypeDefect
 from db.status_defect import StatusDefect
+from db.base import Base
 from db.utils import get_time
 
 #from constants import ROLES, ROOT, GROUP_REESTR_SO, ENERGOBLOCKS

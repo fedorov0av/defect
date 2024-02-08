@@ -62,7 +62,7 @@ const appVueAddDefect = Vue.createApp({
       setLimitNotes(event){
         var myText1 = document.getElementById("my-notes");
         var result1 = document.getElementById("notes");
-        var limit1 = 100;
+        var limit1 = 200;
         result1.textContent = 0 + "/" + limit1;
   
         myText1.addEventListener('input',function(){

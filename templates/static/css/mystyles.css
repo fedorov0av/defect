@@ -6,12 +6,6 @@
   user-select: none;
 }
 
-@media (min-width: 768px) {
-  .bd-placeholder-img-lg {
-    font-size: 3.5rem;
-  }
-}
-
 .b-example-divider {
   width: 100%;
   height: 3rem;
@@ -74,7 +68,7 @@
 .bd-mode-toggle .dropdown-menu .active .bi {
   display: block !important;
 }
-jpg
+
 .navbar-nav1 {
   display: none;
 }
@@ -104,7 +98,7 @@ jpg
 }
 
 .last_block_row {
-  margin-bottom: 5px;
+  margin: 0px 5px 5px 5px;
 }
 
 .block_data_column {
@@ -121,11 +115,58 @@ jpg
   margin: 0px 3px;
 }
 
+.block_data_column2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.block_data_column3 {
+  display: flex;
+  flex-direction: column;
+}
+
 .block_height100 {
   height: 100%;
 }
 
-@media screen and (max-width: 1550px) {
+.block-checkbox3 {
+  margin: 15px 5px 5px 5px;
+}
+
+.width50 {
+  width: 50%;
+}
+
+.width30 {
+  width: 30%;
+}
+
+.width25 {
+  width: 25%;
+}
+
+.ml {
+  margin-left: 5px;
+}
+
+.KKS_discr {
+  text-align: left;
+  vertical-align: middle;
+  padding-top: 5px;
+}
+
+.block_nav_modal {
+  margin: 0px 5px;
+}
+
+.block_checkbox {
+  text-align: center;
+  vertical-align: middle;
+  margin: auto;
+}
+
+@media screen and (max-width: 1400px) {
     .button-text {
         display: none;
     }
@@ -133,7 +174,6 @@ jpg
 
 .rr {
   margin-left: 10px;
-
 }
 
 .type-defect {
@@ -289,7 +329,7 @@ jpg
 
 .block_input_data {
   min-width: 230px;
-  padding: 5px 5px 0px 5px;
+  padding: 0px 5px;
   text-align: left;
   font-size: 16px;
   vertical-align: middle;
@@ -361,6 +401,11 @@ jpg
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.block_row1 {
+  display: flex;
+  flex-direction: row;
 }
 
 .block-history{
@@ -538,8 +583,8 @@ jpg
 
 .pos_a1 {
   position: absolute;
-  top: 53%;
-  left: 93%;
+  top: 77%;
+  left: 94%;
 }
 
 .pos_r2 {
@@ -548,8 +593,8 @@ jpg
 
 .pos_a2 {
   position: absolute;
-  top: 41%;
-  left: 44%;
+  top: 57%;
+  left: 45%;
 }
 
 .correction_area {
@@ -567,7 +612,7 @@ jpg
 .block_filter_flex1 {
   display: flex;
   flex-direction: row;
-  margin-right: 5px;
+  margin-right: 15px;
 }
 
 .verticalLine {
@@ -599,7 +644,14 @@ jpg
 }
 
 .block_border {
-  border: 1px solid rgb(236, 158, 14);
+  border: 1px solid #ee4545;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 3px;
+}
+
+.block_border_grey {
+  border: 1px solid grey;
   border-radius: 5px;
   margin: 5px;
   padding: 3px;
@@ -614,10 +666,88 @@ jpg
 }
 
 .label {
-  font-weight: 400;
+  font-weight: 600;
 }
 
-@media screen and (min-width:200px) and (max-width:1700px) {
+.componentWraper {
+  margin: 10px 0px;
+  position: relative;
+  border: 1px solid rgb(179, 160, 157);
+  border-radius: 10px;
+  padding: 15px 10px;
+}
+
+.componentWraper::before {
+  content: 'Устранение дефекта';
+  position: absolute;
+  top: -10px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.componentWraper1 {
+  margin: 10px 0px;
+  position: relative;
+  border: 1px solid rgb(179, 160, 157);
+  border-radius: 10px;
+  padding: 15px 10px;
+}
+
+.componentWraper1::before {
+  content: 'Проверка устранения дефекта';
+  position: absolute;
+  top: -10px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.componentWraper2 {
+  margin: 10px 5px;
+  position: relative;
+  border: 1px solid rgb(179, 160, 157);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.componentWraper2::before {
+  content: 'Состояние оборудования';
+  position: absolute;
+  top: -10px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.componentWraper3 {
+  margin: 10px 0px;
+  position: relative;
+  border: 1px solid rgb(179, 160, 157);
+  border-radius: 10px;
+  padding: 15px 10px;
+}
+
+.componentWraper3::before {
+  content: 'Сведения о дефекте';
+  position: absolute;
+  top: -10px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.block_margin {
+  margin: 5px;
+}
+
+.outer {
+  position: relative;
+}
+
+.inner {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media screen and (min-width:200px) and (max-width:1400px) {
 
   .h2 {
     margin: auto;
