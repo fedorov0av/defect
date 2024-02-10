@@ -178,8 +178,12 @@ const appCloseDefect = Vue.createApp({
               })
                 })
           .catch(err => {
-              Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
-              console.log(err);
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
           }) /* axios */
       }, /* updateCardDefect */
       updateTableHistory() {
@@ -189,10 +193,14 @@ const appCloseDefect = Vue.createApp({
           })
           .then(response => {
               this.cardHistorys = response.data;
-                }) /* axios */
+                }) 
           .catch(err => {
-                  Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
-                  console.log(err);
+                  if (err.response.status === 401){
+                    window.location.href = "/";
+                  } else {
+                    Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    console.log(err);
+                  }
               }) /* axios */
       }, /* updateTableHistory */
       closeDefect() {
@@ -212,10 +220,14 @@ const appCloseDefect = Vue.createApp({
                 appVueDefect.updateTables()
                 /* console.log(response.data); */
                 Swal.fire("ДЕФЕКТ ЗАКРЫТ", "", "success");
-                  }) /* axios */
+                  })
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ЗАКРЫТИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
-                    console.log(err);
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ЗАКРЫТИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
                 }) /* axios */
           }
         });

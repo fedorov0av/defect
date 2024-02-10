@@ -8,7 +8,7 @@
           <tbody>
             <thead>
               <tr class="head_table">
-                <th v-for="colunmName in colunmsName">{{ colunmName }}</th>
+                <th v-for="colunmName in colunmsName" class="th-sm">{{ colunmName }} <span class="arrow-up"></span></th>
               </tr>
             </thead>
             <tr @dblclick="handleDoubleClick" data-bs-target="#ConfirmDefectModalWindow" v-for="defect in defects" v-bind:key="defect.defect_id">

@@ -134,7 +134,11 @@ async def get_defect(request: Request, response: Response, defect_id: Defect_id,
                 "defect_checker": { 'user_surname': defect.defect_checker.user_surname,
                                     'user_name': defect.defect_checker.user_name,
                                     'user_id': defect.defect_checker.user_id,
-                                   } if defect.defect_checker else None
+                                   } if defect.defect_checker else None,
+                "defect_safety": defect.defect_safety,
+                "defect_pnr": defect.defect_pnr,
+                "defect_exploitation": defect.defect_exploitation,
+                "defect_localized": defect.defect_localized,
             }
 
 @defect_router.post("/confirm_defect/")

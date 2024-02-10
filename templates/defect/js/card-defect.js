@@ -139,8 +139,12 @@ const appCardDefect = Vue.createApp({
             this.cardCheckerDescription = this.cardDefect.defect_check_result;
                 })
           .catch(err => {
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
               Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
-              console.log(err);
+              console.log(err); 
+              }
           }) /* axios */
       }, /* updateCardDefect */
       updateTableHistory() {
@@ -152,8 +156,12 @@ const appCardDefect = Vue.createApp({
               this.cardHistorys = response.data;
                 }) /* axios */
           .catch(err => {
+                  if (err.response.status === 401){
+                    window.location.href = "/";
+                  } else {
                   Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
                   console.log(err);
+                  }
               }) /* axios */
       }, /* updateTableHistory */
       exportHistoryExcel(){
@@ -184,7 +192,11 @@ const appCardDefect = Vue.createApp({
               Swal.fire("История дефекта выгружена в каталог 'Загрузки' на ваш компьютер!", "", "success");
             })
               .catch(error => {
+                if (err.response.status === 401){
+                  window.location.href = "/";
+                } else {
                 console.error(error);
+                }
               });
             }
         });

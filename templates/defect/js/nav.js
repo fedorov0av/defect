@@ -54,9 +54,14 @@ const appVueNav = Vue.createApp({
               link.click();
               Swal.fire("Журнал дефектов выгружен в каталог 'Загрузки' на ваш компьютер!", "", "success");
             })
-            .catch(error => {
-              console.error(error);
-            });
+            .catch(err => {
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выгрузке в Excel! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
+            }); /* axios */
           }
       });
     }, /* exportExcel */

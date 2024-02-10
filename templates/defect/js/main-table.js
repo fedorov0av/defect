@@ -49,7 +49,15 @@ const appVueDefect = Vue.createApp({
               this.pageNumber = response.data.page;
               this.pages = response.data.pages;
               this.defects = response.data.items;
-                }) /* axios */
+                })
+          .catch(err => {
+            if (err.response.status === 401){
+              window.location.href = "/";
+            } else {
+              Swal.fire({html:"<b>Произошла ошибка! Обратитесь к администратору!</b>", heightAuto: false}); 
+              console.log(err);
+            }
+          }); /* axios */
             } /* else */
       }, /* updateTableDefect */
       handleDoubleClick (event){

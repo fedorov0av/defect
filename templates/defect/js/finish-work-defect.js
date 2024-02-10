@@ -200,7 +200,12 @@ const appFinishWorkDefect = Vue.createApp({
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
                 })
           .catch(err => {
-              Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false});
+                console.log(err);
+              }
           }) /* axios */
       }, /* updateCardDefect */ 
       updateTableHistory() {
@@ -212,8 +217,12 @@ const appFinishWorkDefect = Vue.createApp({
               this.cardHistorys = response.data;
                 }) /* axios */
           .catch(err => {
-                  Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
-                  console.log(err);
+                  if (err.response.status === 401){
+                    window.location.href = "/";
+                  } else {
+                    Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    console.log(err);
+                  }
               }) /* axios */
       }, /* updateTableHistory */
       finishworkDefect() {
@@ -250,8 +259,12 @@ const appFinishWorkDefect = Vue.createApp({
                 Swal.fire("РАБОТЫ ПО ДЕФЕКТУ ЗАВЕРШЕНЫ", "", "success");
                   }) /* axios */
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 
-                    console.log(err);
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
                 }) /* axios */
           }
         });

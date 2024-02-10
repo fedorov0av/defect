@@ -61,28 +61,60 @@ const appVueUser = Vue.createApp({
             .post('/users',)
             .then(response => {
                 this.users = response.data;
-                  }) /* axios */
+                  })
+            .catch(err => {
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
+              }) /* axios */
           }, /* updateTableUser */
         updateTableEmails() {
             axios
             .post('/users/emails',)
             .then(response => {
                 this.emails = response.data;
-                  }) /* axios */
+                  })
+            .catch(err => {
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
+              }) /* axios */
           }, /* updateTableEmails */
         updateTableRole() {
             axios
             .post('/roles',)
             .then(response => {
                 this.roles = response.data;
-                  }) /* axios */
+                  })
+            .catch(err => {
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
+              }) /* axios */
         }, /* updateTableRole */
         updateTableDivision() {
           axios
           .post('/divisions',)
           .then(response => {
               this.divisions = response.data;
-                }) /* axios */
+                })
+          .catch(err => {
+            if (err.response.status === 401){
+              window.location.href = "/";
+            } else {
+              Swal.fire({html:"<b>Произошла ошибка при выводе карточки пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
+              console.log(err);
+            }
+            }) /* axios */
         }, /* updateTableDivision */
         updateAllTables() {
           this.updateTableUser();
@@ -118,8 +150,12 @@ const appVueUser = Vue.createApp({
                 
                   })
             .catch(err => {
-                Swal.fire({html:"<b>Произошла ошибка при добавлении пользователя. Обратитесь к администратору.</b>", heightAuto: false}); 
-                console.log(err);
+                if (err.response.status === 401){
+                  window.location.href = "/";
+                } else {
+                  Swal.fire({html:"<b>Произошла ошибка при добавлении пользователя. Обратитесь к администратору.</b>", heightAuto: false}); 
+                  console.log(err);
+                }
             }) /* axios */
           } /* else */
         }, /* addNewUser */
@@ -148,8 +184,12 @@ const appVueUser = Vue.createApp({
                 this.updateTableUser();
                   })
             .catch(err => {
-                Swal.fire({html:"<b>Произошла ошибка при изменении данных пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
-                console.log(err);
+                if (err.response.status === 401){
+                  window.location.href = "/";
+                } else {
+                  Swal.fire({html:"<b>Произошла ошибка при изменении данных пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
+                  console.log(err);
+                }
             }) /* axios */
           } /* else */
         }, /* editUser */
@@ -176,8 +216,12 @@ const appVueUser = Vue.createApp({
               myModal.show()
                   })
             .catch(err => {
-                Swal.fire({html:"<b>Произошла ошибка при выводе карточки пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
-                console.log(err);
+                if (err.response.status === 401){
+                  window.location.href = "/";
+                } else {
+                  Swal.fire({html:"<b>Произошла ошибка при выводе карточки пользователя! Обратитесь к администратору!</b>", heightAuto: false}); 
+                  console.log(err);
+                }
             }) /* axios */
           
         }, /* handleDoubleClick */

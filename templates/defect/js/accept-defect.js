@@ -176,8 +176,12 @@ const appAcceptDefect = Vue.createApp({
           this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
               })
         .catch(err => {
+            if (err.response.status === 401){
+              window.location.href = "/";
+            } else {
             Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
             console.log(err);
+            }
         }) /* axios */
     }, /* updateCardDefect */
     updateTableHistory() {
@@ -189,8 +193,12 @@ const appAcceptDefect = Vue.createApp({
             this.cardHistorys = response.data;
               }) /* axios */
         .catch(err => {
+                if (err.response.status === 401){
+                  window.location.href = "/";
+                } else {
                 Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
                 console.log(err);
+                }
             }) /* axios */
     }, /* updateTableHistory */
     acceptDefect() {
@@ -230,8 +238,12 @@ const appAcceptDefect = Vue.createApp({
               Swal.fire("НАЗНАЧЕН ИСПОЛНИТЕЛЬ!", "", "success");
                 }) /* axios */
           .catch(err => {
+                  if (err.response.status === 401){
+                    window.location.href = "/";
+                  } else {
                   Swal.fire({html:"<b>Произошла ошибка при НАЗНАЧЕНИИ ИСПОЛНИТЕЛЯ! Обратитесь к администратору!</b>", heightAuto: false}); 
                   console.log(err);
+                  }
               }) /* axios */
         }
       });

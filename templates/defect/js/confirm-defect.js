@@ -50,6 +50,10 @@ const appConfirmDefect = Vue.createApp({
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
 
+        newSafety: false,
+        newPnr: false,
+        newExploitation: false,
+
         cardHistorys: [{
           "history_id": 0,
           "history_date": "",
@@ -85,13 +89,54 @@ const appConfirmDefect = Vue.createApp({
         })
     },
     mounted() {
+      this.setLimitNotes();
+      this.setLimitSystem();
+      this.setLimitLocation();
       this.setPopover();
       var myModalEl = document.getElementById('ConfirmDefectModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appConfirmDefect.clearData();
+        appConfirmDefect.setLimitNotes();
+        appConfirmDefect.setLimitSystem();
+        appConfirmDefect.setLimitLocation();
       })
     },
     methods: {
+      setLimitNotes(event){
+        var myText1 = document.getElementById("my-notes-confirm");
+        var result1 = document.getElementById("notes-confirm");
+        var limit1 = 200;
+        result1.textContent = 0 + "/" + limit1;
+  
+        myText1.addEventListener('input',function(){
+        var textLength1 = myText1.value.length;
+        result1.textContent = textLength1 + "/" + limit1;
+        });
+      }, /* setLimitNotes */
+
+      setLimitSystem(event){
+        var myText = document.getElementById("my-system-confirm");
+        var result = document.getElementById("system-confirm");
+        var limit = 100;
+        result.textContent = 0 + "/" + limit;
+  
+        myText.addEventListener('input',function(){
+        var textLength = myText.value.length;
+        result.textContent = textLength + "/" + limit;
+        });
+      }, /* setLimitSystem */
+
+      setLimitLocation(event){
+        var myText = document.getElementById("work-location-confirm");
+        var result = document.getElementById("location-confirm");
+        var limit = 100;
+        result.textContent = 0 + "/" + limit;
+  
+        myText.addEventListener('input',function(){
+        var textLength = myText.value.length;
+        result.textContent = textLength + "/" + limit;
+        });
+      }, /* setLimitLocation */
       setPopover(){
         $(document).ready(function(){
           if($("#confirmCancelDefectButton").is(":disabled") && $("#confirmConfirmDefectButton").is(":disabled"))  {
@@ -101,6 +146,27 @@ const appConfirmDefect = Vue.createApp({
           }
         });
       }, /* setPopover */
+      changeTextCorrection(event){
+        if (event.target.value){
+          this.style_input_type = "lime"
+        }
+      }, /* changeTextWork */
+      changeTextWork100(event){
+        if (event.target.value.length > 100){
+          event.target.value = event.target.value.slice(0, 100);
+        }
+      }, /* changeTextWork100 */
+      changeTextWork200(event){
+        if (event.target.value.length > 200){
+          event.target.value = event.target.value.slice(0, 200);
+        }
+      }, /* changeTextWork200 */
+      changePnr(event){
+        if (this.newPnr === true){ 
+          this.newSafety = false;
+          this.newExploitation = false;
+        }
+      },
       clearData() {
         this.newCardKKS = null;
         this.newDivisionOwner_id = 0;
@@ -184,10 +250,18 @@ const appConfirmDefect = Vue.createApp({
             this.newCardTypeDefectName = this.cardTypeDefectName; //
             this.newCardKKS = this.cardKKS;
             this.newDivisionOwner_id = this.divisionOwner_id;
+
+            this.newSafety = this.cardDefect.defect_safety;
+            this.newPnr = this.cardDefect.defect_pnr;
+            this.newExploitation = this.cardDefect.defect_exploitation;
                 })
           .catch(err => {
-              Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
-              console.log(err);
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
           }) /* axios */
       }, /* updateCardDefect */
       updateTableHistory() {
@@ -199,8 +273,12 @@ const appConfirmDefect = Vue.createApp({
               this.cardHistorys = response.data;
                 }) /* axios */
           .catch(err => {
-                  Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
-                  console.log(err);
+                  if (err.response.status === 401){
+                    window.location.href = "/";
+                  } else {
+                    Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    console.log(err);
+                  }
               }) /* axios */
       }, /* updateTableHistory */
       checkMask(){
@@ -331,8 +409,12 @@ const appConfirmDefect = Vue.createApp({
                 Swal.fire("Дефект подтвержден", "", "success");
                   }) /* axios */
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ПОДТВЕРЖДЕНИИ ДЕФЕКТА. Обратитесь к администратору.</b>", heightAuto: false}); 
-                    console.log(err);
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ПОДТВЕРЖДЕНИИ ДЕФЕКТА. Обратитесь к администратору.</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
                 }) /* axios */
           }
         });
@@ -354,10 +436,14 @@ const appConfirmDefect = Vue.createApp({
                 appVueDefect.updateTables()
                 /* console.log(response.data); */
                 Swal.fire("ДЕФЕКТ ОТМЕНЕН", "", "success");
-                  }) /* axios */
+                  })
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ОТМЕНЫ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
-                    console.log(err);
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ОТМЕНЫ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
                 }) /* axios */
             }
         });

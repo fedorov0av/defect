@@ -148,8 +148,12 @@ const appVueAddDefect = Vue.createApp({
             this.newDivisionOwner = this.currentUser.user_division;
           })
           .catch(err => {
-              Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
-              console.log(err);
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
           }) /* axios */
       }, /* getDivision */
       updateTableDivision() {
@@ -224,8 +228,12 @@ const appVueAddDefect = Vue.createApp({
               document.getElementById('closeModalAddDefect').click();
                 })
           .catch(err => {
-              Swal.fire({html:"<b>Произошла ошибка при добавлении дефекта. Обратитесь к администратору.</b>", heightAuto: false}); 
-              console.log(err);
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при добавлении дефекта. Обратитесь к администратору.</b>", heightAuto: false}); 
+                console.log(err);
+              }
           }) /* axios */
         } /* else */
       }, /* addNewDefect */

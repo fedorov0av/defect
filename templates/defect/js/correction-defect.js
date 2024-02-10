@@ -98,8 +98,12 @@ const appCorrectionDefect = Vue.createApp({
                   document.getElementById(this.parent_button_close_modal_name).click();
                     }) /* axios */
               .catch(err => {
-                      Swal.fire({html:"<b>Произошла ошибка при ОТМЕНE ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
-                      console.log(err);
+                      if (err.response.status === 401){
+                        window.location.href = "/";
+                      } else {
+                        Swal.fire({html:"<b>Произошла ошибка при ОТМЕНE ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                        console.log(err);
+                      }
                   }) /* axios */
               }
           });

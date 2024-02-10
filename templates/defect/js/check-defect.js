@@ -189,8 +189,12 @@ const appCheckDefect = Vue.createApp({
             
                 })
           .catch(err => {
-              Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
-              console.log(err);
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
           }) /* axios */
       }, /* updateCardDefect */
       updateTableHistory() {
@@ -202,8 +206,12 @@ const appCheckDefect = Vue.createApp({
               this.cardHistorys = response.data;
                 }) /* axios */
           .catch(err => {
-                  Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
-                  console.log(err);
+                  if (err.response.status === 401){
+                    window.location.href = "/";
+                  } else {
+                    Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    console.log(err); 
+                  }
               }) /* axios */
       }, /* updateTableHistory */
       successDefect() {
@@ -239,10 +247,14 @@ const appCheckDefect = Vue.createApp({
                 appVueDefect.updateTables()
                 console.log(response.data);
                 Swal.fire("ДЕФЕКТ УСТРАНЕН", "", "success");
-                  }) /* axios */
+                  })
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 
-                    console.log(err);
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
                 }) /* axios */
           }
         });
@@ -279,10 +291,14 @@ const appCheckDefect = Vue.createApp({
                 appVueDefect.updateTables()
                 console.log(response.data);
                 Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА УСТРАНЕНИЕ ЗАНОВО", "", "success");
-                  }) /* axios */
-            .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 
-                    console.log(err);
+                  })
+            .catch(err => { 
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
                 }) /* axios */
             }
         });

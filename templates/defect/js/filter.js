@@ -85,6 +85,14 @@ const appVueFilter = Vue.createApp({
             .then(response => {
               appVueDefect.defects = response.data;
               appVueDefect.pages = 0;
+                })
+            .catch(err => {
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
                 }) /* axios */
         }, /* useFilter */
         nouseFilter() {
@@ -93,7 +101,15 @@ const appVueFilter = Vue.createApp({
           .post('/defects',)
           .then(response => {
               appVueDefect.updateTables();
-                }) /* axios */
+                })
+          .catch(err => {
+            if (err.response.status === 401){
+              window.location.href = "/";
+            } else {
+              Swal.fire({html:"<b>Произошла ошибка! Обратитесь к администратору!</b>", heightAuto: false}); 
+              console.log(err);
+            }
+              }) /* axios */
         }, /* nouseFilter */
         updateTableStatusDefect() {
           axios

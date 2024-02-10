@@ -169,8 +169,12 @@ const appExecutionDefect = Vue.createApp({
             }
                 })
           .catch(err => {
-              Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
-              console.log(err);
+              if (err.response.status === 401){
+                window.location.href = "/";
+              } else {
+                Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+                console.log(err);
+              }
           }) /* axios */
       }, /* updateCardDefect */ 
       updateTableHistory() {
@@ -182,8 +186,12 @@ const appExecutionDefect = Vue.createApp({
               this.cardHistorys = response.data;
                 }) /* axios */
           .catch(err => {
-                  Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
-                  console.log(err);
+                  if (err.response.status === 401){
+                    window.location.href = "/";
+                  } else {
+                    Swal.fire({html:"<b>Произошла ошибка при выводе ИСТОРИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    console.log(err);
+                  }
               }) /* axios */
       }, /* updateTableHistory */
       saveChange() {
@@ -220,8 +228,12 @@ const appExecutionDefect = Vue.createApp({
                 this.updateTableHistory();
                   }) /* axios */
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при НАЗНАЧЕНИИ ИСПОЛНИТЕЛЯ! Обратитесь к администратору!</b>", heightAuto: false}); 
-                    console.log(err);
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при НАЗНАЧЕНИИ ИСПОЛНИТЕЛЯ! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
                 }) /* axios */
           }
         });
@@ -248,8 +260,12 @@ const appExecutionDefect = Vue.createApp({
                 Swal.fire("ДЕФЕКТ ПРИНЯТ В РАБОТУ", "", "success");
                   }) /* axios */
             .catch(err => {
-                    Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 
-                    console.log(err);
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
                 }) /* axios */
           }
         });
