@@ -31,7 +31,10 @@ const appVueAddDefect = Vue.createApp({
         style_input_type: '',
         check_defect_type: false,
         check_defect_notes: false,
-        check_defect_system: false
+        check_defect_system: false,
+        newSafety: false,
+        newPnr: false,
+        newExploitation: false,
       }
     },
     beforeMount(){
@@ -40,6 +43,7 @@ const appVueAddDefect = Vue.createApp({
     mounted() {
       this.setLimitNotes()
       this.setLimitSystem()
+      this.setLimitLocation()
       this.getDivision();
       this.updateTableDivision();
       this.updateTableTypeDefect();
@@ -50,14 +54,21 @@ const appVueAddDefect = Vue.createApp({
         appVueDefect.updateTables();
         appVueAddDefect.setLimitNotes();
         appVueAddDefect.setLimitSystem();
+        appVueAddDefect.setLimitLocation();
     })
     },
     methods: {
-      changeTextWork(event){
+      changeTextWork100(event){
         if (event.target.value.length > 100){
           event.target.value = event.target.value.slice(0, 100);
         }
-      }, /* changeTextWork */
+      }, /* changeTextWork100 */
+
+      changeTextWork200(event){
+        if (event.target.value.length > 200){
+          event.target.value = event.target.value.slice(0, 200);
+        }
+      }, /* changeTextWork200 */
       
       setLimitNotes(event){
         var myText1 = document.getElementById("my-notes");
@@ -82,6 +93,18 @@ const appVueAddDefect = Vue.createApp({
         result.textContent = textLength + "/" + limit;
         });
       }, /* setLimitSystem */
+
+      setLimitLocation(event){
+        var myText = document.getElementById("work-location");
+        var result = document.getElementById("location");
+        var limit = 100;
+        result.textContent = 0 + "/" + limit;
+  
+        myText.addEventListener('input',function(){
+        var textLength = myText.value.length;
+        result.textContent = textLength + "/" + limit;
+        });
+      }, /* setLimitLocation */
       
       changeTextCorrection(event){
         if (event.target.value){
@@ -112,6 +135,8 @@ const appVueAddDefect = Vue.createApp({
         this.check_defect_type = false;
         this.check_defect_notes = false;
         this.check_defect_system = false;
+        this.newSafety = false;
+        
       }, /* clearData */
       
       getDivision() {
@@ -149,6 +174,12 @@ const appVueAddDefect = Vue.createApp({
       checkMask(){
         this.maskObject.completed = this.newSystemKKS.length >= this.placeholders[this.newTypeDefect].slice(0,11).length
       },
+      changePnr(event){
+        if (this.newPnr === true){ 
+          this.newSafety = false;
+          this.newExploitation = false;
+        }
+      },
       addNewDefect() {
         if (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA') {
           this.checkMask()
@@ -182,6 +213,9 @@ const appVueAddDefect = Vue.createApp({
                 "defect_type_defect_name": this.newTypeDefect,
                 "defect_location": this.newLocation,
                 "defect_user_division_id": parseInt(this.newDivisionOwner_id),
+                "defect_safety": this.newSafety,
+                "defect_pnr": this.newPnr,
+                "defect_exploitation": this.newExploitation,
               }
           )
           .then(response => {

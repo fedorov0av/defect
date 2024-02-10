@@ -2,9 +2,12 @@ const appVueFilter = Vue.createApp({
     data() {
       return {
         divisions: {}, 
+        type_defects: {},
         statuses_defect: {}, 
         defects: {},
 
+        filterType: 0,
+        filterManager: 0,
         filterDivision: 0,
         startDate: null,
         endDate: null,
@@ -25,12 +28,23 @@ const appVueFilter = Vue.createApp({
           document.getElementById('toggle-silent').switchButton('off', true);
         },
         clearData() {
+          this.filterType = 0;
+          this.filterManager = 0;
           this.filterDivision = 0;
           this.startDate = null;
           this.endDate = null;
           this.filterStatusDefect = 0;
           this.ppr = 'false';
         }, /* clearData */
+
+        updateTableTypeDefect() {
+          axios
+          .post('/type_defect',)
+          .then(response => {
+              this.type_defects = response.data;
+                }) /* axios */
+        }, /* updateTableTypeDefect */
+
         updateTableDivision() {
           axios
           .post('/divisions',)
@@ -38,9 +52,12 @@ const appVueFilter = Vue.createApp({
               this.divisions = response.data;
                 }) /* axios */
         }, /* updateTableDivision */
+        
         updateAllTables() {
           this.updateTableDivision();
+          this.updateTableTypeDefect();
         }, /* updateAllTables */
+
         useFilter() {
           if (this.startDate !== null && this.endDate !== null) {
             if (this.startDate >= this.endDate) {
@@ -56,6 +73,7 @@ const appVueFilter = Vue.createApp({
                "division_id":  this.filterDivision,
                "status_id":  this.filterStatusDefect,
                "ppr": this.ppr === 'true' ? true : null,
+               "type_defect_id":  this.filterType,
               //  "division_id": {
               //     "division_id": this.filterDivision !== 0 ? this.filterDivision : 0
               //   },

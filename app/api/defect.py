@@ -23,6 +23,7 @@ from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr
 from app.schemas.type_defect import TypeDefect_name
 from app.schemas.system import System_kks, System_name
+from app.middleware.auth import auth_required, check_auth_api
 
 
 STATUS_REGISTRATION = 1
@@ -32,8 +33,9 @@ STATUS_CLOSE_DEFECT_ID = 10
 defect_router = APIRouter()
 
 @defect_router.post("/defect/add")
-async def add_new_defect(defect_p: New_defect_p, request: Request, session: AsyncSession = Depends(get_db)):
-    token_dec = await decode_token(request.cookies['jwt_access_token'])
+async def add_new_defect(request: Request, response: Response, defect_p: New_defect_p, session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
+    token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     try:
         if defect_p.defect_system_kks:
@@ -64,6 +66,9 @@ async def add_new_defect(defect_p: New_defect_p, request: Request, session: Asyn
         defect_type=defect_type,
         defect_status=defect_status,
         defect_division=division if defect_p.defect_user_division_id else user.user_division,
+        defect_safety=defect_p.defect_safety,
+        defect_pnr=defect_p.defect_pnr,
+        defect_exploitation=defect_p.defect_exploitation,
     )
     history = await History.add_history(
         session=session,
@@ -74,7 +79,8 @@ async def add_new_defect(defect_p: New_defect_p, request: Request, session: Asyn
     return defect
 
 @defect_router.post("/defects/", response_model=Page[Defects_output])
-async def get_defects(response: Response, session: AsyncSession = Depends(get_db)):
+async def get_defects(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
     return await paginate(
         session,
         select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID)\
@@ -103,7 +109,8 @@ async def get_defects(response: Response, session: AsyncSession = Depends(get_db
     )
 
 @defect_router.post("/get_defect/")
-async def get_defect(defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
+async def get_defect(request: Request, response: Response, defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
     defect: Defect = await Defect.get_defect_by_id(session=session, defect_id=defect_id.defect_id)
     return  {
                 "defect_id": defect.defect_id,
@@ -131,12 +138,11 @@ async def get_defect(defect_id: Defect_id, session: AsyncSession = Depends(get_d
             }
 
 @defect_router.post("/confirm_defect/")
-async def confirm_defect(
+async def confirm_defect(request: Request, response: Response, 
                         defect_id: Defect_id,
                         status_name: StatusDefect_name,
                         repair_manager_id: User_id,
                         division_id: Division_id,
-                        request: Request,
                         defect_description: Defect_description_p = None,
                         location: Defect_location_p = None,
                         system_name: System_name = None,
@@ -146,7 +152,8 @@ async def confirm_defect(
                         defect_ppr: Ppr = None,
                         comment: Сomment = None,
                         session: AsyncSession = Depends(get_db)):
-    token_dec = await decode_token(request.cookies['jwt_access_token'])
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
+    token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     try:
         if system_kks.system_kks:
@@ -204,13 +211,16 @@ async def confirm_defect(
     return defect
 
 @defect_router.post("/accept_defect/")
-async def accept_defect(defect_id: Defect_id,
-                      status_name: StatusDefect_name,
-                      worker_id: User_id,
-                      request: Request,
-                      comment: Сomment = None,
-                      session: AsyncSession = Depends(get_db)):
-    token_dec = await decode_token(request.cookies['jwt_access_token'])
+async def accept_defect(
+                    request: Request,
+                    response: Response, 
+                    defect_id: Defect_id,
+                    status_name: StatusDefect_name,
+                    worker_id: User_id,
+                    comment: Сomment = None,
+                    session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
+    token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
     worker: User = await User.get_user_by_id(session, int(worker_id.user_id))
@@ -232,12 +242,15 @@ async def accept_defect(defect_id: Defect_id,
     return defect
 
 @defect_router.post("/check_defect/")
-async def check_defect(defect_id: Defect_id,
-                      status_name: StatusDefect_name,
-                      defect_check_result: Сomment,
-                      request: Request,
-                      session: AsyncSession = Depends(get_db)):
-    token_dec = await decode_token(request.cookies['jwt_access_token'])
+async def check_defect(
+                    request: Request,
+                    response: Response, 
+                    defect_id: Defect_id,
+                    status_name: StatusDefect_name,
+                    defect_check_result: Сomment,
+                    session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
+    token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
@@ -258,12 +271,15 @@ async def check_defect(defect_id: Defect_id,
     return defect
 
 @defect_router.post("/finish_work_defect/")
-async def finish_work_defect(defect_id: Defect_id,
-                      status_name: StatusDefect_name,
-                      worker_description: Сomment,
-                      request: Request,
-                      session: AsyncSession = Depends(get_db)):
-    token_dec = await decode_token(request.cookies['jwt_access_token'])
+async def finish_work_defect(
+                    request: Request,
+                    response: Response, 
+                    defect_id: Defect_id,
+                    status_name: StatusDefect_name,
+                    worker_description: Сomment,
+                    session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
+    token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
@@ -283,9 +299,10 @@ async def finish_work_defect(defect_id: Defect_id,
     return defect
 
 @defect_router.post("/get_defect_by_filter/")
-async def get_defect_by_filter(  filter: Filter, 
+async def get_defect_by_filter(request: Request, response: Response, filter: Filter, 
                         session: AsyncSession = Depends(get_db)):
-    result: list[Defect] = await Defect.get_defects_by_filter(session, filter.division_id, filter.date_start, filter.date_end, filter.status_id, filter.ppr)
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
+    result: list[Defect] = await Defect.get_defects_by_filter(session, filter.division_id, filter.date_start, filter.date_end, filter.status_id, filter.ppr, filter.type_defect_id)
     defects_with_filters = list()
     for defect in result:
         defects_with_filters.append(

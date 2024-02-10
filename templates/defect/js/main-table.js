@@ -63,7 +63,7 @@ const appVueDefect = Vue.createApp({
           })
           myModal.show()
         } 
-        if (status_name == "Подтвержден" || status_name == "Не устранен") {
+        if (status_name == "Адресован" || status_name == "Не устранен") {
           appAcceptDefect.defect_id = defect_id;
           appAcceptDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('AcceptModalWindow'), {

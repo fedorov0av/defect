@@ -1,253 +1,251 @@
 {% raw %}
 <div id="vueAddDefect">
-    <div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content pos_r1">
-          <div class="modal-header status_add_defect">
-            <h2 class="modal-title" id="exampleModalLabel">Регистрация дефекта</h2>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalAddDefect"></button>
-          </div>
-          <div class="modal-body modal-body1">
-            <form method="post">
-              <div class="block_nav_modal">
-                <ul class="nav nav-pills">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Общая информация</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">История дефекта</a>
-                  </li>
-                </ul>
-              </div>
+  <div class="modal fade" id="AddDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content pos_r1">
+        <div class="modal-header status_add_defect">
+          <h2 class="modal-title" id="exampleModalLabel">Регистрация дефекта</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalAddDefect"></button>
+        </div>
+        <div class="modal-body modal-body1">
+          <form method="post">
+            <div class="block_nav_modal">
+              <button type="button" class="btn btn-outline-primary margin">Общая информация</button>
+              <button type="button" class="btn btn-outline-secondary margin" disabled>История дефекта</button>
+              <button type="button" class="btn btn-outline-secondary margin" disabled>Классификация дефекта</button>
+              <!-- <ul class="nav nav-pills">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Общая информация</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">История дефекта</a>
+                </li>
+              </ul> -->
+            </div>
 
-              <div class="componentWraper3">
-                <div class="block_row block_margin">
-                  <div class="block_row1 width50">
-                    <div class="block_data_column1">
-                      <div class="block_input_data">
-                        <b class="label">Дата регистрации</b>
-                      </div>
-                      <input type="text" class="form-control width50" aria-label="readonly input example" disabled>
-                    </div>
-                    <div class="block_data_column3">
-                      <div class="block_input_data block_data9">
-                        <b class="label">Журнал дефекта</b>
-                        <b class="zvezda"> &nbsp * </b> 
-                      </div>
-                      <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': check_defect_type === true & newTypeDefect === '0' }" @change="changeTextCorrection" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
-                        <option disabled selected :value=0>Выберите журнал дефекта</option>
-                        <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
-                      </select>
-                      <!-- <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': newTypeDefect === 'True' }" @change="changeTextCorrection" :style= "{'border-color': style_input_type}" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
-                        <option disabled selected :value=0>Выберите тип дефекта</option>
-                        <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
-                      </select> -->
-                    </div>
-                  </div>
-                  <div class="block_row width50">
-                    <div class="block_data_column width50">
-                      <div class="block_input_data">
-                        <b class="label">Владелец оборудования</b>
-                      </div>
-                        <!-- <select class="form-select" :class="{ 'is-valid': newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }"  v-model="newDivisionOwner_id"> -->
-                        <select class="form-select ml" v-model="newDivisionOwner_id" disabled>
-                          <option disabled selected :value=0>Выберите подразделение</option>
-                          <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
-                        </select> 
-                    </div>
-                    <div class="block_data_column">
-                        <div class="block_input_data">
-                          <b class="label">Статус дефекта</b>
-                        </div>
-                          <select class="form-select" aria-label="Disabled select example" disabled>
-                            <!-- <option disabled selected>Выберите статус дефекта</option>
-                            <option v-for="defect_type_defect in defect_type_defects"></option> -->
-                          </select>
-                    </div>
-                  </div>
-                </div>
-
-                  <div class="block_row">
-                    <div class="block_data_column1">
-                      <div class="block_input_data">
-                        <b class="label">KKS</b>
-                      </div>
-                      <div class="block_data8">
-                        <div class="form-floating block_row1">
-                          <input type="text" id="inputKKS" class="form-control width50 margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newTypeDefect]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
-                          v-model="newSystemKKS" :disabled="newTypeDefect==='0'" :placeholder="placeholders[newTypeDefect]" />
-                          <label for="inputKKS" :hidden="newTypeDefect==='0'">{{ placeholders[newTypeDefect] }}</label>
-                          <div class="KKS_discr">
-                            <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="block_row width50 componentWraper2">
-                      <div class="block_row">
-                        <div class="block_filter_flex1">
-                          <div class = "form-check form-switch block-checkbox-left block-checkbox3">
-                            <label class = "form-check-label" for = "defaultCheck1">
-                              В эксплуатации
-                            </label>
-                          </div>
-                          <div class = "form-check form-switch block-checkbox3">
-                            <input class="form-check-input" type="checkbox">
-                            <label class = "form-check-label margin-right1" for = "defaultCheck1">
-                              В ПНР
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="block_data_column2">
-                        <div class="form-check form-switch ">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label margin-right" for="flexCheckChecked">Влияет на безопасность и несение нагрузки</label>
-                        </div>
-                        <div class="form-check form-switch">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label margin-right" for="flexCheckChecked">Влияет на режим нормальной эксплуатации</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                <div class="block_data4">
-                  <div class="block_data_column1">
-                    <div class="block_data_column">
-                      <div class="block_input_data">
-                        <b class="label">Наименование оборудования</b> 
-                        <b class="zvezda"> * </b>
-                      </div>
-                      <textarea id="my-system" @input="changeTextWork" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': check_defect_system === true & newSystemName === '' }" v-model="newSystemName" placeholder="Введите наименование оборудования" required></textarea>
-                      <p id="system" class="pos_a2"></p>
-                    </div>
-                  </div>
-                  <div class="block_data_column1">
-                    <div >
-                      <div class="block_input_data">
-                        <b class="label">Местоположение</b>
-                      </div>
-                    </div>
-                    <textarea class="form-control" v-model="newLocation" placeholder="Введите местоположение"></textarea>
-                  </div>
-                </div>
-    
-                
-                <div class="block_data_column">
-                  <div class="block_input_data">
-                    <b class="label">Описание дефекта</b> 
-                    <b class="zvezda"> * </b> 
-                  </div>
-                  <textarea id="my-notes" @input="changeTextWork" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': check_defect_notes === true & newDefectNotes === '' }" v-model="newDefectNotes" placeholder="Введите описание дефекта" required></textarea>
-                  <p id="notes" class="pos_a1"></p>
-                </div>
-                  
-                <div class="block_row1">
+            <div class="componentWraper3">
+              <div class="block_row block_margin">
+                <div class="block_row1 width50">
                   <div class="block_data_column1">
                     <div class="block_input_data">
-                      <b class="label">Обнаружил дефект</b>
+                      <b class="label">Дата регистрации</b>
                     </div>
-                    <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
-                      <option disabled selected>Выберите подразделение</option>
-                      <option v-for="division in defect_divisions"></option>
-                    </select> 
+                    <input type="text" class="form-control width50" aria-label="readonly input example" disabled>
                   </div>
-                  <div class="block_row1">
+                  <div class="block_data_column3 width50">
+                    <div class="block_input_data block_data9">
+                      <b class="label">Журнал дефекта</b>
+                      <b class="zvezda"> &nbsp * </b> 
+                    </div>
+                    <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': check_defect_type === true & newTypeDefect === '0' }" @change="changeTextCorrection" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
+                      <option disabled selected :value=0>Выберите журнал дефекта</option>
+                      <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
+                    </select>
+                    <!-- <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': newTypeDefect === 'True' }" @change="changeTextCorrection" :style= "{'border-color': style_input_type}" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
+                      <option disabled selected :value=0>Выберите тип дефекта</option>
+                      <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
+                    </select> -->
+                  </div>
+                </div>
+                <div class="block_row width50">
+                  <div class="block_data_column width50">
+                    <div class="block_input_data">
+                      <b class="label">Владелец оборудования</b>
+                    </div>
+                      <!-- <select class="form-select" :class="{ 'is-valid': newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }"  v-model="newDivisionOwner_id"> -->
+                      <select class="form-select ml" v-model="newDivisionOwner_id" disabled>
+                        <option disabled selected :value=0>Выберите подразделение</option>
+                        <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
+                      </select> 
+                  </div>
+                  <div class="block_data_column">
+                      <div class="block_input_data">
+                        <b class="label">Статус дефекта</b>
+                      </div>
+                        <select class="form-select" aria-label="Disabled select example" disabled>
+                          <!-- <option disabled selected>Выберите статус дефекта</option>
+                          <option v-for="defect_type_defect in defect_type_defects"></option> -->
+                        </select>
+                  </div>
+                </div>
+              </div>
 
+              <div class="block_row">
+                <div class="block_data_column1">
+                  <div class="block_input_data">
+                    <b class="label">KKS</b>
+                  </div>
+                  <div class="block_data8">
+                    <div class="form-floating block_row1">
+                      <input type="text" id="inputKKS" class="form-control width50 margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newTypeDefect]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
+                      v-model="newSystemKKS" :disabled="newTypeDefect==='0'" :placeholder="placeholders[newTypeDefect]" />
+                      <label for="inputKKS" :hidden="newTypeDefect==='0'">{{ placeholders[newTypeDefect] }}</label>
+                      <div class="KKS_discr">
+                        <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="block_row width50 componentWraper2">
+                  <div class="block_row">
+                    <div class="block_filter_flex1">
+                      <div class = "form-check form-switch block-checkbox-left block-checkbox3">
+                        <label class = "form-check-label" for = "defaultCheck1">
+                          В эксплуатации
+                        </label>
+                      </div>
+                      <div class = "form-check form-switch block-checkbox3">
+                        <input class="form-check-input" type="checkbox"  v-model="newPnr" @change="changePnr">
+                        <label class = "form-check-label margin-right1" for = "defaultCheck1">
+                          В ПНР
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="block_data_column2">
+                    <div class="form-check form-switch ">
+                      <input class="form-check-input" type="checkbox" v-model="newSafety" :disabled="newPnr===true">
+                      <label class="form-check-label margin-right" for="flexCheckChecked">Влияет на безопасность и несение нагрузки</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" v-model="newExploitation" :disabled="newPnr===true">
+                      <label class="form-check-label margin-right" for="flexCheckChecked">Влияет на режим нормальной эксплуатации</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="block_data4">
+                <div class="block_data_column1">
+                  <div class="block_data_column">
+                    <div class="block_input_data">
+                      <b class="label">Наименование оборудования</b> 
+                      <b class="zvezda"> * </b>
+                    </div>
+                    <textarea id="my-system" @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': check_defect_system === true & newSystemName === '' }" v-model="newSystemName" placeholder="Введите наименование оборудования" required></textarea>
+                    <p id="system" class="pos_a2"></p>
+                  </div>
+                </div>
+                <div class="block_data_column1">
+                  <div >
+                    <div class="block_input_data">
+                      <b class="label">Местоположение</b>
+                    </div>
+                  </div>
+                  <textarea class="form-control" id="work-location" @input="changeTextWork100" v-model="newLocation" placeholder="Введите местоположение"></textarea>
+                  <p id="location" class="pos_a3"></p>
+                </div>
+              </div>
+  
+              <div class="block_data_column">
+                <div class="block_input_data">
+                  <b class="label">Описание дефекта</b> 
+                  <b class="zvezda"> * </b> 
+                </div>
+                <textarea id="my-notes" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': check_defect_notes === true & newDefectNotes === '' }" v-model="newDefectNotes" placeholder="Введите описание дефекта" required></textarea>
+                <p id="notes" class="pos_a1"></p>
+              </div>
+                
+              <div class="block_data4">
+                <div class="block_data_column1 margin_left_right">
+                  <div class="block_input_data">
+                    <b class="label">Обнаружил дефект</b>
+                  </div>
+                  <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
+                    <option disabled selected>Выберите подразделение</option>
+                    <option v-for="division in defect_divisions"></option>
+                  </select> 
+                </div>
+
+                <div class="width50 margin_left_right">
+                  <div class="block_row1">
                     <div>
                       <div class="block_input_data">
                         <b class="label">Срок устранения</b>
                       </div>
                       <input class="form-control" disabled>
                     </div>
-
-                    <div class="width50 block_checkbox">
+                    <div class="block_checkbox block_checkbox1">
                       <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox">
+                        <input class="form-check-input" type="checkbox" disabled>
                         <label class="form-check-label margin-right" for="flexCheckChecked">Будет устранен в ППР</label>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
+            </div>
 
-
-
-
-              <div class="block_row componentWraper">
-                <div class="block_data_column1">
-                  <div class="block_data_column">
-                    <div class="block_input_data">
-                      <b class="label">Руководитель ремонта</b>
-                    </div>
-                      <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
-                        <option disabled selected>Выберите подразделение</option>
-                        <option v-for="division in defect_divisions"></option>
-                      </select> 
+            <div class="block_row componentWraper">
+              <div class="block_data_column1">
+                <div class="block_data_column">
+                  <div class="block_input_data">
+                    <b class="label">Руководитель ремонта</b>
                   </div>
-                  <div class="block_data_column">
-                    <div class="block_input_data">
-                      <b class="label">Исполнитель ремонта</b>
-                    </div>
                     <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
                       <option disabled selected>Выберите подразделение</option>
                       <option v-for="division in defect_divisions"></option>
                     </select> 
-                  </div>
                 </div>
-                <div class="block_data_column1">
-                  <div class="block_data_column">
-                    <div >
-                      <div class="block_input_data">
-                        <b class="label">Выполненные работы</b>
-                      </div>
-                    </div>
-                    <textarea class="form-control block_height100" aria-label="Disabled input example" disabled readonly></textarea>
-                  </div>
-                  <div class="block_data_column">
-                    <div class="form-check form-switch block_checkbox">
-                      <input class="form-check-input" type="checkbox">
-                      <label class="form-check-label margin-right" for="flexCheckChecked">Дефект локализован</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-  
-
-
-
-              <div class="block_row last_block_row block_border componentWraper1">
-                <div class="block_data_column1">
+                <div class="block_data_column">
                   <div class="block_input_data">
-                    <b  class="label">Выполнил проверку после ремонта</b>
+                    <b class="label">Исполнитель ремонта</b>
                   </div>
                   <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
                     <option disabled selected>Выберите подразделение</option>
                     <option v-for="division in defect_divisions"></option>
-                  </select>  
-                </div>
-                <div class="block_data_column1">
-                  <div class="block_input_data">
-                    <b class="label">Результат проверки</b>
-                  </div>
-                  <input type="text" class="form-control" aria-label="readonly input example" disabled>
+                  </select> 
                 </div>
               </div>
-                
-                <div class="modal-footer modal-footer1">
-                  <div class="block_data9">
-                    <b class="zvezda"> &nbsp * &nbsp </b>
-                    <p>- обязательные элементы для заполнения</p>
+              <div class="block_data_column1">
+                <div class="block_data_column">
+                  <div >
+                    <div class="block_input_data">
+                      <b class="label">Выполненные работы</b>
+                    </div>
                   </div>
-                  <button @click="addNewDefect" class="btn btn-primary" type="button">Зарегистрировать</button>
+                  <textarea class="form-control height100" aria-label="Disabled input example" disabled readonly></textarea>
                 </div>
-              </form>
-          </div>
+                <!-- <div class="block_row">
+                  <div class="empty_block"></div>
+                  <div class="form-check form-switch block_checkbox">
+                    <input class="form-check-input" type="checkbox">
+                    <label class="form-check-label margin-right" for="flexCheckChecked">Дефект локализован</label>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+
+            <div class="block_row last_block_row block_border componentWraper1">
+              <div class="block_data_column1">
+                <div class="block_input_data">
+                  <b  class="label">Выполнил проверку после ремонта</b>
+                </div>
+                <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
+                  <option disabled selected>Выберите подразделение</option>
+                  <option v-for="division in defect_divisions"></option>
+                </select>  
+              </div>
+              <div class="block_data_column1">
+                <div class="block_input_data">
+                  <b class="label">Результат проверки</b>
+                </div>
+                <input type="text" class="form-control" aria-label="readonly input example" disabled>
+              </div>
+            </div>
+              
+              <div class="modal-footer modal-footer1">
+                <div class="block_data9">
+                  <b class="zvezda"> &nbsp * &nbsp </b>
+                  <p>- обязательные элементы для заполнения</p>
+                </div>
+                <button @click="addNewDefect" class="btn btn-primary" type="button">Зарегистрировать</button>
+              </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
-  {% endraw %}
-  <script src="{{ url_for('defect_js', path='defect.js') }}"></script>
+</div>
+{% endraw %}
+<script src="{{ url_for('defect_js', path='defect.js') }}"></script>

@@ -88,11 +88,6 @@
   padding-top: 5px;
 }
 
-.width60 {
-  max-width: 60%;
-  margin-right: 5px;
-}
-
 .back{
   background: no-repeat url("../img/fon.jpg");
 }
@@ -105,6 +100,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin: 0px 3px;
 }
 
 .block_data_column1 {
@@ -134,8 +130,17 @@
   margin: 15px 5px 5px 5px;
 }
 
+.height100 {
+  height: 124px;;
+}
+
 .width50 {
   width: 50%;
+}
+
+.width60 {
+  max-width: 60%;
+  margin-right: 5px;
 }
 
 .width30 {
@@ -144,6 +149,15 @@
 
 .width25 {
   width: 25%;
+}
+
+.empty_block {
+  width: 230px;
+  height: 1px;
+}
+
+.margin_left_right {
+  margin: 0px 5px;
 }
 
 .ml {
@@ -166,6 +180,18 @@
   margin: auto;
 }
 
+.block_checkbox1 {
+  margin-top: 30px;
+}
+
+.width100 {
+  width: 100%;
+}
+
+.nav-link:hover {
+  background-color: bisque;
+}
+
 @media screen and (max-width: 1400px) {
     .button-text {
         display: none;
@@ -183,7 +209,12 @@
   margin-right: 15px;
 }
 
-
+.type-defect2 {
+  max-width: 300px;
+  min-width: 170px;
+  height: 38px;
+  margin-right: 15px;
+}
 
 .mylabel {
   padding: 5px;
@@ -217,7 +248,7 @@
 }
 
 .modal1 {
-  --bs-modal-width: 60%;
+  --bs-modal-width: 50% !important;
   background-color:grey;
 }
 
@@ -597,6 +628,12 @@
   left: 45%;
 }
 
+.pos_a3 {
+  position: absolute;
+  top: 57%;
+  left: 94%;
+}
+
 .correction_area {
   min-height: 90px;
 }
@@ -607,6 +644,10 @@
 
 .margin-right1 {
   margin-right: 10px;
+}
+
+.margin {
+  margin: 5px;
 }
 
 .block_filter_flex1 {
@@ -662,7 +703,7 @@
 }
 
 .modal-body1 {
-  padding: 5px 15px;
+  padding: 0px 15px;
 }
 
 .label {
@@ -747,7 +788,7 @@
   transform: translateY(-50%);
 }
 
-@media screen and (min-width:200px) and (max-width:1400px) {
+@media screen and (min-width:200px) and (max-width:1920px) {
 
   .h2 {
     margin: auto;
@@ -773,10 +814,6 @@
     margin-right: 5px;
   }
 
-  .type-defect {
-    margin-bottom: 5px;
-  }
-
   .type-defect1 {
     margin-bottom: 5px;
     margin-top: 0px;
@@ -790,10 +827,6 @@
   .block-checkbox1 {
     margin-top: 1px;
     vertical-align: middle;
-  }
-
-  .block-checkbox-left {
-    padding-left: 0px;
   }
 
   .block-checkbox2 {
@@ -824,6 +857,13 @@
 
   /* Внимание! CSS выше до @media относятся к адаптивности */
 
-  
+  @media screen and (min-width:200px) and (max-width:1430px) {
+
+    .block-checkbox-left {
+      display: none;
+      padding-left: 0px;
+    }
+
+  }
 
 }

@@ -1,17 +1,10 @@
-from fastapi import FastAPI, Request, Security, Response
+from fastapi import FastAPI, Request, APIRouter, Depends
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
-from fastapi import APIRouter, Depends, Security, HTTPException
 import os
 
-from datetime import timedelta
-
-from typing import Union, Optional
-from db.user import User
 from db.database import get_db
-
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.auth import auth_router
 from app.api.user import user_router
@@ -91,6 +84,7 @@ def get_csrf_config():
   return CsrfSettings()
 
 @app.get("/")
+@app.post("/")
 async def form(request: Request, csrf_protect: CsrfProtect = Depends()):
   csrf_token, signed_token = csrf_protect.generate_csrf_tokens()
   response = templates.TemplateResponse(
@@ -98,6 +92,7 @@ async def form(request: Request, csrf_protect: CsrfProtect = Depends()):
   )
   csrf_protect.set_csrf_cookie(signed_token, response)
   return response
+
 
 
 @app.exception_handler(CsrfProtectError)

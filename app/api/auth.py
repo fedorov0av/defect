@@ -1,5 +1,7 @@
 from datetime import timedelta
-from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request
+from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request, status
+from fastapi.responses import RedirectResponse
+
 from fastapi_jwt import JwtAccessBearerCookie, JwtAuthorizationCredentials, JwtRefreshBearer, JwtAccessBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
@@ -31,7 +33,6 @@ async def auth(request: Request,
                response: Response, 
                session: AsyncSession = Depends(get_db), 
                csrf_protect: CsrfProtect = Depends()):
-    print(request)
     await csrf_protect.validate_csrf(request)
     csrf_protect.unset_csrf_cookie(response)  # prevent token reuse
 

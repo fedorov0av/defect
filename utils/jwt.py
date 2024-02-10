@@ -8,7 +8,7 @@ import base64
 SECRET_KEY = 'UhGa_2vRrIQRVeTxtSjSpj9xWKxR3X5zMRaJlFTyaNU='
 
 TIME_ACCESS_TIME_TOKEN = 1
-TIME_REFRESH_TIME_TOKEN = 3
+TIME_REFRESH_TIME_TOKEN = 2
 
 # Read access token from bearer header and cookie (bearer priority)
 access_security = JwtAccessBearerCookie(

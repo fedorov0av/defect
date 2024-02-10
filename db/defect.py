@@ -36,7 +36,7 @@ class Defect(Base):
 
     defect_ppr: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Устранить в ППР?
     defect_safety: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Влияет на безопасность?
-    defect_load: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Влияет на нагрузку?
+    defect_pnr: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Влияет на нагрузку?
     defect_exploitation: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # True - дефект в эксплуатации; False - дефект в ПНР?
     defect_localized: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Дефект локализован? (В ЦС ТОИР данное значение назвается "Временно устранен")
 
@@ -67,7 +67,8 @@ class Defect(Base):
     
     @staticmethod
     async def add_defect(session: AsyncSession, defect_registrator: User, defect_description: str, defect_system: System,
-                          defect_location: str, defect_type: TypeDefect, defect_status: StatusDefect, defect_division: Division): # добавление системы в БД
+                          defect_location: str, defect_type: TypeDefect, defect_status: StatusDefect, defect_division: Division, defect_safety: bool,
+                          defect_pnr: bool, defect_exploitation: bool,): # добавление системы в БД
         defects = await Defect.get_all_defect(session)
         now_year = str(datetime.datetime.now().date().year)[2:]
         if len(defects):
@@ -81,8 +82,20 @@ class Defect(Base):
             last_defect_id = 0
         new_defect_id = now_year + '-' + ('0'*(7-len(str(last_defect_id + 1))) + str(last_defect_id + 1))
         now_time = get_time()
-        defect = Defect(defect_id=new_defect_id, defect_registrator_id=defect_registrator.user_id, defect_description=defect_description, defect_division_id=defect_division.division_id, defect_created_at=now_time,
-                        defect_location=defect_location, defect_type_id=defect_type.type_defect_id, defect_status_id=defect_status.status_defect_id, defect_system_id=defect_system.system_id)
+        defect = Defect(
+            defect_id=new_defect_id,
+            defect_registrator_id=defect_registrator.user_id,
+            defect_description=defect_description,
+            defect_division_id=defect_division.division_id,
+            defect_created_at=now_time,
+            defect_location=defect_location,
+            defect_type_id=defect_type.type_defect_id,
+            defect_status_id=defect_status.status_defect_id,
+            defect_system_id=defect_system.system_id,
+            defect_safety=defect_safety,
+            defect_pnr=defect_pnr,
+            defect_exploitation=defect_exploitation,
+            )
         session.add(defect)
         await session.commit()
         return defect
@@ -178,11 +191,13 @@ class Defect(Base):
     
     @staticmethod
     async def get_defects_by_filter(session: AsyncSession, division_id = None, date_start: str = None, 
-                                date_end: str = None, status_id = None, ppr = None):
+                                date_end: str = None, status_id = None, ppr = None, type_defect_id = None):
         conditions = []
 
         if division_id is not None and division_id !=0:
             conditions.append(Defect.defect_division_id == division_id)
+        if type_defect_id is not None and type_defect_id !=0:
+            conditions.append(Defect.defect_type_id == type_defect_id)
         if status_id is not None and status_id !=0:
             conditions.append(Defect.defect_status_id == status_id)
         if ppr is not None:

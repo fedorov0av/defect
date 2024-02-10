@@ -1,4 +1,4 @@
-from fastapi import Request, HTTPException, Response
+from fastapi import Request, HTTPException, Response, status
 from fastapi.responses import RedirectResponse
 from starlette.templating import Jinja2Templates
 
@@ -29,16 +29,48 @@ def auth_required(func):
             jwt_access_token = request.cookies['jwt_access_token'] 
             data_access_jwt = await decode_token(jwt_access_token)
         except (KeyError, DecodeError):
-            return RedirectResponse(url="/")
+            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
         except ExpiredSignatureError:
             try:
                 jwt_refresh_token = request.cookies['jwt_refresh_token'] 
                 data_refresh_jwt = await decode_token(jwt_refresh_token)
             except (KeyError, ExpiredSignatureError, DecodeError):
-                return RedirectResponse(url="/")
+                return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
             else:
                 if (datetime.datetime.now().timestamp() > data_refresh_jwt['exp']):
                     print('Срок токена прошел')
-                    return RedirectResponse(url="/")
+                    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
         return await func(request, *args, **kwargs)
     return wrapper
+
+async def update_jwt_tokens_by_refresh_token(request: Request, response: Response, jwt_refresh_token: str):
+    token_dec = await decode_token(jwt_refresh_token)
+    user_id = await decrypt_user_id(token_dec['subject']['userId'])
+    token_user_id = await encrypt_user_id(str(user_id))
+
+    subject = {"userId": token_user_id}
+    access_token = access_security.create_access_token(subject=subject)
+    refresh_token = refresh_security.create_refresh_token(subject=subject)
+    response.set_cookie(key="jwt_access_token", value=access_token, httponly=True)
+    response.set_cookie(key="jwt_refresh_token", value=refresh_token, httponly=True)
+
+async def check_auth_api(request: Request, response: Response):
+    try:
+        jwt_access_token = request.cookies['jwt_access_token'] 
+        data_access_jwt = await decode_token(jwt_access_token)
+    except (KeyError, DecodeError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid JWT token",
+        )
+    except ExpiredSignatureError:
+        try:
+            jwt_refresh_token = request.cookies['jwt_refresh_token'] 
+            data_refresh_jwt = await decode_token(jwt_refresh_token)
+        except (KeyError, ExpiredSignatureError, DecodeError):
+                raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid JWT token",
+                )
+        else:
+            await update_jwt_tokens_by_refresh_token(request, response, jwt_refresh_token)

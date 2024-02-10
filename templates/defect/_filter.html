@@ -15,6 +15,15 @@
 				<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
 			</select>
 		</div>
+
+		<div class="block_filter_flex">
+			<select class="form-select form-select1 type-defect2" @change="useFilter" aria-label="Default select example" v-model="filterType">
+				<option selected value=0>Журнал дефектов</option>
+				<option v-for="type_defect in type_defects" :value="type_defect.type_defect_id">{{ type_defect.type_defect_name	}}</option>
+			</select>
+	
+			<input type="text" class="form-control type-defect2" name="RapairManager" placeholder="ФИО ответственного">
+		</div>
 		
 		<div class="block_filter_flex">
 			<div class="mydatechoise justify-content-center">

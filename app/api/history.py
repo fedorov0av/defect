@@ -1,16 +1,18 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.history_defect import History
 from db.defect import Defect
 from db.database import get_db
 from app.schemas.defect import Defect_id
+from app.middleware.auth import check_auth_api
  
 
 history_router = APIRouter()
 
 @history_router.post("/history_by_defect/")
-async def get_history_by_defect(defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
+async def get_history_by_defect(request: Request, response: Response, defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
     result: list[History] = await History.get_history_by_defect(session, defect)
     history_l = list()

@@ -1,6 +1,6 @@
 import pandas as pd
 from io import BytesIO
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import StreamingResponse
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Alignment
@@ -11,7 +11,9 @@ from openpyxl import Workbook
 from db.database import get_db
 from db.defect import Defect
 from db.history_defect import History
+
 from app.schemas.defect import Defect_id
+from app.middleware.auth import check_auth_api
 
 
 export_router = APIRouter()
@@ -22,7 +24,8 @@ COLUMNS_WIDTHS = {'№': 30, 'Дата регистрации': 60, 'Срок у
 COLUMNS_NAME_HISTORY = ['№', 'Дата', 'Статус', 'Ответственное лицо', 'Комментарий']
 
 @export_router.post("/export_excel_defect/")
-async def export_excel_defect(defect_list_ids: Defect_list_ids, session: AsyncSession = Depends(get_db)):
+async def export_excel_defect(request: Request, response: Response, defect_list_ids: Defect_list_ids, session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
     df = pd.DataFrame(columns=COLUMNS_NAME)
     for defect_id in defect_list_ids.defect_list_ids:
         defect = await Defect.get_defect_by_id(session, defect_id)
@@ -66,7 +69,8 @@ async def export_excel_defect(defect_list_ids: Defect_list_ids, session: AsyncSe
         )
 
 @export_router.post("/export_history_excel_defect/")
-async def export_history_excel_defect(defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
+async def export_history_excel_defect(request: Request, response: Response, defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
     df_head = pd.DataFrame()
     df_main = pd.DataFrame(columns=COLUMNS_NAME_HISTORY)
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
