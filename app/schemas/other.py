@@ -19,6 +19,15 @@ class Сomment(BaseModel):
 class Ppr(BaseModel):
     ppr: Optional[bool]
 
+class Pnr(BaseModel):
+    pnr: Optional[bool]
+    
+class Safety(BaseModel):
+    safety: Optional[bool]
+
+class Exploitation(BaseModel):
+    exploitation: Optional[bool]
+
 class Filter(BaseModel):
     division_id: Optional[int] = 0 
     status_id: Optional[int] = 0 

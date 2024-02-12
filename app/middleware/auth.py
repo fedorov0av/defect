@@ -74,3 +74,13 @@ async def check_auth_api(request: Request, response: Response):
                 )
         else:
             await update_jwt_tokens_by_refresh_token(request, response, jwt_refresh_token)
+
+async def check_refresh_token(request: Request, response: Response):
+    try:
+        jwt_refresh_token = request.cookies['jwt_refresh_token'] 
+        data_refresh_jwt = await decode_token(jwt_refresh_token)
+    except (KeyError, ExpiredSignatureError, DecodeError):
+            raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid JWT token",
+            )

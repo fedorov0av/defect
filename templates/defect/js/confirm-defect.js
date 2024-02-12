@@ -12,7 +12,9 @@ const appConfirmDefect = Vue.createApp({
         isDisabledConfirmDefect: false,
         isHiddenDate: 'false',
         check_repair_manager: false,
-        
+        isHiddenblockmain: 'false',
+        isHiddenblockhistory: 'false',
+         
         placeholders: {
           'ЖД основного оборудования': '##XXX##XX###',
           'ЖД по строительным конструкциям': '##XXX##XN##AAAAAA',
@@ -53,6 +55,10 @@ const appConfirmDefect = Vue.createApp({
         newSafety: false,
         newPnr: false,
         newExploitation: false,
+        
+        backgroundMainButtonCCS: "btn-primary",
+        backgroundHistoryButtonCCS: "btn-outline-primary",
+        backgroundСlassificationButtonCCS: "btn-outline-primary",
 
         cardHistorys: [{
           "history_id": 0,
@@ -93,6 +99,7 @@ const appConfirmDefect = Vue.createApp({
       this.setLimitSystem();
       this.setLimitLocation();
       this.setPopover();
+      this.isHiddenblockhistory = 'true';
       var myModalEl = document.getElementById('ConfirmDefectModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appConfirmDefect.clearData();
@@ -165,6 +172,9 @@ const appConfirmDefect = Vue.createApp({
         if (this.newPnr === true){ 
           this.newSafety = false;
           this.newExploitation = false;
+        } else {
+          this.newSafety = this.cardDefect.defect_safety;
+          this.newExploitation = this.cardDefect.defect_exploitation;
         }
       },
       clearData() {
@@ -284,6 +294,21 @@ const appConfirmDefect = Vue.createApp({
       checkMask(){
         this.maskObject.completed = this.newCardKKS.length >= this.placeholders[this.newCardTypeDefectName].slice(0,11).length
       },
+      clickbuttonmain () {
+        this.isHiddenblockmain = 'false';
+        this.isHiddenblockhistory = 'true';
+        this.backgroundMainButtonCCS = "btn-primary";
+        this.backgroundHistoryButtonCCS = "btn-outline-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+
+      },
+      clickbuttonhistory () {
+        this.isHiddenblockmain = 'true';
+        this.isHiddenblockhistory = 'false';
+        this.backgroundMainButtonCCS = "btn-outline-primary";
+        this.backgroundHistoryButtonCCS = "btn-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+      },
       confirmDefect() {
         //this.newDate = this.cardDatePlannedFinish ? this.cardDatePlannedFinish  : null;
         if ((this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newDivisionOwner_id == 0 || this.newCardDatePlannedFinish == '') {
@@ -348,7 +373,16 @@ const appConfirmDefect = Vue.createApp({
             if (this.newRepairManager_id !== this.repairManager_id && this.cardStatusDefectName !== 'Зарегистрирован'){
               textHistory = textHistory+'Руководитель ремонта изменился с "'+repairManager+'" на "'+newRepairManager+'"\n';
             }
-            
+            if (this.cardDefect.defect_safety !== this.newSafety){
+              textHistory = textHistory+'Влияет на безопасность и несение нагрузки изменился с "'+(this.cardDefect.defect_safety ? "ДА": "НЕТ")+'" на "'+(this.newSafety ? "ДА": "НЕТ")+'"\n';
+            }
+            if (this.cardDefect.defect_pnr !== this.newPnr){
+              textHistory = textHistory+'В ПНР изменился с "'+(this.cardDefect.defect_pnr ? "ДА": "НЕТ")+'" на "'+(this.newPnr ? "ДА": "НЕТ")+'"\n';
+            }
+            if (this.cardDefect.defect_exploitation !== this.newExploitation){
+              textHistory = textHistory+'Влияет на безопасность и несение нагрузки изменился с "'+(this.cardDefect.defect_exploitation ? "ДА": "НЕТ")+'" на "'+(this.newExploitation ? "ДА": "НЕТ")+'"\n';
+            }
+
             if (this.cardDatePlannedFinish !== this.newCardDatePlannedFinish){
               if (this.cardDatePlannedFinish === null){
                 textHistory = textHistory+'Срок устранения изменился с "Устранить в ППР" на "'+this.newCardDatePlannedFinish+'"\n';
@@ -377,6 +411,15 @@ const appConfirmDefect = Vue.createApp({
               },
               "defect_ppr": {
                 "ppr": this.isHiddenDate == 'true' ? true : false
+              },
+              "defect_pnr": {
+                "pnr": this.newPnr
+              },
+              "defect_safety": {
+                "safety": this.newSafety
+              },
+              "defect_exploitation": {
+                "exploitation": this.newExploitation
               },
               "division_id": {
                 "division_id": parseInt(this.newDivisionOwner_id)
@@ -407,9 +450,12 @@ const appConfirmDefect = Vue.createApp({
                 appVueDefect.updateTables()
                 /* console.log(response.data); */
                 Swal.fire("Дефект подтвержден", "", "success");
-                  }) /* axios */
+                  })
             .catch(err => {
+                    console.log(err);
+
                     if (err.response.status === 401){
+                      
                       window.location.href = "/";
                     } else {
                       Swal.fire({html:"<b>Произошла ошибка при ПОДТВЕРЖДЕНИИ ДЕФЕКТА. Обратитесь к администратору.</b>", heightAuto: false}); 

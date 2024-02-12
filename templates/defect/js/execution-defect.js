@@ -62,7 +62,16 @@ const appExecutionDefect = Vue.createApp({
           },
           "history_comment": ""
         }], /* ОБЩИЙ ОБЪЕКТ для храненения данных истории дефекта !!! ЕСЛИ ПОМЕНЯЕТСЯ API ТО ЗАМЕНИТЬ НА АКТУАЛЬНЫЕ ЗНАЧЕНИЯ */
-        
+
+        backgroundMainButtonCCS: "btn-primary",
+        backgroundHistoryButtonCCS: "btn-outline-primary",
+        backgroundСlassificationButtonCCS: "btn-outline-primary",
+        isHiddenblockmain: 'false',
+        isHiddenblockhistory: 'false',
+        cardSafety: false,
+        cardPnr: false,
+        cardExploitation: false,
+        isHiddenDate: 'false',
 
       }
     },
@@ -82,6 +91,7 @@ const appExecutionDefect = Vue.createApp({
     },  
     mounted() {
       this.setPopover();
+      this.isHiddenblockhistory = 'true';
     },
     methods: {
       changeWorker() {
@@ -164,6 +174,11 @@ const appExecutionDefect = Vue.createApp({
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
             this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
+
+            this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
+            this.cardSafety = this.cardDefect.defect_safety;
+            this.cardPnr = this.cardDefect.defect_pnr;
+            this.cardExploitation = this.cardDefect.defect_exploitation;
             if (this.currentUser.user_role === 'Исполнитель' && this.currentUser.user_id !== this.cardDefect.defect_worker.user_id){
               this.isDisabledExecutionDefect = true;
             }
@@ -238,6 +253,21 @@ const appExecutionDefect = Vue.createApp({
           }
         });
       },/* saveChange */
+      clickbuttonmain () {
+        this.isHiddenblockmain = 'false';
+        this.isHiddenblockhistory = 'true';
+        this.backgroundMainButtonCCS = "btn-primary";
+        this.backgroundHistoryButtonCCS = "btn-outline-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+
+      },
+      clickbuttonhistory () {
+        this.isHiddenblockmain = 'true';
+        this.isHiddenblockhistory = 'false';
+        this.backgroundMainButtonCCS = "btn-outline-primary";
+        this.backgroundHistoryButtonCCS = "btn-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+      },
       executionDefect() {
         if (this.cardWorker == '') {
           Swal.fire({html:"<b>ИСПОЛНИТЕЛЬ РЕМОНТА!</b>", heightAuto: false}); 

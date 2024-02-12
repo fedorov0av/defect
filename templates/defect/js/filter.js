@@ -12,7 +12,10 @@ const appVueFilter = Vue.createApp({
         startDate: null,
         endDate: null,
         filterStatusDefect: 0,
-        ppr: 'false'
+        ppr: 'false',
+        pnr: false,
+        safety: false,
+        exploitation: false,
       }
     },
     mounted() {
@@ -65,7 +68,10 @@ const appVueFilter = Vue.createApp({
               return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
             }
           }
-
+          if (this.pnr === true){ 
+            this.safety = false;
+            this.exploitation = false;
+          }
           axios
             .post('/get_defect_by_filter/', 
               {"date_start": this.startDate,

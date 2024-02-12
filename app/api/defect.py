@@ -20,10 +20,10 @@ from db.history_defect import History
 from app.schemas.user import User_id
 from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_description_p, Defect_location_p
 from app.schemas.status_defect import StatusDefect_name
-from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr
+from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr, Pnr, Safety, Exploitation
 from app.schemas.type_defect import TypeDefect_name
 from app.schemas.system import System_kks, System_name
-from app.middleware.auth import auth_required, check_auth_api
+from app.middleware.auth import auth_required, check_auth_api, check_refresh_token
 
 
 STATUS_REGISTRATION = 1
@@ -154,6 +154,9 @@ async def confirm_defect(request: Request, response: Response,
                         type_defect_name: TypeDefect_name = None,
                         defect_planned_finish_date_str: Date_p = None,
                         defect_ppr: Ppr = None,
+                        defect_pnr: Pnr = None,
+                        defect_safety: Safety = None,
+                        defect_exploitation: Exploitation = None,
                         comment: Сomment = None,
                         session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
@@ -198,6 +201,10 @@ async def confirm_defect(request: Request, response: Response,
                                             defect_repair_manager_id=repair_manager.user_id,
                                             defect_planned_finish_date = defect_planned_finish_date if defect_planned_finish_date_str.date else None,
                                             defect_ppr = defect_ppr.ppr,
+                                            defect_pnr = defect_pnr.pnr,
+                                            defect_safety = defect_safety.safety,
+                                            defect_exploitation = defect_exploitation.exploitation,
+
                                             defect_division_id = division.division_id,
 
                                             defect_location = location.defect_location if location.defect_location else None,
@@ -332,3 +339,7 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
             }
         )
     return defects_with_filters
+
+@defect_router.post("/update_table_by_timer/")
+async def add_new_defect(request: Request, response: Response, defect_p: New_defect_p, session: AsyncSession = Depends(get_db)):
+    await check_refresh_token(request, response) # проверка на истечение времени jwt токена

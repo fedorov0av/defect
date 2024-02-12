@@ -19,7 +19,9 @@ const appAcceptDefect = Vue.createApp({
       toggle: 'false',
       isDisabledAcceptDefect: false,
       check_worker: false,
-
+      isHiddenblockmain: 'false',
+      isHiddenblockhistory: 'false',
+ 
       cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
 
       cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
@@ -42,6 +44,14 @@ const appAcceptDefect = Vue.createApp({
 
       newWorker_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
 
+      backgroundMainButtonCCS: "btn-primary",
+      backgroundHistoryButtonCCS: "btn-outline-primary",
+      backgroundСlassificationButtonCCS: "btn-outline-primary",
+      cardSafety: false,
+      cardPnr: false,
+      cardExploitation: false,
+      isHiddenDate: 'false',
+      
       cardHistorys: [{
         "history_id": 0,
         "history_date": "",
@@ -78,6 +88,7 @@ const appAcceptDefect = Vue.createApp({
   },
   mounted() {
     this.setPopover();
+    this.isHiddenblockhistory = 'true';
     var myModalEl = document.getElementById('AcceptModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         /* console.log(event); */
@@ -174,6 +185,11 @@ const appAcceptDefect = Vue.createApp({
           this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name : '';
           this.cardCheckerDescription = this.cardDefect.defect_check_result ? this.cardDefect.defect_check_result : '';
           this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
+          
+          this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
+          this.cardSafety = this.cardDefect.defect_safety;
+          this.cardPnr = this.cardDefect.defect_pnr;
+          this.cardExploitation = this.cardDefect.defect_exploitation;
               })
         .catch(err => {
             if (err.response.status === 401){
@@ -201,6 +217,21 @@ const appAcceptDefect = Vue.createApp({
                 }
             }) /* axios */
     }, /* updateTableHistory */
+    clickbuttonmain () {
+      this.isHiddenblockmain = 'false';
+      this.isHiddenblockhistory = 'true';
+      this.backgroundMainButtonCCS = "btn-primary";
+      this.backgroundHistoryButtonCCS = "btn-outline-primary";
+      this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+
+    },
+    clickbuttonhistory () {
+      this.isHiddenblockmain = 'true';
+      this.isHiddenblockhistory = 'false';
+      this.backgroundMainButtonCCS = "btn-outline-primary";
+      this.backgroundHistoryButtonCCS = "btn-primary";
+      this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+    },
     acceptDefect() {
       if (this.newWorker_id == 0) {
         this.check_worker = true

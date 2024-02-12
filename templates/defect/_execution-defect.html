@@ -1,11 +1,268 @@
 {% raw %}
-<!----------------------------------------Модальное окно "Исполнение"------------------------------------------>
+<!----------------------------------------Модальное окно "Устранение"------------------------------------------>
 <div id="vueExecutionDefect">
   <div class="modal fade" id="ExecutionModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
+
+
+
+      
+      <div class="modal-content pos_r1">
+        <div class="modal-header status_confirm_defect">
+          <h3 class="modal-title" id="exampleModalLabel">Устранение дефекта №</h3>
+          <h3 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeConfirmDefectModalWindow"></button>
+        </div>
+        <div class="modal-body modal-body1">
+          <form method="post">
+            <div class="block_nav_modal">
+              <button @click="clickbuttonmain" type="button" id="isHiddenblockhistory" class="btn margin" :class="backgroundMainButtonCCS" >Общая информация</button>
+              <button @click="clickbuttonhistory" type="button" id="isHiddenblockmain" class="btn margin" :class="backgroundHistoryButtonCCS">История дефекта</button>
+              <button type="button" class="btn btn-outline-secondary margin" disabled>Классификация дефекта</button>
+            </div>
+
+            <div :class="{ hidden: isHiddenblockmain == 'true' }" :hidden='isHiddenblockmain == "true"'>
+              <div class="componentWraper3">
+                <div class="block_row block_margin">
+                  <div class="block_row1 width50">
+                    <div class="block_data_column1">
+                      <div class="block_input_data">
+                        <b class="label">Дата регистрации</b>
+                      </div>
+                      <input type="text" class="form-control width60" aria-label="readonly input example" v-model="cardDateRegistration" disabled>
+                    </div>
+                    <div class="block_data_column3 width50">
+                      <div class="block_input_data block_data9">
+                        <b class="label">Журнал дефекта</b>
+                        <b class="zvezda"> &nbsp * </b> 
+                      </div>
+                      <input type="text" class="form-control" aria-label="readonly input example" v-model="cardTypeDefectName" disabled>
+                      <!-- <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': newTypeDefect === 'True' }" @change="changeTextCorrection" :style= "{'border-color': style_input_type}" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
+                        <option disabled selected :value=0>Выберите тип дефекта</option>
+                        <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
+                      </select> -->
+                    </div>
+                  </div>
+                  <div class="block_row width50">
+                    <div class="block_data_column width50">
+                      <div class="block_input_data">
+                        <b class="label">Владелец оборудования</b>
+                      </div>
+                        <!-- <select class="form-select" :class="{ 'is-valid': newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }"  v-model="newDivisionOwner_id"> -->
+                          <input type="text" class="form-control" aria-label="readonly input example" v-model="cardDivisionOwner" disabled>
+                    </div>
+                    <div class="block_data_column">
+                        <div class="block_input_data">
+                          <b class="label">Статус дефекта</b>
+                        </div>
+                        <input type="text" class="form-control" v-model="cardStatusDefectName" placeholder="Статус дефекта" disabled>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="block_row">
+                  <div class="block_data_column1">
+                    <div class="block_input_data">
+                      <b class="label">KKS</b>
+                    </div>
+                    <div class="block_data8">
+                      <div class="form-floating block_row1">
+                        <input type="text" class="form-control width50 margin-right" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx" disabled>
+                        <div class="KKS_discr">
+                          <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="block_row width50 componentWraper2">
+                    <div class="block_row">
+                      <div class="block_filter_flex1">
+                        <div class = "form-check form-switch block-checkbox-left block-checkbox3">
+                          <label class = "form-check-label" for="flexPnrExecution">
+                            В эксплуатации
+                          </label>
+                        </div>
+                        <div class = "form-check form-switch block-checkbox3">
+                          <input class="form-check-input" type="checkbox" id="flexPnrExecution" v-model="cardPnr" disabled>
+                          <label class = "form-check-label margin-right1" for="flexPnrExecution">
+                            В ПНР
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="block_data_column2">
+                      <div class="form-check form-switch ">
+                        <input class="form-check-input" type="checkbox" id="flexSafetyExecution" v-model="cardSafety" disabled>
+                        <label class="form-check-label margin-right" for="flexSafetyExecution">Влияет на безопасность и несение нагрузки</label>
+                      </div>
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexExploitationExecution" v-model="cardExploitation" disabled>
+                        <label class="form-check-label margin-right" for="flexExploitationExecution">Влияет на режим нормальной эксплуатации</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="block_data4">
+                  <div class="block_data_column1">
+                    <div class="block_data_column">
+                      <div class="block_input_data">
+                        <b class="label">Наименование оборудования</b> 
+                        <b class="zvezda"> * </b>
+                      </div>
+                      <textarea class="form-control" v-model="cardSystemName" placeholder="Введите наименование оборудования" disabled></textarea>
+                    </div>
+                  </div>
+                  <div class="block_data_column1">
+                    <div >
+                      <div class="block_input_data">
+                        <b class="label">Местоположение</b>
+                      </div>
+                    </div>
+                    <textarea class="form-control" v-model="cardLocation" placeholder="Введите местоположение" disabled></textarea>
+                  </div>
+                </div>
+    
+                <div class="block_data_column">
+                  <div class="block_input_data">
+                    <b class="label">Описание дефекта</b> 
+                    <b class="zvezda"> * </b> 
+                  </div>
+                  <textarea class="form-control" v-model="cardDescription" placeholder="Введите описание дефекта" disabled></textarea>
+                </div>
+                  
+                <div class="block_data4">
+                  <div class="block_data_column1 margin_left_right">
+                    <div class="block_input_data">
+                      <b class="label">Обнаружил дефект</b>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Обнаружил дефект"  aria-label="readonly input example" v-model="cardRegistrator" disabled>
+                  </div>
+  
+                  <div class="width50 margin_left_right">
+                    <div class="block_row1">
+                      <div>
+                        <div class="block_input_data">
+                          <b class="label">Срок устранения</b>
+                        </div>
+                        <input id="date" class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
+                      </div>
+                      <div class="block_checkbox block_checkbox1">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false disabled>
+                          <label class="form-check-label margin-right" for="flexCheckChecked">Будет устранен в ППР</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="block_row componentWraper">
+                <div class="block_data_column1">
+                  <div class="block_data_column">
+                    <div class="block_input_data">
+                      <b class="label">Руководитель ремонта</b>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Руководитель ремонта"  aria-label="readonly input example" v-model="cardRepairManager" disabled>
+                  </div>
+                  <div class="block_data_column">
+                    <div class="block_input_data">
+                      <b class="label">Исполнитель ремонта</b>
+                    </div>
+                    <select class="form-select" aria-label="Disabled select example" v-model="newWorker_id" :disabled='isDisabledWorker'>
+                      <option selected value=0 disabled>Выберите исполнителя ремонта</option>
+                      <option v-for="worker in workers" :value=worker.user_id >{{ worker.user_surname + ' ' + worker.user_name }}</option>
+                    </select> 
+                  </div>
+                </div>
+                <div class="block_data_column1">
+                  <div class="block_data_column">
+                    <div >
+                      <div class="block_input_data">
+                        <b class="label">Выполненные работы</b>
+                      </div>
+                    </div>
+                    <textarea class="form-control height100" aria-label="Disabled input example" v-model="cardWorkerDescription" disabled readonly></textarea>
+                  </div>
+                  <!-- <div class="block_row">
+                    <div class="empty_block"></div>
+                    <div class="form-check form-switch block_checkbox">
+                      <input class="form-check-input" type="checkbox">
+                      <label class="form-check-label margin-right" for="flexCheckChecked">Дефект локализован</label>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+  
+              <div class="block_row last_block_row block_border componentWraper1">
+                <div class="block_data_column1">
+                  <div class="block_input_data">
+                    <b  class="label">Выполнил проверку после ремонта</b>
+                  </div>
+                  <input type="text" class="form-control" aria-label="readonly input example" disabled>
+                </div>
+                <div class="block_data_column1">
+                  <div class="block_input_data">
+                    <b class="label">Результат проверки</b>
+                  </div>
+                  <input type="text" class="form-control" aria-label="readonly input example" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div :class="{ hidden: isHiddenblockhistory == 'true' }" :hidden='isHiddenblockhistory == "true"'>
+              <h4>История дефекта</h4>
+              <div class="table-responsive small">
+                <table class="table table-striped table-sm">
+                  <thead>
+                    <tr >
+                      <th scope="col">#</th>
+                      <th class="column1" scope="col">Дата</th>
+                      <th class="column2" scope="col">Статус</th>
+                      <th class="column3" scope="col">Ответственное лицо</th>
+                      <th class="column4" scope="col">Комментарий</th>
+                    </tr>
+                  </thead>
+                </table>
+                <div class="scroll-table-body">
+                  <table class="table table-striped table-sm table-hover">
+                    <tbody class="demotable">
+                        <tr v-for="cardHistory in cardHistorys">
+                          <td class="column1">{{ cardHistory.history_date }}</td>
+                          <td class="column2">{{ cardHistory.history_status }}</td>
+                          <td class="column3">{{ cardHistory.history_user.user_surname + ' ' + cardHistory.history_user.user_name }}</td>
+                          <td class="column4">{{ cardHistory.history_comment }}</td>
+                        </tr>
+                    </tbody>
+                  </table> 
+                </div>
+              </div>
+            </div>
+            
+            <div class="modal-footer modal-footer1">
+              <div class="block_data9">
+                <b class="zvezda"> &nbsp * &nbsp </b>
+                <p>- обязательные элементы для заполнения</p>
+              </div>
+              <div>
+                <span class="d-inline-block button-margin"  data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
+                  <button @click="cancelDefect" id="executionCancelDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-primary" type="button">Отменить дефект</button>
+                </span>
+                <span class="d-inline-block" tabindex="0" data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
+                  <button @click="executionDefect" id="executionExecutionDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-primary" type="button">Подтвердить дефект</button>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
+      <!-- <div class="modal-content">
         <div class="modal-header status_execution_defect">
-          <h2 class="modal-title" id="exampleModalLabel">Исполнение дефекта №</h2>
+          <h2 class="modal-title" id="exampleModalLabel"> Устранение дефекта №</h2>
           <h2 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h2>
           <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="closeExecutionModalWindow"></button>
         </div>
@@ -14,12 +271,12 @@
 
             <div class="block_row">
               <div class="block_data2">
-                <div class="block_input_data"><b>Тип дефекта</b></div>
+                <div class="block_input_data"><b>Тип дефекта</b></div> -->
                   <!-- <select class="form-select" aria-label="Default select example" v-model="cardTypeDefectName" disabled>
                     <option disabled selected>Выберите тип дефекта</option>
                     <option v-for="defect_type_defect in defect_type_defects">{{ defect_type_defect.type_defect_name }}</option>
                   </select> -->
-                  <input type="text" class="form-control" aria-label="readonly input example" v-model="cardTypeDefectName" disabled>
+                  <!-- <input type="text" class="form-control" aria-label="readonly input example" v-model="cardTypeDefectName" disabled>
               </div>
               <div class="block_data2">
                   <div class="block_input_data"><b>Статус дефекта</b></div>
@@ -41,9 +298,9 @@
                   <div class="block_input_data">
                     <b>Оборудование</b>
                   </div>
-                  <textarea class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled></textarea>
+                  <textarea class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled></textarea> -->
                   <!-- <input type="text" class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled> -->
-              </div>
+              <!-- </div>
             </div>
 
             <div class="block_row">
@@ -59,12 +316,12 @@
 
             <div class="block_row">
               <div class="block_data2">
-                <div class="block_input_data"><b>Подразделение-владелец</b></div>
+                <div class="block_input_data"><b>Подразделение-владелец</b></div> -->
                   <!-- <select class="form-select" aria-label="Default select example" v-model="cardDivisionOwner" disabled>
                     <option disabled selected>Выберите подразделение</option>
                     <option v-for="division in defect_divisions">{{ division.division_name }}</option>
                   </select>  -->
-                  <input type="text" class="form-control" aria-label="readonly input example" v-model="cardDivisionOwner" disabled>
+              <!--     <input type="text" class="form-control" aria-label="readonly input example" v-model="cardDivisionOwner" disabled>
               </div>
               <div class="block_data2">
                 <div class="block_input_data"><b>Обнаружил дефект</b></div>
@@ -94,9 +351,9 @@
               <div class="block_data2">
                 <div class="block_input_data">
                   <b>Исполнитель ремонта</b>
-                </div>
+                </div> -->
                 <!-- <input type="text" class="form-control width60" placeholder="Исполнитель ремонта"  aria-label="readonly input example" v-model="cardWorker" disabled> -->
-                <select class="form-select width60" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledWorker'>
+                <!-- <select class="form-select width60" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledWorker'>
                   <option selected value=0 disabled>Выберите исполнителя ремонта</option>
                   <option v-for="worker in workers" :value=worker.user_id >{{ worker.user_surname + ' ' + worker.user_name }}</option>
                 </select> 
@@ -118,12 +375,12 @@
             
             <div class="block_row last_block_row">
               <div class="block_data2">
-                <div class="block_input_data"><b>Выполнил проверку</b></div>
+                <div class="block_input_data"><b>Выполнил проверку</b></div> -->
                   <!-- <select class="form-select" aria-label="Disabled select example" v-model="cardChecker" disabled>
                     <option disabled selected>Выберите подразделение</option>
                     <option v-for="division in defect_divisions"></option>
                   </select>  -->
-                  <input type="text" class="form-control" aria-label="readonly input example" disabled>
+                  <!-- <input type="text" class="form-control" aria-label="readonly input example" disabled>
               </div>
               <div class="block_data2">
                 <div class="block_input_data">
@@ -144,7 +401,7 @@
                 <button @click="cancelDefect" id="executionCancelDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-warning" type="button">Требует решения</button>
               </span>
               <span class="d-inline-block" tabindex="0" data-toggle="popover_execution" data-bs-trigger="hover focus" data-bs-content="Эта кнопка только для пользователя с ролью Исполнитель ремонта">
-                <button @click="executionDefect" id="executionExecutionDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-primary" type="button">Принят в ремонт</button>
+                <button @click="executionDefect" id="executionExecutionDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-primary" type="button">Принять в ремонт</button>
               </span>
             </div>
 
@@ -179,7 +436,11 @@
 
             
           </form>
-        </div>
+        </div> -->
+
+
+
+
       </div>
     </div>
   </div>

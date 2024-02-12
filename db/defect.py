@@ -129,6 +129,9 @@ class Defect(Base):
                                   defect_division_id: int=None, # OK
                                   defect_system_id: int=None, # OK
                                   defect_ppr: bool=None, # OK
+                                  defect_pnr: bool=None, # OK
+                                  defect_safety: bool=None, # OK
+                                  defect_exploitation: bool=None, # OK
                                   confirm_defect: bool=False, # OK
                                   ): # обновление дефект в БД (там где нет ОК, значит обновление тех полей еще не реализовано)
         defect:Defect = await Defect.get_defect_by_id(session, defect_id)
@@ -164,6 +167,10 @@ class Defect(Base):
         if confirm_defect:
             defect.defect_planned_finish_date = defect_planned_finish_date
             defect.defect_ppr = defect_ppr
+            defect.defect_pnr = defect_pnr
+            defect.defect_safety = defect_safety
+            defect.defect_exploitation = defect_exploitation
+
         session.add(defect)
         await session.commit() 
         return defect
