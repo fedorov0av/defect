@@ -62,14 +62,14 @@
                     </div>
                   </div>
     
-                  <div class="block_row">
-                    <div class="block_data_column1">
+                  <div class="block_rowKKS">
+                    <div class="block_data_column_KKS">
                       <div class="block_input_data">
                         <b class="label">KKS</b>
                       </div>
                       <div class="block_data8">
                         <div class="form-floating block_row1">
-                          <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control width50 margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
+                          <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
                           v-model="newCardKKS" :placeholder="placeholders[newCardTypeDefectName]" />
                           <label for="inputConfirmKKS" :hidden="newCardTypeDefectName==='0'">{{ placeholders[newCardTypeDefectName] }}</label>
                           <div class="KKS_discr">
@@ -78,7 +78,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="block_row width50 componentWraper2">
+                    <div class="block_row width650 componentWraper2">
                       <div class="block_row">
                         <div class="block_filter_flex1">
                           <div class = "form-check form-switch block-checkbox-left block-checkbox3">

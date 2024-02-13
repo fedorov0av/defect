@@ -3,15 +3,11 @@
 <div id="vueExecutionDefect">
   <div class="modal fade" id="ExecutionModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-
-
-
-      
       <div class="modal-content pos_r1">
-        <div class="modal-header status_confirm_defect">
+        <div class="modal-header status_execution_defect">
           <h3 class="modal-title" id="exampleModalLabel">Устранение дефекта №</h3>
           <h3 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeConfirmDefectModalWindow"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeExecutionModalWindow"></button>
         </div>
         <div class="modal-body modal-body1">
           <form method="post">
@@ -34,7 +30,6 @@
                     <div class="block_data_column3 width50">
                       <div class="block_input_data block_data9">
                         <b class="label">Журнал дефекта</b>
-                        <b class="zvezda"> &nbsp * </b> 
                       </div>
                       <input type="text" class="form-control" aria-label="readonly input example" v-model="cardTypeDefectName" disabled>
                       <!-- <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': newTypeDefect === 'True' }" @change="changeTextCorrection" :style= "{'border-color': style_input_type}" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
@@ -60,21 +55,21 @@
                   </div>
                 </div>
   
-                <div class="block_row">
-                  <div class="block_data_column1">
+                <div class="block_rowKKS">
+                  <div class="block_data_column_KKS">
                     <div class="block_input_data">
                       <b class="label">KKS</b>
                     </div>
                     <div class="block_data8">
                       <div class="form-floating block_row1">
-                        <input type="text" class="form-control width50 margin-right" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx" disabled>
+                        <input type="text" class="form-control widthKKS margin-right" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx" disabled>
                         <div class="KKS_discr">
                           <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="block_row width50 componentWraper2">
+                  <div class="block_row width650 componentWraper2">
                     <div class="block_row">
                       <div class="block_filter_flex1">
                         <div class = "form-check form-switch block-checkbox-left block-checkbox3">
@@ -108,7 +103,6 @@
                     <div class="block_data_column">
                       <div class="block_input_data">
                         <b class="label">Наименование оборудования</b> 
-                        <b class="zvezda"> * </b>
                       </div>
                       <textarea class="form-control" v-model="cardSystemName" placeholder="Введите наименование оборудования" disabled></textarea>
                     </div>
@@ -126,7 +120,6 @@
                 <div class="block_data_column">
                   <div class="block_input_data">
                     <b class="label">Описание дефекта</b> 
-                    <b class="zvezda"> * </b> 
                   </div>
                   <textarea class="form-control" v-model="cardDescription" placeholder="Введите описание дефекта" disabled></textarea>
                 </div>
@@ -242,8 +235,7 @@
             
             <div class="modal-footer modal-footer1">
               <div class="block_data9">
-                <b class="zvezda"> &nbsp * &nbsp </b>
-                <p>- обязательные элементы для заполнения</p>
+                
               </div>
               <div>
                 <span class="d-inline-block button-margin"  data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">

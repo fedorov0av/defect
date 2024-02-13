@@ -49,6 +49,18 @@ const appVueDefect = Vue.createApp({
               this.pageNumber = response.data.page;
               this.pages = response.data.pages;
               this.defects = response.data.items;
+              for (defect in this.defects){
+                if (this.defects[defect].defect_status.status_defect_name === 'Зарегистрирован' || this.defects[defect].defect_status.status_defect_name === 'Устранен' || this.defects[defect].defect_status.status_defect_name === 'Закрыт'){
+                  responsible = this.defects[defect].defect_owner;
+                } else if (this.defects[defect].defect_status.status_defect_name === 'Адресован'){
+                  responsible = this.defects[defect].defect_repair_manager.user_surname + ' ' + this.defects[defect].defect_repair_manager.user_name;
+                } else if (this.defects[defect].defect_status.status_defect_name === 'Назначен исполнитель' || this.defects[defect].defect_status.status_defect_name === 'Принят в работу'){
+                  responsible = this.defects[defect].defect_worker.user_surname + ' ' + this.defects[defect].defect_worker.user_name;
+                } else if (this.defects[defect].defect_status.status_defect_name === 'Работы завершены'){
+                  responsible = 'ОП ' + this.defects[defect].defect_owner;
+                }
+                this.defects[defect].responsible = responsible;
+              }
                 })
           .catch(err => {
             if (err.response.status === 401){

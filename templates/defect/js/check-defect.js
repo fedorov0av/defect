@@ -66,6 +66,15 @@ const appCheckDefect = Vue.createApp({
           "history_comment": ""
         }], /* ОБЩИЙ ОБЪЕКТ для храненения данных истории дефекта !!! ЕСЛИ ПОМЕНЯЕТСЯ API ТО ЗАМЕНИТЬ НА АКТУАЛЬНЫЕ ЗНАЧЕНИЯ */
         
+        backgroundMainButtonCCS: "btn-primary",
+        backgroundHistoryButtonCCS: "btn-outline-primary",
+        backgroundСlassificationButtonCCS: "btn-outline-primary",
+        isHiddenblockmain: 'false',
+        isHiddenblockhistory: 'false',
+        cardSafety: false,
+        cardPnr: false,
+        cardExploitation: false,
+        isHiddenDate: 'false',
 
       }
     },
@@ -85,6 +94,7 @@ const appCheckDefect = Vue.createApp({
     }, 
     mounted() {
       this.setPopover();
+      this.isHiddenblockhistory = 'true';
       var myModalEl = document.getElementById('CheckModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appCheckDefect.clearData();
@@ -187,6 +197,10 @@ const appCheckDefect = Vue.createApp({
             this.cardWorkerDescription = this.cardDefect.defect_work_comment
             this.newCheckerId = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_id : 0;
             
+            this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false'
+            this.cardSafety = this.cardDefect.defect_safety;
+            this.cardPnr = this.cardDefect.defect_pnr;
+            this.cardExploitation = this.cardDefect.defect_exploitation;
                 })
           .catch(err => {
               if (err.response.status === 401){
@@ -215,9 +229,9 @@ const appCheckDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       successDefect() {
-        if (this.cardCheckerDescription == '') {
+        if (this.cardCheckerDescription === '' || this.newCheckerId === 0) {
           this.check_checker_discription = true;
-          Swal.fire({html:"<b>Не заполнен результат проверки!</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Не заполнен результат проверки или не выбран проверяющий!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
         }
         Swal.fire({
@@ -259,10 +273,25 @@ const appCheckDefect = Vue.createApp({
           }
         });
       },/* executionDefect */
+      clickbuttonmain () {
+        this.isHiddenblockmain = 'false';
+        this.isHiddenblockhistory = 'true';
+        this.backgroundMainButtonCCS = "btn-primary";
+        this.backgroundHistoryButtonCCS = "btn-outline-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+
+      },
+      clickbuttonhistory () {
+        this.isHiddenblockmain = 'true';
+        this.isHiddenblockhistory = 'false';
+        this.backgroundMainButtonCCS = "btn-outline-primary";
+        this.backgroundHistoryButtonCCS = "btn-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+      },
       dangerDefect() {
-        if (this.cardCheckerDescription == '') {
+        if (this.cardCheckerDescription === '' || this.newCheckerId === 0) {
           this.check_checker_discription = true;
-          Swal.fire({html:"<b>Не заполнен результат проверки!</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Не заполнен результат проверки или не выбран проверяющий!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
         }
         Swal.fire({

@@ -90,6 +90,18 @@ const appVueFilter = Vue.createApp({
             )
             .then(response => {
               appVueDefect.defects = response.data;
+              for (defect in appVueDefect.defects){
+                if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Зарегистрирован' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Устранен' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Закрыт'){
+                  responsible = appVueDefect.defects[defect].defect_owner;
+                } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Адресован'){
+                  responsible = appVueDefect.defects[defect].defect_repair_manager.user_surname + ' ' + appVueDefect.defects[defect].defect_repair_manager.user_name;
+                } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Назначен исполнитель' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Принят в работу'){
+                  responsible = appVueDefect.defects[defect].defect_worker.user_surname + ' ' + appVueDefect.defects[defect].defect_worker.user_name;
+                } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Работы завершены'){
+                  responsible = 'ОП ' + appVueDefect.defects[defect].defect_owner;
+                }
+                appVueDefect.defects[defect].responsible = responsible;
+              }
               appVueDefect.pages = 0;
                 })
             .catch(err => {

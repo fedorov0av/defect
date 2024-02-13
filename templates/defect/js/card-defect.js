@@ -61,12 +61,21 @@ const appCardDefect = Vue.createApp({
           "history_comment": ""
         }], /* ОБЩИЙ ОБЪЕКТ для храненения данных истории дефекта !!! ЕСЛИ ПОМЕНЯЕТСЯ API ТО ЗАМЕНИТЬ НА АКТУАЛЬНЫЕ ЗНАЧЕНИЯ */
         
+        backgroundMainButtonCCS: "btn-primary",
+        backgroundHistoryButtonCCS: "btn-outline-primary",
+        backgroundСlassificationButtonCCS: "btn-outline-primary",
+        isHiddenblockmain: 'false',
+        isHiddenblockhistory: 'false',
+        cardSafety: false,
+        cardPnr: false,
+        cardExploitation: false,
+        isHiddenDate: 'false',
 
       }
     },
-    /* mounted() {
-      this.updateTables()
-    }, */
+    mounted() {
+      this.isHiddenblockhistory = 'true';
+    },
     methods: {
       updateTables() {
         this.updateTableDivision();
@@ -164,6 +173,21 @@ const appCardDefect = Vue.createApp({
                   }
               }) /* axios */
       }, /* updateTableHistory */
+      clickbuttonmain () {
+        this.isHiddenblockmain = 'false';
+        this.isHiddenblockhistory = 'true';
+        this.backgroundMainButtonCCS = "btn-primary";
+        this.backgroundHistoryButtonCCS = "btn-outline-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+
+      },
+      clickbuttonhistory () {
+        this.isHiddenblockmain = 'true';
+        this.isHiddenblockhistory = 'false';
+        this.backgroundMainButtonCCS = "btn-outline-primary";
+        this.backgroundHistoryButtonCCS = "btn-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+      },
       exportHistoryExcel(){
         Swal.fire({
           title: "Выгрузить историю дефекта в файл Excel?",

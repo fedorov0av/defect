@@ -30,7 +30,6 @@
                       <div class="block_data_column3 width50">
                         <div class="block_input_data block_data9">
                           <b class="label">Журнал дефекта</b>
-                          <b class="zvezda"> &nbsp * </b> 
                         </div>
                         <input type="text" class="form-control" aria-label="readonly input example" v-model="cardTypeDefectName" disabled>
                       </div>
@@ -51,21 +50,21 @@
                     </div>
                   </div>
     
-                  <div class="block_row">
-                    <div class="block_data_column1">
+                  <div class="block_rowKKS">
+                    <div class="block_data_column_KKS">
                       <div class="block_input_data">
                         <b class="label">KKS</b>
                       </div>
                       <div class="block_data8">
                         <div class="form-floating block_row1">
-                          <input type="text" class="form-control width50 margin-right" v-model="cardKKS" disabled>
+                          <input type="text" class="form-control widthKKS margin-right" v-model="cardKKS" disabled>
                           <div class="KKS_discr">
                             <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div class="block_row width50 componentWraper2">
+                    <div class="block_row width650 componentWraper2">
                       <div class="block_row">
                         <div class="block_filter_flex1">
                           <div class = "form-check form-switch block-checkbox-left block-checkbox3">
@@ -99,7 +98,6 @@
                       <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Наименование оборудования</b> 
-                          <b class="zvezda"> * </b>
                         </div>
                         <textarea class="form-control" v-model="cardSystemName" placeholder="Оборудование" disabled></textarea>
                       </div>
@@ -117,7 +115,6 @@
                   <div class="block_data_column">
                     <div class="block_input_data">
                       <b class="label">Описание дефекта</b> 
-                      <b class="zvezda"> * </b> 
                     </div>
                     <textarea class="form-control" v-model="cardDescription" placeholder="Описание дефекта" disabled></textarea>
                   </div>
@@ -152,12 +149,13 @@
                 <div class="block_row componentWraper">
                   <div class="block_data_column1">
                     <div class="block_data_column">
-                      <div class="block_input_data"><b>Руководитель ремонта</b></div>
+                      <div class="block_input_data"><b class="label">Руководитель ремонта</b></div>
                         <input type="text" class="form-control" placeholder="Руководитель ремонта"  aria-label="readonly input example" v-model="cardRepairManager" disabled>
                     </div>
                     <div class="block_data_column">
                       <div class="block_input_data">
                         <b class="label">Исполнитель ремонта</b>
+                        <b class="zvezda"> * </b>
                       </div>
                       <select class="form-select" :class="{ 'is-valid': newWorker_id !== 0, 'is-invalid': check_worker === true & newWorker_id === 0 }" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledAcceptDefect' data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Исполнителя ремонта может выбрать только Руководитель ремонта">
                         <option selected disabled :value=0>Выберите исполнителя ремонта</option>

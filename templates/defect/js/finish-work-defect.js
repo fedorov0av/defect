@@ -63,6 +63,15 @@ const appFinishWorkDefect = Vue.createApp({
           "history_comment": ""
         }], /* ОБЩИЙ ОБЪЕКТ для храненения данных истории дефекта !!! ЕСЛИ ПОМЕНЯЕТСЯ API ТО ЗАМЕНИТЬ НА АКТУАЛЬНЫЕ ЗНАЧЕНИЯ */
         
+        backgroundMainButtonCCS: "btn-primary",
+        backgroundHistoryButtonCCS: "btn-outline-primary",
+        backgroundСlassificationButtonCCS: "btn-outline-primary",
+        isHiddenblockmain: 'false',
+        isHiddenblockhistory: 'false',
+        cardSafety: false,
+        cardPnr: false,
+        cardExploitation: false,
+        isHiddenDate: 'false',
 
       }
     },
@@ -82,6 +91,7 @@ const appFinishWorkDefect = Vue.createApp({
     },
     mounted() {
       this.setPopover();
+      this.isHiddenblockhistory = 'true';
       this.setLimit();
       var myModalEl = document.getElementById('FinishWorkModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
@@ -117,9 +127,9 @@ const appFinishWorkDefect = Vue.createApp({
         var limit = 200;
         result.textContent = 0 + "/" + limit;
   
-        myText.addEventListener('keypress',function(){
+        myText.addEventListener('input',function(){
         var textLength = myText.value.length;
-        result.textContent = textLength + 1 + "/" + limit;
+        result.textContent = textLength + "/" + limit;
   
         /*if(textLength > limit -1){
             myText.style.borderColor = "#ff2851";
@@ -225,6 +235,21 @@ const appFinishWorkDefect = Vue.createApp({
                   }
               }) /* axios */
       }, /* updateTableHistory */
+      clickbuttonmain () {
+        this.isHiddenblockmain = 'false';
+        this.isHiddenblockhistory = 'true';
+        this.backgroundMainButtonCCS = "btn-primary";
+        this.backgroundHistoryButtonCCS = "btn-outline-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+
+      },
+      clickbuttonhistory () {
+        this.isHiddenblockmain = 'true';
+        this.isHiddenblockhistory = 'false';
+        this.backgroundMainButtonCCS = "btn-outline-primary";
+        this.backgroundHistoryButtonCCS = "btn-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+      },
       finishworkDefect() {
         if (this.cardWorkerDescription == '') {
           this.check_worker_discription = true

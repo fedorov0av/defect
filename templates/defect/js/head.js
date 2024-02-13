@@ -8,9 +8,17 @@ const appVueHead = Vue.createApp({
   },
   methods: {
     logOut(event = NaN) {
-        document.cookie = 'jwt_access_token=;jwt_refresh_token=;path=/';
-        window.location.replace("/");
-        /* window.location.href = "/"; */
+      axios
+      .post('/log_out')
+      .then(response => {
+          window.location.replace("/");
+          /* window.location.href = "/"; */
+        })
+      .catch(err => {
+          Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+          console.log(err);
+          }
+      ) /* axios */
       },
     showModalUsers(){
         appVueUser.updateAllTables();

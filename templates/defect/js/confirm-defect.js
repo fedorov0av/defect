@@ -380,7 +380,7 @@ const appConfirmDefect = Vue.createApp({
               textHistory = textHistory+'В ПНР изменился с "'+(this.cardDefect.defect_pnr ? "ДА": "НЕТ")+'" на "'+(this.newPnr ? "ДА": "НЕТ")+'"\n';
             }
             if (this.cardDefect.defect_exploitation !== this.newExploitation){
-              textHistory = textHistory+'Влияет на безопасность и несение нагрузки изменился с "'+(this.cardDefect.defect_exploitation ? "ДА": "НЕТ")+'" на "'+(this.newExploitation ? "ДА": "НЕТ")+'"\n';
+              textHistory = textHistory+'Влияет на режим нормальной эксплуатации изменился с "'+(this.cardDefect.defect_exploitation ? "ДА": "НЕТ")+'" на "'+(this.newExploitation ? "ДА": "НЕТ")+'"\n';
             }
 
             if (this.cardDatePlannedFinish !== this.newCardDatePlannedFinish){

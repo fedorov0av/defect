@@ -75,10 +75,19 @@ async def auth(auth_data:AuthData, response: Response, session: AsyncSession = D
 @auth_router.post("/refresh")
 async def refresh(
         credentials: JwtAuthorizationCredentials = Security(refresh_security)
-):
+    ):
     # Update access/refresh tokens pair
     # We can customize expires_delta when creating
     access_token = access_security.create_access_token(subject=credentials.subject)
     refresh_token = refresh_security.create_refresh_token(subject=credentials.subject, expires_delta=timedelta(days=2))
 
     return {"access_token": access_token, "refresh_token": refresh_token}
+
+@auth_router.post("/log_out", response_class=JSONResponse)
+async def log_out(response: Response):
+    # Update access/refresh tokens pair
+    # We can customize expires_delta when creating
+    response.set_cookie(key="jwt_access_token", value='', httponly=True)
+    response.set_cookie(key="jwt_refresh_token", value='', httponly=True)
+
+    return {"access_token": '', "refresh_token": ''}

@@ -41,6 +41,7 @@ const appCloseDefect = Vue.createApp({
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
+        
         cardCheckResult: '',
         cardHistorys: [{
           "history_id": 0,
@@ -62,6 +63,15 @@ const appCloseDefect = Vue.createApp({
           "history_comment": ""
         }], /* ОБЩИЙ ОБЪЕКТ для храненения данных истории дефекта !!! ЕСЛИ ПОМЕНЯЕТСЯ API ТО ЗАМЕНИТЬ НА АКТУАЛЬНЫЕ ЗНАЧЕНИЯ */
         
+        backgroundMainButtonCCS: "btn-primary",
+        backgroundHistoryButtonCCS: "btn-outline-primary",
+        backgroundСlassificationButtonCCS: "btn-outline-primary",
+        isHiddenblockmain: 'false',
+        isHiddenblockhistory: 'false',
+        cardSafety: false,
+        cardPnr: false,
+        cardExploitation: false,
+        isHiddenDate: 'false',
 
       }
     },
@@ -81,6 +91,7 @@ const appCloseDefect = Vue.createApp({
     },
     mounted() {
       this.setPopover();
+      this.isHiddenblockhistory = 'true';
     },
     methods: {
       setPopover(){
@@ -160,6 +171,8 @@ const appCloseDefect = Vue.createApp({
             this.cardWorkerDescription = this.cardDefect.defect_work_comment;
             this.cardCheckResult = this.cardDefect.defect_check_result;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            this.cardWorkerDescription = this.cardDefect.defect_work_comment;
+            this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
             axios
             .post('/user/me')
             .then(response => {
@@ -203,6 +216,21 @@ const appCloseDefect = Vue.createApp({
                   }
               }) /* axios */
       }, /* updateTableHistory */
+      clickbuttonmain () {
+        this.isHiddenblockmain = 'false';
+        this.isHiddenblockhistory = 'true';
+        this.backgroundMainButtonCCS = "btn-primary";
+        this.backgroundHistoryButtonCCS = "btn-outline-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+
+      },
+      clickbuttonhistory () {
+        this.isHiddenblockmain = 'true';
+        this.isHiddenblockhistory = 'false';
+        this.backgroundMainButtonCCS = "btn-outline-primary";
+        this.backgroundHistoryButtonCCS = "btn-primary";
+        this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+      },
       closeDefect() {
         Swal.fire({
           title: "Закрыть дефект?",

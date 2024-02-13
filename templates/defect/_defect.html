@@ -10,7 +10,7 @@
         <div class="modal-body modal-body1">
           <form method="post">
             <div class="block_nav_modal">
-              <button type="button" class="btn btn-outline-primary margin">Общая информация</button>
+              <button type="button" class="btn btn-primary margin" disabled>Общая информация</button>
               <button type="button" class="btn btn-outline-secondary margin" disabled>История дефекта</button>
               <button type="button" class="btn btn-outline-secondary margin" disabled>Классификация дефекта</button>
               <!-- <ul class="nav nav-pills">
@@ -70,14 +70,14 @@
                 </div>
               </div>
 
-              <div class="block_row">
-                <div class="block_data_column1">
+              <div class="block_rowKKS">
+                <div class="block_data_column_KKS">
                   <div class="block_input_data">
                     <b class="label">KKS</b>
                   </div>
                   <div class="block_data8">
                     <div class="form-floating block_row1">
-                      <input type="text" id="inputKKS" class="form-control width50 margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newTypeDefect]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
+                      <input type="text" id="inputKKS" class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newTypeDefect]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
                       v-model="newSystemKKS" :disabled="newTypeDefect==='0'" :placeholder="placeholders[newTypeDefect]" />
                       <label for="inputKKS" :hidden="newTypeDefect==='0'">{{ placeholders[newTypeDefect] }}</label>
                       <div class="KKS_discr">
@@ -86,7 +86,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="block_row width50 componentWraper2">
+                <div class="block_row width650 componentWraper2">
                   <div class="block_row">
                     <div class="block_filter_flex1">
                       <div class = "form-check form-switch block-checkbox-left block-checkbox3">
@@ -122,7 +122,7 @@
                       <b class="label">Наименование оборудования</b> 
                       <b class="zvezda"> * </b>
                     </div>
-                    <textarea id="my-system" @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': check_defect_system === true & newSystemName === '' }" v-model="newSystemName" placeholder="Введите наименование оборудования" required></textarea>
+                    <textarea id="my-system" @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': check_defect_system === true & newSystemName === '' }" v-model.lazy="newSystemName" placeholder="Введите наименование оборудования" required></textarea>
                     <p id="system" class="pos_a2"></p>
                   </div>
                 </div>
@@ -132,7 +132,7 @@
                       <b class="label">Местоположение</b>
                     </div>
                   </div>
-                  <textarea class="form-control" id="work-location" @input="changeTextWork100" v-model="newLocation" placeholder="Введите местоположение"></textarea>
+                  <textarea class="form-control" id="work-location" @input="changeTextWork100" v-model.lazy="newLocation" placeholder="Введите местоположение"></textarea>
                   <p id="location" class="pos_a3"></p>
                 </div>
               </div>
@@ -142,7 +142,7 @@
                   <b class="label">Описание дефекта</b> 
                   <b class="zvezda"> * </b> 
                 </div>
-                <textarea id="my-notes" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': check_defect_notes === true & newDefectNotes === '' }" v-model="newDefectNotes" placeholder="Введите описание дефекта" required></textarea>
+                <textarea id="my-notes" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': check_defect_notes === true & newDefectNotes === '' }" v-model.lazy="newDefectNotes" placeholder="Введите описание дефекта" required></textarea>
                 <p id="notes" class="pos_a1"></p>
               </div>
                 
