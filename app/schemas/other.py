@@ -34,5 +34,8 @@ class Filter(BaseModel):
     date_start: Optional[str] = None
     date_end: Optional[str] = None
     ppr: Optional[bool] = None
+    pnr: Optional[bool] = None
+    safety: Optional[bool] = None
+    exploitation: Optional[bool] = None
     type_defect_id: Optional[int] = 0 
 

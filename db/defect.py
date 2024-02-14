@@ -197,8 +197,17 @@ class Defect(Base):
         return defects """
     
     @staticmethod
-    async def get_defects_by_filter(session: AsyncSession, division_id = None, date_start: str = None, 
-                                date_end: str = None, status_id = None, ppr = None, type_defect_id = None):
+    async def get_defects_by_filter(
+                                session: AsyncSession,
+                                division_id = None,
+                                date_start: str = None, 
+                                date_end: str = None,
+                                status_id = None,
+                                ppr = None,
+                                pnr = None,
+                                safety = None,
+                                exploitation = None,
+                                type_defect_id = None):
         conditions = []
 
         if division_id is not None and division_id !=0:
@@ -209,13 +218,19 @@ class Defect(Base):
             conditions.append(Defect.defect_status_id == status_id)
         if ppr is not None:
             conditions.append(Defect.defect_ppr == ppr)
+        if pnr is not None:
+            conditions.append(Defect.defect_pnr == pnr)
+        if safety is not None:
+            conditions.append(Defect.defect_safety == safety)
+        if exploitation is not None:
+            conditions.append(Defect.defect_exploitation == exploitation)
         if date_start:
             start_date = datetime.datetime.strptime(date_start, "%Y-%m-%d")
             conditions.append(Defect.defect_created_at >= start_date)
         if date_end:
             end_date = (datetime.datetime.strptime(date_end, "%Y-%m-%d") + datetime.timedelta(days=1))
             conditions.append(Defect.defect_created_at <= end_date)
-
+            
         query = select(Defect)
         if conditions:
             query = query.filter(*conditions)

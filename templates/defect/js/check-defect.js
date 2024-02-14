@@ -4,16 +4,17 @@ const appCheckDefect = Vue.createApp({
         defect_id: '0',
         defect_divisions: {},
         defect_type_defects: {},
-        statuses_defect:{}, /* ['Зарегистрирован', # 1
-                 'Подтвержден', # 2
-                 'Принят в работу', # 3
-                 'Назначен исполнитель', # 4
-                 'Работы завершены', # 5
-                 'Устранен', # 6
-                 'Не устранен', # 7
-                 'Требует корректировки', # 8
-                 'Отменен',  # 9
-                 ] */
+        statuses_defect:{}, /* ['Зарегистрирован', # 0
+                                'Адресован', # 1
+                                'Назначен исполнитель', # 2
+                                'Принят в работу', # 3
+                                'Работы завершены', # 4
+                                'Устранен', # 5
+                                'Не устранен', # 6
+                                'Требует решения', # 7
+                                'Отменен',  # 8
+                                'Закрыт',  # 9
+                                ] */
         repair_managers: {},
         registrators: {},
         workers: {},
@@ -110,6 +111,11 @@ const appCheckDefect = Vue.createApp({
         this.check_checker_discription = false;
 
       }, /* clearData */
+      changeTextCheck(event){
+        if (event.target.value.length > 100){
+          event.target.value = event.target.value.slice(0, 100);
+        }
+      }, /* changeTextCheck */
       setPopover(){
         $(document).ready(function(){
           if($("#checkDangerDefectButton").is(":disabled") && $("#checkSuccessDefectButton").is(":disabled"))  {
@@ -249,6 +255,9 @@ const appCheckDefect = Vue.createApp({
               },
               "status_name": {
                 "status_defect_name": this.statuses_defect[5].status_defect_name
+              },
+              "checker_id": {
+                "user_id": this.newCheckerId
               },
               "defect_check_result": {
                 "comment": this.cardCheckerDescription

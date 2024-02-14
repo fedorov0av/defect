@@ -12,8 +12,8 @@
           <div class="modal-body modal-body1">
             <form method="post">
               <div class="block_nav_modal">
-                <button @click="clickbuttonmain" type="button" id="isHiddenblockhistory" class="btn margin" :class="backgroundMainButtonCCS" >Общая информация</button>
-                <button @click="clickbuttonhistory" type="button" id="isHiddenblockmain" class="btn margin" :class="backgroundHistoryButtonCCS">История дефекта</button>
+                <button @click="clickbuttonmain" type="button" class="btn margin" :class="backgroundMainButtonCCS" >Общая информация</button>
+                <button @click="clickbuttonhistory" type="button" class="btn margin" :class="backgroundHistoryButtonCCS">История дефекта</button>
                 <button type="button" class="btn btn-outline-secondary margin" disabled>Классификация дефекта</button>
               </div>
   
@@ -114,7 +114,7 @@
                           <b class="label">Наименование оборудования</b> 
                           <b class="zvezda"> * </b>
                         </div>
-                        <textarea id="my-system-confirm"  @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardSystemName !== '', 'is-invalid': newCardSystemName === '' }" v-model="newCardSystemName" placeholder="Введите наименование оборудования" :disabled='isDisabledConfirmDefect' required></textarea>
+                        <textarea id="my-system-confirm"  @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardSystemName !== '', 'is-invalid': newCardSystemName === '' }" v-model.lazy="newCardSystemName" placeholder="Введите наименование оборудования" :disabled='isDisabledConfirmDefect' required></textarea>
                         <p id="system-confirm" class="pos_a2"></p>
                       </div>
                     </div>
@@ -124,7 +124,7 @@
                           <b class="label">Местоположение</b>
                         </div>
                       </div>
-                      <textarea class="form-control" id="work-location-confirm" @input="changeTextWork100" v-model="newCardLocation" placeholder="Введите местоположение" :disabled='isDisabledConfirmDefect'></textarea>
+                      <textarea class="form-control" id="work-location-confirm" @input="changeTextWork100" v-model.lazy="newCardLocation" placeholder="Введите местоположение" :disabled='isDisabledConfirmDefect'></textarea>
                       <p id="location-confirm" class="pos_a3"></p>
                     </div>
                   </div>
@@ -134,7 +134,7 @@
                       <b class="label">Описание дефекта</b> 
                       <b class="zvezda"> * </b> 
                     </div>
-                    <textarea id="my-notes-confirm" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardDescription !== '', 'is-invalid': newCardDescription === '' }" v-model="newCardDescription" placeholder="Введите описание дефекта" :disabled='isDisabledConfirmDefect' required></textarea>
+                    <textarea id="my-notes-confirm" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardDescription !== '', 'is-invalid': newCardDescription === '' }" v-model.lazy="newCardDescription" placeholder="Введите описание дефекта" :disabled='isDisabledConfirmDefect' required></textarea>
                     <p id="notes-confirm" class="pos_a1"></p>
                   </div>
                     

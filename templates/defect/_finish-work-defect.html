@@ -170,7 +170,7 @@
                         <b class="zvezda"> * </b> 
                       </div>
                     </div>
-                    <textarea id="my-text" :class="{ 'is-valid': cardWorkerDescription !== '', 'is-invalid': check_worker_discription === true & cardWorkerDescription === '' }" @input="changeTextWork" class="form-control height100" placeholder="Комментарий исполнителя" v-model="cardWorkerDescription" :disabled='isDisabledFinishDefect'></textarea>
+                    <textarea id="my-text" :class="{ 'is-valid': cardWorkerDescription !== '', 'is-invalid': check_worker_discription === true & cardWorkerDescription === '' }" @input="changeTextWork" class="form-control height100" placeholder="Комментарий исполнителя" v-model.lazy="cardWorkerDescription" :disabled='isDisabledFinishDefect'></textarea>
                     <p id="result" class="pos_a"></p>
                   </div>
                   <!-- <div class="block_row">

@@ -18,7 +18,7 @@ status_defect_router = APIRouter()
 @status_defect_router.post("/update_status_defect/")
 async def update_status_defects(request: Request, response: Response, defect_id: Defect_id, status_name: StatusDefect_name, comment: Сomment = None, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
-    token_dec = await decode_token(request.cookies['jwt_access_token'])
+    token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
 

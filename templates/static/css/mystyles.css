@@ -150,6 +150,18 @@
   flex-direction: column;
 }
 
+.block_data_column4 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0px 3px;
+}
+
+.h4 {
+  margin: 10px;
+}
+
 .block_height100 {
   height: 100%;
 }
@@ -174,6 +186,18 @@
   width: 50%;
 }
 
+.width100 {
+  width: 100%;
+}
+
+.width300px {
+  width: 300px;
+}
+
+.width500 {
+  min-width: 500px;
+}
+
 .widthKKS {
   width: 50%;
 }
@@ -185,6 +209,10 @@
 
 .width30 {
   width: 30%;
+}
+
+.width35 {
+  width: 35%;
 }
 
 .width25 {
@@ -256,6 +284,10 @@
 
 .rr {
   margin-left: 10px;
+}
+
+.rr20 {
+  margin-left: 20px;
 }
 
 .type-defect {
@@ -510,6 +542,18 @@
 
 .block-history{
   margin: 5px;
+}
+
+.block-table {
+  margin: 10px;
+}
+
+.table-sm1 {
+  font-size: 10px;
+}
+
+.table-column1 {
+  width: 60px;
 }
 
 .demotable {
@@ -823,7 +867,7 @@
 .componentWraper2::before {
   content: 'Состояние оборудования';
   position: absolute;
-  top: -10px;
+  top: -15px;
   padding: 0 10px;
   background: #fff;
 }
@@ -857,6 +901,38 @@
   content: 'Сведения о дефекте';
   position: absolute;
   top: -10px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.componentWraper4 {
+  margin: 10px 0px;
+  position: relative;
+  border: 1px solid rgb(179, 160, 157);
+  border-radius: 10px;
+  padding: 15px 10px;
+}
+
+.componentWraper4::before {
+  content: 'Коренная причина дефекта';
+  position: absolute;
+  top: -15px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.componentWraper5 {
+  margin: 10px 0px;
+  position: relative;
+  border: 1px solid rgb(179, 160, 157);
+  border-radius: 10px;
+  padding: 15px 10px;
+}
+
+.componentWraper5::before {
+  content: 'Непосредственная причина дефекта';
+  position: absolute;
+  top: -15px;
   padding: 0 10px;
   background: #fff;
 }

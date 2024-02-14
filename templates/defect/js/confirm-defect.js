@@ -5,7 +5,17 @@ const appConfirmDefect = Vue.createApp({
         defect_id: '0',
         defect_divisions: {},
         defect_type_defects: {},
-        statuses_defect:{},
+        statuses_defect:{}, /* ['Зарегистрирован', # 0
+                                'Адресован', # 1
+                                'Назначен исполнитель', # 2
+                                'Принят в работу', # 3
+                                'Работы завершены', # 4
+                                'Устранен', # 5
+                                'Не устранен', # 6
+                                'Требует решения', # 7
+                                'Отменен',  # 8
+                                'Закрыт',  # 9
+                                ] */
         repair_managers: {},
         workers: {},
         toggle: 'false',
@@ -47,7 +57,7 @@ const appConfirmDefect = Vue.createApp({
         newCardSystemName: '',
         newCardDescription: '',
         newCardDatePlannedFinish: '',
-        newCardTypeDefectName: '',
+        newCardTypeDefectName: '', 
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */

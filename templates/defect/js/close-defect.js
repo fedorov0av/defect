@@ -4,17 +4,17 @@ const appCloseDefect = Vue.createApp({
         defect_id: '0',
         defect_divisions: {},
         defect_type_defects: {},
-        statuses_defect:{}, /* ['Зарегистрирован', # 1
-                 'Подтвержден', # 2
-                 'Принят в работу', # 3
-                 'Назначен исполнитель', # 4
-                 'Работы завершены', # 5
-                 'Устранен', # 6
-                 'Не устранен', # 7
-                 'Требует корректировки', # 8
-                 'Отменен',  # 9
-                 'Закрыт',  #10
-                 ] */
+        statuses_defect:{}, /* ['Зарегистрирован', # 0
+                                'Адресован', # 1
+                                'Назначен исполнитель', # 2
+                                'Принят в работу', # 3
+                                'Работы завершены', # 4
+                                'Устранен', # 5
+                                'Не устранен', # 6
+                                'Требует решения', # 7
+                                'Отменен',  # 8
+                                'Закрыт',  # 9
+                                ] */
         repair_managers: {},
         workers: {},
         toggle: 'false',
@@ -42,7 +42,6 @@ const appCloseDefect = Vue.createApp({
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         
-        cardCheckResult: '',
         cardHistorys: [{
           "history_id": 0,
           "history_date": "",
@@ -169,10 +168,14 @@ const appCloseDefect = Vue.createApp({
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardPPR = this.cardDefect.defect_ppr;
             this.cardWorkerDescription = this.cardDefect.defect_work_comment;
-            this.cardCheckResult = this.cardDefect.defect_check_result;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
-            this.cardWorkerDescription = this.cardDefect.defect_work_comment;
+            this.cardCheckerDescription = this.cardDefect.defect_check_result;
+            this.cardChecker = this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name;
+
             this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
+            this.cardSafety = this.cardDefect.defect_safety;
+            this.cardPnr = this.cardDefect.defect_pnr;
+            this.cardExploitation = this.cardDefect.defect_exploitation;
             axios
             .post('/user/me')
             .then(response => {

@@ -258,19 +258,21 @@ async def check_defect(
                     response: Response, 
                     defect_id: Defect_id,
                     status_name: StatusDefect_name,
+                    checker_id: User_id,
                     defect_check_result: Сomment,
                     session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     user: User = await User.get_user_by_id(session, int(user_id))
+    checker: User = await User.get_user_by_id(session, int(checker_id.user_id))
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
     status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
 
     defect = await Defect.update_defect_by_id(session = session,
                                             defect_id = defect_id.defect_id,
                                             defect_status_id = status_defect.status_defect_id,
-                                            defect_checker_id = user.user_id,
+                                            defect_checker_id = checker.user_id,
                                             defect_check_result = defect_check_result.comment,
                                             )
     history = await History.add_history(
@@ -313,7 +315,17 @@ async def finish_work_defect(
 async def get_defect_by_filter(request: Request, response: Response, filter: Filter, 
                         session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
-    result: list[Defect] = await Defect.get_defects_by_filter(session, filter.division_id, filter.date_start, filter.date_end, filter.status_id, filter.ppr, filter.type_defect_id)
+    result: list[Defect] = await Defect.get_defects_by_filter(
+                                            session = session,
+                                            division_id = filter.division_id,
+                                            date_start = filter.date_start,
+                                            date_end = filter.date_end,
+                                            status_id = filter.status_id,
+                                            ppr = filter.ppr,
+                                            pnr = filter.pnr,
+                                            safety = filter.safety,
+                                            exploitation = filter.exploitation,
+                                            type_defect_id = filter.type_defect_id)
     defects_with_filters = list()
     for defect in result:
         defects_with_filters.append(

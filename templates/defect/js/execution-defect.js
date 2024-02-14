@@ -4,16 +4,17 @@ const appExecutionDefect = Vue.createApp({
         defect_id: '0',
         defect_divisions: {},
         defect_type_defects: {},
-        statuses_defect:{}, /* ['Зарегистрирован', # 1
-                 'Подтвержден', # 2
-                 'Принят в работу', # 3
-                 'Назначен исполнитель', # 4
-                 'Работы завершены', # 5
-                 'Устранен', # 6
-                 'Не устранен', # 7
-                 'Требует корректировки', # 8
-                 'Отменен',  # 9
-                 ] */
+        statuses_defect:{}, /* ['Зарегистрирован', # 0
+                                'Адресован', # 1
+                                'Назначен исполнитель', # 2
+                                'Принят в работу', # 3
+                                'Работы завершены', # 4
+                                'Устранен', # 5
+                                'Не устранен', # 6
+                                'Требует решения', # 7
+                                'Отменен',  # 8
+                                'Закрыт',  # 9
+                                ] */
         repair_managers: {},
         workers: {},
         toggle: 'false',
@@ -224,7 +225,7 @@ const appExecutionDefect = Vue.createApp({
               "defect_id": this.defect_id
             },
             "status_name": {
-              "status_defect_name": this.statuses_defect[3].status_defect_name
+              "status_defect_name": this.statuses_defect[2].status_defect_name
             },
             "worker_id": {
               "user_id": this.newWorker_id
@@ -281,7 +282,7 @@ const appExecutionDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": this.defect_id}, "status_name": {"status_defect_name": this.statuses_defect[2].status_defect_name}}
+            data = {"defect_id": {"defect_id": this.defect_id}, "status_name": {"status_defect_name": this.statuses_defect[3].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {

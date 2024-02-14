@@ -64,7 +64,7 @@ const appVueFilter = Vue.createApp({
         useFilter() {
           if (this.startDate !== null && this.endDate !== null) {
             if (this.startDate >= this.endDate) {
-              Swal.fire({html:"<b>Дата окончания раньше даты начала!</b>", heightAuto: false}); 
+              Swal.fire({html:"<b>Дата окончания должна быть позже даты начала!</b>", heightAuto: false}); 
               return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
             }
           }
@@ -78,7 +78,10 @@ const appVueFilter = Vue.createApp({
                "date_end": this.endDate,
                "division_id":  this.filterDivision,
                "status_id":  this.filterStatusDefect,
-               "ppr": this.ppr === 'true' ? true : null,
+               "ppr": this.ppr === true ? true : null,
+               "pnr": this.pnr === true ? true : null,
+               "safety": this.safety === true ? true : null,
+               "exploitation": this.exploitation === true ? true : null,
                "type_defect_id":  this.filterType,
               //  "division_id": {
               //     "division_id": this.filterDivision !== 0 ? this.filterDivision : 0

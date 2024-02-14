@@ -8,7 +8,7 @@
         <div class="modal-header status_check_defect">
           <h3 class="modal-title" id="exampleModalLabel">Проверка работ по дефекту №</h3>
           <h3 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeExecutionModalWindow"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeCheckModalWindow"></button>
         </div>
         <div class="modal-body modal-body1">
           <form method="post">
@@ -203,7 +203,7 @@
                   <div class="block_input_data">
                     <b class="label">Результат проверки</b>
                   </div>
-                  <input type="text" class="form-control" :class="{ 'is-valid': cardCheckerDescription !== '', 'is-invalid': check_checker_discription === true & cardCheckerDescription === '' }" aria-label="readonly input example" v-model="cardCheckerDescription" :disabled='isDisabledCheckDefect'>
+                  <input type="text" class="form-control" @input="changeTextCheck" :class="{ 'is-valid': cardCheckerDescription !== '', 'is-invalid': check_checker_discription === true & cardCheckerDescription === '' }" aria-label="readonly input example" v-model.lazy="cardCheckerDescription" :disabled='isDisabledCheckDefect'>
                 </div>
               </div>
             </div>
