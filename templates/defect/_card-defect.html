@@ -5,8 +5,8 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header card_defect back">
-          <h2 class="modal-title" id="exampleModalLabel">История закрытого дефекта №</h2>
-          <h2 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h2>
+          <h3 class="modal-title" id="exampleModalLabel">История закрытого дефекта №</h3>
+          <h3 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h3>
           <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="closeCheckModalWindow"></button>
         </div>
         <div class="modal-body modal-body1">
@@ -16,7 +16,7 @@
               <button @click="clickbuttonhistory" type="button" id="isHiddenblockmain" class="btn margin" :class="backgroundHistoryButtonCCS">История дефекта</button>
               <button type="button" class="btn btn-outline-secondary margin" disabled>Классификация дефекта</button>
             </div>
-            
+             
             <div :class="{ hidden: isHiddenblockmain == 'true' }" :hidden='isHiddenblockmain == "true"'>
               <div class="componentWraper3">
                 <div class="block_row block_margin">
@@ -186,13 +186,13 @@
                   <div class="block_input_data">
                     <b  class="label">Выполнил проверку после ремонта</b>
                   </div>
-                  <input type="text" class="form-control" aria-label="readonly input example" disabled>
+                  <input type="text" class="form-control" aria-label="readonly input example" v-model="cardChecker" disabled>
                 </div>
                 <div class="block_data_column1">
                   <div class="block_input_data">
                     <b class="label">Результат проверки</b>
                   </div>
-                  <input type="text" class="form-control" aria-label="readonly input example" disabled>
+                  <input type="text" class="form-control" aria-label="readonly input example" v-model="cardCheckerDescription" disabled>
                 </div>
               </div>
             </div>

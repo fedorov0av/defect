@@ -47,7 +47,7 @@
   
 	<!----------------------------------------Модальное окно "Добавить пользователя"------------------------------------------>
 	<div id="AddUserModalWindow" class="modal fade"  ref="vueAddUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-	  <div class="modal-dialog">
+	  <div class="modal-dialog modal1">
 		<div class="modal-content">
 		  <div class="modal-header">
 			<h5 class="modal-title" id="exampleModalLabel">Добавление пользователя</h5>
@@ -55,7 +55,6 @@
 		  </div>
 		  <div class="modal-body">
 			<form method="post">
-				<input type="hidden" class="form-control" name="id" value="<?= $employee['id'] ?>">
 				<div class="block_data1">
 				  <div class="block_input_data"><b>Фамилия</b></div>
 					<input type="text" class="form-control" name="surname" v-model="newUserSurname" placeholder="Фамилия">

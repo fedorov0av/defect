@@ -18,7 +18,7 @@ const appCardDefect = Vue.createApp({
         repair_managers: {},
         workers: {},
         toggle: 'false',
-
+ 
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
  
         cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
@@ -146,6 +146,11 @@ const appCardDefect = Vue.createApp({
             this.cardWorkerDescription = this.cardDefect.defect_work_comment;
             this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name: '';
             this.cardCheckerDescription = this.cardDefect.defect_check_result;
+
+            this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false'
+            this.cardSafety = this.cardDefect.defect_safety;
+            this.cardPnr = this.cardDefect.defect_pnr;
+            this.cardExploitation = this.cardDefect.defect_exploitation;
                 })
           .catch(err => {
               if (err.response.status === 401){

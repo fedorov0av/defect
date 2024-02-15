@@ -22,6 +22,7 @@ const appConfirmDefect = Vue.createApp({
         isDisabledConfirmDefect: false,
         isHiddenDate: 'false',
         check_repair_manager: false,
+        check_date: false,
         isHiddenblockmain: 'false',
         isHiddenblockhistory: 'false',
          
@@ -123,8 +124,8 @@ const appConfirmDefect = Vue.createApp({
         var myText1 = document.getElementById("my-notes-confirm");
         var result1 = document.getElementById("notes-confirm");
         var limit1 = 200;
-        result1.textContent = 0 + "/" + limit1;
-  
+        result1.textContent = this.newCardDescription.length + "/" + limit1;
+        
         myText1.addEventListener('input',function(){
         var textLength1 = myText1.value.length;
         result1.textContent = textLength1 + "/" + limit1;
@@ -135,8 +136,8 @@ const appConfirmDefect = Vue.createApp({
         var myText = document.getElementById("my-system-confirm");
         var result = document.getElementById("system-confirm");
         var limit = 100;
-        result.textContent = 0 + "/" + limit;
-  
+        result.textContent = this.newCardSystemName.length + "/" + limit;
+
         myText.addEventListener('input',function(){
         var textLength = myText.value.length;
         result.textContent = textLength + "/" + limit;
@@ -144,10 +145,11 @@ const appConfirmDefect = Vue.createApp({
       }, /* setLimitSystem */
 
       setLimitLocation(event){
+        
         var myText = document.getElementById("work-location-confirm");
         var result = document.getElementById("location-confirm");
         var limit = 100;
-        result.textContent = 0 + "/" + limit;
+        result.textContent = this.newCardLocation.length + "/" + limit;
   
         myText.addEventListener('input',function(){
         var textLength = myText.value.length;
@@ -193,6 +195,7 @@ const appConfirmDefect = Vue.createApp({
         this.newRepairManager_id = 0;
         this.isHiddenDate = 'false';
         this.check_repair_manager = false;
+        this.check_date = false;
 
       }, /* clearData */
       updateTables() {
@@ -203,6 +206,7 @@ const appConfirmDefect = Vue.createApp({
         this.updateTableHistory();
         this.updateTableRepairManagers();
         this.updateTableWorkers();
+        this.check_date = false;
       }, /* updateTables */
       updateTableWorkers() {
         axios
@@ -274,6 +278,9 @@ const appConfirmDefect = Vue.createApp({
             this.newSafety = this.cardDefect.defect_safety;
             this.newPnr = this.cardDefect.defect_pnr;
             this.newExploitation = this.cardDefect.defect_exploitation;
+            this.setLimitNotes();
+            this.setLimitSystem();
+            this.setLimitLocation();
                 })
           .catch(err => {
               if (err.response.status === 401){
@@ -282,6 +289,7 @@ const appConfirmDefect = Vue.createApp({
                 Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
                 console.log(err);
               }
+          
           }) /* axios */
       }, /* updateCardDefect */
       updateTableHistory() {
@@ -321,8 +329,13 @@ const appConfirmDefect = Vue.createApp({
       },
       confirmDefect() {
         //this.newDate = this.cardDatePlannedFinish ? this.cardDatePlannedFinish  : null;
-        if ((this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newDivisionOwner_id == 0 || this.newCardDatePlannedFinish == '') {
-          Swal.fire({html:"<b>Заполните все необходимые поля. Укажите срок устранения и руководителя ремонта.</b>", heightAuto: false}); 
+        //if ((this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newDivisionOwner_id == 0 || this.newCardDatePlannedFinish == '') {
+        //  Swal.fire({html:"<b>Заполните все необходимые поля. Укажите срок устранения и руководителя ремонта.</b>", heightAuto: false}); 
+        //  return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
+        //}
+        if (this.newCardDatePlannedFinish == null) {
+          this.check_date = true;
+          Swal.fire({html:"<b>Срок устранения должен быть заполнен или переключатель 'Будет устранен в ППР' должен быть включен!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
         if (this.newRepairManager_id == 0) {

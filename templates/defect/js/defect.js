@@ -5,6 +5,8 @@ const appVueAddDefect = Vue.createApp({
 
         defect_divisions: {},
         defect_type_defects: {},
+        categories_reason: {},
+
         vueAddUserModalWindow: Vue.ref('vueAddUserModalWindow'),
         placeholders: {
           'ЖД основного оборудования': '##XXX##XX###',
@@ -26,6 +28,8 @@ const appVueAddDefect = Vue.createApp({
         newTypeDefect: '0',
         newDivisionOwner: '',
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
+        newCoreClassificationCode: '0',
+        newCoreClassificationName: '',
 
         maskObject: {},
         style_input_type: '',
@@ -57,6 +61,7 @@ const appVueAddDefect = Vue.createApp({
       this.setLimitSystem()
       this.setLimitLocation()
       this.getDivision();
+      this.updateCategoriesReason();
       this.updateTableDivision();
       this.updateTableTypeDefect();
       this.isHiddenblockclassification  = 'true';
@@ -108,7 +113,10 @@ const appVueAddDefect = Vue.createApp({
         result.textContent = textLength + "/" + limit;
         });
       }, /* setLimitSystem */
-
+      changeCoreClassificationCode(event){
+        category_reason = this.categories_reason.filter((category_reason) => category_reason.category_reason_code === event.target.value)
+        this.newCoreClassificationName = category_reason[0].category_reason_name
+      },
       setLimitLocation(event){
         var myText = document.getElementById("work-location");
         var result = document.getElementById("location");
@@ -182,6 +190,13 @@ const appVueAddDefect = Vue.createApp({
             }
           }) /* axios */
       }, /* updateTableDivision */
+      updateCategoriesReason() {
+        axios
+        .post('/get_categories_reason',)
+        .then(response => {
+            this.categories_reason = response.data;
+            }) /* axios */
+      }, /* updateCategoriesReason */
       updateTableTypeDefect() {
         axios
         .post('/type_defect',)

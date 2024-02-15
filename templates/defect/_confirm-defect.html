@@ -150,9 +150,9 @@
                       <div class="block_row1">
                         <div>
                           <div class="block_input_data">
-                            <b class="label">Срок устранения</b>
+                            <b class="label">Срок устранения</b> 
                           </div>
-                          <input id="date" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardDatePlannedFinish !== null, 'is-invalid': newCardDatePlannedFinish === '' }" class="form-control" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
+                          <input id="date" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardDatePlannedFinish !== null, 'is-invalid': this.check_date == 1 & newCardDatePlannedFinish === null }" class="form-control" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
                         </div>
                         <div class="block_checkbox block_checkbox1">
                           <div class="form-check form-switch">

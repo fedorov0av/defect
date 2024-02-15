@@ -238,8 +238,9 @@
                     <div class="block_input_data">
                       <b class="label">Класс оборудования по НП-00-97</b>
                     </div>
-                    <input type="text" class="form-control" aria-label="readonly input example" disabled>
+                    <input type="text" class="form-control">
                   </div>
+                  <br>
                   <br>
                   <div class="block_row componentWraper4">
                     <div class="block_data_column4">
@@ -247,20 +248,21 @@
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
-                            <option disabled selected>Выберите подразделение</option>
-                            <option v-for="division in defect_divisions"></option>
+                          <select class="form-select" aria-label="Disabled select example" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode">
+                            <option disabled :value="0" selected>Выберите код причины</option>
+                            <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
                           </select> 
                       </div>
                       <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" aria-label="Disabled input example" disabled readonly></textarea>
+                        <textarea class="form-control height100" v-model="newCoreClassificationName" aria-label="Disabled input example" disabled></textarea>
                       </div>
                     </div>
                   </div>
     
+                  <br>
                   <br>
 
                   <div class="block_row componentWraper5">
@@ -269,17 +271,19 @@
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <input type="text" class="form-control" aria-label="readonly input example" disabled>
+                          <input type="text" class="form-control">
                       </div>
                       <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" aria-label="Disabled input example" disabled readonly></textarea>
+                        <textarea class="form-control height100" aria-label="Disabled input example"></textarea>
                       </div>
                     </div>
                   </div>
+                  <br>
                 </div>
+                
                 {% endraw %}
 
                 <div class="block_data_column3" style="display: none;">
