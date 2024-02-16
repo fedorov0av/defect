@@ -116,6 +116,7 @@ const appExecutionDefect = Vue.createApp({
         this.updateTableRepairManagers();
         this.updateTableWorkers();
         this.isDisabledWorker = true;
+        this.clickbuttonmain();
       }, /* updateTables */
       updateTableWorkers() {
         axios
@@ -309,5 +310,42 @@ const appExecutionDefect = Vue.createApp({
         })
         myModal.show()
       },/* cancelDefect */
+      exportHistoryExcel(){
+        Swal.fire({
+          title: "Выгрузить карточку дефекта в файл Excel?",
+          showDenyButton: true,
+          confirmButtonText: "ПОДТВЕРЖДАЮ",
+          denyButtonText: `ОТМЕНА`
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios({
+              url: '/export_history_excel_defect',
+              data: {
+                "defect_id": this.defect_id
+              },
+              method: 'POST',
+              responseType: 'blob', // Важно указать responseType как 'blob' для скачивания файла
+            })
+            .then(response => {
+              // Создаем ссылку для скачивания файла
+              let today = new Date();
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', ('history_defects_'+today.getDate()+'_'+(parseInt(today.getMonth())+1)+'_'+today.getFullYear()+'.xlsx')); // Установите желаемое имя файла
+              document.body.appendChild(link);
+              link.click();
+              Swal.fire("Карточка дефекта выгружена в каталог 'Загрузки' на ваш компьютер!", "", "success");
+            })
+              .catch(error => {
+                if (err.response.status === 401){
+                  window.location.href = "/";
+                } else {
+                console.error(error);
+                }
+              });
+            }
+        });
+      }, /* exportHistoryExcel */
       },
     }).mount('#vueExecutionDefect')

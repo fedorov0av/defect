@@ -15,7 +15,8 @@ from app.api.type_defect import type_defect_router
 from app.api.history import history_router
 from app.api.status_defect import status_defect_router
 from app.api.export import export_router
-from app.api.category_reason import category_reason_router
+from app.api.defect_reason_core import category_reason_router
+from app.api.category_defect import category_defect_router
 
 from fastapi_pagination import add_pagination
 
@@ -42,6 +43,8 @@ app.include_router(history_router)
 app.include_router(status_defect_router)
 app.include_router(export_router)
 app.include_router(category_reason_router)
+app.include_router(category_defect_router)
+
 
 app.mount("/css", StaticFiles(directory="templates/static/css"), name="static_css")
 app.mount("/js", StaticFiles(directory="templates/static/js"), name="static_js")

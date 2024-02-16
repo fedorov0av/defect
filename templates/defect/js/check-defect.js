@@ -20,6 +20,7 @@ const appCheckDefect = Vue.createApp({
         workers: {},
         toggle: 'false',
         isDisabledCheckDefect: false,
+        check_checker_name: false,
         check_checker_discription: false,
         isDisabledWorker: false,
 
@@ -108,6 +109,7 @@ const appCheckDefect = Vue.createApp({
       clearData() {
         this.newCheckerId = 0;
         this.cardCheckerDescription = '';
+        this.check_checker_name = false;
         this.check_checker_discription = false;
 
       }, /* clearData */
@@ -135,6 +137,7 @@ const appCheckDefect = Vue.createApp({
         this.updateTableWorkers();
         this.updateTableRegistrators();
         this.isDisabledWorker = true;
+        this.clickbuttonmain();
       }, /* updateTables */
       updateTableWorkers() {
         axios
@@ -235,9 +238,14 @@ const appCheckDefect = Vue.createApp({
               }) /* axios */
       }, /* updateTableHistory */
       successDefect() {
-        if (this.cardCheckerDescription === '' || this.newCheckerId === 0) {
+        if (this.newCheckerId === 0) {
+          this.check_checker_name = true;
+          Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
+          return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
+        }
+        if (this.cardCheckerDescription === '') {
           this.check_checker_discription = true;
-          Swal.fire({html:"<b>Не заполнен результат проверки или не выбран проверяющий!</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Не заполнен результат проверки!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
         }
         Swal.fire({
@@ -298,10 +306,15 @@ const appCheckDefect = Vue.createApp({
         this.backgroundСlassificationButtonCCS = "btn-outline-primary";
       },
       dangerDefect() {
-        if (this.cardCheckerDescription === '' || this.newCheckerId === 0) {
-          this.check_checker_discription = true;
-          Swal.fire({html:"<b>Не заполнен результат проверки или не выбран проверяющий!</b>", heightAuto: false}); 
+        if (this.newCheckerId === 0) {
+          this.check_checker_name = true;
+          Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
+        }
+        if (this.cardCheckerDescription === '') {
+          this.check_checker_discription = true;
+          Swal.fire({html:"<b>Не заполнен результат проверки!</b>", heightAuto: false}); 
+          return;  /* Если комментарий проверяющего не заполнен, то выходим из функции */
         }
         Swal.fire({
           title: "Вы подтверждаете, что дефект не устранен?",
@@ -341,5 +354,42 @@ const appCheckDefect = Vue.createApp({
             }
         });
       },/* cancelDefect */
+      exportHistoryExcel(){
+        Swal.fire({
+          title: "Выгрузить карточку дефекта в файл Excel?",
+          showDenyButton: true,
+          confirmButtonText: "ПОДТВЕРЖДАЮ",
+          denyButtonText: `ОТМЕНА`
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios({
+              url: '/export_history_excel_defect',
+              data: {
+                "defect_id": this.defect_id
+              },
+              method: 'POST',
+              responseType: 'blob', // Важно указать responseType как 'blob' для скачивания файла
+            })
+            .then(response => {
+              // Создаем ссылку для скачивания файла
+              let today = new Date();
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', ('history_defects_'+today.getDate()+'_'+(parseInt(today.getMonth())+1)+'_'+today.getFullYear()+'.xlsx')); // Установите желаемое имя файла
+              document.body.appendChild(link);
+              link.click();
+              Swal.fire("Карточка дефекта выгружена в каталог 'Загрузки' на ваш компьютер!", "", "success");
+            })
+              .catch(error => {
+                if (err.response.status === 401){
+                  window.location.href = "/";
+                } else {
+                console.error(error);
+                }
+              });
+            }
+        });
+      }, /* exportHistoryExcel */
       },
     }).mount('#vueCheckDefect')

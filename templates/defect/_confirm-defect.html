@@ -206,7 +206,7 @@
                 </div>
     
                 <div class="block_row last_block_row block_border componentWraper1">
-                  <div class="block_data_column1">
+                  <div class="block_data_column1 margin6px">
                     <div class="block_input_data">
                       <b  class="label">Выполнил проверку после ремонта</b>
                     </div>
@@ -215,7 +215,7 @@
                       <option v-for="division in defect_divisions"></option>
                     </select>  
                   </div>
-                  <div class="block_data_column1">
+                  <div class="block_data_column1 margin6px">
                     <div class="block_input_data">
                       <b class="label">Результат проверки</b>
                     </div>
@@ -259,6 +259,10 @@
                   <p>- обязательные элементы для заполнения</p>
                 </div>
                 <div>
+                  <span class="d-inline-block button-margin">
+                    <button @click="exportHistoryExcel" class="btn btn-secondary" type="button">Выгрузить дефект в Excel</button>
+                  </span>
+                  <span class="verticalLine1"></span>
                   <span class="d-inline-block button-margin"  data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
                     <button @click="cancelDefect" id="confirmCancelDefectButton" :disabled='isDisabledConfirmDefect' class="btn btn-primary" type="button">Отменить дефект</button>
                   </span>

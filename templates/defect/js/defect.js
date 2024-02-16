@@ -6,6 +6,7 @@ const appVueAddDefect = Vue.createApp({
         defect_divisions: {},
         defect_type_defects: {},
         categories_reason: {},
+        categories_defect: {},
 
         vueAddUserModalWindow: Vue.ref('vueAddUserModalWindow'),
         placeholders: {
@@ -30,6 +31,10 @@ const appVueAddDefect = Vue.createApp({
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
         newCoreClassificationCode: '0',
         newCoreClassificationName: '',
+        newCategoryDefect: 0,
+        newClassSystemName: '',
+        newDirectClassificationCode: '',   
+        newDirectClassificationName: '',   
 
         maskObject: {},
         style_input_type: '',
@@ -62,6 +67,7 @@ const appVueAddDefect = Vue.createApp({
       this.setLimitLocation()
       this.getDivision();
       this.updateCategoriesReason();
+      this.updateCategoriesDefect();
       this.updateTableDivision();
       this.updateTableTypeDefect();
       this.isHiddenblockclassification  = 'true';
@@ -71,11 +77,13 @@ const appVueAddDefect = Vue.createApp({
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appVueAddDefect.clearData();
         appVueAddDefect.style_input_type = "#dee2e6";
-        appVueDefect.updateTables();
+        appVueDefect.updateTables(); // Что это?!
+        appVueAddDefect.updateTables();
         appVueAddDefect.setLimitNotes();
         appVueAddDefect.setLimitSystem();
         appVueAddDefect.setLimitLocation();
     })
+      
     },
     methods: {
       changeTextWork100(event){
@@ -154,14 +162,28 @@ const appVueAddDefect = Vue.createApp({
         this.newLocation = '';
         this.newTypeDefect = '0';
         this.newDivisionOwner = '';
+        this.newCoreClassificationCode = '0';
+        this.newCoreClassificationName = '';
+        this.newDirectClassificationCode = '';
+        this.newDirectClassificationName = '';
+        
+        this.newClassSystemName = '';
+        this.newCategoryDefect = 0;
+        this.newSafety = false;
+        this.newPnr = false;
+        this.newExploitation = false;
+
         this.updateTableDivision();
         this.check_defect_type = false;
         this.check_defect_notes = false;
         this.check_defect_system = false;
-        this.newSafety = false;
-        
       }, /* clearData */
-      
+
+      updateTables() {
+        this.clickbuttonmain();
+
+      }, /* updateTables */
+
       getDivision() {
         axios
           .post('/user/me',{
@@ -192,9 +214,16 @@ const appVueAddDefect = Vue.createApp({
       }, /* updateTableDivision */
       updateCategoriesReason() {
         axios
-        .post('/get_categories_reason',)
+        .post('/get_categories_core_reason',)
         .then(response => {
             this.categories_reason = response.data;
+            }) /* axios */
+      }, /* updateCategoriesReason */
+      updateCategoriesDefect() {
+        axios
+        .post('/get_categories_defect',)
+        .then(response => {
+            this.categories_defect = response.data;
             }) /* axios */
       }, /* updateCategoriesReason */
       updateTableTypeDefect() {
@@ -285,6 +314,9 @@ const appVueAddDefect = Vue.createApp({
         else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
           Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
         } 
+        else if (this.newCategoryDefect === 0) {
+          Swal.fire({html:"<b>Категория дефекта должна быть заполнена!</b>", heightAuto: false});
+        } 
         else {
           axios
           .post('/defect/add', 
@@ -298,6 +330,11 @@ const appVueAddDefect = Vue.createApp({
                 "defect_safety": this.newSafety,
                 "defect_pnr": this.newPnr,
                 "defect_exploitation": this.newExploitation,
+                "defect_category_defect_id": this.newCategoryDefect,
+                "defect_class_system": this.newClassSystemName !== '' ? this.newClassSystemName : null,
+                "defect_core_reason_code": this.newCoreClassificationCode !== '0' ? this.newCoreClassificationCode : null,
+                "defect_direct_reason_code": this.newDirectClassificationCode !== '' ? this.newDirectClassificationCode : null,
+                "defect_direct_reason_name": this.newDirectClassificationName !== '' ? this.newDirectClassificationName : null,
               }
           )
           .then(response => {

@@ -207,6 +207,7 @@ const appConfirmDefect = Vue.createApp({
         this.updateTableRepairManagers();
         this.updateTableWorkers();
         this.check_date = false;
+        this.clickbuttonmain();
       }, /* updateTables */
       updateTableWorkers() {
         axios
@@ -333,7 +334,7 @@ const appConfirmDefect = Vue.createApp({
         //  Swal.fire({html:"<b>Заполните все необходимые поля. Укажите срок устранения и руководителя ремонта.</b>", heightAuto: false}); 
         //  return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         //}
-        if (this.newCardDatePlannedFinish == null) {
+        if (this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') {
           this.check_date = true;
           Swal.fire({html:"<b>Срок устранения должен быть заполнен или переключатель 'Будет устранен в ППР' должен быть включен!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
@@ -517,5 +518,42 @@ const appConfirmDefect = Vue.createApp({
             }
         });
       },/* cancelDefect */
+      exportHistoryExcel(){
+        Swal.fire({
+          title: "Выгрузить карточку дефекта в файл Excel?",
+          showDenyButton: true,
+          confirmButtonText: "ПОДТВЕРЖДАЮ",
+          denyButtonText: `ОТМЕНА`
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios({
+              url: '/export_history_excel_defect',
+              data: {
+                "defect_id": this.defect_id
+              },
+              method: 'POST',
+              responseType: 'blob', // Важно указать responseType как 'blob' для скачивания файла
+            })
+            .then(response => {
+              // Создаем ссылку для скачивания файла
+              let today = new Date();
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', ('history_defects_'+today.getDate()+'_'+(parseInt(today.getMonth())+1)+'_'+today.getFullYear()+'.xlsx')); // Установите желаемое имя файла
+              document.body.appendChild(link);
+              link.click();
+              Swal.fire("Карточка дефекта выгружена в каталог 'Загрузки' на ваш компьютер!", "", "success");
+            })
+              .catch(error => {
+                if (err.response.status === 401){
+                  window.location.href = "/";
+                } else {
+                console.error(error);
+                }
+              });
+            }
+        });
+      }, /* exportHistoryExcel */
       },
     }).mount('#vueConfirmDefect')

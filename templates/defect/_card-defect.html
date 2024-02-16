@@ -182,13 +182,13 @@
               </div>
   
               <div class="block_row last_block_row block_border componentWraper1">
-                <div class="block_data_column1">
+                <div class="block_data_column1 margin6px">
                   <div class="block_input_data">
                     <b  class="label">Выполнил проверку после ремонта</b>
                   </div>
                   <input type="text" class="form-control" aria-label="readonly input example" v-model="cardChecker" disabled>
                 </div>
-                <div class="block_data_column1">
+                <div class="block_data_column1 margin6px">
                   <div class="block_input_data">
                     <b class="label">Результат проверки</b>
                   </div>
@@ -227,8 +227,12 @@
             </div>
             
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="exportHistoryExcel">Экспорт истории в Excel</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+              <span class="d-inline-block button-margin">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="exportHistoryExcel">Выгрузить дефект в Excel</button>
+              </span>
+              <span class="d-inline-block">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрыть</button>
+              </span>
             </div>
 
           </form>

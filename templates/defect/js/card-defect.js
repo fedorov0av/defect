@@ -85,6 +85,7 @@ const appCardDefect = Vue.createApp({
         this.updateTableHistory();
         this.updateTableRepairManagers();
         this.updateTableWorkers();
+        this.clickbuttonmain();
       }, /* updateTables */
       updateTableWorkers() {
         axios

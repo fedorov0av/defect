@@ -11,7 +11,10 @@ from db.defect import Defect
 from db.history_defect import History
 from db.type_defect import TypeDefect
 from db.status_defect import StatusDefect
-from db.category_reason import CategoryReason
+from db.category_defect import CategoryDefect
+from db.defect_reason_core import CategoryCoreReason
+from db.defect_reason_direct import CategoryDirectReason
+
 from db.base import Base
 from db.utils import get_time
 
@@ -78,6 +81,8 @@ CATEGORIES_REASON  = (
     ('G04', 'Недостатки входного контроля при обеспечении запасными частями и материалами'),
 
 )        
+
+CATEGORIES_DEFECT = ('малозначительный дефект', 'значительный дефект', 'критический дефект')
 
 TYPES_DEFECT = ['ЖД основного оборудования', 'ЖД по строительным конструкциям', 'ЖД по освещению', 'ЖД по системам пожаротушения']
 

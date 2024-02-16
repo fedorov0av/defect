@@ -93,7 +93,7 @@ async def export_history_excel_defect(request: Request, response: Response, defe
                                                  defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                                                  (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '') if not defect.defect_ppr else 'Устр. в ППР', 
                                                  defect.defect_work_comment, 
-                                                 defect.defect_checker.user_surname + ' ' + defect.defect_checker.user_name + ' ' + defect.defect_checker.user_fathername]})
+                                                 defect.defect_checker.user_surname + ' ' + defect.defect_checker.user_name + ' ' + defect.defect_checker.user_fathername if defect.defect_checker else '']})
     
     df_header_right_title = pd.DataFrame({"Data": ['Статус дефекта', 
                                                   'Оборудование:',

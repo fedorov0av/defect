@@ -16,6 +16,10 @@ from db.system import System
 from db.status_defect import StatusDefect
 from db.type_defect import TypeDefect
 from db.history_defect import History
+from db.category_defect import CategoryDefect
+from db.defect_reason_core import CategoryCoreReason
+from db.defect_reason_direct import CategoryDirectReason
+
 
 from app.schemas.user import User_id
 from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_description_p, Defect_location_p
@@ -55,6 +59,13 @@ async def add_new_defect(request: Request, response: Response, defect_p: New_def
     user: User = await User.get_user_by_id(session, int(user_id))
     defect_type: TypeDefect = await TypeDefect.get_defect_by_name(session, defect_p.defect_type_defect_name)
     defect_status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, STATUS_REGISTRATION)
+    category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session, defect_p.defect_category_defect_id)
+    if defect_p.defect_core_reason_code:
+        defect_core_category_reason = await CategoryCoreReason.get_category_core_reason_by_code(session, defect_p.defect_core_reason_code)
+    if defect_p.defect_direct_reason_code:
+        defect_direct_category_reason = await CategoryDirectReason.add_category_direct_reason(session,
+                                                                                            category_reason_code=defect_p.defect_direct_reason_code,
+                                                                                            category_reason_name=defect_p.defect_direct_reason_name)
     if defect_p.defect_user_division_id:
         division = await Division.get_division_by_id(session, int(defect_p.defect_user_division_id))
     defect = await Defect.add_defect(
@@ -69,6 +80,10 @@ async def add_new_defect(request: Request, response: Response, defect_p: New_def
         defect_safety=defect_p.defect_safety,
         defect_pnr=defect_p.defect_pnr,
         defect_exploitation=defect_p.defect_exploitation,
+        defect_system_klass=defect_p.defect_class_system,
+        defect_category_defect=category_defect,
+        defect_core_category_reason=defect_core_category_reason if defect_p.defect_core_reason_code else None,
+        defect_direct_category_reason=defect_direct_category_reason if defect_p.defect_direct_reason_code else None,
     )
     history = await History.add_history(
         session=session,

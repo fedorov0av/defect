@@ -25,6 +25,11 @@ class New_defect_p(BaseModel):
     defect_safety: Optional[bool]
     defect_pnr: Optional[bool]
     defect_exploitation: Optional[bool]
+    defect_category_defect_id: Optional[int]
+    defect_class_system: Optional[str] = None
+    defect_core_reason_code: Optional[str] = None
+    defect_direct_reason_code: Optional[str] = None
+    defect_direct_reason_name: Optional[str] = None
 
 class Defect_description_p(BaseModel):
     defect_description: Optional[str] = None

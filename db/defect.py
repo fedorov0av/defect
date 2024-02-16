@@ -11,6 +11,9 @@ from db.type_defect import TypeDefect
 from db.system import System
 from db.status_defect import StatusDefect
 from db.division import Division
+from db.defect_reason_core import CategoryCoreReason
+from db.defect_reason_direct import CategoryDirectReason
+from db.category_defect import CategoryDefect
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from db.utils import get_time
@@ -31,7 +34,7 @@ class Defect(Base):
     defect_worker: Mapped["User"] = relationship(foreign_keys=[defect_worker_id]) #  для работы с таблицей User как с объектом
     defect_checker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - выполняющий ОП проверку.
     defect_checker: Mapped["User"] = relationship(foreign_keys=[defect_checker_id]) #  для работы с таблицей User как с объектом
-
+    
     defect_planned_finish_date: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=True)  # планируемая дата завершения ремонта
 
     defect_ppr: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Устранить в ППР?
@@ -52,7 +55,13 @@ class Defect(Base):
     defect_division: Mapped["Division"] = relationship(foreign_keys=[defect_division_id]) #  для работы с таблицей User как с объектом
     defect_system_id: Mapped[int] = mapped_column(ForeignKey("system.system_id")) # вид дефекта
     defect_system: Mapped["System"] = relationship(foreign_keys=[defect_system_id]) #  для работы с таблицей System как с объектом
-    
+    defect_system_klass: Mapped[str] = mapped_column(String(30), nullable=True) # Класс оборудования по 'НП-00-97'
+    defect_category_defect_id: Mapped[int] = mapped_column(ForeignKey("category_defect.category_defect_id"), nullable=True) # code из таблицы CategoryDefect
+    defect_category_defect: Mapped["CategoryDefect"] = relationship(foreign_keys=[defect_category_defect_id]) #  для работы с таблицей CategoryDefect как с объектом
+    defect_core_category_reason_code: Mapped[str] = mapped_column(ForeignKey("category_core_reason.category_reason_code"), nullable=True) # code из таблицы CategoryCoreReason
+    defect_core_category_reason: Mapped["CategoryCoreReason"] = relationship(foreign_keys=[defect_core_category_reason_code]) #  для работы с таблицей CategoryCoreReason как с объектом
+    defect_direct_category_reason_code: Mapped[str] = mapped_column(ForeignKey("category_direct_reason.category_reason_code"), nullable=True) # code из таблицы CategoryDirectReason
+    defect_direct_category_reason: Mapped["CategoryDirectReason"] = relationship(foreign_keys=[defect_direct_category_reason_code]) #  для работы с таблицей CategoryDirectReason как с объектом
 
     @staticmethod
     async def get_all_defect(session: AsyncSession): # получение всех систем в БД
@@ -68,7 +77,8 @@ class Defect(Base):
     @staticmethod
     async def add_defect(session: AsyncSession, defect_registrator: User, defect_description: str, defect_system: System,
                           defect_location: str, defect_type: TypeDefect, defect_status: StatusDefect, defect_division: Division, defect_safety: bool,
-                          defect_pnr: bool, defect_exploitation: bool,): # добавление системы в БД
+                          defect_pnr: bool, defect_exploitation: bool, defect_system_klass: str, defect_category_defect: CategoryDefect,
+                          defect_core_category_reason: CategoryCoreReason, defect_direct_category_reason: CategoryDirectReason): # добавление системы в БД
         defects = await Defect.get_all_defect(session)
         now_year = str(datetime.datetime.now().date().year)[2:]
         if len(defects):
@@ -95,7 +105,14 @@ class Defect(Base):
             defect_safety=defect_safety,
             defect_pnr=defect_pnr,
             defect_exploitation=defect_exploitation,
+            defect_category_defect_id = defect_category_defect.category_defect_id,
             )
+        if defect_system_klass:
+            defect.defect_system_klass = defect_system_klass
+        if defect_core_category_reason:
+            defect.defect_core_category_reason_code = defect_core_category_reason.category_reason_code
+        if defect_direct_category_reason:
+            defect.defect_direct_category_reason_code = defect_direct_category_reason.category_reason_code
         session.add(defect)
         await session.commit()
         return defect
