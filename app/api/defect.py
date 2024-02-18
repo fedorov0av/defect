@@ -27,6 +27,8 @@ from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr, Pnr, Safety, Exploitation
 from app.schemas.type_defect import TypeDefect_name
 from app.schemas.system import System_kks, System_name
+from app.schemas.category_defect import CategoryDefect_id, ClassSystem_name, CoreClassification_code, DirectClassification_code, DirectClassification_name
+
 from app.middleware.auth import auth_required, check_auth_api, check_refresh_token
 
 
@@ -154,6 +156,10 @@ async def get_defect(request: Request, response: Response, defect_id: Defect_id,
                 "defect_pnr": defect.defect_pnr,
                 "defect_exploitation": defect.defect_exploitation,
                 "defect_localized": defect.defect_localized,
+                "defect_category_defect": defect.defect_category_defect if defect.defect_category_defect else None,
+                "defect_system_klass": defect.defect_system_klass if defect.defect_system_klass else None,
+                "defect_core_category_reason": defect.defect_core_category_reason if defect.defect_core_category_reason else None,
+                "defect_direct_category_reason": defect.defect_direct_category_reason if defect.defect_direct_category_reason else None,
             }
 
 @defect_router.post("/confirm_defect/")
@@ -172,6 +178,11 @@ async def confirm_defect(request: Request, response: Response,
                         defect_pnr: Pnr = None,
                         defect_safety: Safety = None,
                         defect_exploitation: Exploitation = None,
+                        category_defect_id: CategoryDefect_id = None,
+                        class_system_name: ClassSystem_name = None,
+                        core_classification_code: CoreClassification_code = None,
+                        direct_classification_code: DirectClassification_code = None,
+                        direct_classification_name: DirectClassification_name = None,
                         comment: Сomment = None,
                         session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
@@ -192,6 +203,26 @@ async def confirm_defect(request: Request, response: Response,
         system: System = await System.get_system_by_kks(session, system_kks=system_kks.system_kks)
         if system_name.system_name:
             system.system_name = system_name.system_name
+
+    try:
+        if direct_classification_code.direct_rarery_code:
+            await CategoryDirectReason.add_category_direct_reason(session=session,
+                                                              category_reason_code=direct_classification_code.direct_rarery_code,
+                                                              category_reason_name=direct_classification_name.direct_rarery_name)
+            direct_classification = await CategoryDirectReason.get_category_direct_reason_by_code(session, direct_classification_code.direct_rarery_code)
+        else:
+            direct_classification = None
+    except (PendingRollbackError, IntegrityError):
+        await session.rollback()
+        system: System = await System.get_system_by_kks(session, system_kks=system_kks.system_kks)
+        direct_classification = await CategoryDirectReason.get_category_direct_reason_by_code(session, direct_classification_code.direct_rarery_code)
+        if direct_classification_name.direct_rarery_name:
+            direct_classification.category_reason_name = direct_classification_name.direct_rarery_name
+
+    if core_classification_code.core_rarery_code:
+        core_classification = await CategoryCoreReason.get_category_core_reason_by_code(session, core_classification_code.core_rarery_code)
+    else:
+        core_classification = None
     if type_defect_name.type_defect_name:
             type_defect: TypeDefect = await TypeDefect.get_defect_by_name(session, type_defect_name=type_defect_name.type_defect_name)
             type_defect_id = type_defect.type_defect_id
@@ -209,6 +240,8 @@ async def confirm_defect(request: Request, response: Response,
         
     division: Division = await Division.get_division_by_id(session, division_id.division_id)
     status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
+    category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session=session, category_defect_id=category_defect_id.category_defect_id)
+    
 
     defect = await Defect.update_defect_by_id(session = session,
                                             defect_id = defect.defect_id,
@@ -219,8 +252,12 @@ async def confirm_defect(request: Request, response: Response,
                                             defect_pnr = defect_pnr.pnr,
                                             defect_safety = defect_safety.safety,
                                             defect_exploitation = defect_exploitation.exploitation,
-
                                             defect_division_id = division.division_id,
+
+                                            defect_system_klass = class_system_name.class_system_name,
+                                            defect_category_defect_id = category_defect.category_defect_id,
+                                            defect_core_category_reason_code = core_classification.category_reason_code if core_classification else core_classification,
+                                            defect_direct_category_reason_code = direct_classification.category_reason_code if direct_classification else direct_classification,
 
                                             defect_location = location.defect_location if location.defect_location else None,
                                             defect_description = defect_description.defect_description if defect_description.defect_description else None,
@@ -325,6 +362,65 @@ async def finish_work_defect(
         status=status_defect,
         )
     return defect
+
+############################# в работе ##########################
+@defect_router.post("/close_defect/")
+async def close_defect(
+                    request: Request,
+                    response: Response, 
+                    defect_id: Defect_id,
+                    status_name: StatusDefect_name,
+                    category_defect_id: CategoryDefect_id = None,
+                    class_system_name: ClassSystem_name = None,
+                    core_classification_code: CoreClassification_code = None,
+                    direct_classification_code: DirectClassification_code = None,
+                    direct_classification_name: DirectClassification_name = None,
+                    comment: Сomment = None,
+                    session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
+    token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+    user_id = await decrypt_user_id(token_dec['subject']['userId'])
+    try:
+        if direct_classification_code.direct_rarery_code:
+            await CategoryDirectReason.add_category_direct_reason(session=session,
+                                                              category_reason_code=direct_classification_code.direct_rarery_code,
+                                                              category_reason_name=direct_classification_name.direct_rarery_name)
+            direct_classification = await CategoryDirectReason.get_category_direct_reason_by_code(session, direct_classification_code.direct_rarery_code)
+        else:
+            direct_classification = None
+    except (PendingRollbackError, IntegrityError):
+        await session.rollback()
+        direct_classification = await CategoryDirectReason.get_category_direct_reason_by_code(session, direct_classification_code.direct_rarery_code)
+        if direct_classification_name.direct_rarery_name:
+            direct_classification.category_reason_name = direct_classification_name.direct_rarery_name
+    if core_classification_code.core_rarery_code:
+        core_classification = await CategoryCoreReason.get_category_core_reason_by_code(session, core_classification_code.core_rarery_code)
+    else:
+        core_classification = None
+    user: User = await User.get_user_by_id(session, int(user_id))
+    defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
+    status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
+    category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session=session, category_defect_id=category_defect_id.category_defect_id)
+
+    defect = await Defect.update_defect_by_id(session = session,
+                                            defect_id = defect_id.defect_id,
+                                            defect_status_id = status_defect.status_defect_id,
+                                            defect_system_klass = class_system_name.class_system_name,
+                                            defect_category_defect_id = category_defect.category_defect_id,
+                                            defect_core_category_reason_code = core_classification.category_reason_code if core_classification else core_classification,
+                                            defect_direct_category_reason_code = direct_classification.category_reason_code if direct_classification else direct_classification,
+                                            close_defect=True,
+                                            )
+    history = await History.add_history(
+        session=session,
+        defect=defect,
+        user=user,
+        status=status_defect,
+        comment=comment.comment if comment.comment else None,
+        )
+    return defect
+#################################################################
+
 
 @defect_router.post("/get_defect_by_filter/")
 async def get_defect_by_filter(request: Request, response: Response, filter: Filter, 

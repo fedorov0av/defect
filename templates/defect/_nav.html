@@ -3,7 +3,7 @@
 	<div class="container-fluid justify-content-start">
 	  <div class="btn-group">
 		<span class="d-inline-block" tabindex="0" data-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Регистратор">
-			<button id="add-button" type="button" :disabled='isDisabledAddDefect' class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#AddDefectModalWindow">
+			<button id="add-button" type="button" :hidden='isDisabledAddDefect' class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#AddDefectModalWindow">
 			Зарегистрировать дефект
 			</button>
 		</span>	

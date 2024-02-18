@@ -20,7 +20,7 @@ const appVueDefect = Vue.createApp({
       this.updateTableDefect(true);
       this.currentPage = 1;
     },  /* mounted */
-    methods: {    
+    methods: { 
       tableRowClassName({row, rowIndex}) {
         axios
         .post('/user/user_role')

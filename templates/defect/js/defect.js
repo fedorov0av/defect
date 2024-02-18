@@ -7,7 +7,7 @@ const appVueAddDefect = Vue.createApp({
         defect_type_defects: {},
         categories_reason: {},
         categories_defect: {},
-
+ 
         vueAddUserModalWindow: Vue.ref('vueAddUserModalWindow'),
         placeholders: {
           'ЖД основного оборудования': '##XXX##XX###',
@@ -56,10 +56,20 @@ const appVueAddDefect = Vue.createApp({
         backgroundPage1CCS: "active",
         backgroundPage2CCS: "nav-link",
         backgroundPage3CCS: "nav-link",
+        isDisabledAddDefect: false,
       }
     },
-    beforeMount(){
+    beforeMount() {
       this.setMask();
+      axios
+      .post('/user/user_role')
+      .then(response => {
+          this.currentUser = response.data;
+          this.currentUserDivision = this.currentUser.user_division;
+          if (this.currentUserDivision != 'РусАС') {
+            this.isDisabledAddDefect = true;
+          }
+        })
     },
     mounted() {
       this.setLimitNotes()
@@ -225,7 +235,7 @@ const appVueAddDefect = Vue.createApp({
         .then(response => {
             this.categories_defect = response.data;
             }) /* axios */
-      }, /* updateCategoriesReason */
+      }, /* updateCategoriesDefect */
       updateTableTypeDefect() {
         axios
         .post('/type_defect',)

@@ -163,6 +163,22 @@ async def create_tables():
             session.add(division)
             await session.commit()
     ################################################
+            
+    ########### добавление категорий дефекта в БД #######
+    async with async_session() as session:
+        for category_defect in CATEGORIES_DEFECT:
+            category = CategoryDefect(category_defect_name=category_defect)
+            session.add(category)
+            await session.commit()
+    ################################################
+
+    ########### добавление коренных причин дефекта в БД #######
+    async with async_session() as session:
+        for category_reason in CATEGORIES_REASON:
+            category_r = CategoryCoreReason(category_reason_code=category_reason[0], category_reason_name=category_reason[1])
+            session.add(category_r)
+            await session.commit()
+    ################################################
 
     ########### добавление ROOT пользователя в БД #######
     async with async_session() as session:

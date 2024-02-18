@@ -69,7 +69,8 @@ class Defect(Base):
                 .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                 .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
-                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker))
+                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)).options(selectinload(Defect.defect_category_defect))\
+                .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
         result = await session.scalars(query)
         defects = result.all()
         return defects
@@ -123,7 +124,8 @@ class Defect(Base):
                 .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                 .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
-                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker))
+                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)).options(selectinload(Defect.defect_category_defect))\
+                .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
         result = await session.scalars(query)
         defect = result.one()
         return defect
@@ -139,7 +141,7 @@ class Defect(Base):
                                   defect_check_result: str=None, # OK
                                   defect_planned_finish_date: datetime.datetime=None, # OK
                                   defect_description: str=None, # OK
-                                  defect_work_comment: str=None,
+                                  defect_work_comment: str=None, # OK
                                   defect_location: str=None, # OK
                                   defect_type_id: int=None, # OK
                                   defect_status_id: int=None, # OK
@@ -149,7 +151,12 @@ class Defect(Base):
                                   defect_pnr: bool=None, # OK
                                   defect_safety: bool=None, # OK
                                   defect_exploitation: bool=None, # OK
-                                  confirm_defect: bool=False, # OK
+                                  defect_system_klass: bool=None,
+                                  defect_category_defect_id: int=None,
+                                  defect_core_category_reason_code: str=None,
+                                  defect_direct_category_reason_code: str=None,
+                                  confirm_defect: bool=False, # если метод вызывается на этапе "Подтвердение"
+                                  close_defect: bool=False, # если метод вызывается на этапе "Закрытие"
                                   ): # обновление дефект в БД (там где нет ОК, значит обновление тех полей еще не реализовано)
         defect:Defect = await Defect.get_defect_by_id(session, defect_id)
         if defect_system_id:
@@ -180,8 +187,18 @@ class Defect(Base):
             defect.defect_checker_id = defect_checker_id
         if defect_check_result:
             defect.defect_check_result = defect_check_result
-
+        if close_defect:
+            defect.defect_system_klass = defect_system_klass
+            defect.defect_category_defect_id = defect_category_defect_id
+            defect.defect_core_category_reason_code = defect_core_category_reason_code
+            defect.defect_direct_category_reason_code = defect_direct_category_reason_code
+            
         if confirm_defect:
+            defect.defect_system_klass = defect_system_klass
+            defect.defect_category_defect_id = defect_category_defect_id
+            defect.defect_core_category_reason_code = defect_core_category_reason_code
+            defect.defect_direct_category_reason_code = defect_direct_category_reason_code
+
             defect.defect_planned_finish_date = defect_planned_finish_date
             defect.defect_ppr = defect_ppr
             defect.defect_pnr = defect_pnr
@@ -253,10 +270,11 @@ class Defect(Base):
             query = query.filter(*conditions)
 
         query = query.order_by(Defect.defect_id.desc())\
-                     .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
-                     .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
-                     .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
-                     .options(selectinload(Defect.defect_system))
+                    .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
+                    .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
+                    .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                    .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect)).options(selectinload(Defect.defect_checker))\
+                    .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
         result = await session.scalars(query)
         defects = result.all()
         return defects

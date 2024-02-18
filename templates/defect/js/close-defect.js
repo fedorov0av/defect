@@ -4,6 +4,8 @@ const appCloseDefect = Vue.createApp({
         defect_id: '0',
         defect_divisions: {},
         defect_type_defects: {},
+        categories_reason: {},
+        categories_defect: {},
         statuses_defect:{}, /* ['Зарегистрирован', # 0
                                 'Адресован', # 1
                                 'Назначен исполнитель', # 2
@@ -41,6 +43,13 @@ const appCloseDefect = Vue.createApp({
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
+
+        newCoreClassificationCode: '0',
+        newCoreClassificationName: '',
+        newCategoryDefect_id: 0,
+        newClassSystemName: '',
+        newDirectClassificationCode: '',   
+        newDirectClassificationName: '', 
         
         cardHistorys: [{
           "history_id": 0,
@@ -67,6 +76,7 @@ const appCloseDefect = Vue.createApp({
         backgroundСlassificationButtonCCS: "btn-outline-primary",
         isHiddenblockmain: 'false',
         isHiddenblockhistory: 'false',
+        isHiddenblockclassification: 'false',
         cardSafety: false,
         cardPnr: false,
         cardExploitation: false,
@@ -91,6 +101,9 @@ const appCloseDefect = Vue.createApp({
     mounted() {
       this.setPopover();
       this.isHiddenblockhistory = 'true';
+      this.isHiddenblockclassification  = 'true';
+      this.updateCategoriesReason();
+      this.updateCategoriesDefect();
     },
     methods: {
       setPopover(){
@@ -112,6 +125,10 @@ const appCloseDefect = Vue.createApp({
         this.updateTableWorkers();
         this.clickbuttonmain();
       }, /* updateTables */
+      changeCoreClassificationCode(event){
+        category_reason = this.categories_reason.filter((category_reason) => category_reason.category_reason_code === event.target.value)
+        this.newCoreClassificationName = category_reason[0].category_reason_name
+      },
       updateTableWorkers() {
         axios
         .post('/user/workers',)
@@ -147,6 +164,20 @@ const appCloseDefect = Vue.createApp({
             this.defect_type_defects = response.data;
               }) /* axios */
       }, /* updateTableTypeDefect */
+      updateCategoriesReason() {
+        axios
+        .post('/get_categories_core_reason',)
+        .then(response => {
+            this.categories_reason = response.data;
+            }) /* axios */
+      }, /* updateCategoriesReason */
+      updateCategoriesDefect() {
+        axios
+        .post('/get_categories_defect',)
+        .then(response => {
+            this.categories_defect = response.data;
+            }) /* axios */
+      }, /* updateCategoriesDefect */
       updateCardDefect() {
         axios
           .post('/get_defect/',{
@@ -177,6 +208,15 @@ const appCloseDefect = Vue.createApp({
             this.cardSafety = this.cardDefect.defect_safety;
             this.cardPnr = this.cardDefect.defect_pnr;
             this.cardExploitation = this.cardDefect.defect_exploitation;
+
+            this.newCategoryDefect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : 0;
+            this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
+            this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
+            category_reason = this.categories_reason.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
+            this.newCoreClassificationName = category_reason[0].category_reason_name
+            this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
+            this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';
+
             axios
             .post('/user/me')
             .then(response => {
@@ -223,17 +263,27 @@ const appCloseDefect = Vue.createApp({
       clickbuttonmain () {
         this.isHiddenblockmain = 'false';
         this.isHiddenblockhistory = 'true';
+        this.isHiddenblockclassification = 'true';
         this.backgroundMainButtonCCS = "btn-primary";
         this.backgroundHistoryButtonCCS = "btn-outline-primary";
         this.backgroundСlassificationButtonCCS = "btn-outline-primary";
-
+  
       },
       clickbuttonhistory () {
         this.isHiddenblockmain = 'true';
         this.isHiddenblockhistory = 'false';
+        this.isHiddenblockclassification = 'true';
         this.backgroundMainButtonCCS = "btn-outline-primary";
         this.backgroundHistoryButtonCCS = "btn-primary";
         this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+      },
+      clickbuttonclassification () {
+        this.isHiddenblockmain = 'true';
+        this.isHiddenblockhistory = 'true';
+        this.isHiddenblockclassification = 'false';
+        this.backgroundMainButtonCCS = "btn-outline-primary";
+        this.backgroundHistoryButtonCCS = "btn-outline-primary";
+        this.backgroundСlassificationButtonCCS = "btn-primary";
       },
       closeDefect() {
         Swal.fire({
@@ -244,9 +294,50 @@ const appCloseDefect = Vue.createApp({
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[9].status_defect_name}}
+            textHistory = ''
+            if (this.newCategoryDefect_id !== this.cardDefect.defect_category_defect.category_defect_id){
+              textHistory = textHistory+'Категория дефекта изменилась с "'+this.cardDefect.defect_category_defect.category_defect_name+'" на "'+this.categories_defect[this.newCategoryDefect_id-1].category_defect_name+'"\n';
+            }
+            if ((this.cardDefect.defect_system_klass !== null && this.newClassSystemName !== '') && (this.newClassSystemName !== this.cardDefect.defect_system_klass)){
+              textHistory = textHistory+'Класс оборудования изменился с "'+this.cardDefect.defect_system_klass+'" на "'+this.newClassSystemName+'"\n';
+            }
+            if ((this.cardDefect.defect_core_category_reason !== null && this.newCoreClassificationCode !== '0') && (this.cardDefect.defect_core_category_reason.category_reason_code !== this.newCoreClassificationCode)){
+              textHistory = textHistory+'Код категории коренной причины изменился с "'+this.cardDefect.defect_core_category_reason.category_reason_code+'" на "'+this.newCoreClassificationCode+'"\n';
+            }
+            if ((this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationCode !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_code !== this.newDirectClassificationCode)){
+              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+this.cardDefect.defect_direct_category_reason.category_reason_code+'" на "'+this.newDirectClassificationCode+'"\n';
+            }
+            if ((this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationName !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_name !== this.newDirectClassificationName)){
+              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+this.cardDefect.defect_direct_category_reason.category_reason_name+'" на "'+this.newDirectClassificationName+'"\n';
+            }
+            data = { 
+                  "defect_id": {
+                    "defect_id": this.defect_id
+                  },
+                  "status_name": {
+                    "status_defect_name": this.statuses_defect[9].status_defect_name
+                  },
+                  "category_defect_id": {
+                    "category_defect_id": this.newCategoryDefect_id !== this.cardDefect.defect_category_defect.category_defect_id ? this.newCategoryDefect_id : this.cardDefect.defect_category_defect.category_defect_id
+                  },
+                  "class_system_name": {
+                    "class_system_name": (this.cardDefect.defect_system_klass !== null && this.newClassSystemName !== '') && (this.newClassSystemName !== this.cardDefect.defect_system_klass) ? this.newClassSystemName : this.cardDefect.defect_system_klass
+                  },
+                  "core_classification_code": {
+                    "core_rarery_code": (this.cardDefect.defect_core_category_reason !== null && this.newCoreClassificationCode !== '0') && (this.cardDefect.defect_core_category_reason.category_reason_code !== this.newCoreClassificationCode) ? this.newCoreClassificationCode : this.cardDefect.defect_core_category_reason.category_reason_code
+                  },
+                  "direct_classification_code": {
+                    "direct_rarery_code": (this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationCode !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_name !== this.newDirectClassificationCode) ? this.newDirectClassificationCode : this.cardDefect.defect_direct_category_reason.category_reason_name
+                  },
+                  "direct_classification_name": {
+                    "direct_rarery_name": (this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationName !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_name !== this.newDirectClassificationName) ? this.newDirectClassificationName : this.cardDefect.defect_direct_category_reason.category_reason_name
+                  },
+                  "comment": {
+                    "comment": textHistory !== '' ? textHistory : null
+                  }
+                  }
             axios
-            .post('/update_status_defect', data)
+            .post('/close_defect', data)
             .then(response => {
                 document.getElementById('closeCloseDefectModalWindow').click();
                 appVueDefect.updateTables()

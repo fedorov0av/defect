@@ -14,7 +14,7 @@
             <div class="block_nav_modal">
               <button @click="clickbuttonmain" type="button" id="isHiddenblockhistory" class="btn margin" :class="backgroundMainButtonCCS" >Общая информация</button>
               <button @click="clickbuttonhistory" type="button" id="isHiddenblockmain" class="btn margin" :class="backgroundHistoryButtonCCS">История дефекта</button>
-              <button type="button" class="btn btn-outline-secondary margin" disabled>Классификация дефекта</button>
+              <button @click="clickbuttonclassification" type="button" class="btn margin" :class="backgroundСlassificationButtonCCS">Классификация дефекта</button>
             </div>
 
             <div :class="{ hidden: isHiddenblockmain == 'true' }" :hidden='isHiddenblockmain == "true"'>
@@ -233,6 +233,77 @@
               </div>
             </div>
             
+            <!----------------------------------------- Классификация дефекта ------------------------------------------------>
+            <div :hidden='isHiddenblockclassification == "true"'>
+              <h4 class="h4">Классификация дефекта</h4>
+              <br>
+              <div class="block_row1">
+                <div class="width100">
+                  <div class="block_row1">
+                    <div class="block_data_column1 width300px rr20">
+                      <div class="block_input_data">
+                        <b class="label">Категория дефекта</b>
+                        <b class="zvezda"> * </b> 
+                      </div>
+                      <select class="form-select" v-model="newCategoryDefect_id" disabled>
+                        <option disabled selected :value=0>Выберите категорию дефекта</option>
+                        <option v-for="category_defect in categories_defect" :value="category_defect.category_defect_id">{{ category_defect.category_defect_name }}</option>
+                      </select>  
+                    </div>
+                    <div class="block_data_column1 width300px rr20">
+                      <div class="block_input_data">
+                        <b class="label">Класс оборудования по НП-00-97</b>
+                      </div>
+                      <input type="text" class="form-control" v-model="newClassSystemName" disabled>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="block_row componentWraper4">
+                    <div class="block_data_column4">
+                      <div class="block_data_column width300px">
+                        <div class="block_input_data">
+                          <b class="label">Категория причины и код причины</b>
+                        </div>
+                          <select class="form-select" v-model="newCoreClassificationCode" disabled>
+                            <option disabled :value="0" selected>Выберите код причины</option>
+                            <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
+                          </select> 
+                      </div>
+                      <div class="block_data_column">
+                        <div class="block_input_data">
+                          <b class="label">Причина события</b>
+                        </div>
+                        <textarea class="form-control height100" v-model="newCoreClassificationName" aria-label="Disabled input example" disabled></textarea>
+                      </div>
+                    </div>
+                  </div>
+    
+                  <br>
+                  <br>
+
+                  <div class="block_row componentWraper5">
+                    <div class="block_data_column4">
+                      <div class="block_data_column width300px">
+                        <div class="block_input_data">
+                          <b class="label">Категория причины и код причины</b>
+                        </div>
+                          <input type="text" class="form-control" v-model="newDirectClassificationCode" disabled>
+                      </div>
+                      <div class="block_data_column">
+                        <div class="block_input_data">
+                          <b class="label">Причина события</b>
+                        </div>
+                        <textarea class="form-control height100" aria-label="Disabled input example" v-model="newDirectClassificationName" disabled></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>   
+            </div>
+
+
             <div class="modal-footer modal-footer1">
               <div class="block_data9">
                 
@@ -241,12 +312,12 @@
                 <span class="d-inline-block button-margin">
                   <button @click="exportHistoryExcel" class="btn btn-secondary" type="button">Выгрузить дефект в Excel</button>
                 </span>
-                <span class="verticalLine1"></span>
+                <span class="verticalLine1" :hidden='isDisabledExecutionDefect'></span>
                 <span class="d-inline-block button-margin"  data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
-                  <button @click="cancelDefect" id="executionCancelDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-primary" type="button">Отменить дефект</button>
+                  <button @click="cancelDefect" id="executionCancelDefectButton" :hidden='isDisabledExecutionDefect' class="btn btn-primary" type="button">Отменить дефект</button>
                 </span>
                 <span class="d-inline-block" tabindex="0" data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
-                  <button @click="executionDefect" id="executionExecutionDefectButton" :disabled='isDisabledExecutionDefect' class="btn btn-primary" type="button">Подтвердить дефект</button>
+                  <button @click="executionDefect" id="executionExecutionDefectButton" :hidden='isDisabledExecutionDefect' class="btn btn-primary" type="button">Подтвердить дефект</button>
                 </span>
               </div>
             </div>

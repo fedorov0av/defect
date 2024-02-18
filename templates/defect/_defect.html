@@ -12,7 +12,7 @@
             <div class="block_nav_modal">
               <button @click="clickbuttonmain" type="button" class="btn margin" :class="backgroundMainButtonCCS" >Общая информация</button>
               <button @click="clickbuttonhistory" type="button" class="btn btn-outline-secondary margin" :class="backgroundHistoryButtonCCS" disabled>История дефекта</button>
-              <button @click="clickbuttonclassification" type="button" class="btn margin" :class="backgroundСlassificationButtonCCS">Классификация дефекта</button>
+              <button @click="clickbuttonclassification" type="button" class="btn margin" :class="backgroundСlassificationButtonCCS" >Классификация дефекта</button>
             </div>
 
             <div :class="{ hidden: isHiddenblockmain == 'true' }" :hidden='isHiddenblockmain == "true"'>
@@ -46,7 +46,7 @@
                         <b class="label">Владелец оборудования</b>
                       </div>
                         <!-- <select class="form-select" :class="{ 'is-valid': newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }"  v-model="newDivisionOwner_id"> -->
-                        <select class="form-select ml" v-model="newDivisionOwner_id" disabled>
+                        <select class="form-select ml" v-model="newDivisionOwner_id" :disabled='isDisabledAddDefect'> 
                           <option disabled selected :value=0>Выберите подразделение</option>
                           <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
                         </select> 
@@ -229,7 +229,7 @@
             </div> 
 
             <!----------------------------------------- Классификация дефекта ------------------------------------------------>
-            <div :class="{ hidden: isHiddenblockclassification == 'true' }" :hidden='isHiddenblockclassification == "true"'>
+            <div :hidden='isHiddenblockclassification == "true"'>
               <h4 class="h4">Классификация дефекта</h4>
               <br>
               <div class="block_row1">

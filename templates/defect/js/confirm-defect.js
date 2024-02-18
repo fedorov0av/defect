@@ -3,6 +3,8 @@ const appConfirmDefect = Vue.createApp({
     data() {
       return {
         defect_id: '0',
+        categories_reason: {},
+        categories_defect: {},
         defect_divisions: {},
         defect_type_defects: {},
         statuses_defect:{}, /* ['Зарегистрирован', # 0
@@ -19,12 +21,13 @@ const appConfirmDefect = Vue.createApp({
         repair_managers: {},
         workers: {},
         toggle: 'false',
-        isDisabledConfirmDefect: false,
+        isDisabledConfirmDefect: false, 
         isHiddenDate: 'false',
         check_repair_manager: false,
         check_date: false,
         isHiddenblockmain: 'false',
         isHiddenblockhistory: 'false',
+        isHiddenblockclassification: 'false',
          
         placeholders: {
           'ЖД основного оборудования': '##XXX##XX###',
@@ -58,7 +61,13 @@ const appConfirmDefect = Vue.createApp({
         newCardSystemName: '',
         newCardDescription: '',
         newCardDatePlannedFinish: '',
-        newCardTypeDefectName: '', 
+        newCardTypeDefectName: '',
+        newCoreClassificationCode: '0',
+        newCoreClassificationName: '',
+        newCategoryDefect_id: 0,
+        newClassSystemName: '',
+        newDirectClassificationCode: '',   
+        newDirectClassificationName: '',  
 
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
@@ -110,7 +119,10 @@ const appConfirmDefect = Vue.createApp({
       this.setLimitSystem();
       this.setLimitLocation();
       this.setPopover();
+      this.updateCategoriesReason();
+      this.updateCategoriesDefect();
       this.isHiddenblockhistory = 'true';
+      this.isHiddenblockclassification  = 'true';
       var myModalEl = document.getElementById('ConfirmDefectModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appConfirmDefect.clearData();
@@ -189,6 +201,10 @@ const appConfirmDefect = Vue.createApp({
           this.newExploitation = this.cardDefect.defect_exploitation;
         }
       },
+      changeCoreClassificationCode(event){
+        category_reason = this.categories_reason.filter((category_reason) => category_reason.category_reason_code === event.target.value)
+        this.newCoreClassificationName = category_reason[0].category_reason_name
+      },
       clearData() {
         this.newCardKKS = null;
         this.newDivisionOwner_id = 0;
@@ -208,7 +224,7 @@ const appConfirmDefect = Vue.createApp({
         this.updateTableWorkers();
         this.check_date = false;
         this.clickbuttonmain();
-      }, /* updateTables */
+      }, /* updateTables */ 
       updateTableWorkers() {
         axios
         .post('/user/workers',)
@@ -243,7 +259,21 @@ const appConfirmDefect = Vue.createApp({
         .then(response => {
             this.defect_type_defects = response.data;
               }) /* axios */
-      }, /* updateTableTypeDefect */
+      }, /* updateTableTypeDefect */ 
+      updateCategoriesReason() {
+        axios
+        .post('/get_categories_core_reason',)
+        .then(response => {
+            this.categories_reason = response.data;
+            }) /* axios */
+      }, /* updateCategoriesReason */
+      updateCategoriesDefect() {
+        axios
+        .post('/get_categories_defect',)
+        .then(response => {
+            this.categories_defect = response.data;
+            }) /* axios */
+      }, /* updateCategoriesDefect */
       updateCardDefect() {
         axios
           .post('/get_defect/',{
@@ -279,6 +309,15 @@ const appConfirmDefect = Vue.createApp({
             this.newSafety = this.cardDefect.defect_safety;
             this.newPnr = this.cardDefect.defect_pnr;
             this.newExploitation = this.cardDefect.defect_exploitation;
+
+            this.newCategoryDefect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : 0;
+            this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
+            this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
+            category_reason = this.categories_reason.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
+            this.newCoreClassificationName = category_reason[0].category_reason_name
+            this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
+            this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';
+
             this.setLimitNotes();
             this.setLimitSystem();
             this.setLimitLocation();
@@ -316,6 +355,7 @@ const appConfirmDefect = Vue.createApp({
       clickbuttonmain () {
         this.isHiddenblockmain = 'false';
         this.isHiddenblockhistory = 'true';
+        this.isHiddenblockclassification = 'true';
         this.backgroundMainButtonCCS = "btn-primary";
         this.backgroundHistoryButtonCCS = "btn-outline-primary";
         this.backgroundСlassificationButtonCCS = "btn-outline-primary";
@@ -324,9 +364,18 @@ const appConfirmDefect = Vue.createApp({
       clickbuttonhistory () {
         this.isHiddenblockmain = 'true';
         this.isHiddenblockhistory = 'false';
+        this.isHiddenblockclassification = 'true';
         this.backgroundMainButtonCCS = "btn-outline-primary";
         this.backgroundHistoryButtonCCS = "btn-primary";
         this.backgroundСlassificationButtonCCS = "btn-outline-primary";
+      },
+      clickbuttonclassification () {
+        this.isHiddenblockmain = 'true';
+        this.isHiddenblockhistory = 'true';
+        this.isHiddenblockclassification = 'false';
+        this.backgroundMainButtonCCS = "btn-outline-primary";
+        this.backgroundHistoryButtonCCS = "btn-outline-primary";
+        this.backgroundСlassificationButtonCCS = "btn-primary";
       },
       confirmDefect() {
         //this.newDate = this.cardDatePlannedFinish ? this.cardDatePlannedFinish  : null;
@@ -356,7 +405,10 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>KKS введен не полностью!</b>", heightAuto: false});
           return;
         }
-
+        if (this.newDirectClassificationName === '' && this.newDirectClassificationCode !== '') {
+          Swal.fire({html:"<b>Причина события в разделе 'Непосредственная причина события' должна быть заполнена!</b>", heightAuto: false});
+          return;
+        }
         tempDate = this.cardDateRegistration.split(' ')[0].split('-')
         cardDateRegistration = tempDate[2] + '-'+tempDate[1]+'-'+tempDate[0]
         
@@ -389,7 +441,7 @@ const appConfirmDefect = Vue.createApp({
               textHistory = textHistory+'Описание дефекта изменилось с "'+this.cardDescription+'" на "'+this.newCardDescription+'"\n';
             }
             if (this.newDivisionOwner_id !== this.divisionOwner_id){
-              textHistory = textHistory+'Подразделение-владелец изменилось с "'+this.defect_divisions[this.divisionOwner_id-1]+'" на "'+this.defect_divisions[this.newDivisionOwner_id-1]+'"\n';
+              textHistory = textHistory+'Подразделение-владелец изменилось с "'+this.defect_divisions[this.divisionOwner_id-1].division_name+'" на "'+this.defect_divisions[this.newDivisionOwner_id-1].division_name+'"\n';
             }
             if (this.newCardSystemName !== this.cardSystemName){
               textHistory = textHistory+'Оборудование изменилось с "'+this.cardSystemName+'" на "'+this.newCardSystemName+'"\n';
@@ -406,8 +458,24 @@ const appConfirmDefect = Vue.createApp({
             if (this.cardDefect.defect_exploitation !== this.newExploitation){
               textHistory = textHistory+'Влияет на режим нормальной эксплуатации изменился с "'+(this.cardDefect.defect_exploitation ? "ДА": "НЕТ")+'" на "'+(this.newExploitation ? "ДА": "НЕТ")+'"\n';
             }
+            
+            if (this.newCategoryDefect_id !== this.cardDefect.defect_category_defect.category_defect_id){
+              textHistory = textHistory+'Категория дефекта изменилась с "'+this.cardDefect.defect_category_defect.category_defect_name+'" на "'+this.categories_defect[this.newCategoryDefect_id-1].category_defect_name+'"\n';
+            }
+            if ((this.cardDefect.defect_system_klass !== null && this.newClassSystemName !== '') && (this.newClassSystemName !== this.cardDefect.defect_system_klass)){
+              textHistory = textHistory+'Класс оборудования изменился с "'+this.cardDefect.defect_system_klass+'" на "'+this.newClassSystemName+'"\n';
+            }
+            if ((this.cardDefect.defect_core_category_reason !== null && this.newCoreClassificationCode !== '0') && (this.cardDefect.defect_core_category_reason.category_reason_code !== this.newCoreClassificationCode)){
+              textHistory = textHistory+'Код категории коренной причины изменился с "'+this.cardDefect.defect_core_category_reason.category_reason_code+'" на "'+this.newCoreClassificationCode+'"\n';
+            }
+            if ((this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationCode !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_code !== this.newDirectClassificationCode)){
+              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+this.cardDefect.defect_direct_category_reason.category_reason_code+'" на "'+this.newDirectClassificationCode+'"\n';
+            }
+            if ((this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationName !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_name !== this.newDirectClassificationName)){
+              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+this.cardDefect.defect_direct_category_reason.category_reason_name+'" на "'+this.newDirectClassificationName+'"\n';
+            }
 
-            if (this.cardDatePlannedFinish !== this.newCardDatePlannedFinish){
+            if (this.cardDatePlannedFinish !== this.newCardDatePlannedFinish && this.cardStatusDefectName == 'Требует решения'){
               if (this.cardDatePlannedFinish === null){
                 textHistory = textHistory+'Срок устранения изменился с "Устранить в ППР" на "'+this.newCardDatePlannedFinish+'"\n';
               } else {
@@ -420,7 +488,6 @@ const appConfirmDefect = Vue.createApp({
             }
 
             data = {
-
               "defect_id": {
                 "defect_id": this.defect_id
               },
@@ -463,10 +530,26 @@ const appConfirmDefect = Vue.createApp({
               "type_defect_name": {
                 "type_defect_name": this.newCardTypeDefectName !== this.cardTypeDefectName ? this.newCardTypeDefectName : null
               },
+              "category_defect_id": {
+                "category_defect_id": this.newCategoryDefect_id !== this.cardDefect.defect_category_defect.category_defect_id ? this.newCategoryDefect_id : this.cardDefect.defect_category_defect.category_defect_id
+              },
+              "class_system_name": {
+                "class_system_name": (this.cardDefect.defect_system_klass !== null && this.newClassSystemName !== '') && (this.newClassSystemName !== this.cardDefect.defect_system_klass) ? this.newClassSystemName : this.cardDefect.defect_system_klass
+              },
+              "core_classification_code": {
+                "core_rarery_code": (this.cardDefect.defect_core_category_reason !== null && this.newCoreClassificationCode !== '0') && (this.cardDefect.defect_core_category_reason.category_reason_code !== this.newCoreClassificationCode) ? this.newCoreClassificationCode : this.cardDefect.defect_core_category_reason.category_reason_code
+              },
+              "direct_classification_code": {
+                "direct_rarery_code": (this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationCode !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_name !== this.newDirectClassificationCode) ? this.newDirectClassificationCode : this.cardDefect.defect_direct_category_reason.category_reason_name
+              },
+              "direct_classification_name": {
+                "direct_rarery_name": (this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationName !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_name !== this.newDirectClassificationName) ? this.newDirectClassificationName : this.cardDefect.defect_direct_category_reason.category_reason_name
+              },
               "comment": {
                 "comment": textHistory !== '' ? textHistory : null
               }
             }
+            console.log(data)
             axios
             .post('/confirm_defect', data)
             .then(response => {
@@ -477,13 +560,11 @@ const appConfirmDefect = Vue.createApp({
                   })
             .catch(err => {
                     console.log(err);
-
                     if (err.response.status === 401){
                       
                       window.location.href = "/";
                     } else {
                       Swal.fire({html:"<b>Произошла ошибка при ПОДТВЕРЖДЕНИИ ДЕФЕКТА. Обратитесь к администратору.</b>", heightAuto: false}); 
-                      console.log(err);
                     }
                 }) /* axios */
           }

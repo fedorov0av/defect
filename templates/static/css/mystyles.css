@@ -712,6 +712,20 @@
   margin-right: 15px;
 }
 
+.style-1 {
+  background-color: rgb(215,215,44)
+}
+.style-2 {
+  background-color: rgb(114,114,67)
+}
+
+.selected{
+  background-color:green !important;
+}
+.bad{
+  background-color:red !important;
+}
+
 .p{
   width: 100%;
   text-align: right;
@@ -727,6 +741,12 @@
 .pos_a {
   position: absolute;
   top: 70%;
+  left: 94%;
+}
+
+.pos_a_cor {
+  position: absolute;
+  top: 65%;
   left: 94%;
 }
 
