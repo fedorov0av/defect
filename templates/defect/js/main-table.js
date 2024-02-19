@@ -49,6 +49,7 @@ const appVueDefect = Vue.createApp({
               this.pageNumber = response.data.page;
               this.pages = response.data.pages;
               this.defects = response.data.items;
+              let responsible = null
               for (defect in this.defects){
                 if (this.defects[defect].defect_status.status_defect_name === 'Зарегистрирован' || this.defects[defect].defect_status.status_defect_name === 'Устранен' || this.defects[defect].defect_status.status_defect_name === 'Закрыт'){
                   responsible = this.defects[defect].defect_owner;
@@ -60,9 +61,23 @@ const appVueDefect = Vue.createApp({
                   responsible = 'ОП ' + this.defects[defect].defect_owner;
                 }
                 this.defects[defect].responsible = responsible;
+
+                let date_background = null
+                if ((this.defects[defect].defect_planned_finish_date !== "Устр. в ППР") && (this.defects[defect].defect_planned_finish_date !== null)){
+                  let now = new Date()
+                  date_defect_finish_temp = this.defects[defect].defect_planned_finish_date.split('-')
+                  finish_date = Date.parse(date_defect_finish_temp[2]+'-'+date_defect_finish_temp[1]+'-'+date_defect_finish_temp[0])
+                  if (finish_date - now <= 0){
+                    date_background = "table-danger"
+                  } else if (finish_date - now <= 172800000){
+                    date_background = "table-warning"
+                  }
+                }
+                this.defects[defect].dateBackgroundColor = date_background;
               }
                 })
           .catch(err => {
+            console.log()
             if (err.response.status === 401){
               window.location.href = "/";
             } else {
@@ -148,11 +163,13 @@ const appVueDefect = Vue.createApp({
         axios
         .post('/defects', null, { params:{'page': this.nextPageNumber, 'size': parseInt(this.pageSize)}})
         .then(response => {
+            
             this.temp_resp = response.data;
             this.pageNumber = response.data.page;
             this.pages = response.data.pages;
             this.defects = response.data.items;
             for (defect in this.defects){
+              let responsible = null
               if (this.defects[defect].defect_status.status_defect_name === 'Зарегистрирован' || this.defects[defect].defect_status.status_defect_name === 'Устранен' || this.defects[defect].defect_status.status_defect_name === 'Закрыт'){
                 responsible = this.defects[defect].defect_owner;
               } else if (this.defects[defect].defect_status.status_defect_name === 'Адресован'){
@@ -163,6 +180,20 @@ const appVueDefect = Vue.createApp({
                 responsible = 'ОП ' + this.defects[defect].defect_owner;
               }
               this.defects[defect].responsible = responsible;
+              
+              let date_background = null
+              if ((this.defects[defect].defect_planned_finish_date !== "Устр. в ППР") && (this.defects[defect].defect_planned_finish_date !== null)){
+                let now = new Date()
+                date_defect_finish_temp = this.defects[defect].defect_planned_finish_date.split('-')
+                finish_date = Date.parse(date_defect_finish_temp[2]+'-'+date_defect_finish_temp[1]+'-'+date_defect_finish_temp[0])
+                if (finish_date - now <= 0){
+                  date_background = "table-danger"
+                } else if (finish_date - now <= 172800000){
+                  date_background = "table-warning"
+                }
+              }
+              this.defects[defect].dateBackgroundColor = date_background;
+
             }
               }) /* axios */
       }, /* changePage */

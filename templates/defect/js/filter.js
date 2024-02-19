@@ -96,6 +96,7 @@ const appVueFilter = Vue.createApp({
             .then(response => {
               appVueDefect.defects = response.data;
               for (defect in appVueDefect.defects){
+                let responsible = null
                 if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Зарегистрирован' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Устранен' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Закрыт' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Требует решения'){
                   responsible = appVueDefect.defects[defect].defect_owner;
                 } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Адресован'){
@@ -106,10 +107,24 @@ const appVueFilter = Vue.createApp({
                   responsible = 'ОП ' + appVueDefect.defects[defect].defect_owner;
                 }
                 appVueDefect.defects[defect].responsible = responsible;
+                let date_background = null
+                if ((appVueDefect.defects[defect].defect_planned_finish_date !== "Устр. в ППР") && (appVueDefect.defects[defect].defect_planned_finish_date !== null)){
+                  let now = new Date()
+                  date_defect_finish_temp = appVueDefect.defects[defect].defect_planned_finish_date.split('-')
+                  finish_date = Date.parse(date_defect_finish_temp[2]+'-'+date_defect_finish_temp[1]+'-'+date_defect_finish_temp[0])
+                  if (finish_date - now <= 0){
+                    date_background = "table-danger"
+                  } else if (finish_date - now <= 172800000){
+                    date_background = "table-warning"
+                  }
+                }
+                appVueDefect.defects[defect].dateBackgroundColor = date_background;
               }
+              
               appVueDefect.pages = 0;
                 })
             .catch(err => {
+              console.log(err)
               if (err.response.status === 401){
                 window.location.href = "/";
               } else {

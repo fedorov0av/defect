@@ -2,7 +2,13 @@
 FROM python:3.10-alpine
 
 # Копирование исходных файлов в контейнер
-COPY . /defects
+COPY app/ /defects/app/
+COPY db/ /defects/db/
+COPY templates/ /defects/templates/
+COPY utils/ /defects/utils/
+COPY create_db.py defects/
+COPY main.py defects/
+
 
 # Копирование requirements.txt и установка зависимостей
 COPY requirements.txt /defects/requirements.txt
@@ -14,6 +20,5 @@ WORKDIR /defects
 
 # Открытие порта
 EXPOSE 4010
- 
 # Команда запуска приложения
-CMD ["uvicorn", "main:app", "--host", "192.168.1.126", "--port", "4010"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "4010"]

@@ -11,7 +11,7 @@
                 <th v-for="colunmName in colunmsName" class="th-sm">{{ colunmName }} <span class="arrow-up"></span></th>
               </tr>
             </thead>
-            <tr @dblclick="handleDoubleClick" data-bs-target="#ConfirmDefectModalWindow" v-for="defect in defects" v-bind:key="defect.defect_id">
+            <tr @dblclick="handleDoubleClick" data-bs-target="#ConfirmDefectModalWindow" v-for="defect in defects" :class="defect.dateBackgroundColor" v-bind:key="defect.defect_id">
               <td class="main-table_td95">{{ defect.defect_id }}</td>
               <td class="main-table_td150">{{ defect.defect_created_at }}</td>
               <td class="main-table_td95">{{ defect.defect_planned_finish_date }}</td>
