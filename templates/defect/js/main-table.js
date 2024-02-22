@@ -130,7 +130,7 @@ const appVueDefect = Vue.createApp({
           })
           myModal.show()
         }
-        if (status_name == "Устранен") {
+        if (status_name == "Устранен" || status_name == "Локализован") {
           appCloseDefect.defect_id = defect_id;
           appCloseDefect.updateTables()
           var myModal = new bootstrap.Modal(document.getElementById('CloseModalWindow'), {

@@ -18,7 +18,7 @@
             <div :class="{ hidden: isHiddenblockmain == 'true' }" :hidden='isHiddenblockmain == "true"'>
               <div class="componentWraper3">
                 <div class="block_row block_margin">
-                  <div class="block_row1 width50">
+                  <div class="block_row1 width50 margin6px">
                     <div class="block_data_column1">
                       <div class="block_input_data">
                         <b class="label">Дата регистрации</b>
@@ -46,7 +46,7 @@
                         <b class="label">Владелец оборудования</b>
                       </div>
                         <!-- <select class="form-select" :class="{ 'is-valid': newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }"  v-model="newDivisionOwner_id"> -->
-                        <select class="form-select ml" v-model="newDivisionOwner_id" :disabled='isDisabledAddDefect'> 
+                        <select class="form-select" v-model="newDivisionOwner_id" :disabled='isDisabledAddDefect'> 
                           <option disabled selected :value=0>Выберите подразделение</option>
                           <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
                         </select> 
@@ -69,7 +69,7 @@
                       <b class="label">KKS</b>
                     </div>
                     <div class="block_data8">
-                      <div class="form-floating block_row1">
+                      <div class="form-floating block_row1 margin6px">
                         <input type="text" id="inputKKS" class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newTypeDefect]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
                         v-model="newSystemKKS" :disabled="newTypeDefect==='0'" :placeholder="placeholders[newTypeDefect]" />
                         <label for="inputKKS" :hidden="newTypeDefect==='0'">{{ placeholders[newTypeDefect] }}</label>
@@ -173,7 +173,7 @@
                 <div class="block_data_column1">
                   <div class="block_data_column">
                     <div class="block_input_data">
-                      <b class="label">Руководитель ремонта</b>
+                      <b class="label">Ответственный за устранение</b>
                     </div>
                       <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
                         <option disabled selected>Выберите подразделение</option>
@@ -247,9 +247,9 @@
                     </div>
                     <div class="block_data_column1 width300px rr20">
                       <div class="block_input_data">
-                        <b class="label">Класс оборудования по НП-00-97</b>
+                        <b class="label">Классификация оборудования по НП-00-97</b>
                       </div>
-                      <input type="text" class="form-control" placeholder="Введите класс оборудования" v-model="newClassSystemName" >
+                      <input type="text" class="form-control" placeholder="Введите классификацию оборудования" v-model="newClassSystemName" >
                     </div>
                   </div>
                   <br>
@@ -260,7 +260,7 @@
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <select class="form-select" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode">
+                          <select class="form-select" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" disabled>
                             <option disabled :value="0" selected>Выберите код причины</option>
                             <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
                           </select> 
@@ -283,13 +283,13 @@
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <input type="text" class="form-control" placeholder="Введите код причины" v-model="newDirectClassificationCode">
+                          <input type="text" class="form-control" placeholder="Введите код причины" v-model="newDirectClassificationCode" disabled>
                       </div>
                       <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" aria-label="Disabled input example" placeholder="Введите причину" v-model="newDirectClassificationName"></textarea>
+                        <textarea class="form-control height100" aria-label="Disabled input example" placeholder="Введите причину" v-model="newDirectClassificationName" disabled></textarea>
                       </div>
                     </div>
                   </div>

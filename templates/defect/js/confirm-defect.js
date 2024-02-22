@@ -30,8 +30,8 @@ const appConfirmDefect = Vue.createApp({
         isHiddenblockclassification: 'false',
          
         placeholders: {
-          'ЖД основного оборудования': '##XXX##XX###',
-          'ЖД по строительным конструкциям': '##XXX##XN##AAAAAA',
+          'ЖД оборудования': '##XXX##XX###',
+          'ЖД по конструкциям и ЗИС': '##XXX##XN##AAAAAA',
           'ЖД по освещению': '##XXX##XX###',
           'ЖД по системам пожаротушения': '##XXX##',
           },
@@ -212,7 +212,8 @@ const appConfirmDefect = Vue.createApp({
         this.isHiddenDate = 'false';
         this.check_repair_manager = false;
         this.check_date = false;
-
+        this.newCoreClassificationName = 0;
+        this.newCoreClassificationCode = '';
       }, /* clearData */
       updateTables() {
         this.updateTableDivision();
@@ -314,7 +315,7 @@ const appConfirmDefect = Vue.createApp({
             this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
             this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
             category_reason = this.categories_reason.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
-            this.newCoreClassificationName = category_reason[0].category_reason_name
+            this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
             this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
             this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';
 
@@ -323,6 +324,7 @@ const appConfirmDefect = Vue.createApp({
             this.setLimitLocation();
                 })
           .catch(err => {
+              console.log(err)
               if (err.response.status === 401){
                 window.location.href = "/";
               } else {
@@ -462,17 +464,17 @@ const appConfirmDefect = Vue.createApp({
             if (this.newCategoryDefect_id !== this.cardDefect.defect_category_defect.category_defect_id){
               textHistory = textHistory+'Категория дефекта изменилась с "'+this.cardDefect.defect_category_defect.category_defect_name+'" на "'+this.categories_defect[this.newCategoryDefect_id-1].category_defect_name+'"\n';
             }
-            if ((this.cardDefect.defect_system_klass !== null && this.newClassSystemName !== '') && (this.newClassSystemName !== this.cardDefect.defect_system_klass)){
+            if (this.newClassSystemName !== this.cardDefect.defect_system_klass){
               textHistory = textHistory+'Класс оборудования изменился с "'+this.cardDefect.defect_system_klass+'" на "'+this.newClassSystemName+'"\n';
             }
-            if ((this.cardDefect.defect_core_category_reason !== null && this.newCoreClassificationCode !== '0') && (this.cardDefect.defect_core_category_reason.category_reason_code !== this.newCoreClassificationCode)){
-              textHistory = textHistory+'Код категории коренной причины изменился с "'+this.cardDefect.defect_core_category_reason.category_reason_code+'" на "'+this.newCoreClassificationCode+'"\n';
+            if (this.cardDefect.defect_core_category_reason !== null ? this.cardDefect.defect_core_category_reason.category_reason_code : '' !== this.newCoreClassificationCode){
+              textHistory = textHistory+'Код категории коренной причины изменился с "'+(this.cardDefect.defect_core_category_reason !== null ? this.cardDefect.defect_core_category_reason.category_reason_code : '')+'" на "'+this.newCoreClassificationCode+'"\n';
             }
-            if ((this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationCode !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_code !== this.newDirectClassificationCode)){
-              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+this.cardDefect.defect_direct_category_reason.category_reason_code+'" на "'+this.newDirectClassificationCode+'"\n';
+            if (this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_code : '' !== this.newDirectClassificationCode){
+              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+(this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_code : '')+'" на "'+this.newDirectClassificationCode+'"\n';
             }
-            if ((this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationName !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_name !== this.newDirectClassificationName)){
-              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+this.cardDefect.defect_direct_category_reason.category_reason_name+'" на "'+this.newDirectClassificationName+'"\n';
+            if (this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : '' !== this.newDirectClassificationName){
+              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+(this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : '')+'" на "'+this.newDirectClassificationName+'"\n';
             }
 
             if (this.cardDatePlannedFinish !== this.newCardDatePlannedFinish && this.cardStatusDefectName == 'Требует решения'){
@@ -534,16 +536,24 @@ const appConfirmDefect = Vue.createApp({
                 "category_defect_id": this.newCategoryDefect_id !== this.cardDefect.defect_category_defect.category_defect_id ? this.newCategoryDefect_id : this.cardDefect.defect_category_defect.category_defect_id
               },
               "class_system_name": {
-                "class_system_name": (this.cardDefect.defect_system_klass !== null && this.newClassSystemName !== '') && (this.newClassSystemName !== this.cardDefect.defect_system_klass) ? this.newClassSystemName : this.cardDefect.defect_system_klass
+                "class_system_name": this.newClassSystemName !== this.cardDefect.defect_system_klass ?
+                                     this.newClassSystemName !== '' ? this.newClassSystemName : null:
+                                     this.cardDefect.defect_system_klass !== null ? this.cardDefect.defect_system_klass : null
               },
               "core_classification_code": {
-                "core_rarery_code": (this.cardDefect.defect_core_category_reason !== null && this.newCoreClassificationCode !== '0') && (this.cardDefect.defect_core_category_reason.category_reason_code !== this.newCoreClassificationCode) ? this.newCoreClassificationCode : this.cardDefect.defect_core_category_reason.category_reason_code
+                "core_rarery_code": (this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '') !== this.newCoreClassificationCode ?
+                                    this.newCoreClassificationCode !== '0' ? this.newCoreClassificationCode : null :
+                                    this.cardDefect.defect_core_category_reason !== null ? this.cardDefect.defect_core_category_reason.category_reason_code : null
               },
               "direct_classification_code": {
-                "direct_rarery_code": (this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationCode !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_name !== this.newDirectClassificationCode) ? this.newDirectClassificationCode : this.cardDefect.defect_direct_category_reason.category_reason_name
+                "direct_rarery_code": (this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '') !== this.newDirectClassificationCode ?
+                                    this.newDirectClassificationCode !== '' ? this.newDirectClassificationCode : null :
+                                    this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : null
               },
               "direct_classification_name": {
-                "direct_rarery_name": (this.cardDefect.defect_direct_category_reason !== null && this.newDirectClassificationName !== '') && (this.cardDefect.defect_direct_category_reason.category_reason_name !== this.newDirectClassificationName) ? this.newDirectClassificationName : this.cardDefect.defect_direct_category_reason.category_reason_name
+                "direct_rarery_name": (this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '') !== this.newDirectClassificationName ?
+                                    this.newDirectClassificationName !== '' ? this.newDirectClassificationName : null :
+                                    this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : null
               },
               "comment": {
                 "comment": textHistory !== '' ? textHistory : null

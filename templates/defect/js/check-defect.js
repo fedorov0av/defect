@@ -16,6 +16,7 @@ const appCheckDefect = Vue.createApp({
                                 'Требует решения', # 7
                                 'Отменен',  # 8
                                 'Закрыт',  # 9
+                                'Локализован',  # 10
                                 ] */
         repair_managers: {},
         registrators: {},
@@ -242,7 +243,7 @@ const appCheckDefect = Vue.createApp({
             this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
             this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
             category_reason = this.categories_reason.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
-            this.newCoreClassificationName = category_reason[0].category_reason_name
+            this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
             this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
             this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : ''; 
                 })
@@ -332,13 +333,60 @@ const appCheckDefect = Vue.createApp({
                 document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()
                 console.log(response.data);
-                Swal.fire("ДЕФЕКТ УСТРАНЕН", "", "success");
+                Swal.fire("ДЕФЕКТ УСТРАНЕН, МЫ ВСЕ СПАСЕНЫ!", "", "success");
                   })
             .catch(err => {
                     if (err.response.status === 401){
                       window.location.href = "/";
                     } else {
                       Swal.fire({html:"<b>Произошла ошибка при ПРИНЯТИИ ДЕФЕКТА В РАБОТУ! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
+                }) /* axios */
+          }
+        });
+      },/* executionDefect */
+      warningDefect() {
+        if (this.newCheckerId === 0) {
+          this.check_checker_name = true;
+          Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
+          return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
+        }
+        Swal.fire({
+          title: "Вы подтверждаете, что дефект локализован?",
+          showDenyButton: true,
+          confirmButtonText: "ПОДТВЕРЖДАЮ",
+          denyButtonText: `ОТМЕНА`
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            data =
+            {
+              "defect_id": {
+                "defect_id": this.defect_id
+              },
+              "status_name": {
+                "status_defect_name": this.statuses_defect[10].status_defect_name
+              },
+              "checker_id": {
+                "user_id": this.newCheckerId
+              },
+              "defect_check_result": {
+                "comment": 'Дефект локализован!'
+              }
+            } 
+            axios
+            .post('/check_defect', data)
+            .then(response => {
+                document.getElementById('closeCheckModalWindow').click();
+                appVueDefect.updateTables()
+                Swal.fire("ДЕФЕКТ ЛОКАЛИЗОВАН, МЫ ВСЕ ВРЕМЕННО СПАСЕНЫ!", "", "success");
+                  })
+            .catch(err => {
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ЛОКАЛИЗАЦИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
                       console.log(err);
                     }
                 }) /* axios */

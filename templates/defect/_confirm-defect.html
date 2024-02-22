@@ -20,7 +20,7 @@
               <div :class="{ hidden: isHiddenblockmain == 'true' }" :hidden='isHiddenblockmain == "true"'>
                 <div class="componentWraper3">
                   <div class="block_row block_margin">
-                    <div class="block_row1 width50">
+                    <div class="block_row1 width50 margin6px">
                       <div class="block_data_column1">
                         <div class="block_input_data">
                           <b class="label">Дата регистрации</b>
@@ -48,7 +48,7 @@
                           <b class="label">Владелец оборудования</b>
                         </div>
                           <!-- <select class="form-select" :class="{ 'is-valid': newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }"  v-model="newDivisionOwner_id"> -->
-                          <select class="form-select ml" v-model="newDivisionOwner_id" :class="{ 'is-valid': isDisabledConfirmDefect === false & newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }" :disabled='isDisabledConfirmDefect' disabled>
+                          <select class="form-select" v-model="newDivisionOwner_id" :class="{ 'is-valid': isDisabledConfirmDefect === false & newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }" :disabled='isDisabledConfirmDefect' disabled>
                             <option disabled selected :value=0>Выберите подразделение</option>
                             <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
                           </select> 
@@ -68,7 +68,7 @@
                         <b class="label">KKS</b>
                       </div>
                       <div class="block_data8">
-                        <div class="form-floating block_row1">
+                        <div class="form-floating block_row1 margin6px">
                           <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
                           v-model="newCardKKS" :placeholder="placeholders[newCardTypeDefectName]" />
                           <label for="inputConfirmKKS" :hidden="newCardTypeDefectName==='0'">{{ placeholders[newCardTypeDefectName] }}</label>
@@ -87,7 +87,7 @@
                             </label>
                           </div>
                           <div class = "form-check form-switch block-checkbox3">
-                            <input class="form-check-input" type="checkbox" id="flexPnrConfirm" v-model="newPnr" @change="changePnr">
+                            <input class="form-check-input" type="checkbox" id="flexPnrConfirm" v-model="newPnr" @change="changePnr" :disabled='isDisabledConfirmDefect'>
                             <label class = "form-check-label margin-right1" for="flexPnrConfirm">
                               В ПНР
                             </label>
@@ -96,11 +96,11 @@
                       </div>
                       <div class="block_data_column2">
                         <div class="form-check form-switch ">
-                          <input class="form-check-input" type="checkbox" id="flexSafetyConfirm" v-model="newSafety" :disabled="newPnr===true">
+                          <input class="form-check-input" type="checkbox" id="flexSafetyConfirm" v-model="newSafety" :disabled="newPnr===true || isDisabledConfirmDefect===true">
                           <label class="form-check-label margin-right" for="flexSafetyConfirm">Влияет на безопасность и несение нагрузки</label>
                         </div>
                         <div class="form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="flexExploitationConfirm" v-model="newExploitation" :disabled="newPnr===true">
+                          <input class="form-check-input" type="checkbox" id="flexExploitationConfirm" v-model="newExploitation" :disabled="newPnr===true || isDisabledConfirmDefect===true">
                           <label class="form-check-label margin-right" for="flexExploitationConfirm">Влияет на режим нормальной эксплуатации</label>
                         </div>
                       </div>
@@ -156,7 +156,8 @@
                         </div>
                         <div class="block_checkbox block_checkbox1">
                           <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false :disabled='isDisabledConfirmDefect'>
+                            <!-- <input class="form-check-input" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false :disabled='isDisabledConfirmDefect'> -->
+                            <input class="form-check-input" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false :disabled="newPnr===true || isDisabledConfirmDefect===true">
                             <label class="form-check-label margin-right" for="flexCheckChecked">Будет устранен в ППР</label>
                           </div>
                         </div>
@@ -169,10 +170,10 @@
                   <div class="block_data_column1">
                     <div class="block_data_column">
                       <div class="block_input_data">
-                        <b class="label">Руководитель ремонта</b>
+                        <b class="label">Ответственный за устранение</b>
                       </div>
                         <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newRepairManager_id !== 0, 'is-invalid': check_repair_manager === true & newRepairManager_id === 0 }" aria-label="Disabled select example" v-model="newRepairManager_id" :disabled='isDisabledConfirmDefect'>
-                          <option disabled selected :value=0>Выберите руководителя ремонта</option>
+                          <option disabled selected :value=0>Выберите ответственного за устранение дефекта</option>
                           <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name }}</option>
                         </select> 
                     </div>
@@ -272,9 +273,9 @@
                       </div>
                       <div class="block_data_column1 width300px rr20">
                         <div class="block_input_data">
-                          <b class="label">Класс оборудования по НП-00-97</b>
+                          <b class="label">Классификация оборудования по НП-00-97</b>
                         </div>
-                        <input type="text" class="form-control" placeholder="Введите класс оборудования" v-model="newClassSystemName" >
+                        <input type="text" class="form-control" placeholder="Введите классификацию оборудования" v-model="newClassSystemName" >
                       </div>
                     </div>
                     <br>

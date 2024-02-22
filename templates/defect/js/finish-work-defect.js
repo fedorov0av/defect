@@ -16,6 +16,7 @@ const appFinishWorkDefect = Vue.createApp({
                                 'Требует решения', # 7
                                 'Отменен',  # 8
                                 'Закрыт',  # 9
+                                'Локализован',  # 10
                                 ] */
         repair_managers: {},
         workers: {},
@@ -247,7 +248,7 @@ const appFinishWorkDefect = Vue.createApp({
             this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
             this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
             category_reason = this.categories_reason.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
-            this.newCoreClassificationName = category_reason[0].category_reason_name
+            this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
             this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
             this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';  
 
@@ -346,7 +347,7 @@ const appFinishWorkDefect = Vue.createApp({
                 }) /* axios */
           }
         });
-      },/* executionDefect */
+      },/* finishworkDefect */
       cancelDefect() {
         appCorrectionDefect.defect_id = defect_id;
         appCorrectionDefect.parent_button_close_modal_name = 'closeFinishWorkModalWindow';

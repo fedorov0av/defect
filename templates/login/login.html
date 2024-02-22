@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Journal of defects">
     <meta name="author" content="Fedorov A., Baibekov V., Petrov T., Rykov A.">
-    <title>Журнал учета дефектов</title>
+    <title>Электронный журнал дефектов АЭС "АККУЮ"</title>
    
 <link rel="stylesheet" href="{{ url_for('static_css', path='login-styles.css') }}">    
 <!-- Bootstrap core CSS -->
@@ -86,7 +86,7 @@
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
 <main class="form-signin w-100 m-auto">
 <img class="mb-4" src="{{ url_for('static_img', path='logo.svg') }}" alt="" width="300" height="300">
-<h2 class="block_h1">Журнал дефектов</h1>
+<h2 class="block_h1">Электронный журнал дефектов</h1>
 {% raw %}<div id="login_vue" ><h2 class="block_h2 h3 mb-3 fw-normal">Войдите в систему:</h2></div>{% endraw %}
 
 {% raw %}
@@ -114,7 +114,7 @@
     <button @click="createPost" v-on:keyup.enter="createPost" class="btn btn-primary w-100 py-2" style="font-size: 25px" :type="typeButton">Войти</button>
 
 {% endraw %}
-<p style="text-align: center;" class="mt-3 mb-3 text-body-secondary">&copy; Аккую Нуклеар 2023</p>
+<p style="text-align: center;" class="mt-3 mb-3 text-body-secondary">&copy; Аккую Нуклеар 2024</p>
 </main>
 <script src="{{ url_for('static_js', path='bootstrap.bundle.min.js') }}" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script src="{{ url_for('login_js', path='login.js') }}"></script>

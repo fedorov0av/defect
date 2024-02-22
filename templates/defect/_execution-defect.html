@@ -20,7 +20,7 @@
             <div :class="{ hidden: isHiddenblockmain == 'true' }" :hidden='isHiddenblockmain == "true"'>
               <div class="componentWraper3">
                 <div class="block_row block_margin">
-                  <div class="block_row1 width50">
+                  <div class="block_row1 width50 margin6px">
                     <div class="block_data_column1">
                       <div class="block_input_data">
                         <b class="label">Дата регистрации</b>
@@ -61,7 +61,7 @@
                       <b class="label">KKS</b>
                     </div>
                     <div class="block_data8">
-                      <div class="form-floating block_row1">
+                      <div class="form-floating block_row1 margin6px">
                         <input type="text" class="form-control widthKKS margin-right" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx" disabled>
                         <div class="KKS_discr">
                           <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
@@ -155,9 +155,9 @@
                 <div class="block_data_column1">
                   <div class="block_data_column">
                     <div class="block_input_data">
-                      <b class="label">Руководитель ремонта</b>
+                      <b class="label">Ответственный за устранение</b>
                     </div>
-                    <input type="text" class="form-control" placeholder="Руководитель ремонта"  aria-label="readonly input example" v-model="cardRepairManager" disabled>
+                    <input type="text" class="form-control" placeholder="Ответственный за устранение"  aria-label="readonly input example" v-model="cardRepairManager" disabled>
                   </div>
                   <div class="block_data_column">
                     <div class="block_input_data">
@@ -251,7 +251,7 @@
                     </div>
                     <div class="block_data_column1 width300px rr20">
                       <div class="block_input_data">
-                        <b class="label">Класс оборудования по НП-00-97</b>
+                        <b class="label">Классификация оборудования по НП-00-97</b>
                       </div>
                       <input type="text" class="form-control" v-model="newClassSystemName" disabled>
                     </div>
@@ -301,7 +301,7 @@
                 </div>
               </div>   
             </div>
-
+ 
 
             <div class="modal-footer modal-footer1">
               <div class="block_data9">
@@ -313,10 +313,10 @@
                 </span>
                 <span class="verticalLine1" :hidden='isDisabledExecutionDefect'></span>
                 <span class="d-inline-block button-margin"  data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
-                  <button @click="cancelDefect" id="executionCancelDefectButton" :hidden='isDisabledExecutionDefect' class="btn btn-primary" type="button">Отменить дефект</button>
+                  <button @click="cancelDefect" id="executionCancelDefectButton" :hidden='isDisabledExecutionDefect' class="btn btn-warning" type="button">Требует решения</button>
                 </span>
                 <span class="d-inline-block" tabindex="0" data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
-                  <button @click="executionDefect" id="executionExecutionDefectButton" :hidden='isDisabledExecutionDefect' class="btn btn-primary" type="button">Подтвердить дефект</button>
+                  <button @click="executionDefect" id="executionExecutionDefectButton" :hidden='isDisabledExecutionDefect' class="btn btn-primary" type="button">Принять в работу</button>
                 </span>
               </div>
             </div>
