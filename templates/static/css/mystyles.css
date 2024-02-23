@@ -345,7 +345,12 @@
 
 .modal1 {
   --bs-modal-width: 50% !important;
-  background-color:grey;
+  background-color: grey;
+}
+
+.modal3 {
+  --bs-modal-width: 80% !important;
+  background-color: grey;
 }
 
 .block_data1 {

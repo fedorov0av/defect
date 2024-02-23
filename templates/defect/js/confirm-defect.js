@@ -216,23 +216,17 @@ const appConfirmDefect = Vue.createApp({
         this.newCoreClassificationCode = '';
       }, /* clearData */
       updateTables() {
-        this.updateTableDivision();
-        this.updateTableTypeDefect();
+        updateTableDivision(this.defect_divisions);
+        updateTableTypeDefect(this.defect_type_defects);
         this.updateCardDefect();
         this.updateTableStatusDefect();
         this.updateTableHistory();
         this.updateTableRepairManagers();
-        this.updateTableWorkers();
+        updateTableWorkers(this.workers);
         this.check_date = false;
         this.clickbuttonmain();
       }, /* updateTables */ 
-      updateTableWorkers() {
-        axios
-        .post('/user/workers',)
-        .then(response => {
-            this.workers = response.data;
-              }) /* axios */
-      }, /* updateTableWorkers */
+      
       updateTableRepairManagers() {
         axios
         .post('/user/repair_managers',)
@@ -240,13 +234,7 @@ const appConfirmDefect = Vue.createApp({
             this.repair_managers = response.data;
               }) /* axios */
       }, /* updateTableRepairManagers */
-      updateTableDivision() {
-        axios
-        .post('/divisions',)
-        .then(response => {
-            this.defect_divisions = response.data;
-              }) /* axios */
-      }, /* updateTableDivision */
+
       updateTableStatusDefect() {
         axios
         .post('/statuses_defect',)
@@ -379,6 +367,16 @@ const appConfirmDefect = Vue.createApp({
         this.backgroundHistoryButtonCCS = "btn-outline-primary";
         this.backgroundСlassificationButtonCCS = "btn-primary";
       },
+
+      clickbuttonspravochnik() {
+        appVueSpravochnik.clicklinkpage1();
+        appVueSpravochnik.parent_button_close_modal_name = 'closeModalAddDefect';
+        var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindow'), {
+          keyboard: false
+        })
+        myModal.show()
+      }, /* clickbuttonspravochnik */
+
       confirmDefect() {
         //this.newDate = this.cardDatePlannedFinish ? this.cardDatePlannedFinish  : null;
         //if ((this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') || this.newDivisionOwner_id == 0 || this.newCardDatePlannedFinish == '') {

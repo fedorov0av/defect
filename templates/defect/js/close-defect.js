@@ -287,6 +287,14 @@ const appCloseDefect = Vue.createApp({
         this.backgroundHistoryButtonCCS = "btn-outline-primary";
         this.backgroundСlassificationButtonCCS = "btn-primary";
       },
+      clickbuttonspravochnik() {
+        appVueSpravochnik.clicklinkpage1();
+        appVueSpravochnik.parent_button_close_modal_name = 'closeModalAddDefect';
+        var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindow'), {
+          keyboard: false
+        })
+        myModal.show()
+      }, /* clickbuttonspravochnik */
       closeDefect() {
         Swal.fire({
           title: "Закрыть дефект?",

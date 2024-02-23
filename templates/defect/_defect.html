@@ -256,15 +256,20 @@
                   <br>
                   <div class="block_row componentWraper4">
                     <div class="block_data_column4">
-                      <div class="block_data_column width300px">
-                        <div class="block_input_data">
+                      
+                      <div class="block_data_column">
+                        <div class="block_input_data ">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <select class="form-select" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" disabled>
+                        <div class="block_row1">
+                          <select class="form-select block_theme width300px" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" disabled>
                             <option disabled :value="0" selected>Выберите код причины</option>
                             <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
                           </select> 
+                          <button @click="clickbuttonspravochnik" id="SpravochnikButton" class="btn btn-primary" type="button" hidden>Справочник кодов</button>
+                        </div>
                       </div>
+
                       <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
@@ -279,11 +284,14 @@
 
                   <div class="block_row componentWraper5">
                     <div class="block_data_column4">
-                      <div class="block_data_column width300px">
+                      <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <input type="text" class="form-control" placeholder="Введите код причины" v-model="newDirectClassificationCode" disabled>
+                        <div class="block_row1">
+                          <input type="text" class="form-control block_theme width300px" placeholder="Введите код причины" v-model="newDirectClassificationCode" disabled>
+                          <button @click="clickbuttonspravochnik" id="SpravochnikButton" class="btn btn-primary" type="button" hidden>Справочник кодов</button>
+                        </div>
                       </div>
                       <div class="block_data_column">
                         <div class="block_input_data">
@@ -295,243 +303,9 @@
                   </div>
                   <br>
                 </div>
-                
-                {% endraw %}
-
-                <div class="block_data_column3" style="display: none;">
-                  <ul class="nav nav-tabs" style="height: 50px;">
-                    <li class="nav-item">
-                      <a class="nav-link" aria-current="page" href="#" @click="clicklinkpage1" :class="backgroundPage1CCS">Диапазон кодов: 00 - С 03</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#" @click="clicklinkpage2" :class="backgroundPage2CCS">Диапазон кодов: С 04 - F 02</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#" @click="clicklinkpage3" :class="backgroundPage3CCS">Диапазон кодов: F 03 -G 04</a>
-                    </li>
-                  </ul>
-  
-                  <div class="block-table" :class="{ hidden: isHiddenblockcods1 == 'true' }" :hidden='isHiddenblockcods1 == "true"'>
-                    <table class="table table-sm">
-                      <thead>
-                        <tr>
-                          <th class="table-column1">Код</th>
-                          <th>Причина</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>00</td>
-                          <td>не определена</td>
-                        </tr>
-                        <tr>
-                          <td>А 01</td>
-                          <td>недостатки проектирования (включая изменения)</td>
-                        </tr>
-                        <tr>
-                          <td>А 02</td>
-                          <td>недостатки изготовления</td>
-                        </tr>
-                        <tr>
-                          <td>А 03</td>
-                          <td>недостатки сооружения</td>
-                        </tr>
-                        <tr>
-                          <td>А 04</td>
-                          <td>недостатки монтажа</td>
-                        </tr>
-                        <tr>
-                          <td>А 05</td>
-                          <td>недостатки наладки</td>
-                        </tr>
-                        <tr>
-                          <td>А 06</td>
-                          <td>недостатки ремонта, выполняемого сторонними (по отношению к АС) организациями</td>
-                        </tr>
-                        <tr>
-                          <td>А 07</td>
-                          <td>недостатки нормативной, технической и другой документации, выполняемой сторонними (по отношению к АС) организациями</td>
-                        </tr>
-                        <tr>
-                          <td>А 08</td>
-                          <td>недостатки конструирования (включая изменения)</td>
-                        </tr>
-                        <tr>
-                          <td>B 01</td>
-                          <td>отсутствие эксплуатационной технической документации (включая документацию на ТОиР)</td>
-                        </tr>
-                        <tr>
-                          <td>B 02</td>
-                          <td>отсутствие требований или неоднозначное определение требований в эксплуатационной технической документации (включая документацию на ТОиР)</td>
-                        </tr>
-                        <tr>
-                          <td>B 03</td>
-                          <td>несвоевременное внесение изменений в эксплуатационную техническую документацию (включая ТОиР)</td>
-                        </tr>
-                        <tr>
-                          <td>C 01</td>
-                          <td>по замене оборудования, исчерпавшего ресурс, обеспечению систем рабочими средами, запасными частями, узлами</td>
-                        </tr>
-                        <tr>
-                          <td>C 02</td>
-                          <td>по изменению конструкции оборудования, проектных решений и проектной документации, а также принятие мер без согласования с проектной, конструкторской организациями, изготовителем оборудования</td>
-                        </tr>
-                        <tr>
-                          <td>C 03</td>
-                          <td>по устранению выявленных недостатков</td>
-                        </tr>
-
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div class="block-table" :class="{ hidden: isHiddenblockcods2 == 'true' }" :hidden='isHiddenblockcods2 == "true"'>
-                    <table class="table table-sm">
-                      <thead>
-                        <tr>
-                          <th class="table-column1">Код</th>
-                          <th>Причина</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>C 04</td>
-                          <td>по соответствующему анализу технических решений, изменений проектных схем до выполнения работ по их реализации</td>
-                        </tr>
-                        <tr>
-                          <td>C 05</td>
-                            <td>Непринятие необходимых мер по использованию опыта эксплуатации</td>
-                          </tr>
-                          <tr>
-                            <td>D 01</td>
-                            <td>недостатки процедуры допуска к работам (переключения, устранение дефектов, ТОиР)</td>
-                          </tr>
-                          <tr>
-                            <td>D 02</td>
-                            <td>недостатки выполнения работ (переключений, устранение дефектов, ТОиР) выполняемых персоналом АС, включая контроль </td>
-                          </tr>
-                          <tr>
-                            <td>D 03</td>
-                            <td>проблемы связи (технические)</td>
-                          </tr>
-                          <tr>
-                            <td>E 01</td>
-                            <td>неадекватная мотивация</td>
-                          </tr>
-                        <tr>
-                          <td>E 02</td>
-                          <td>неадекватные профессионально важные личностные психологические качества (ПВЛК)</td>
-                        </tr>
-                        <tr>
-                          <td>E 03</td>
-                          <td>неадекватные психофизиологические качества (скорость и точность реагирования)</td>
-                        </tr>
-                        <tr>
-                          <td>E 04</td>
-                          <td>неадекватные характеристики мышления, памяти, внимания</td>
-                        </tr>
-                        <tr>
-                          <td>E 05</td>
-                          <td>сниженное функциональное состояние</td>
-                        </tr>
-                        <tr>
-                          <td>E 06</td>
-                          <td>недостатки профессиональной подготовленности</td>
-                        </tr>
-                        <tr>
-                          <td>E 07</td>
-                          <td>преобладание финансовых, организационных вопросов над безопасностью</td>
-                        </tr>
-                        <tr>
-                          <td>E 09</td>
-                          <td>отсутствие консервативного подхода</td>
-                        </tr>
-                        <tr>
-                          <td>F 01</td>
-                          <td>эргономические характеристики эксплуатационной документации</td>
-                        </tr>
-                        <tr>
-                          <td>F 02</td>
-                          <td>эргономические характеристики условий труда: режим труда и отдыха</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div class="block-table" :class="{ hidden: isHiddenblockcods3 == 'true' }" :hidden='isHiddenblockcods3 == "true"'>
-                    <table class="table table-sm">
-                      <thead>
-                        <tr>
-                          <th class="table-column1">Код</th>
-                          <th>Причина</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>F 03</td>
-                          <td>эргономические характеристики условий труда: организация рабочего места</td>
-                        </tr>
-                        <tr>
-                          <td>F 04</td>
-                          <td>эргономические недостатки технологии</td>
-                        </tr>
-                        <tr>
-                          <td>F 05</td>
-                          <td>скрытые (не выявленные на предшествующих этапах жизненного цикла АС) эргономические ошибки проекта и монтажа</td>
-                        </tr>
-                        <tr>
-                          <td>F 06</td>
-                          <td>конфликт или иная социально-психологическая, повлиявшая на функциональное состояние при выполнении неправильного действия в группе (коллективе)</td>
-                        </tr>
-                        <tr>
-                          <td>F 07</td>
-                          <td>конфликт или иная социально-психологическая, повлиявшая на функциональное состояние при выполнении неправильного действия в быту</td>
-                        </tr>
-                        <tr>
-                          <td>F 08</td>
-                          <td>социальные условия</td>
-                        </tr>
-                        <tr>
-                          <td>F 09</td>
-                          <td>социально-политическая ситуация</td>
-                        </tr>
-                        <tr>
-                          <td>F 10</td>
-                          <td>организационные факторы: организационная структура</td>
-                        </tr>
-                        <tr>
-                          <td>F 11</td>
-                          <td>организационные факторы: организация контроля</td>
-                        </tr>
-                        <tr>
-                          <td>F 12</td>
-                          <td>организационные факторы: организация связи</td>
-                        </tr>
-                        <tr>
-                          <td>G 01</td>
-                          <td>за выявлением и устранением неработоспособности систем (элементов)</td>
-                        </tr>
-                        <tr>
-                          <td>G 02</td>
-                          <td>за выявлением и устранением недостатков процедур</td>
-                        </tr>
-                        <tr>
-                          <td>G 03</td>
-                          <td>за выявлением и устранением недостатков в подготовке персонала</td>
-                        </tr>
-                        <tr>
-                          <td>G 04</td>
-                          <td>Недостатки входного контроля при обеспечении запасными частями и материалами</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                </div>
               </div>   
             </div>
 
-            {% raw %}
             <div class="modal-footer modal-footer1">
               <div class="block_data9">
                 <b class="zvezda"> &nbsp * &nbsp </b>

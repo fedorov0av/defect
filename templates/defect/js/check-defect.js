@@ -148,18 +148,11 @@ const appCheckDefect = Vue.createApp({
         this.updateTableStatusDefect();
         this.updateTableHistory();
         this.updateTableRepairManagers();
-        this.updateTableWorkers();
+        updateTableWorkers(this.workers);
         this.updateTableRegistrators();
         this.isDisabledWorker = true;
         this.clickbuttonmain();
       }, /* updateTables */
-      updateTableWorkers() {
-        axios
-        .post('/user/workers',)
-        .then(response => {
-            this.workers = response.data;
-              }) /* axios */
-      }, /* updateTableWorkers */
       updateTableRepairManagers() {
         axios
         .post('/user/repair_managers',)

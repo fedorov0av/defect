@@ -91,22 +91,16 @@ const appCardDefect = Vue.createApp({
     },
     methods: {
       updateTables() {
-        this.updateTableDivision();
-        this.updateTableTypeDefect();
+        updateTableDivision(this.defect_divisions);
+        updateTableTypeDefect(this.defect_type_defects);
+        
         this.updateCardDefect();
         this.updateTableStatusDefect();
         this.updateTableHistory();
         this.updateTableRepairManagers();
-        this.updateTableWorkers();
+        updateTableWorkers(this.workers);
         this.clickbuttonmain();
       }, /* updateTables */
-      updateTableWorkers() {
-        axios
-        .post('/user/workers',)
-        .then(response => {
-            this.workers = response.data;
-              }) /* axios */
-      }, /* updateTableWorkers */
       updateTableRepairManagers() {
         axios
         .post('/user/repair_managers',)
@@ -114,13 +108,6 @@ const appCardDefect = Vue.createApp({
             this.repair_managers = response.data;
               }) /* axios */
       }, /* updateTableRepairManagers */
-      updateTableDivision() {
-        axios
-        .post('/divisions',)
-        .then(response => {
-            this.defect_divisions = response.data;
-              }) /* axios */
-      }, /* updateTableDivision */
       updateTableStatusDefect() {
         axios
         .post('/statuses_defect',)
@@ -128,13 +115,6 @@ const appCardDefect = Vue.createApp({
             this.statuses_defect = response.data;
               }) /* axios */
       }, /* updateTableStatusDefect */
-      updateTableTypeDefect() {
-        axios
-        .post('/type_defect',)
-        .then(response => {
-            this.defect_type_defects = response.data;
-              }) /* axios */
-      }, /* updateTableTypeDefect */
       updateCategoriesReason() {
         axios
         .post('/get_categories_core_reason',)

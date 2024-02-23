@@ -258,15 +258,20 @@
                   <br>
                   <div class="block_row componentWraper4">
                     <div class="block_data_column4">
-                      <div class="block_data_column width300px">
-                        <div class="block_input_data">
+
+                      <div class="block_data_column">
+                        <div class="block_input_data ">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <select class="form-select" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode">
+                        <div class="block_row1">
+                          <select class="form-select block_theme width300px" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode">
                             <option disabled :value="0" selected>Выберите код причины</option>
                             <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
                           </select> 
+                          <button @click="clickbuttonspravochnik" id="SpravochnikButton" class="btn btn-primary" type="button">Справочник кодов</button>
+                        </div>
                       </div>
+
                       <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
@@ -281,12 +286,14 @@
 
                   <div class="block_row componentWraper5">
                     <div class="block_data_column4">
+
                       <div class="block_data_column width300px">
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
                           <input type="text" class="form-control" v-model="newDirectClassificationCode">
                       </div>
+                      
                       <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Причина события</b>

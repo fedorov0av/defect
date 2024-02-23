@@ -14,6 +14,9 @@ COPY requirements.txt /defects/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /defects/requirements.txt && \
     rm -rf /defects/requirements.txt
 
+# установка таймзоны
+ENV TZ=Europe/Istanbul
+
 # Установка рабочей директории
 WORKDIR /defects
 

@@ -50,12 +50,6 @@ const appVueAddDefect = Vue.createApp({
         backgroundMainButtonCCS: "btn-primary",
         backgroundHistoryButtonCCS: "btn-outline-primary",
         backgroundСlassificationButtonCCS: "btn-outline-primary",
-        isHiddenblockcods1: 'false',
-        isHiddenblockcods2: 'true',
-        isHiddenblockcods3: 'true',
-        backgroundPage1CCS: "active",
-        backgroundPage2CCS: "nav-link",
-        backgroundPage3CCS: "nav-link",
         isDisabledAddDefect: false,
       }
     },
@@ -81,8 +75,6 @@ const appVueAddDefect = Vue.createApp({
       this.updateTableDivision();
       this.updateTableTypeDefect();
       this.isHiddenblockclassification  = 'true';
-      this.isHiddenblockcods2 = 'true';
-      this.isHiddenblockcods3 = 'true';
       var myModalEl = document.getElementById('AddDefectModalWindow');
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appVueAddDefect.clearData();
@@ -277,30 +269,16 @@ const appVueAddDefect = Vue.createApp({
         this.backgroundHistoryButtonCCS = "btn-outline-primary";
         this.backgroundСlassificationButtonCCS = "btn-primary";
       },
-      clicklinkpage1 () {
-        this.isHiddenblockcods1 = 'false';
-        this.isHiddenblockcods2 = 'true';
-        this.isHiddenblockcods3 = 'true';
-        this.backgroundPage1CCS = "active";
-        this.backgroundPage2CCS = "nav-link";
-        this.backgroundPage3CCS = "nav-link";
-      },
-      clicklinkpage2 () {
-        this.isHiddenblockcods1 = 'true';
-        this.isHiddenblockcods2 = 'false';
-        this.isHiddenblockcods3 = 'true';
-        this.backgroundPage1CCS = "nav-link";
-        this.backgroundPage2CCS = "active";
-        this.backgroundPage3CCS = "nav-link";
-      },
-      clicklinkpage3 () {
-        this.isHiddenblockcods1 = 'true';
-        this.isHiddenblockcods2 = 'true';
-        this.isHiddenblockcods3 = 'false';
-        this.backgroundPage1CCS = "nav-link";
-        this.backgroundPage2CCS = "nav-link";
-        this.backgroundPage3CCS = "active";
-      },
+
+      clickbuttonspravochnik() {
+        appVueSpravochnik.clicklinkpage1();
+        appVueSpravochnik.parent_button_close_modal_name = 'closeModalAddDefect';
+        var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindow'), {
+          keyboard: false
+        })
+        myModal.show()
+      }, /* clickbuttonspravochnik */
+
       addNewDefect() {
         if (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA') {
           this.checkMask()
