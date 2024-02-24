@@ -1,6 +1,5 @@
 {% raw %}
 <!----------------------------------------Модальное окно "Пользователи"------------------------------------------>
-
 <div id="vueUser">
 	<div class="modal fade" id="UserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
@@ -18,8 +17,6 @@
 				  </tr>
 				</thead>
 				<tbody>
-				  <!--<button id="show-modal" @click="showModalUsers" class="btn btn-outline-success me-2" 
-					data-bs-toggle="modal" data-bs-target="#UserModalWindow" type="button">Пользователи</button>-->
 				  <tr @dblclick="handleDoubleClick" data-bs-target="#CardUserModalWindow" v-for="user in users">
 					<td >{{ user.user_id }}</td>
 					<td >{{ user.user_surname }}</td>
@@ -41,9 +38,6 @@
 		</div>
 	  </div>
 	</div>
-  
-   <!--  <marquee direction="right" scrollamount="10">Nasdaq +2,34%, Nyse +1,75, DowJons -0,5%</marquee> -->
-  
   
 	<!----------------------------------------Модальное окно "Добавить пользователя"------------------------------------------>
 	<div id="AddUserModalWindow" class="modal fade"  ref="vueAddUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >

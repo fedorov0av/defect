@@ -1,7 +1,4 @@
 const appVueDefect = Vue.createApp({
-  /* components: {
-    VueTailwindPagination,
-  }, */
     data() {
       return {
         colunmsName: ['№', 'Дата регистрации', 'Срок устранения', 'Подразделение-владелец', 'KKS', 'Оборудование', 'Описание дефекта', 'Статус',  'Ответственный'],
@@ -15,7 +12,6 @@ const appVueDefect = Vue.createApp({
         nextPageNumber: 0,
       }
     },
-
     mounted() {
       this.updateTableDefect(true);
       this.currentPage = 1;
@@ -77,7 +73,6 @@ const appVueDefect = Vue.createApp({
               }
                 })
           .catch(err => {
-            console.log()
             if (err.response.status === 401){
               window.location.href = "/";
             } else {
@@ -146,7 +141,6 @@ const appVueDefect = Vue.createApp({
           })
           myModal.show()
         }
-        
       }, /* handleDoubleClick */
       changePage (event){
         if (event.target.text == 'Вперед'){
@@ -180,7 +174,6 @@ const appVueDefect = Vue.createApp({
                 responsible = 'ОП ' + this.defects[defect].defect_owner;
               }
               this.defects[defect].responsible = responsible;
-              
               let date_background = null
               if ((this.defects[defect].defect_planned_finish_date !== "Устр. в ППР") && (this.defects[defect].defect_planned_finish_date !== null)){
                 let now = new Date()
@@ -193,7 +186,6 @@ const appVueDefect = Vue.createApp({
                 }
               }
               this.defects[defect].dateBackgroundColor = date_background;
-
             }
               }) /* axios */
       }, /* changePage */

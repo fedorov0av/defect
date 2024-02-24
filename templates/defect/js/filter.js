@@ -5,7 +5,6 @@ const appVueFilter = Vue.createApp({
         type_defects: {},
         statuses_defect: {}, 
         defects: {},
-
         filterType: 0,
         filterManager: 0,
         filterDivision: 0,
@@ -20,7 +19,7 @@ const appVueFilter = Vue.createApp({
     },
     mounted() {
       this.updateAllTables()
-      this.updateTableStatusDefect()
+      updateTableStatusDefect(this.statuses_defect)
       this.setDivisionByUser()
     }, /* mounted */
     methods: {
@@ -38,29 +37,11 @@ const appVueFilter = Vue.createApp({
           this.endDate = null;
           this.filterStatusDefect = 0;
           this.ppr = 'false';
-        }, /* clearData */
-
-        updateTableTypeDefect() {
-          axios
-          .post('/type_defect',)
-          .then(response => {
-              this.type_defects = response.data;
-                }) /* axios */
-        }, /* updateTableTypeDefect */
-
-        updateTableDivision() {
-          axios
-          .post('/divisions',)
-          .then(response => {
-              this.divisions = response.data;
-                }) /* axios */
-        }, /* updateTableDivision */
-        
+        }, /* clearData */        
         updateAllTables() {
-          this.updateTableDivision();
-          this.updateTableTypeDefect();
+          updateTableDivision(this.divisions)
+          updateTableTypeDefect(this.type_defects)
         }, /* updateAllTables */
-
         useFilter() {
           if (this.startDate !== null && this.endDate !== null) {
             if (this.startDate >= this.endDate) {
@@ -85,12 +66,6 @@ const appVueFilter = Vue.createApp({
                "safety": this.safety === true ? true : null,
                "exploitation": this.exploitation === true ? true : null,
                "type_defect_id":  this.filterType,
-              //  "division_id": {
-              //     "division_id": this.filterDivision !== 0 ? this.filterDivision : 0
-              //   },
-              //   "status_id": {
-              //     "status_id": this.filterStatusDefect !== 0 ? this.filterStatusDefect : 0
-              //   }
               }
             )
             .then(response => {
@@ -120,11 +95,9 @@ const appVueFilter = Vue.createApp({
                 }
                 appVueDefect.defects[defect].dateBackgroundColor = date_background;
               }
-              
               appVueDefect.pages = 0;
                 })
             .catch(err => {
-              console.log(err)
               if (err.response.status === 401){
                 window.location.href = "/";
               } else {
@@ -149,13 +122,6 @@ const appVueFilter = Vue.createApp({
             }
               }) /* axios */
         }, /* nouseFilter */
-        updateTableStatusDefect() {
-          axios
-          .post('/statuses_defect',)
-          .then(response => {
-              this.statuses_defect = response.data;
-                }) /* axios */
-        }, /* updateTableStatusDefect */
         setDivisionByUser(){
           axios
           .post('/user/me')

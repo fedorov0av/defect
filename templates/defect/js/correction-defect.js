@@ -4,19 +4,9 @@ const appCorrectionDefect = Vue.createApp({
           textLength: 0,
           defect_id: '0',
           parent_button_close_modal_name: '', 
-          statuses_defect:{}, /* ['Зарегистрирован', # 1
-                                  'Подтвержден', # 2
-                                  'Назначен исполнитель', # 3
-                                  'Принят в работу', # 4
-                                  'Работы завершены', # 5
-                                  'Устранен', # 6
-                                  'Не устранен', # 7
-                                  'Требует корректировки', # 8
-                                  'Отменен',  # 9
-                                  'Закрыт',  # 10
-                                  ] */
+          statuses_defect:{}, /* ['Зарегистрирован' - 0, 'Адресован' - 1, 'Назначен исполнитель' - 2, 'Принят в работу' - 3, 'Работы завершены' - 4, 
+                                  'Устранен' - 5, 'Не устранен' - 6, 'Требует решения' - 7, 'Отменен' - 8, 'Закрыт' - 9, 'Локализован' - 10,] */
           cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
-          
           cardDefectID: '', /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
           cardComment: '', /* Для отображения ВЫПОЛНЕННЫЕ РАБОТЫ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !!  */
         }
@@ -24,7 +14,7 @@ const appCorrectionDefect = Vue.createApp({
       mounted() {
         this.clearData()
         this.setLimit()
-        this.updateTableStatusDefect()
+        updateTableStatusDefect(this.statuses_defect);
         var myModal = document.getElementById('CorrectionDefectModalWindow')
         myModal.addEventListener('hidden.bs.modal', function (event) {
           appCorrectionDefect.clearData();
@@ -41,13 +31,8 @@ const appCorrectionDefect = Vue.createApp({
           var result = document.getElementById("correction-result");
           var limit = 200;
           result.textContent = 0 + "/" + limit;
-    
           myText.addEventListener('keypress',function(){
           result.textContent = this.textLength + 1 + "/" + limit;
-          /* if(this.textLength > limit -1){
-              myText.style.borderColor = "#ff2851";
-              result.style.color = "#ff2851"; 
-          } */
           });
         }, /* setlimit*/
         clearData() {
@@ -57,13 +42,6 @@ const appCorrectionDefect = Vue.createApp({
           this.cardComment = '';
           this.parent_button_close_modal_name = '';
         }, /* clearData */
-        updateTableStatusDefect() {
-          axios
-          .post('/statuses_defect',)
-          .then(response => {
-              this.statuses_defect = response.data;
-                }) /* axios */
-        }, /* updateTableStatusDefect */
         cancelDefect(event) {
           if (this.cardComment == '') {
             Swal.fire({html:"<b>Отсутствует комментарий</b>", heightAuto: false}); 
@@ -93,7 +71,6 @@ const appCorrectionDefect = Vue.createApp({
               .then(response => {
                   document.getElementById('closeCorrectionDefectModalWindow').click();
                   appVueDefect.updateTables()
-                  /* console.log(response.data); */
                   Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ", "", "success");
                   document.getElementById(this.parent_button_close_modal_name).click();
                     }) /* axios */

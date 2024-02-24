@@ -1,51 +1,49 @@
 <!doctype html>
 <html lang="ru">
-<head>
-	<!-- Подключение js-файла фреймворка Bootstrap 5 -->
-	<script src="{{ url_for('static_js', path='popper.min.js') }}"></script>
-	<link href="{{ url_for('static_css', path='bootstrap.min.css') }}" rel="stylesheet" crossorigin="anonymous">
-	<script src="{{ url_for('static_js', path='jquery.min.js') }}"></script>
-	<script src="{{ url_for('static_js', path='sweetalert2.js') }}"></script>
-	<script src="{{ url_for('static_js', path='maska.umd.js') }}"></script>
-	<script src="{{ url_for('static_js', path='vue3.js') }}"></script>
-	<script src="{{ url_for('static_js', path='axios.min.js') }}"></script>
-	<script src="{{ url_for('defect_js', path='utils.js') }}"></script>
-	
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Journal of defects">
-	<meta name="author" content="Fedorov A., Baibekov V., Petrov T., Leskov S., Rykov A.">
-	<title>Журнал учета дефектов</title>
-
-	<link rel="stylesheet" href="{{ url_for('static_css', path='defect-styles.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static_css', path='mystyles.css') }}">
-
-	<!-- Custom styles for this template -->
-	<link href="{{ url_for('static_css', path='defect.css') }}" rel="stylesheet">
-</head>
-<body>
-	{% include "defect/_head.html" %} <!-- Заголовок -->
-	{% include "defect/_nav.html" %} <!-- Меню навигации -->
-	{% block content %}
-		{% include "defect/_filter.html" %} <!--Модальное окно "Фильтры" -->
-		{% include "defect/_user.html" %} <!--Модальное окно "Пользователи" -->
-		{% include "defect/_about.html" %} <!--Модальное окно "Пользователи" -->
-		{% include "defect/_defect.html" %} <!-- Модальное окно "Добавить дефект" --> 
-		{% include "defect/_confirm-defect.html" %} <!-- Модальное окно "Подтвердить дефект" --> 
-		{% include "defect/_accept-defect.html" %} <!-- Принять дефект -->
-		{% include "defect/_execution-defect.html" %} <!-- Модальное окно "Исполнение" -->
-		{% include "defect/_finish-work-defect.html" %} <!-- Модальное окно "Завершение работ" -->
-		{% include "defect/_check-defect.html" %} <!-- Модальное окно "Проверка работ по дефекту" -->
-		{% include "defect/_close-defect.html" %} <!-- Модальное окно "Закрытие дефекта" -->
-		{% include "defect/_card-defect.html" %} <!-- Модальное окно "История закрытого дефекта" -->
-		{% include "defect/_correction-defect.html" %} <!-- Модальное окно "Корректировка дефекта" --> 
-		{% include "defect/_main-table.html" %} <!-- Модальное окно "Главное окно дефектов" --> 
-		{% include "defect/_classification-table.html" %} <!-- Модальное окно "Главное окно дефектов" --> 
-	{% endblock content %}
-</body>
-
+	<head>
+		<!-- Подключение js-файла фреймворка Bootstrap 5 -->
+		<script src="{{ url_for('static_js', path='popper.min.js') }}"></script>
+		<link href="{{ url_for('static_css', path='bootstrap.min.css') }}" rel="stylesheet" crossorigin="anonymous">
+		<script src="{{ url_for('static_js', path='jquery.min.js') }}"></script>
+		<script src="{{ url_for('static_js', path='sweetalert2.js') }}"></script>
+		<script src="{{ url_for('static_js', path='maska.umd.js') }}"></script>
+		<script src="{{ url_for('static_js', path='vue3.js') }}"></script>
+		<script src="{{ url_for('static_js', path='axios.min.js') }}"></script>
+		<script src="{{ url_for('defect_js', path='utils/update-tables.js') }}"></script>
+		<script src="{{ url_for('defect_js', path='utils/export.js') }}"></script>
+		<script src="{{ url_for('defect_js', path='utils/get-setting.js') }}"></script>
+		<script src="{{ url_for('defect_js', path='utils/get-data.js') }}"></script>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Journal of defects">
+		<meta name="author" content="Fedorov A., Baibekov V., Petrov T., Leskov S., Rykov A.">
+		<title>Журнал учета дефектов</title>
+		<link rel="stylesheet" href="{{ url_for('static_css', path='defect-styles.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static_css', path='mystyles.css') }}">
+		<!-- Custom styles for this template -->
+		<link href="{{ url_for('static_css', path='defect.css') }}" rel="stylesheet">
+	</head>
+	<body>
+		{% include "defect/_head.html" %} <!-- Заголовок -->
+		{% include "defect/_nav.html" %} <!-- Меню навигации -->
+		{% block content %}
+			{% include "defect/_filter.html" %} <!--Модальное окно "Фильтры" -->
+			{% include "defect/_user.html" %} <!--Модальное окно "Пользователи" -->
+			{% include "defect/_about.html" %} <!--Модальное окно "Пользователи" -->
+			{% include "defect/_defect.html" %} <!-- Модальное окно "Добавить дефект" --> 
+			{% include "defect/_confirm-defect.html" %} <!-- Модальное окно "Подтвердить дефект" --> 
+			{% include "defect/_accept-defect.html" %} <!-- Принять дефект -->
+			{% include "defect/_execution-defect.html" %} <!-- Модальное окно "Исполнение" -->
+			{% include "defect/_finish-work-defect.html" %} <!-- Модальное окно "Завершение работ" -->
+			{% include "defect/_check-defect.html" %} <!-- Модальное окно "Проверка работ по дефекту" -->
+			{% include "defect/_close-defect.html" %} <!-- Модальное окно "Закрытие дефекта" -->
+			{% include "defect/_card-defect.html" %} <!-- Модальное окно "История закрытого дефекта" -->
+			{% include "defect/_correction-defect.html" %} <!-- Модальное окно "Корректировка дефекта" --> 
+			{% include "defect/_main-table.html" %} <!-- Модальное окно "Главное окно дефектов" --> 
+			{% include "defect/_classification-table.html" %} <!-- Модальное окно "Главное окно дефектов" --> 
+		{% endblock content %}
+	</body>
 <script src="{{ url_for('static_js', path='defect-bootstrap.bundle.min.js') }}" crossorigin="anonymous"></script>
 <script src="{{ url_for('static_js', path='chart.umd.js') }}" crossorigin="anonymous"></script>
-
 </html>
 

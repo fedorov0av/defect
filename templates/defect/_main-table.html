@@ -27,7 +27,6 @@
       </div>
     </main>
   </div>
-
   <div id="footer_info" class="footer">
     <div class="footer-left" v-if="pages > 1">
       <span class="footer-left-span">Кол-во записей на странице:</span>
@@ -37,7 +36,6 @@
         <option value=45>45</option>
       </select>
     </div>
-
     <ul class="pagination justify-content-center" v-if="pages > 1">
       <li class="page-item" :class="{ disabled: pageNumber == 1 }" @click="changePage">
         <a class="page-link">Назад</a>
@@ -47,18 +45,11 @@
         <a class="page-link" @click="changePage">Вперед</a>
       </li>
     </ul>
-    <!-- <div style="width: 700px;"><marquee  scrollamount="10">
-      <img alt="Бегущая строка в html | Тег < marquee >" decoding="async" src="https://i0.wp.com/neonafm.ru/wp-content/uploads/2023/05/kot.gif?w=840&amp;ssl=1" style="width: 100px; height: 56px;" width="100" height="56">
-      </marquee>
-    </div>  -->
     <div class="footer-right">
       <span style="margin-left: 5px;">Разработано ЦИКТ. AKKUYU NÜKLEER A.Ş.</span>
     </div>
-
   </div>
 </div>
 
-
 {% endraw %}
-
 <script src="{{ url_for('defect_js', path='main-table.js') }}"></script>

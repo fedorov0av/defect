@@ -300,7 +300,7 @@
                           <div class="block_input_data">
                             <b class="label">Причина события</b>
                           </div>
-                          <textarea class="form-control height100" v-model="newCoreClassificationName" aria-label="Disabled input example"></textarea>
+                          <textarea class="form-control height100" v-model="newCoreClassificationName" aria-label="Disabled input example" disabled></textarea>
                         </div>
                       </div>
                     </div>
@@ -356,4 +356,4 @@
 
   </div>
   {% endraw %}
-  <script src="{{ url_for('defect_js', path='confirm-defect.js') }}"></script>
+  <script src="{{ url_for('defect_js', path='modal/confirm-defect.js') }}"></script>

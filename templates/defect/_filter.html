@@ -17,7 +17,6 @@
 						<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
 					</select>
 				</div>
-		
 				<div class="block_filter_flex">
 					<select class="form-select form-select1 type-defect2" @change="useFilter" aria-label="Default select example" v-model="filterType">
 						<option selected value=0>Журнал дефектов</option>
@@ -26,7 +25,6 @@
 			
 					<input type="text" class="form-control type-defect2" name="RapairManager" placeholder="Ответственное подразделение">
 				</div>
-				
 				<div class="block_row">
 					<div class="block_filter_flex">
 						<div class="mydatechoise justify-content-center">
@@ -35,7 +33,6 @@
 							</div>
 							<div class="block_data col-lg-3 col-sm-6">
 								<input id="startDate" class="form-control type-defect" type="date" @change="useFilter" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" v-model="startDate"/>
-								<!-- <span id="startDateSelected"></span> -->
 							</div>
 						</div>
 						<div class="mydatechoise justify-content-center">
@@ -44,7 +41,6 @@
 							</div>
 							<div class="block_data col-lg-3 col-sm-6">
 								<input id="endDate" class="form-control type-defect form-select1" type="date" @change="useFilter" v-model="endDate"/>
-								<!-- <span id="endDateSelected"></span> -->
 							</div>
 						</div>
 					</div>
@@ -54,9 +50,6 @@
 					</div>
 				</div>
 			</div>
-			
-			
-	
 			<div class="block_filter_flex">
 	
 				<div class="verticalLine"></div>
@@ -87,28 +80,10 @@
 						<label class="form-check-label margin-right" for="flexExploitationFilter">Влияет на режим нормальной эксплуатации</label>
 						</div>
 					</div>
-					</div>
-	
-					<!-- <div class="block_filter_flex1">
-						<div class = "form-check form-switch block-checkbox-left block-checkbox1">
-							<label class = "form-check-label" for = "defaultCheck1">
-								Эксплуатация
-							</label>
-						</div>
-						<div class = "form-check form-switch block-checkbox1">
-							<input class="form-check-input" type="checkbox">
-							<label class = "form-check-label margin-right1" for = "defaultCheck1">
-								ПНР
-							</label>
-						</div>
-					</div> -->
-	
+					</div>	
 				<div class="verticalLine"></div>
-	
 			</div>
 		</div>
-
-
 		<div class="block_filter_flex lastbutton">
 			<div class="lastbutton">
 				<button type="button" @click="nouseFilter" class="btn btn-primary w190">Очистить фильтры</button>

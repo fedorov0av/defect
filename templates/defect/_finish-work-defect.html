@@ -93,7 +93,6 @@
                     </div>
                   </div>
                 </div>
-  
                 <div class="block_data4">
                   <div class="block_data_column1">
                     <div class="block_data_column">
@@ -112,14 +111,12 @@
                     <textarea class="form-control" v-model="cardLocation" placeholder="Введите местоположение" disabled></textarea>
                   </div>
                 </div>
-    
                 <div class="block_data_column">
                   <div class="block_input_data">
                     <b class="label">Описание дефекта</b>  
                   </div>
                   <textarea class="form-control" v-model="cardDescription" placeholder="Введите описание дефекта" disabled></textarea>
                 </div>
-                  
                 <div class="block_data4">
                   <div class="block_data_column1 margin_left_right">
                     <div class="block_input_data">
@@ -127,7 +124,6 @@
                     </div>
                     <input type="text" class="form-control" placeholder="Обнаружил дефект"  aria-label="readonly input example" v-model="cardRegistrator" disabled>
                   </div>
-  
                   <div class="width50 margin_left_right">
                     <div class="block_row1">
                       <div>
@@ -146,7 +142,6 @@
                   </div>
                 </div>
               </div>
-  
               <div class="block_row componentWraper">
                 <div class="block_data_column1">
                   <div class="block_data_column">
@@ -173,16 +168,8 @@
                     <textarea id="my-text" :class="{ 'is-valid': cardWorkerDescription !== '', 'is-invalid': check_worker_discription === true & cardWorkerDescription === '' }" @input="changeTextWork" class="form-control height100" placeholder="Комментарий исполнителя" v-model.lazy="cardWorkerDescription" :disabled='isDisabledFinishDefect'></textarea>
                     <p id="result" class="pos_a"></p>
                   </div>
-                  <!-- <div class="block_row">
-                    <div class="empty_block"></div>
-                    <div class="form-check form-switch block_checkbox">
-                      <input class="form-check-input" type="checkbox">
-                      <label class="form-check-label margin-right" for="flexCheckChecked">Дефект локализован</label>
-                    </div>
-                  </div> -->
                 </div>
               </div>
-  
               <div class="block_row last_block_row block_border componentWraper1">
                 <div class="block_data_column1 margin6px">
                   <div class="block_input_data">
@@ -198,7 +185,6 @@
                 </div>
               </div>
             </div>
-
             <div :class="{ hidden: isHiddenblockhistory == 'true' }" :hidden='isHiddenblockhistory == "true"'>
               <h4>История дефекта</h4>
               <div class="table-responsive small">
@@ -227,7 +213,6 @@
                 </div>
               </div>
             </div>
-
             <!----------------------------------------- Классификация дефекта ------------------------------------------------>
             <div :hidden='isHiddenblockclassification == "true"'>
               <h4 class="h4">Классификация дефекта</h4>
@@ -272,10 +257,8 @@
                       </div>
                     </div>
                   </div>
-    
                   <br>
                   <br>
-
                   <div class="block_row componentWraper5">
                     <div class="block_data_column4">
                       <div class="block_data_column width300px">
@@ -296,7 +279,6 @@
                 </div>
               </div>   
             </div>
-
             <div class="modal-footer modal-footer1">
               <div class="block_data9">
                 <b class="zvezda"> &nbsp * &nbsp </b>
@@ -315,13 +297,11 @@
                 </span>
               </div>
             </div>
-
           </form>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 {% endraw %}
-<script src="{{ url_for('defect_js', path='finish-work-defect.js') }}"></script>
+<script src="{{ url_for('defect_js', path='modal/finish-work-defect.js') }}"></script>
