@@ -1,23 +1,25 @@
-<!----------------------------------------Модальное окно "Подтвердить дефект"------------------------------------------>
+<!----------------------------------------Модальное  окно ""------------------------------------------>
 {% raw %}
-<div id="vueConfirmDefect">
+<div id="vueBaseModal">
     <div class="modal fade" id="ConfirmDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modalConfirmDefectModalWindow">
       <div class="modal-dialog">
+        
         <div class="modal-content pos_r1">
-          <div class="modal-header status_confirm_defect">
-            <h3 class="modal-title" id="exampleModalLabel">Подтверждение дефекта №</h3>
-            <h3 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeConfirmDefectModalWindow"></button>
-          </div>
+            {% include "defect/test_modal/head/headTitle.html" %} <!-- Заголовок -->
+
           <div class="modal-body modal-body1">
             <form method="post">
-              <div class="block_nav_modal">
-                <button @click="clickbuttonmain" type="button" class="btn margin" :class="backgroundMainButtonCCS" >Общая информация</button>
-                <button @click="clickbuttonhistory" type="button" class="btn margin" :class="backgroundHistoryButtonCCS">История дефекта</button>
-                <button @click="clickbuttonclassification" type="button" class="btn margin" :class="backgroundСlassificationButtonCCS">Классификация дефекта</button>
-              </div>
-  
+             
+            {% include "defect/test_modal/navButton/navButton.html" %} <!-- Навигационные кнопки -->
+
+
+
+
               <div :class="{ hidden: isHiddenblockmain == 'true' }" :hidden='isHiddenblockmain == "true"'>
+
+
+
+
                 <div class="componentWraper3">
                   <div class="block_row block_margin">
                     <div class="block_row1 width50 margin6px">
@@ -160,6 +162,11 @@
                   </div>
                 </div>
     
+
+
+
+
+
                 <div class="block_row componentWraper">
                   <div class="block_data_column1">
                     <div class="block_data_column">
@@ -193,6 +200,10 @@
                   </div>
                 </div>
     
+
+
+
+
                 <div class="block_row last_block_row block_border componentWraper1">
                   <div class="block_data_column1 margin6px">
                     <div class="block_input_data">
@@ -212,7 +223,11 @@
                 </div>
               </div>
 
+
+
+
               <div :class="{ hidden: isHiddenblockhistory == 'true' }" :hidden='isHiddenblockhistory == "true"'>
+                
                 <h4>История дефекта</h4>
                 <div class="table-responsive small">
                   <table class="table table-striped table-sm">

@@ -45,7 +45,6 @@ app.include_router(export_router)
 app.include_router(category_reason_router)
 app.include_router(category_defect_router)
 
-
 app.mount("/css", StaticFiles(directory="templates/static/css"), name="static_css")
 app.mount("/js", StaticFiles(directory="templates/static/js"), name="static_js")
 app.mount("/img", StaticFiles(directory="templates/static/img"), name="static_img")
@@ -56,13 +55,7 @@ app.mount("/defect_js", StaticFiles(directory="templates/defect/js"), name="defe
 app.mount("/temp_css_js", StaticFiles(directory="templates/temp/temp_modal_static"), name="temp_css_js")
 #----------------------------------------------------------------------------------------#
 
-
-
 templates = Jinja2Templates(directory="templates")
-
-""" @app.get("/",response_class=HTMLResponse)
-async def signin(request:Request):
-    return templates.TemplateResponse("login/login.html",context={"request":request}) """
 
 @app.get('/favicon.ico')
 async def favicon():
@@ -97,8 +90,6 @@ async def form(request: Request, csrf_protect: CsrfProtect = Depends()):
   )
   csrf_protect.set_csrf_cookie(signed_token, response)
   return response
-
-
 
 @app.exception_handler(CsrfProtectError)
 def csrf_protect_exception_handler(request: Request, exc: CsrfProtectError):

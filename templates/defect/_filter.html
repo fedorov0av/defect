@@ -1,95 +1,108 @@
 {% raw %}
 <div id='vueFilter'>
-	<div class="d-flex justify-content-start block_filter">
+	<div class="accordion" id="accordionExample">
 		<div>
-			<p class="mylabel mylabel1">Фильтры:</p>
-		</div>
-		<div class="block_data_filter">
-			<div class="mydatechoise">
-				<div class="block_filter_flex">
-					<select class="form-select form-select1 type-defect" @change="useFilter" aria-label="Default select example" v-model="filterDivision">
-						<option selected value=0>Подразделение</option>
-						<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
-					</select>
-			
-					<select class="form-select form-select1 type-defect" @change="useFilter" aria-label="Default select example" v-model="filterStatusDefect">
-						<option selected value=0>Статус дефекта</option>
-						<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
-					</select>
+		  <h2 class="accordion-header">
+			<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			  Фильтры
+			</button>
+		  </h2>
+		  <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+			<div>
+
+				<div class="d-flex justify-content-start block_filter block_row">
+					<div class="block_data_filter">
+						<div class="mydatechoise">
+							<div class="block_filter_flex">
+								<select class="form-select form-select1 type-defect" @change="useFilter" aria-label="Default select example" v-model="filterDivision">
+									<option selected value=0>Подразделение</option>
+									<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
+								</select>
+						
+								<select class="form-select form-select1 type-defect" @change="useFilter" aria-label="Default select example" v-model="filterStatusDefect">
+									<option selected value=0>Статус дефекта</option>
+									<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
+								</select>
+							</div>
+							<div class="block_filter_flex">
+								<select class="form-select form-select1 type-defect2" @change="useFilter" aria-label="Default select example" v-model="filterType">
+									<option selected value=0>Журнал дефектов</option>
+									<option v-for="type_defect in type_defects" :value="type_defect.type_defect_id">{{ type_defect.type_defect_name	}}</option>
+								</select>
+						
+								<input type="text" class="form-control type-defect2" name="RapairManager" placeholder="Ответственное подразделение">
+							</div>
+							<div class="block_row">
+								<div class="block_filter_flex">
+									<div class="mydatechoise justify-content-center">
+										<div class="block_filter_label">
+											<p class="mylabel">Начало:</p>
+										</div>
+										<div class="block_data col-lg-3 col-sm-6">
+											<input id="startDate" class="form-control type-defect" type="date" @change="useFilter" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" v-model="startDate"/>
+										</div>
+									</div>
+									<div class="mydatechoise justify-content-center">
+										<div class="block_filter_label">
+											<p class="mylabel">Конец:</p>
+										</div>
+										<div class="block_data col-lg-3 col-sm-6">
+											<input id="endDate" class="form-control type-defect form-select1" type="date" @change="useFilter" v-model="endDate"/>
+										</div>
+									</div>
+								</div>
+								<div class="form-check form-switch block-checkbox4">
+									<input class="form-check-input" type="checkbox" @change="useFilter" id="flexCheckChecked" v-model="ppr">
+									<label class="form-check-label margin-right" for="flexCheckChecked">В ППР</label>
+								</div>
+							</div>
+						</div>
+						<div class="block_filter_flex">
+				
+							<div class="verticalLine"></div>
+				
+							<div class="block_row componentWraper0">
+								<div class="block_row">
+									<div class="block_filter_flex1">
+									<div class = "form-check form-switch block-checkbox-left block-checkbox3">
+										<label class = "form-check-label" for = "flexPnrFilter">
+										В эксплуатации
+										</label>
+									</div>
+									<div class = "form-check form-switch block-checkbox3">
+										<input class="form-check-input" type="checkbox" id="flexPnrFilter"  v-model="pnr" @change="useFilter">
+										<label class = "form-check-label margin-right1" for = "flexPnrFilter">
+										В ПНР
+										</label>
+									</div>
+									</div>
+								</div>
+								<div class="block_data_column2">
+									<div class="form-check form-switch ">
+									<input class="form-check-input" type="checkbox" id="flexSafetyFilter" v-model="safety" :disabled="pnr===true" @change="useFilter">
+									<label class="form-check-label margin-right" for="flexSafetyFilter">Влияет на безопасность и несение нагрузки</label>
+									</div>
+									<div class="form-check form-switch">
+									<input class="form-check-input" type="checkbox" id="flexExploitationFilter" v-model="exploitation" :disabled="pnr===true" @change="useFilter">
+									<label class="form-check-label margin-right" for="flexExploitationFilter">Влияет на режим нормальной эксплуатации</label>
+									</div>
+								</div>
+								</div>	
+							<div class="verticalLine"></div>
+						</div>
+					</div>
+					<div class="block_filter_flex lastbutton">
+						<button type="button" @click="nouseFilter" class="btn btn-primary w190">Очистить фильтры</button>
+					</div>
 				</div>
-				<div class="block_filter_flex">
-					<select class="form-select form-select1 type-defect2" @change="useFilter" aria-label="Default select example" v-model="filterType">
-						<option selected value=0>Журнал дефектов</option>
-						<option v-for="type_defect in type_defects" :value="type_defect.type_defect_id">{{ type_defect.type_defect_name	}}</option>
-					</select>
-			
-					<input type="text" class="form-control type-defect2" name="RapairManager" placeholder="Ответственное подразделение">
-				</div>
-				<div class="block_row">
-					<div class="block_filter_flex">
-						<div class="mydatechoise justify-content-center">
-							<div class="block_filter_label">
-								<p class="mylabel">Начало:</p>
-							</div>
-							<div class="block_data col-lg-3 col-sm-6">
-								<input id="startDate" class="form-control type-defect" type="date" @change="useFilter" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" v-model="startDate"/>
-							</div>
-						</div>
-						<div class="mydatechoise justify-content-center">
-							<div class="block_filter_label">
-								<p class="mylabel">Конец:</p>
-							</div>
-							<div class="block_data col-lg-3 col-sm-6">
-								<input id="endDate" class="form-control type-defect form-select1" type="date" @change="useFilter" v-model="endDate"/>
-							</div>
-						</div>
-					</div>
-					<div class="form-check form-switch block-checkbox4">
-						<input class="form-check-input" type="checkbox" @change="useFilter" id="flexCheckChecked" v-model="ppr">
-						<label class="form-check-label margin-right" for="flexCheckChecked">В ППР</label>
-					</div>
-				</div>
+
+				
 			</div>
-			<div class="block_filter_flex">
-	
-				<div class="verticalLine"></div>
-	
-				<div class="block_row componentWraper0">
-					<div class="block_row">
-						<div class="block_filter_flex1">
-						<div class = "form-check form-switch block-checkbox-left block-checkbox3">
-							<label class = "form-check-label" for = "flexPnrFilter">
-							В эксплуатации
-							</label>
-						</div>
-						<div class = "form-check form-switch block-checkbox3">
-							<input class="form-check-input" type="checkbox" id="flexPnrFilter"  v-model="pnr" @change="useFilter">
-							<label class = "form-check-label margin-right1" for = "flexPnrFilter">
-							В ПНР
-							</label>
-						</div>
-						</div>
-					</div>
-					<div class="block_data_column2">
-						<div class="form-check form-switch ">
-						<input class="form-check-input" type="checkbox" id="flexSafetyFilter" v-model="safety" :disabled="pnr===true" @change="useFilter">
-						<label class="form-check-label margin-right" for="flexSafetyFilter">Влияет на безопасность и несение нагрузки</label>
-						</div>
-						<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="flexExploitationFilter" v-model="exploitation" :disabled="pnr===true" @change="useFilter">
-						<label class="form-check-label margin-right" for="flexExploitationFilter">Влияет на режим нормальной эксплуатации</label>
-						</div>
-					</div>
-					</div>	
-				<div class="verticalLine"></div>
-			</div>
-		</div>
-		<div class="block_filter_flex lastbutton">
-			<div class="lastbutton">
-				<button type="button" @click="nouseFilter" class="btn btn-primary w190">Очистить фильтры</button>
-			</div>
+		  </div>
 		</div>
 	</div>
+
+	
 </div>
 {% endraw %}
 <script src="{{ url_for('defect_js', path='filter.js') }}"></script>
