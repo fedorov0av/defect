@@ -4,7 +4,7 @@ function runExportHistoryExcel(defect_id){
       showDenyButton: true,
       confirmButtonText: "ПОДТВЕРЖДАЮ",
       denyButtonText: `ОТМЕНА`
-    }).then((result) => {
+    }).then((result) => { 
       if (result.isConfirmed) {
         axios({
           url: '/export_history_excel_defect',
@@ -20,7 +20,8 @@ function runExportHistoryExcel(defect_id){
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', ('history_defects_'+today.getDate()+'_'+(parseInt(today.getMonth())+1)+'_'+today.getFullYear()+'.xlsx')); // Установите желаемое имя файла
+          /* link.setAttribute('download', ('history_defects_'+today.getDate()+'_'+(parseInt(today.getMonth())+1)+'_'+today.getFullYear()+'.xlsx')); // Установите желаемое имя файла */
+          link.setAttribute('download', ('Defect №' + defect_id + '.xlsx')); // Установите желаемое имя файла
           document.body.appendChild(link);
           link.click();
           Swal.fire("Карточка дефекта выгружена в каталог 'Загрузки' на ваш компьютер!", "", "success");

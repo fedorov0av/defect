@@ -168,10 +168,12 @@ const appCloseDefect = Vue.createApp({
           denyButtonText: `ОТМЕНА`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
+          old_defect_category_defect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : this.cardDefect.defect_category_defect
+
           if (result.isConfirmed) {
             textHistory = ''
-            if (this.newCategoryDefect_id !== this.cardDefect.defect_category_defect.category_defect_id){
-              textHistory = textHistory+'Категория дефекта изменилась с "'+this.cardDefect.defect_category_defect.category_defect_name+'" на "'+this.categories_defect[this.newCategoryDefect_id-1].category_defect_name+'"\n';
+            if (this.newCategoryDefect_id !== old_defect_category_defect_id){
+              textHistory = textHistory+'Категория дефекта изменилась с "'+old_defect_category_defect_id ? old_defect_category_defect_id : "НЕТ" +'" на "'+this.categories_defect[this.newCategoryDefect_id-1].category_defect_name+'"\n';
             }
             if (this.newClassSystemName !== this.cardDefect.defect_system_klass){
               textHistory = textHistory+'Класс оборудования изменился с "'+this.cardDefect.defect_system_klass+'" на "'+this.newClassSystemName+'"\n';
@@ -193,7 +195,7 @@ const appCloseDefect = Vue.createApp({
                     "status_defect_name": this.statuses_defect[9].status_defect_name
                   },
                   "category_defect_id": {
-                    "category_defect_id": this.newCategoryDefect_id !== this.cardDefect.defect_category_defect.category_defect_id ? this.newCategoryDefect_id : this.cardDefect.defect_category_defect.category_defect_id
+                    "category_defect_id": this.newCategoryDefect_id !== old_defect_category_defect_id ? this.newCategoryDefect_id : old_defect_category_defect_id
                   },
                   "class_system_name": {
                     "class_system_name": this.newClassSystemName !== this.cardDefect.defect_system_klass ?
@@ -239,7 +241,7 @@ const appCloseDefect = Vue.createApp({
       },/* closeDefect */
       cancelDefect() {
         appCorrectionDefect.defect_id = defect_id;
-        appCorrectionDefect.parent_button_close_modal_name = 'closeFinishWorkModalWindow';
+        appCorrectionDefect.parent_button_close_modal_name = 'closeCloseDefectModalWindow';
         var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
           keyboard: false
         })

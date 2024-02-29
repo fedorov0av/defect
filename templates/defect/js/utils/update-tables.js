@@ -85,3 +85,53 @@ function updateCategoriesReason(categories_reason) {
     } /* updateCategoriesReason */
 
 /* ################################### */
+
+function setSortTableDafects(defects){
+    dataTable = []
+    for (defect in defects){
+        dataTable.push(
+            {
+                defect_id: defect.defect_id,
+                defect_created_at: defect.defect_created_at,
+                defect_planned_finish_date: defect.defect_planned_finish_date,
+                defect_owner: defect.defect_owner,
+                defect_system_kks: defect.defect_system.system_kks,
+                system_name: defect.defect_system.system_name,
+                defect_description: defect.defect_description,
+                status_defect_name: defect.defect_status.status_defect_name,
+                responsible: defect.responsible,
+            }
+        )
+    }
+    $('#mainTable').bootstrapTable({
+        columns: [{
+          field: 'defect_id',
+          title: '№'
+        }, {
+          field: 'defect_created_at',
+          title: 'Дата регистрации'
+        }, {
+          field: 'defect_planned_finish_date',
+          title: 'Срок устранения'
+        }, {
+          field: 'defect_owner',
+          title: 'Подразделение-владелец'
+        }, {
+          field: 'defect_system_kks',
+          title: 'KKS'
+        }, {
+          field: 'system_name',
+          title: 'Оборудование'
+        }, {
+          field: 'defect_description',
+          title: 'Описание дефекта'
+        }, {
+          field: 'status_defect_name',
+          title: 'Статус'
+          }, {
+          field: 'responsible',
+          title: 'Ответственный'
+        }],
+        data: dataTable,
+      })
+}

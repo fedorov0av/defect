@@ -6,8 +6,8 @@
       
       <div class="modal-content pos_r1">
         <div class="modal-header status_check_defect">
-          <h3 class="modal-title" id="exampleModalLabel">Проверка работ по дефекту №</h3>
-          <h3 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h3>
+          <h4 class="modal-title" id="exampleModalLabel">Проверка работ по дефекту №</h4>
+          <h4 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeCheckModalWindow"></button>
         </div>
         <div class="modal-body modal-body1">
@@ -180,7 +180,8 @@
                     <b  class="label">Выполнил проверку после ремонта</b>
                     <b class="zvezda"> * </b> 
                   </div>
-                  <select class="form-select" v-model="newCheckerId" :class="{ 'is-valid': newCheckerId != 0, 'is-invalid': check_checker_name === true & newCheckerId == 0 }" :disabled='isDisabledCheckDefect'>
+                  <!-- <select class="form-select" v-model="newCheckerId" :class="{ 'is-valid': newCheckerId != 0, 'is-invalid': check_checker_name === true & newCheckerId == 0 }" :disabled='isDisabledCheckDefect'> -->
+                  <select class="form-select" v-model="newCheckerId" :class="{ 'is-valid': newCheckerId != 0, 'is-invalid': newCheckerId == 0 }" :disabled='isDisabledCheckDefect'>
                     <option selected disabled :value=0 >Выберите проверяющего</option>
                     <option v-for="registrator in registrators" :value="registrator.user_id">{{ registrator.user_surname + ' ' + registrator.user_name }}</option>
                   </select>
@@ -189,13 +190,14 @@
                   <div class="block_input_data">
                     <b class="label">Результат проверки</b>
                   </div>
-                  <input type="text" class="form-control" @input="changeTextCheck" :class="{ 'is-valid': cardCheckerDescription !== '', 'is-invalid': check_checker_discription === true & cardCheckerDescription === '' }" aria-label="readonly input example" v-model.lazy="cardCheckerDescription" :disabled='isDisabledCheckDefect'>
+                  <input type="text" class="form-control" @input="changeTextCheck" :class="{ 'is-valid': cardCheckerDescription !== '', 'is-invalid': check_checker_discription === true & cardCheckerDescription === '' }" aria-label="readonly input example" v-model.lazy="cardCheckerDescription" :disabled='isDisabledCheckDefect'
+                  placeholder="Заполните результат проверки в случае, если дефект не устранен!">
                 </div>
               </div>
             </div>
 
             <div :class="{ hidden: isHiddenblockhistory == 'true' }" :hidden='isHiddenblockhistory == "true"'>
-              <h4>История дефекта</h4>
+              <h4 class="h4 margin-left">История дефекта</h4>
               <div class="table-responsive small">
                 <table class="table table-striped table-sm">
                   <thead>
@@ -226,7 +228,7 @@
 
             <!----------------------------------------- Классификация дефекта ------------------------------------------------>
             <div :hidden='isHiddenblockclassification == "true"'>
-              <h4 class="h4">Классификация дефекта</h4>
+              <h4 class="h4 margin-left">Классификация дефекта</h4>
               <br>
               <div class="block_row1">
                 <div class="width100">
@@ -235,7 +237,7 @@
                       <div class="block_input_data">
                         <b class="label">Категория дефекта</b>
                       </div>
-                      <select class="form-select" v-model="newCategoryDefect_id" disabled>
+                      <select class="form-select custom-select-withnot-arrow" v-model="newCategoryDefect_id" disabled>
                         <option disabled selected :value=0>Выберите категорию дефекта</option>
                         <option v-for="category_defect in categories_defect" :value="category_defect.category_defect_id">{{ category_defect.category_defect_name }}</option>
                       </select>  
@@ -248,17 +250,16 @@
                     </div>
                   </div>
                   <br>
-                  <br>
                   <div class="block_row componentWraper4">
                     <div class="block_data_column4">
                       <div class="block_data_column width300px">
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <select class="form-select" v-model="newCoreClassificationCode" disabled>
-                            <option disabled :value="0" selected>Выберите код причины</option>
-                            <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
-                          </select> 
+                        <select class="form-select block_theme width300px custom-select-withnot-arrow" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" disabled>
+                          <option disabled :value="0" selected>Выберите код причины</option>
+                          <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
+                        </select> 
                       </div>
                       <div class="block_data_column">
                         <div class="block_input_data">

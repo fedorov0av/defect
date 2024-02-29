@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, APIRouter, Depends
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from starlette.templating import Jinja2Templates
 import os
 
@@ -51,6 +52,7 @@ app.mount("/img", StaticFiles(directory="templates/static/img"), name="static_im
 app.mount("/login_js", StaticFiles(directory="templates/login/js"), name="login_js")
 app.mount("/defect_js", StaticFiles(directory="templates/defect/js"), name="defect_js")
 
+#app.add_middleware(HTTPSRedirectMiddleware) # для переадресации с 80 порта на 443
 #------------------------------------test_modal_page------------------------------------#
 app.mount("/temp_css_js", StaticFiles(directory="templates/temp/temp_modal_static"), name="temp_css_js")
 #----------------------------------------------------------------------------------------#

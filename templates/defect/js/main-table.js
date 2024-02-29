@@ -10,8 +10,9 @@ const appVueDefect = Vue.createApp({
         pages: 0,
         temp_resp: {},
         nextPageNumber: 0,
+        tableData: {},
       }
-    },
+    }, 
     mounted() {
       this.updateTableDefect(true);
       this.currentPage = 1;
@@ -35,7 +36,7 @@ const appVueDefect = Vue.createApp({
       },
       updateTableDefect(start = false) {
         if (start){ 
-          appVueFilter.useFilter(); 
+          appVueFilter.useFilter();
         }
         else {
           axios

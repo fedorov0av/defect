@@ -8,7 +8,7 @@
 			</button>
 		  </h2>
 		  <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-			<div>
+			<div class="">
 
 				<div class="d-flex justify-content-start block_filter block_row">
 					<div class="block_data_filter">
@@ -18,7 +18,6 @@
 									<option selected value=0>Подразделение</option>
 									<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
 								</select>
-						
 								<select class="form-select form-select1 type-defect" @change="useFilter" aria-label="Default select example" v-model="filterStatusDefect">
 									<option selected value=0>Статус дефекта</option>
 									<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
@@ -30,7 +29,7 @@
 									<option v-for="type_defect in type_defects" :value="type_defect.type_defect_id">{{ type_defect.type_defect_name	}}</option>
 								</select>
 						
-								<input type="text" class="form-control type-defect2" name="RapairManager" placeholder="Ответственное подразделение">
+								<input type="text" class="form-control type-defect2" name="RapairManager" v-model.laze="dataSearch" @input="searchResponsibleMainTable" placeholder="Ответственный">
 							</div>
 							<div class="block_row">
 								<div class="block_filter_flex">
@@ -94,6 +93,7 @@
 					<div class="block_filter_flex lastbutton">
 						<button type="button" @click="nouseFilter" class="btn btn-primary w190">Очистить фильтры</button>
 					</div>
+
 				</div>
 
 				
@@ -105,4 +105,5 @@
 	
 </div>
 {% endraw %}
+
 <script src="{{ url_for('defect_js', path='filter.js') }}"></script>

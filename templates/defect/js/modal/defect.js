@@ -96,9 +96,8 @@ const appVueAddDefect = Vue.createApp({
         this.newCoreClassificationName = category_reason[0].category_reason_name
       },
       changeTextCorrection(event){
-        if (event.target.value){
-          this.style_input_type = "lime"
-        }
+        this.newSystemKKS = ''
+        if (event.target.value){ this.style_input_type = "lime"};
       }, /* changeTextWork */
       onChangeTypeDefect(event) {
         this.newSystemKKS = '';
@@ -198,7 +197,7 @@ const appVueAddDefect = Vue.createApp({
         if (this.newTypeDefect == '0'){
           this.style_input_type = "#ff2851"
           this.check_defect_type = true
-          Swal.fire({html:"<b>Тип дефекта должен быть заполнен!</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Журнал дефекта должен быть заполнен!</b>", heightAuto: false}); 
         } /* if */
         else if (this.newDefectNotes == ''){
           this.check_defect_notes = true
@@ -214,9 +213,9 @@ const appVueAddDefect = Vue.createApp({
         else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
           Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
         } 
-        else if (this.newCategoryDefect === 0) {
+        /*else if (this.newCategoryDefect === 0) {
           Swal.fire({html:"<b>Категория дефекта должна быть заполнена!</b>", heightAuto: false});
-        } 
+        }  */
         else {
           axios
           .post('/defect/add', 

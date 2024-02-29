@@ -155,7 +155,7 @@ const appAcceptDefect = Vue.createApp({
     acceptDefect() {
       if (this.newWorker_id == 0) {
         this.check_worker = true
-        Swal.fire({html:"<b>Не назначен исполнитель ремонта</b>", heightAuto: false}); 
+        Swal.fire({html:"<b>Не назначен исполнитель ремонта!</b>", heightAuto: false}); 
         return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
       }
       Swal.fire({

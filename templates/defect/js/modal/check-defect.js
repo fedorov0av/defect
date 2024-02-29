@@ -209,7 +209,7 @@ const appCheckDefect = Vue.createApp({
             .then(response => {
                 document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()
-                Swal.fire("ДЕФЕКТ УСТРАНЕН, МЫ ВСЕ СПАСЕНЫ!", "", "success");
+                Swal.fire("ДЕФЕКТ УСТРАНЕН!", "", "success");
                   })
             .catch(err => {
                     if (err.response.status === 401){
@@ -256,7 +256,7 @@ const appCheckDefect = Vue.createApp({
             .then(response => {
                 document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()
-                Swal.fire("ДЕФЕКТ ЛОКАЛИЗОВАН, МЫ ВСЕ ВРЕМЕННО СПАСЕНЫ!", "", "success");
+                Swal.fire("ДЕФЕКТ ЛОКАЛИЗОВАН!", "", "success");
                   })
             .catch(err => {
                     if (err.response.status === 401){
@@ -294,6 +294,9 @@ const appCheckDefect = Vue.createApp({
               },
               "status_name": {
                 "status_defect_name": this.statuses_defect[6].status_defect_name
+              },
+              "checker_id": {
+                "user_id": this.newCheckerId
               },
               "defect_check_result": {
                 "comment": this.cardCheckerDescription

@@ -15,6 +15,8 @@ const appVueFilter = Vue.createApp({
         pnr: false,
         safety: false,
         exploitation: false,
+        dataSearch: '',
+        oldDefects: {},
       }
     },
     mounted() {
@@ -37,11 +39,36 @@ const appVueFilter = Vue.createApp({
           this.endDate = null;
           this.filterStatusDefect = 0;
           this.ppr = 'false';
+          this.dataSearch = '';
         }, /* clearData */        
         updateAllTables() {
           updateTableDivision(this.divisions)
           updateTableTypeDefect(this.type_defects)
         }, /* updateAllTables */
+        searchResponsibleMainTable(event) {
+          let tempArray = {}
+          let count = 0
+          if (this.dataSearch === ''){
+            this.useFilter();
+            this.oldDefects = {};
+            return
+          }
+          if (Object.keys(this.oldDefects).length === 0){
+            this.oldDefects = appVueDefect.defects;
+          }
+          for (defect in this.oldDefects){
+            if (this.oldDefects[defect].responsible !== null && this.oldDefects[defect].responsible !== '' && this.dataSearch !== ''){
+              if (this.oldDefects[defect].responsible.toUpperCase().includes(this.dataSearch.toUpperCase())){
+                tempArray[count] = this.oldDefects[defect];
+                count ++;
+              }
+            }
+          }
+          /* console.log(tempArray);
+          console.log(appVueDefect.defects); */
+          appVueDefect.defects = tempArray
+
+        }, /* searchResponsibleMainTable */
         useFilter() {
           if (this.startDate !== null && this.endDate !== null) {
             if (this.startDate >= this.endDate) {
@@ -96,6 +123,9 @@ const appVueFilter = Vue.createApp({
                 appVueDefect.defects[defect].dateBackgroundColor = date_background;
               }
               appVueDefect.pages = 0;
+
+              /* setSortTableDafects(appVueDefect.defects)  */
+
                 })
             .catch(err => {
               if (err.response.status === 401){

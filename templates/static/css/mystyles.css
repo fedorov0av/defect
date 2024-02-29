@@ -1,3 +1,15 @@
+/* Скрываем стрелку в элементе select с классом "custom-select" */
+.custom-select-withnot-arrow.form-select {
+  /* Убираем стандартную стрелку */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Убираем фоновую картинку */
+  background-image: none;
+  /* Убираем padding, чтобы текст не залазил на место стрелки */
+  padding-right: 0;
+}
+
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
@@ -135,7 +147,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0px 3px;
+  margin: 0px 5px 0px 0px;
 }
 
 .block_data_column1 {
@@ -143,14 +155,14 @@
   flex-direction: column;
   justify-content: space-between;
   width: 50%;
-  margin: 0px 3px;
+  margin: 0px 5px 0px 0px;
 }
 
 .block_data_column_KKS {
   display: flex;
   flex-direction: column;
   width: 50%;
-  margin: 0px 3px;
+  margin: 0px 5px 0px 0px;
 }
 
 .block_data_column2 {
@@ -239,7 +251,7 @@
 }
 
 .margin_left_right {
-  margin: 0px 5px;
+  margin: 0px 10px 0px 0px;
 }
 
 .ml {
@@ -257,7 +269,9 @@
 }
 
 .block_nav_modal {
-  margin: 0px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .block_checkbox {
@@ -309,7 +323,7 @@
 }
 
 .margin6px {
-  margin: 0px 6px;
+  margin: 0px 10px 0px 0px;
 }
 
 .type-defect {
@@ -335,7 +349,7 @@
 }
 
 .block_filter {
-  padding: 5px 15px;
+  padding: 10px 15px 5px 15px;
   height: 50px;
   background-color: rgb(171, 207, 248);
 }
@@ -409,7 +423,6 @@
   flex-direction: row;
   width: 100%;
   margin: 3px;
-  margin-bottom: 15px;
 }
 
 .block_data7 {
@@ -490,37 +503,37 @@
 .status_add_defect {
   background-color: #ee4545;
   color: #fff;
-  padding: 5px 15px;
+  padding: 0px 15px 0px 25px;
 }
 
 .status_confirm_defect {
   background-color: #f3da25;
   color: #000;
-  padding: 5px 15px;
+  padding: 0px 15px 0px 25px;
 }
 
 .status_accept_defect {
   background-color: #8bd2e7;
   color: #000;
-  padding: 5px 15px;
+  padding: 0px 15px 0px 25px;
 }
 
 .status_execution_defect {
   background-color: #d438d4;
   color: #fff;
-  padding: 5px 15px;
+  padding: 0px 15px 0px 25px;
 }
 
 .status_finish_work_defect {
   background-color: #081b8a;
   color: #fff;
-  padding: 5px 15px;
+  padding: 0px 15px 0px 25px;
 }
 
 .card_defect {
   background-color: #ffffff;
   color: #000;
-  padding: 5px 15px;
+  padding: 0px 15px 0px 25px;
 }
 
  .status_check_defect {
@@ -532,19 +545,20 @@
   #465298 20px
 );
   color: #fff;
-  padding: 5px 15px;
+  padding: 0px 15px 0px 25px;
 }
  
 
 .status_close_defect {
   background-color: #088a2f;
   color: #fff;
-  padding: 5px 15px;
+  padding: 0px 15px 0px 25px;
 }
 
 .status_correction_defect {
   background-color: #ffc20d;
   color: #000;
+  padding: 0px 15px 0px 25px;
 }
 
 .head_table {
@@ -623,7 +637,7 @@
 }
 
 .scroll-table-body {
-	height: 648px;
+	height: 605px;
 	overflow-x: auto;
 	margin-top: 0px;
 	border-bottom: 1px solid #eee;
@@ -642,7 +656,7 @@
 }
 
 .column4 {
-  width: 50%;
+  width: 53%;
 }
 
 .table .demotable td.column4 {
@@ -711,13 +725,18 @@
 
 .modal-footer1 {
   justify-content:space-between;
-  padding: 5px 15px;
-  margin-bottom: 5px;
+  padding: 0px 15px;
+  border-top: 0px;
+}
+
+.modal-footer2 {
+  padding: 0px 15px 3px 15px;
+  border-top: 0px;
 }
 
 .modal2 {
   position: relative;
-  top: 610px;
+  top: 700px;
 }
 
 .text_center {
@@ -767,7 +786,7 @@
 
 .pos_a_cor {
   position: absolute;
-  top: 65%;
+  top: 55%;
   left: 94%;
 }
 
@@ -798,7 +817,7 @@
 }
 
 .correction_area {
-  min-height: 90px;
+  min-height: 60px;
 }
 
 .margin-right {
@@ -870,8 +889,17 @@
   padding: 0px 15px;
 }
 
+.modal-body2 {
+  padding: 5px 15px;
+}
+
 .label {
   font-weight: 600;
+}
+
+.img-logo {
+  width: 100px;
+  margin: 10px;
 }
 
 .componentWraper {
@@ -891,7 +919,7 @@
 }
 
 .componentWraper1 {
-  margin: 10px 0px;
+  margin: 10px 0px 0px 0px;
   position: relative;
   border: 1px solid rgb(179, 160, 157);
   border-radius: 10px;
@@ -940,17 +968,16 @@
 }
 
 .componentWraper3 {
-  margin: 10px 0px;
   position: relative;
   border: 1px solid rgb(179, 160, 157);
   border-radius: 10px;
-  padding: 15px 10px;
+  padding: 10px 10px;
 }
 
 .componentWraper3::before {
   content: 'Сведения о дефекте';
   position: absolute;
-  top: -10px;
+  top: -14px;
   padding: 0 10px;
   background: #fff;
 }
@@ -995,6 +1022,9 @@
   padding: 15px 10px;
 }
 
+.margin-left {
+  margin-left: 20px;
+}
 
 .block_margin {
   margin: 5px 0px;
@@ -1084,11 +1114,11 @@
     .block_data_column_KKS {
       display: flex;
       flex-direction: column;
-      margin: 0px 3px;
+      margin: 0px 3px 0px 0px;
     }
 
     .block_filter {
-        height: 180px;
+        height: 190px;
     }
 
     .block-checkbox4 {
@@ -1130,3 +1160,4 @@
   } */
 
 }
+

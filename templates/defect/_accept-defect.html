@@ -5,8 +5,8 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header status_accept_defect">
-            <h3 class="modal-title" id="exampleModalLabel">Принятие дефекта №</h3>
-            <h3 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h3>
+            <h4 class="modal-title" id="exampleModalLabel">Принятие дефекта №</h4>
+            <h4 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h4>
             <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="closeAcceptModalWindow"></button>
           </div>
           <div class="modal-body modal-body1">
@@ -157,7 +157,8 @@
                         <b class="label">Исполнитель ремонта</b>
                         <b class="zvezda"> * </b>
                       </div>
-                      <select class="form-select" :class="{ 'is-valid': newWorker_id !== 0, 'is-invalid': check_worker === true & newWorker_id === 0 }" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledAcceptDefect' data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Исполнителя ремонта может выбрать только Руководитель ремонта">
+                      <!-- <select class="form-select" :class="{ 'is-valid': newWorker_id !== 0, 'is-invalid': check_worker === true & newWorker_id === 0 }" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledAcceptDefect' data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Исполнителя ремонта может выбрать только Руководитель ремонта"> -->
+                      <select class="form-select" :class="{ 'is-valid': newWorker_id !== 0, 'is-invalid': newWorker_id === 0 }" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledAcceptDefect' data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Исполнителя ремонта может выбрать только Руководитель ремонта">
                         <option selected disabled :value=0>Выберите исполнителя ремонта</option>
                         <option v-for="worker in workers"  :value="worker.user_id">{{ worker.user_surname + ' ' + worker.user_name }}</option>
                       </select> 
@@ -192,7 +193,7 @@
               </div>
  
               <div :class="{ hidden: isHiddenblockhistory == 'true' }" :hidden='isHiddenblockhistory == "true"'>
-                <h4>История дефекта</h4>
+                <h4 class="h4 margin-left">История дефекта</h4>
                 <div class="table-responsive small">
                   <table class="table table-striped table-sm">
                     <thead>
@@ -222,7 +223,7 @@
 
               <!----------------------------------------- Классификация дефекта ------------------------------------------------>
               <div :hidden='isHiddenblockclassification == "true"'>
-                <h4 class="h4">Классификация дефекта</h4>
+                <h4 class="h4 margin-left">Классификация дефекта</h4>
                 <br>
                 <div class="block_row1">
                   <div class="width100">
@@ -231,7 +232,7 @@
                         <div class="block_input_data">
                           <b class="label">Категория дефекта</b>
                         </div>
-                        <select class="form-select" v-model="newCategoryDefect_id" disabled>
+                        <select class="form-select custom-select-withnot-arrow" v-model="newCategoryDefect_id" disabled>
                           <option disabled selected :value=0>Выберите категорию дефекта</option>
                           <option v-for="category_defect in categories_defect" :value="category_defect.category_defect_id">{{ category_defect.category_defect_name }}</option>
                         </select>  
@@ -251,10 +252,10 @@
                           <div class="block_input_data">
                             <b class="label">Категория причины и код причины</b>
                           </div>
-                            <select class="form-select" v-model="newCoreClassificationCode" disabled>
-                              <option disabled :value="0" selected>Выберите код причины</option>
-                              <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
-                            </select> 
+                          <select class="form-select block_theme width300px custom-select-withnot-arrow" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" disabled>
+                            <option disabled :value="0" selected>Выберите код причины</option>
+                            <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
+                          </select> 
                         </div>
                         <div class="block_data_column">
                           <div class="block_input_data">
@@ -265,7 +266,6 @@
                       </div>
                     </div>
       
-                    <br>
                     <br>
 
                     <div class="block_row componentWraper5">

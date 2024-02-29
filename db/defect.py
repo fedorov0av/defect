@@ -18,6 +18,8 @@ from db.category_defect import CategoryDefect
 from sqlalchemy.ext.asyncio import AsyncSession
 from db.utils import get_time
 
+STATUS_CLOSE_DEFECT_ID = 10
+STATUS_CANCEL_DEFECT_ID = 9
 
 class Defect(Base):
     __tablename__ = "defect" # процесс учета средств оснащения
@@ -106,7 +108,7 @@ class Defect(Base):
             defect_safety=defect_safety,
             defect_pnr=defect_pnr,
             defect_exploitation=defect_exploitation,
-            defect_category_defect_id = defect_category_defect.category_defect_id,
+            defect_category_defect_id = defect_category_defect.category_defect_id if defect_category_defect != None else None,
             )
         if defect_system_klass:
             defect.defect_system_klass = defect_system_klass
@@ -275,6 +277,9 @@ class Defect(Base):
                     .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                     .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect)).options(selectinload(Defect.defect_checker))\
                     .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
-        result = await session.scalars(query)
+        if status_id not in (STATUS_CLOSE_DEFECT_ID, STATUS_CANCEL_DEFECT_ID):
+            result = await session.scalars(query.filter(Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID, Defect.defect_status_id != STATUS_CANCEL_DEFECT_ID))
+        else:
+            result = await session.scalars(query)
         defects = result.all()
         return defects

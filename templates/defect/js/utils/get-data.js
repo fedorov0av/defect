@@ -23,7 +23,7 @@ function getDataCardHistoryes(){
 function getDataPlaceholders(){
     return {
         'ЖД оборудования': '##XXX##XX###',
-        'ЖД по конструкциям и ЗИС': '##XXX##XN##AAAAAA',
+        'ЖД СК и ЗиС': '##XXX##XN##AAAAAA',
         'ЖД по освещению': '##XXX##XX###',
         'ЖД по системам пожаротушения': '##XXX##',
         }

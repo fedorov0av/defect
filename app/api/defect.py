@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import PendingRollbackError, NoResultFound, IntegrityError
+from sqlalchemy import or_
 
 from db.database import get_db
 from db.user import User
@@ -35,6 +36,7 @@ from app.middleware.auth import auth_required, check_auth_api, check_refresh_tok
 STATUS_REGISTRATION = 1
 STATUS_CONFIRM = 2
 STATUS_CLOSE_DEFECT_ID = 10
+STATUS_CANCEL_DEFECT_ID = 9
 
 defect_router = APIRouter()
 
@@ -61,7 +63,10 @@ async def add_new_defect(request: Request, response: Response, defect_p: New_def
     user: User = await User.get_user_by_id(session, int(user_id))
     defect_type: TypeDefect = await TypeDefect.get_defect_by_name(session, defect_p.defect_type_defect_name)
     defect_status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, STATUS_REGISTRATION)
-    category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session, defect_p.defect_category_defect_id)
+    if defect_p.defect_category_defect_id != 0:
+        category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session, defect_p.defect_category_defect_id)
+    else: 
+        category_defect = None
     if defect_p.defect_core_reason_code:
         defect_core_category_reason = await CategoryCoreReason.get_category_core_reason_by_code(session, defect_p.defect_core_reason_code)
     if defect_p.defect_direct_reason_code:
@@ -94,13 +99,13 @@ async def add_new_defect(request: Request, response: Response, defect_p: New_def
         status=defect_status,
         )
     return defect
-
+ 
 @defect_router.post("/defects/", response_model=Page[Defects_output])
 async def get_defects(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     return await paginate(
         session,
-        select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID)\
+        select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID, Defect.defect_status_id != STATUS_CANCEL_DEFECT_ID)\
                 .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                 .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
@@ -227,7 +232,10 @@ async def confirm_defect(request: Request, response: Response,
             type_defect: TypeDefect = await TypeDefect.get_defect_by_name(session, type_defect_name=type_defect_name.type_defect_name)
             type_defect_id = type_defect.type_defect_id
     else: type_defect_id = None
-    
+    if category_defect_id.category_defect_id:
+        category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session, category_defect_id.category_defect_id)
+    else: 
+        category_defect = None
     user: User = await User.get_user_by_id(session, int(user_id))
     repair_manager: User = await User.get_user_by_id(session, int(repair_manager_id.user_id))
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
@@ -240,8 +248,7 @@ async def confirm_defect(request: Request, response: Response,
         
     division: Division = await Division.get_division_by_id(session, division_id.division_id)
     status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
-    category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session=session, category_defect_id=category_defect_id.category_defect_id)
-    
+        
 
     defect = await Defect.update_defect_by_id(session = session,
                                             defect_id = defect.defect_id,
@@ -255,7 +262,7 @@ async def confirm_defect(request: Request, response: Response,
                                             defect_division_id = division.division_id,
 
                                             defect_system_klass = class_system_name.class_system_name,
-                                            defect_category_defect_id = category_defect.category_defect_id,
+                                            defect_category_defect_id = category_defect.category_defect_id if category_defect else None,
                                             defect_core_category_reason_code = core_classification.category_reason_code if core_classification else core_classification,
                                             defect_direct_category_reason_code = direct_classification.category_reason_code if direct_classification else direct_classification,
 
@@ -397,16 +404,19 @@ async def close_defect(
         core_classification = await CategoryCoreReason.get_category_core_reason_by_code(session, core_classification_code.core_rarery_code)
     else:
         core_classification = None
+    if category_defect_id.category_defect_id:
+        category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session, category_defect_id.category_defect_id)
+    else: 
+        category_defect = None
     user: User = await User.get_user_by_id(session, int(user_id))
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
     status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
-    category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session=session, category_defect_id=category_defect_id.category_defect_id)
 
     defect = await Defect.update_defect_by_id(session = session,
                                             defect_id = defect_id.defect_id,
                                             defect_status_id = status_defect.status_defect_id,
                                             defect_system_klass = class_system_name.class_system_name,
-                                            defect_category_defect_id = category_defect.category_defect_id,
+                                            defect_category_defect_id = category_defect.category_defect_id if category_defect else None,
                                             defect_core_category_reason_code = core_classification.category_reason_code if core_classification else core_classification,
                                             defect_direct_category_reason_code = direct_classification.category_reason_code if direct_classification else direct_classification,
                                             close_defect=True,

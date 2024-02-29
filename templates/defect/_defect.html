@@ -4,7 +4,7 @@
     <div class="modal-dialog">
       <div class="modal-content pos_r1">
         <div class="modal-header status_add_defect">
-          <h3 class="modal-title" id="exampleModalLabel">Регистрация дефекта</h3>
+          <h4 class="modal-title" id="exampleModalLabel">Регистрация дефекта</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalAddDefect"></button>
         </div>
         <div class="modal-body modal-body1">
@@ -30,7 +30,8 @@
                         <b class="label">Журнал дефекта</b>
                         <b class="zvezda"> &nbsp * </b> 
                       </div>
-                      <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': check_defect_type === true & newTypeDefect === '0' }" @change="changeTextCorrection" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
+                      <!-- <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid': check_defect_type === true & newTypeDefect === '0' }" @change="changeTextCorrection" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required> -->
+                      <select class="form-select" :class="{ 'is-valid': newTypeDefect !== '0', 'is-invalid':  newTypeDefect === '0' }" @change="changeTextCorrection" aria-label="Default select example" v-model="newTypeDefect" @change="onChangeTypeDefect" required>
                         <option disabled selected :value=0>Выберите журнал дефекта</option>
                         <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
                       </select>
@@ -51,8 +52,7 @@
                         <div class="block_input_data">
                           <b class="label">Статус дефекта</b>
                         </div>
-                          <select class="form-select" aria-label="Disabled select example" disabled>
-                          </select>
+                          <input type="text" class="form-control " v-model="cardStatusDefectName" placeholder="Статус дефекта" disabled>
                     </div>
                   </div>
                 </div>
@@ -109,7 +109,8 @@
                         <b class="label">Наименование оборудования</b> 
                         <b class="zvezda"> * </b>
                       </div>
-                      <textarea id="my-system" @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': check_defect_system === true & newSystemName === '' }" v-model.lazy="newSystemName" placeholder="Введите наименование оборудования" required></textarea>
+                     <!--  <textarea id="my-system" @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': check_defect_system === true & newSystemName === '' }" v-model.lazy="newSystemName" placeholder="Введите наименование оборудования" required></textarea> -->
+                      <textarea id="my-system" @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': newSystemName === '' }" v-model.lazy="newSystemName" placeholder="Введите наименование оборудования" required></textarea>
                       <p id="system" class="pos_a2"></p>
                     </div>
                   </div>
@@ -129,7 +130,8 @@
                     <b class="label">Описание дефекта</b> 
                     <b class="zvezda"> * </b> 
                   </div>
-                  <textarea id="my-notes" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': check_defect_notes === true & newDefectNotes === '' }" v-model.lazy="newDefectNotes" placeholder="Введите описание дефекта" required></textarea>
+                  <!-- <textarea id="my-notes" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': check_defect_notes === true & newDefectNotes === '' }" v-model.lazy="newDefectNotes" placeholder="Введите описание дефекта" required></textarea> -->
+                  <textarea id="my-notes" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': newDefectNotes === '' }" v-model.lazy="newDefectNotes" placeholder="Введите описание дефекта" required></textarea>
                   <p id="notes" class="pos_a1"></p>
                 </div>
                   
@@ -138,10 +140,7 @@
                     <div class="block_input_data">
                       <b class="label">Обнаружил дефект</b>
                     </div>
-                    <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
-                      <option disabled selected>Выберите подразделение</option>
-                      <option v-for="division in defect_divisions"></option>
-                    </select> 
+                    <input type="text" class="form-control" aria-label="readonly input example" v-model="cardRegistrator" disabled>
                   </div>
 
                   <div class="width50 margin_left_right">
@@ -169,19 +168,13 @@
                     <div class="block_input_data">
                       <b class="label">Ответственный за устранение</b>
                     </div>
-                      <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
-                        <option disabled selected>Выберите подразделение</option>
-                        <option v-for="division in defect_divisions"></option>
-                      </select> 
+                    <input type="text" class="form-control" aria-label="readonly input example" disabled>
                   </div>
                   <div class="block_data_column">
                     <div class="block_input_data">
                       <b class="label">Исполнитель ремонта</b>
                     </div>
-                    <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
-                      <option disabled selected>Выберите подразделение</option>
-                      <option v-for="division in defect_divisions"></option>
-                    </select> 
+                    <input type="text" class="form-control"  aria-label="readonly input example" disabled>
                   </div>
                 </div>
                 <div class="block_data_column1">
@@ -201,10 +194,7 @@
                   <div class="block_input_data">
                     <b  class="label">Выполнил проверку после ремонта</b>
                   </div>
-                  <select class="form-select" aria-label="Disabled select example" v-model="newDivisionOwner" disabled>
-                    <option disabled selected>Выберите подразделение</option>
-                    <option v-for="division in defect_divisions"></option>
-                  </select>  
+                  <input type="text" class="form-control"  aria-label="readonly input example" disabled>
                 </div>
                 <div class="block_data_column1 margin6px">
                   <div class="block_input_data">
@@ -217,7 +207,7 @@
 
             <!----------------------------------------- Классификация дефекта ------------------------------------------------>
             <div :hidden='isHiddenblockclassification == "true"'>
-              <h4 class="h4">Классификация дефекта</h4>
+              <h4 class="h4 margin-left">Классификация дефекта</h4>
               <br>
               <div class="block_row1">
                 <div class="width100">
@@ -225,7 +215,6 @@
                     <div class="block_data_column1 width300px rr20">
                       <div class="block_input_data">
                         <b class="label">Категория дефекта</b>
-                        <b class="zvezda"> * </b> 
                       </div>
                       <select class="form-select" v-model="newCategoryDefect" >
                         <option disabled selected :value=0>Выберите категорию дефекта</option>
@@ -249,10 +238,11 @@
                           <b class="label">Категория причины и код причины</b>
                         </div>
                         <div class="block_row1">
-                          <select class="form-select block_theme width300px" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" disabled>
+                          <input type="text" class="form-control width300px" placeholder="Выберите код причины" aria-label="readonly input example" disabled>
+                          <!-- <select class="form-select block_theme width300px" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" disabled>
                             <option disabled :value="0" selected>Выберите код причины</option>
                             <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
-                          </select> 
+                          </select>  -->
                           <button @click="clickbuttonspravochnik" id="SpravochnikButton" class="btn btn-primary" type="button" hidden>Справочник кодов</button>
                         </div>
                       </div>
@@ -266,7 +256,6 @@
                     </div>
                   </div>
     
-                  <br>
                   <br>
 
                   <div class="block_row componentWraper5">
