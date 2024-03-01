@@ -13,11 +13,19 @@ const appVueDefect = Vue.createApp({
         tableData: {},
       }
     }, 
+    deforeMount(){
+    },
     mounted() {
       this.updateTableDefect(true);
       this.currentPage = 1;
     },  /* mounted */
     methods: { 
+      sortBy(field) {
+        $("#mainTable").tablesorter({
+          sortList: [[0,1]], // Сортировка по первой колонке (0) в обратном порядке (1)
+          updateArrows: true,
+        });
+      },
       tableRowClassName({row, rowIndex}) {
         axios
         .post('/user/user_role')
@@ -71,7 +79,8 @@ const appVueDefect = Vue.createApp({
                   }
                 }
                 this.defects[defect].dateBackgroundColor = date_background;
-              }
+              } 
+
                 })
           .catch(err => {
             if (err.response.status === 401){
