@@ -1,8 +1,8 @@
 from datetime import timedelta
-from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request, status
-from fastapi.responses import RedirectResponse
-
+from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request
 from fastapi_jwt import JwtAccessBearerCookie, JwtAuthorizationCredentials, JwtRefreshBearer, JwtAccessBearer
+from fastapi_csrf_protect import CsrfProtect
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
 
@@ -13,8 +13,6 @@ from utils.security import check_password
 from db.user import User
 from db.database import get_db
 
-from fastapi_csrf_protect import CsrfProtect
-from fastapi.responses import JSONResponse
 from app.schemas.auth import CsrfSettings
  
 auth_router = APIRouter()

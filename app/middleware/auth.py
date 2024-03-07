@@ -1,15 +1,13 @@
+import datetime
+import starlette.status as status
 from fastapi import Request, HTTPException, Response, status
 from fastapi.responses import RedirectResponse
-from starlette.templating import Jinja2Templates
-
 from jwt.exceptions import ExpiredSignatureError, DecodeError
-import starlette.status as status
 from functools import wraps
 
 from utils.jwt import decode_token, decrypt_user_id, encrypt_user_id, access_security, refresh_security
 
 
-import datetime
 
 """ {
   "subject": {

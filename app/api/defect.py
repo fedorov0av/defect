@@ -1,13 +1,11 @@
 from datetime import datetime
 from fastapi import APIRouter, Depends, Request, Response
-from utils.jwt import decrypt_user_id, decode_token
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import PendingRollbackError, NoResultFound, IntegrityError
-from sqlalchemy import or_
 
 from db.database import get_db
 from db.user import User
@@ -21,7 +19,6 @@ from db.category_defect import CategoryDefect
 from db.defect_reason_core import CategoryCoreReason
 from db.defect_reason_direct import CategoryDirectReason
 
-
 from app.schemas.user import User_id
 from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_description_p, Defect_location_p
 from app.schemas.status_defect import StatusDefect_name
@@ -29,8 +26,9 @@ from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr, Pnr, S
 from app.schemas.type_defect import TypeDefect_name
 from app.schemas.system import System_kks, System_name
 from app.schemas.category_defect import CategoryDefect_id, ClassSystem_name, CoreClassification_code, DirectClassification_code, DirectClassification_name
+from app.middleware.auth import check_auth_api, check_refresh_token
 
-from app.middleware.auth import auth_required, check_auth_api, check_refresh_token
+from utils.jwt import decrypt_user_id, decode_token
 
 
 STATUS_REGISTRATION = 1
@@ -40,11 +38,29 @@ STATUS_CANCEL_DEFECT_ID = 9
 
 defect_router = APIRouter()
 
+""" async def add_system_(session: AsyncSession, system_name: str, system_kks: str = None):
+    try:
+        if system_kks:
+            await System.add_system(session, system_name, system_kks)
+            system = await System.get_system_by_kks(session, system_kks)
+        else:
+            try:
+                system = await System.get_system_by_name(session, system_name)
+            except NoResultFound:
+                await System.add_system(session, system_name=system_name, system_kks=None)
+                system = await System.get_system_by_name(session, system_name)
+    except (PendingRollbackError, IntegrityError):
+        await session.rollback()
+        system: System = await System.get_system_by_kks(session, defect_p.defect_system_kks)
+        if defect_p.defect_system_name:
+            system.system_name = defect_p.defect_system_name """
+
 @defect_router.post("/defect/add")
 async def add_new_defect(request: Request, response: Response, defect_p: New_defect_p, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
+
     try:
         if defect_p.defect_system_kks:
             await System.add_system(session, defect_p.defect_system_name, defect_p.defect_system_kks)
@@ -60,6 +76,7 @@ async def add_new_defect(request: Request, response: Response, defect_p: New_def
         system: System = await System.get_system_by_kks(session, defect_p.defect_system_kks)
         if defect_p.defect_system_name:
             system.system_name = defect_p.defect_system_name
+
     user: User = await User.get_user_by_id(session, int(user_id))
     defect_type: TypeDefect = await TypeDefect.get_defect_by_name(session, defect_p.defect_type_defect_name)
     defect_status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, STATUS_REGISTRATION)
@@ -193,6 +210,7 @@ async def confirm_defect(request: Request, response: Response,
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
+
     try:
         if system_kks.system_kks:
             await System.add_system(session, system_name=system_name.system_name, system_kks=system_kks.system_kks)

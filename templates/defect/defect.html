@@ -10,15 +10,6 @@
 		<script src="{{ url_for('static_js', path='vue3.js') }}"></script>
 		<script src="{{ url_for('static_js', path='axios.min.js') }}"></script>
 		<script src="{{ url_for('static_js', path='bootstrap-table.min.js') }}"></script>
-		<style src="https://cdn.datatables.net/2.0.1/css/dataTables.bootstrap5.css"></style>
-		
-
-		<!-- load jQuery and tablesorter scripts -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js" integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-		<!-- tablesorter widgets (optional) -->
-
-		<script src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
-
 		<script src="{{ url_for('defect_js', path='utils/update-tables.js') }}"></script>
 		<script src="{{ url_for('defect_js', path='utils/export.js') }}"></script>
 		<script src="{{ url_for('defect_js', path='utils/get-setting.js') }}"></script>
@@ -31,10 +22,11 @@
 		<title>Журнал учета дефектов</title>
 		<link rel="stylesheet" href="{{ url_for('static_css', path='defect-styles.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static_css', path='mystyles.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static_css', path='tablesort.css') }}">
 		<!-- Custom styles for this template -->
 		<link href="{{ url_for('static_css', path='defect.css') }}" rel="stylesheet">
 	</head>
-	<body>
+	<body class="myfont">
 		{% include "defect/_head.html" %} <!-- Заголовок -->
 		{% include "defect/_nav.html" %} <!-- Меню навигации -->
 		{% block content %}

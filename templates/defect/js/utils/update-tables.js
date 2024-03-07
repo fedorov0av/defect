@@ -7,7 +7,7 @@ function updateTableWorkers(workers, acceptDefect=false) {
                 axios
                 .post('/user/me',)
                 .then(response => {
-                    workers[workers.constructor.values.length] = response.data;
+                    workers[workers.constructor.values.length+1] = response.data;
                     Object.assign(workers, workers);
                     }) /* axios */
             }

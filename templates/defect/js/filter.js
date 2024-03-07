@@ -46,6 +46,7 @@ const appVueFilter = Vue.createApp({
           updateTableTypeDefect(this.type_defects)
         }, /* updateAllTables */
         searchResponsibleMainTable(event) {
+          document.dispatchEvent(new Event('resetSorting'));
           let tempArray = {}
           let count = 0
           if (this.dataSearch === ''){
@@ -135,6 +136,7 @@ const appVueFilter = Vue.createApp({
                 console.log(err);
               }
                 }) /* axios */
+            document.dispatchEvent(new Event('resetSorting'));
         }, /* useFilter */
         nouseFilter() {
           this.clearData();

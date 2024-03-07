@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request, Response
-from utils.jwt import access_security, refresh_security, encrypt_user_id, decrypt_user_id, decode_token
+from fastapi import APIRouter, Response, Depends, Request, Response
+from utils.jwt import decrypt_user_id, decode_token
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.user import User
@@ -7,6 +7,7 @@ from db.history_defect import History
 from db.defect import Defect
 from db.status_defect import StatusDefect
 from db.database import get_db
+
 from app.schemas.defect import Defect_id
 from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Сomment

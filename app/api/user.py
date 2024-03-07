@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, Request, Response
-from utils.jwt import access_security, refresh_security, encrypt_user_id, decrypt_user_id, decode_token
+from utils.jwt import decrypt_user_id, decode_token
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi.responses import RedirectResponse
 
 from db.user import User
 from db.role import Role
 from db.division import Division
 from db.database import get_db
+
 from app.schemas.user import User_p, User_id, User_update
-from app.middleware.auth import auth_required, check_auth_api
+from app.middleware.auth import check_auth_api
 
 
 user_router = APIRouter()

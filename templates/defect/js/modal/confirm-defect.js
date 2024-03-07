@@ -112,6 +112,9 @@ const appConfirmDefect = Vue.createApp({
         this.newCardKKS = '';
         if (event.target.value) {this.style_input_type = "lime"};
       }, /* changeTextWork */
+      changeTextWork15(event){
+        if (event.target.value.length > 15) {event.target.value = event.target.value.slice(0, 15);}
+      }, /* changeTextWork15 */
       changeTextWork100(event){
         if (event.target.value.length > 100) {event.target.value = event.target.value.slice(0, 100);}
       }, /* changeTextWork100 */

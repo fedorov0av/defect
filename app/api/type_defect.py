@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request, Response
+from fastapi import APIRouter, Response, Depends, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.type_defect import TypeDefect
 from db.database import get_db
-from app.middleware.auth import check_auth_api
 
 
 type_defect_router = APIRouter()

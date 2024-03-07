@@ -1,6 +1,6 @@
 from ldap3 import Server, Connection, ALL, NTLM, ObjectDef, AttrDef, HASHED_SALTED_SHA512, ALL_ATTRIBUTES, MODIFY_ADD
 
-SERVER_URI = 'ldaps://ldap.mbu.invalid'
+SERVER_URI = 'ldap://akk-s-dc02.mbu.invalid'
 ATTRS = ['*']
 SEARCH_BASE = 'ou=Users,ou=_Akkuyu,dc=mbu,dc=invalid'
 server = Server(SERVER_URI, get_info=ALL)

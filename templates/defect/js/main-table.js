@@ -1,7 +1,17 @@
 const appVueDefect = Vue.createApp({
     data() {
       return {
-        colunmsName: ['№', 'Дата регистрации', 'Срок устранения', 'Подразделение-владелец', 'KKS', 'Оборудование', 'Описание дефекта', 'Статус',  'Ответственный'],
+        colunmsName: [
+          { name: "№", key: "defect_id" },
+          { name: "Дата регистрации", key: "defect_created_at" },
+          { name: "Срок устранения", key: "defect_planned_finish_date" },
+          { name: "Подразделение-владелец", key: "defect_owner" },
+          { name: "KKS", key: "defect_system.system_kks" },
+          { name: "Оборудование", key: "defect_system.system_name" },
+          { name: "Описание дефекта", key: "defect_description" },
+          { name: "Статус", key: "defect_status.status_defect_name" },
+          { name: "Ответственный", key: "responsible" },
+        ],
         defect_divisions: {},
         defect_type_defects: {},
         defects: {},
@@ -11,6 +21,8 @@ const appVueDefect = Vue.createApp({
         temp_resp: {},
         nextPageNumber: 0,
         tableData: {},
+        sortDirection: 1,
+        sortColumn: null,
       }
     }, 
     deforeMount(){
@@ -18,13 +30,61 @@ const appVueDefect = Vue.createApp({
     mounted() {
       this.updateTableDefect(true);
       this.currentPage = 1;
+      document.addEventListener('resetSorting', () => {
+        this.resetSorting();
+      });
     },  /* mounted */
     methods: { 
-      sortBy(field) {
-        $("#mainTable").tablesorter({
-          sortList: [[0,1]], // Сортировка по первой колонке (0) в обратном порядке (1)
-          updateArrows: true,
+      sortTableColumn(index) {
+        if (!Array.isArray(this.defects)) {
+          this.defects = Object.values(this.defects);
+        }
+  
+        if (this.defects.length === 0) return;
+        
+        let key = this.colunmsName[index].key; // выбор ключа для сортировки
+  
+        // проверка, если все значения в массиве одинаковы
+        const firstValue = key.split(".").reduce((o, i) => o[i], this.defects[0]);
+        const allSame = this.defects.every((defect) => {
+          const value = key.split(".").reduce((o, i) => o[i], defect);
+          return value === firstValue;
         });
+  
+        // если все значения одинаковы, то возврат исходного массива
+        if (allSame) return this.defects;
+  
+        // изменение направления, если клик по тому же столбцу, где уже идет сортировка
+        if (this.sortColumn === index) {
+          this.sortDirection = -this.sortDirection;
+        } else {
+          // установка столбца активным и сортировка по новому столбцу по возрастанию
+          this.sortColumn = index;
+          this.sortDirection = 1;
+        }
+  
+        // передача двух элементов массива defects для сравнения
+        this.defects.sort((a, b) => {
+          // разделение строки на массив подстрок и проход по массиву ключей для извлечения значения
+          // пример: объект a {defect_system: {system_kks: 'KKS1'}}, где key: defect_system.system_kks, aValue: KKS1
+          let aValue = key.split(".").reduce((o, i) => o[i], a);
+          let bValue = key.split(".").reduce((o, i) => o[i], b);
+  
+          if (aValue == null) return 1; // элемент a должен идти после b в отсортированном списке
+          if (bValue == null) return -1; // элемент b должен идти после a в отсортированном списке
+  
+          // если тип элемента - строка, то преобразование элемента в нижний регистр
+          if (typeof aValue === "string") aValue = aValue.toLowerCase();
+          if (typeof bValue === "string") bValue = bValue.toLowerCase();
+  
+          return aValue < bValue
+            ? -1 * this.sortDirection
+            : 1 * this.sortDirection;
+        });
+      },
+      resetSorting() {
+        this.sortColumn = null;
+        this.sortDirection = 1;
       },
       tableRowClassName({row, rowIndex}) {
         axios
@@ -40,7 +100,8 @@ const appVueDefect = Vue.createApp({
           })
       },
       updateTables(){
-        this.updateTableDefect()
+        this.updateTableDefect();
+        this.resetSorting();
       },
       updateTableDefect(start = false) {
         if (start){ 
@@ -50,7 +111,7 @@ const appVueDefect = Vue.createApp({
           axios
           .post('/defects', null, {params:{'page': 1, 'size': parseInt(this.pageSize)}})
           .then(response => {
-              this.temp_resp = response.data;
+/*               this.temp_resp = response.data; */
               this.pageNumber = response.data.page;
               this.pages = response.data.pages;
               this.defects = response.data.items;

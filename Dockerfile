@@ -6,6 +6,7 @@ COPY app/ /defects/app/
 COPY db/ /defects/db/
 COPY templates/ /defects/templates/
 COPY utils/ /defects/utils/
+COPY cert/ /defects/cert/
 COPY create_db.py defects/
 COPY main.py defects/
 
@@ -21,6 +22,6 @@ ENV TZ=Europe/Istanbul
 WORKDIR /defects
 
 # Открытие порта
-EXPOSE 4000
+EXPOSE 80 443
 # Команда запуска приложения
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "4000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "443", "--ssl-keyfile", "cert/private.key", "--ssl-certfile", "cert/defect-journal.akkuyu.local.cer"]

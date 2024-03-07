@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request, Response
+from fastapi import APIRouter, Response, Depends, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.defect_reason_core import CategoryCoreReason

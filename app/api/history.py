@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from db.history_defect import History
 from db.defect import Defect
 from db.database import get_db
+
 from app.schemas.defect import Defect_id
 from app.middleware.auth import check_auth_api
  

@@ -1,3 +1,11 @@
+.myfont {
+  font-family: "Calibri", "Microsoft Sans Serif";
+}
+
+.modal-title {
+  font-family: "Calibri", "Microsoft Sans Serif";
+}
+
 /* Стили для стрелок сортировки */
 .sort-icon {
   position: absolute;
@@ -104,12 +112,16 @@
 .accordion-button {
   font-weight: bold;
   background-color: rgb(171, 207, 248);
-  padding: 5px 25px;
+  padding: 5px 25px 5px 25px;
   border-radius: 0px;
 }
 
 .accordion-button:not(.collapsed) {
   background-color: rgb(171, 207, 248);
+}
+
+.accordion-button::after {
+  margin-left: 10px;
 }
 
 .form-check-input1 {
@@ -145,6 +157,7 @@
 
 .back{
   background: no-repeat url("../img/fon.jpg");
+  background-size: 100% auto;
 }
 
 .last_block_row {
@@ -507,10 +520,6 @@
   text-align: left;
   font-size: 16px;
   vertical-align: middle;
-}
-
-.form-select1 {
-  margin-right: 5px;
 }
 
 .status_add_defect {
@@ -907,6 +916,7 @@
 }
 
 .label {
+  font-family: "Calibri", "Microsoft Sans Serif";
   font-weight: 600;
 }
 
@@ -964,7 +974,7 @@
 }
 
 .componentWraper0 {
-  margin: 10px 5px;
+  margin: 10px 5px 10px 0px;
   position: relative;
   border: 1px solid rgb(179, 160, 157);
   border-radius: 10px;
@@ -1053,7 +1063,7 @@
   transform: translateY(-50%);
 }
 
-@media screen and (min-width:200px) and (max-width:1920px) {
+@media screen and (min-width:200px) and (max-width:2400px) {
 
   .h2 {
     margin: auto;
