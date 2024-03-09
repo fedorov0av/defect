@@ -6,12 +6,13 @@ from jwt.exceptions import ExpiredSignatureError, DecodeError
 from functools import wraps
 
 from utils.jwt import decode_token, decrypt_user_id, encrypt_user_id, access_security, refresh_security
-
+from config import AD
 
 
 """ {
   "subject": {
-    "userId": "gAAAAABlcxc5UgiKjpRjpD3tpOrOzQiJzQskX8fqMRaxv5qxu1sTki9r1MzzZnINcl04C2iwmxPasZCedhZ0fR8UeTyukQMhNA=="
+    "userId": "gAAAAABlcxc5UgiKjpRjpD3tpOrOzQiJzQskX8fqMRaxv5qxu1sTki9r1MzzZnINcl04C2iwmxPasZCedhZ0fR8UeTyukQMhNA==",
+    "userP": "gAAAAABlcxc5UgiKjpRjpD3tpOrOzQiJzQskX8fqMRaxv5qxu1sTki9r1MzzZnINcl04C2iwmxPasZCedhZ0fR8UeTyukQMhNA==",
   },
   "type": "access",
   "exp": 1702045001,
@@ -44,9 +45,14 @@ def auth_required(func):
 async def update_jwt_tokens_by_refresh_token(request: Request, response: Response, jwt_refresh_token: str):
     token_dec = await decode_token(jwt_refresh_token)
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
+    if AD:
+        user_p = await decrypt_user_id(token_dec['subject']['userP'])
+        token_user_p = await encrypt_user_id(str(user_p))
     token_user_id = await encrypt_user_id(str(user_id))
-
-    subject = {"userId": token_user_id}
+    if AD:
+        subject = {"userId": token_user_id, "userP": token_user_p}
+    else:
+        subject = {"userId": token_user_id}
     access_token = access_security.create_access_token(subject=subject)
     refresh_token = refresh_security.create_refresh_token(subject=subject)
     response.set_cookie(key="jwt_access_token", value=access_token, httponly=True)

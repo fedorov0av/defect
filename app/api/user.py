@@ -6,10 +6,12 @@ from db.user import User
 from db.role import Role
 from db.division import Division
 from db.database import get_db
+from app.schemas.user import UserAD
 
+from utils.ldap import get_user_from_EntryLDAP, get_user_by_uid_from_AD
 from app.schemas.user import User_p, User_id, User_update
 from app.middleware.auth import check_auth_api
-
+from config import AD
 
 user_router = APIRouter()
 
@@ -18,7 +20,12 @@ async def get_current_user(request: Request, response: Response, session: AsyncS
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
-    user: User = await User.get_user_by_id(session, int(user_id))
+    if AD:
+        passw = await decrypt_user_id(token_dec['subject']['userP'])
+        userAD = await get_user_by_uid_from_AD(user_id, passw, user_id)
+        user: UserAD = await get_user_from_EntryLDAP(session, request, userAD)
+    else: 
+        user: User = await User.get_user_by_id(session, int(user_id))
     return {
             "user_id": user.user_id,
             "user_surname": user.user_surname,
@@ -37,14 +44,19 @@ async def get_current_user_role(request: Request, response: Response, session: A
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
-    user: User = await User.get_user_by_id(session, int(user_id))
+    if AD:
+        passw = await decrypt_user_id(token_dec['subject']['userP'])
+        userAD = await get_user_by_uid_from_AD(user_id, passw, user_id)
+        user: UserAD = await get_user_from_EntryLDAP(session, request, userAD)
+    else:
+        user: User = await User.get_user_by_id(session, int(user_id))
     return {
             "user_id": user.user_id,
             "user_role": user.user_role[-1].role_name,
             "user_division": user.user_division.division_name,
             }
 
-@user_router.post("/user/add")
+@user_router.post("/user/add") # только в режиме работы "БД"
 async def add_new_user(request: Request, response: Response, user_p: User_p, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     division = await Division.get_division_by_name(session, user_p.user_division)
@@ -62,7 +74,7 @@ async def add_new_user(request: Request, response: Response, user_p: User_p, ses
         )
     return user
 
-@user_router.post("/user/update")
+@user_router.post("/user/update") # только в режиме работы "БД"
 async def update_user(request: Request, response: Response, user_update: User_update, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     user = await User.get_user_by_id(session, user_update.user_id)
@@ -81,7 +93,7 @@ async def update_user(request: Request, response: Response, user_update: User_up
         )
     return user
  
-@user_router.post("/users/")
+@user_router.post("/users/") # только в режиме работы "БД"
 async def get_users(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     result: list[User] = await User.get_all_users(session)
@@ -105,7 +117,14 @@ async def get_users(request: Request, response: Response, session: AsyncSession 
 @user_router.post("/user/")
 async def get_user(request: Request, response: Response, user_id: User_id, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
-    user: User = await User.get_user_by_id(session, user_id.user_id)
+    if AD:
+        token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+        user_current_id = await decrypt_user_id(token_dec['subject']['userId'])
+        passw = await decrypt_user_id(token_dec['subject']['userP'])
+        userAD = await get_user_by_uid_from_AD(user_current_id, passw, user_id.user_id)
+        user: UserAD = await get_user_from_EntryLDAP(session, request, userAD)
+    else:
+        user: User = await User.get_user_by_id(session, user_id.user_id)
     return {
                 "user_id": user.user_id,
                 'user_surname': user.user_surname,
@@ -117,7 +136,7 @@ async def get_user(request: Request, response: Response, user_id: User_id, sessi
                 "user_email": user.user_email
             }
 
-@user_router.post("/user/repair_managers")
+@user_router.post("/user/repair_managers") # получение всех РУКОВОДИТЕЛЕЙ РЕМОНТА - дописать для работы в режиме "AD" (ждем название рабочей группы в AD)
 async def get_repair_managers(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     role_repair_manager: Role = await Role.get_role_by_rolename(session, "Руководитель")
@@ -138,7 +157,7 @@ async def get_repair_managers(request: Request, response: Response, session: Asy
         )
     return user_l
 
-@user_router.post("/user/workers")
+@user_router.post("/user/workers") # получение всех ИСПОЛНИТЕЛЕЙ - дописать для работы в режиме "AD" (ждем название рабочей группы в AD)
 async def get_worker(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     role_worker: Role = await Role.get_role_by_rolename(session, "Исполнитель")
@@ -159,7 +178,7 @@ async def get_worker(request: Request, response: Response, session: AsyncSession
         )
     return user_l
 
-@user_router.post("/user/registrators")
+@user_router.post("/user/registrators") # получение всех РЕГИСТРАТОРОВ - дописать для работы в режиме "AD" (ждем название рабочей группы в AD)
 async def get_registrators(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     role_registrator: Role = await Role.get_role_by_rolename(session, "Регистратор")
@@ -180,7 +199,7 @@ async def get_registrators(request: Request, response: Response, session: AsyncS
         )
     return user_l
 
-@user_router.post("/users/emails")
+@user_router.post("/users/emails") # только в режиме работы "БД"
 async def get_users_emails(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     result: list[User] = await User.get_all_users(session)

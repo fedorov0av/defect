@@ -39,3 +39,6 @@ class Filter(BaseModel):
     exploitation: Optional[bool] = None
     type_defect_id: Optional[int] = 0 
 
+class DivisionAD(BaseModel):
+    division_id: Optional[int]
+    division_name: Optional[str]

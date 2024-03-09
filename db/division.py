@@ -10,7 +10,7 @@ class Division(Base):
     division_name: Mapped[str] = mapped_column(String(100), unique=True) # название роли
 
     @staticmethod
-    async def get_division_by_name(session: AsyncSession, division_name:str): # получение системы по ключу system_kks
+    async def get_division_by_name(session: AsyncSession, division_name:str): # получение системы по названию
         query = select(Division).where(Division.division_name == division_name)
         result = await session.scalars(query)
         division = result.one()
@@ -36,3 +36,7 @@ class Division(Base):
         result = await session.scalars(query)
         divisions = result.all()
         return divisions
+
+    @staticmethod
+    async def get_division_by_departament_name(session: AsyncSession, departament_name:str): # получение системы по названию из AD
+        pass

@@ -8,6 +8,7 @@ from db.user import User
 from db.defect import Defect
 from db.status_defect import StatusDefect
 from db.utils import get_time
+from config import AD
 
 
 class History(Base):
@@ -41,9 +42,13 @@ class History(Base):
     
     @staticmethod
     async def get_history_by_defect(session: AsyncSession, defect: Defect,) -> list:
-        query = select(History).where(History.history_defect_id == defect.defect_id).order_by(History.history_id).options(selectinload(History.history_defect))\
-                                                                                    .options(selectinload(History.history_user))\
+        if AD:
+            query = select(History).where(History.history_defect_id == defect.defect_id).order_by(History.history_id).options(selectinload(History.history_defect))\
                                                                                     .options(selectinload(History.history_status))
+        else:
+            query = select(History).where(History.history_defect_id == defect.defect_id).order_by(History.history_id).options(selectinload(History.history_defect))\
+                                                                                        .options(selectinload(History.history_user))\
+                                                                                        .options(selectinload(History.history_status))
         result = await session.scalars(query)
         historys = result.all()
         return historys

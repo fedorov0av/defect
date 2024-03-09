@@ -1,5 +1,12 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, validator
+from app.schemas.other import DivisionAD
+from sqlalchemy_to_pydantic import sqlalchemy_to_pydantic
+from db.division import Division
+from db.role import Role
+
+PydanticDivision: Division = sqlalchemy_to_pydantic(Division)
+PydanticRole: Role = sqlalchemy_to_pydantic(Role)
 
 class User_p(BaseModel):
     user_surname: Optional[str]
@@ -30,3 +37,13 @@ class User_update(BaseModel):
 
 class User_id(BaseModel):
     user_id: Optional[int]
+
+class UserAD(BaseModel):
+    user_id: str # UID
+    user_name: str # имя пользователя
+    user_fathername: Optional[str] # отчество пользователя
+    user_surname: str # фамилия пользователя
+    user_position: str # должность пользователя
+    user_division: PydanticDivision #  название подразделения пользователя
+    user_role: List[PydanticRole] # роль пользователя в системе
+    user_email: str # почта

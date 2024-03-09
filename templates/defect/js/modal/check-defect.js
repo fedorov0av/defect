@@ -125,7 +125,7 @@ const appCheckDefect = Vue.createApp({
         axios
           .post('/get_defect/',{
             "defect_id": this.defect_id,
-          })
+          }) 
           .then(response => {
             this.cardDefect = response.data;
             this.cardDefectID = this.cardDefect.defect_id; 
@@ -268,7 +268,7 @@ const appCheckDefect = Vue.createApp({
                 }) /* axios */
           }
         });
-      },/* executionDefect */
+      },/* warningDefect */
       dangerDefect() {
         if (this.newCheckerId === 0) {
           this.check_checker_name = true;
@@ -313,13 +313,13 @@ const appCheckDefect = Vue.createApp({
                     if (err.response.status === 401){
                       window.location.href = "/";
                     } else {
-                      Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА КОРРЕКТИРОВКУ! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      Swal.fire({html:"<b>Произошла ошибка при ОТПРАВКЕ ДЕФЕКТА НА УСТРАНЕНИЕ ЗАНОВО! Обратитесь к администратору!</b>", heightAuto: false}); 
                       console.log(err);
                     }
                 }) /* axios */
             }
         });
-      },/* cancelDefect */
+      },/* dangerDefect */
       exportHistoryExcel(){
         runExportHistoryExcel(this.defect_id);
       }, /* exportHistoryExcel */

@@ -10,7 +10,7 @@
               <tr class="head_table myfont">
                 <th v-for="(colunmName, index) in colunmsName" class="th-sm" :class="{ 'active': sortColumn === index }" @click="sortTableColumn(index)">
                   <div class="th-content">
-                    <span>{{ colunmName.name }} </span>
+                    <span>{{ colunmName.name }}</span>
                     <div class="arrow-container">
                       <span class="arrow arrow-up" :class="{ 'active-arrow-up': sortDirection === 1 && sortColumn === index }"></span>
                       <span class="arrow arrow-down" :class="{ 'active-arrow-down': sortDirection === -1 && sortColumn === index }"></span>  
@@ -23,11 +23,11 @@
             </thead>
             <tbody>
               <tr @dblclick="handleDoubleClick" data-bs-target="#ConfirmDefectModalWindow" v-for="defect in defects" :class="defect.dateBackgroundColor" v-bind:key="defect.defect_id">
-                <td class="main-table_td95 myfont">{{ defect.defect_id }}</td>
-                <td class="main-table_td155 myfont" style="width: 155px;">{{ defect.defect_created_at }}</td>
-                <td class="main-table_td100 myfont">{{ defect.defect_planned_finish_date }}</td>
-                <td class="main-table_td150 myfont">{{ defect.defect_owner }}</td>
-                <td class="main-table_td95 myfont">{{ defect.defect_system.system_kks }}</td>
+                <td class="main-table_td110 myfont">{{ defect.defect_id }}</td>
+                <td class="main-table_td160 myfont">{{ defect.defect_created_at }}</td>
+                <td class="main-table_td110 myfont">{{ defect.defect_planned_finish_date }}</td>
+                <td class="main-table_td160 myfont">{{ defect.defect_owner }}</td>
+                <td class="main-table_td110 myfont">{{ defect.defect_system.system_kks }}</td>
                 <td>{{ defect.defect_system.system_name }}</td>
                 <td>{{ defect.defect_description }}</td>
                 <td id="status" class="main-table_td180 myfont">{{ defect.defect_status.status_defect_name }}</td>

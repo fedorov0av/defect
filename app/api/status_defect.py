@@ -29,7 +29,6 @@ async def update_status_defects(request: Request, response: Response, defect_id:
     defect = await Defect.update_defect_by_id(session = session,
                                             defect_id = defect.defect_id,
                                             defect_status_id = status_defect.status_defect_id)
-
     history = await History.add_history(
         session=session,
         defect=defect,

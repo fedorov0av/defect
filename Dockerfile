@@ -9,6 +9,7 @@ COPY utils/ /defects/utils/
 COPY cert/ /defects/cert/
 COPY create_db.py defects/
 COPY main.py defects/
+COPY .env defects/
 
 # Копирование requirements.txt и установка зависимостей
 COPY requirements.txt /defects/requirements.txt

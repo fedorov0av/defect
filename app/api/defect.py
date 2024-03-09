@@ -19,7 +19,8 @@ from db.category_defect import CategoryDefect
 from db.defect_reason_core import CategoryCoreReason
 from db.defect_reason_direct import CategoryDirectReason
 
-from app.schemas.user import User_id
+from utils.ldap import get_user_from_EntryLDAP, get_user_by_uid_from_AD
+from app.schemas.user import User_id, UserAD
 from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_description_p, Defect_location_p
 from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr, Pnr, Safety, Exploitation
@@ -29,7 +30,7 @@ from app.schemas.category_defect import CategoryDefect_id, ClassSystem_name, Cor
 from app.middleware.auth import check_auth_api, check_refresh_token
 
 from utils.jwt import decrypt_user_id, decode_token
-
+from config import AD
 
 STATUS_REGISTRATION = 1
 STATUS_CONFIRM = 2
@@ -38,7 +39,7 @@ STATUS_CANCEL_DEFECT_ID = 9
 
 defect_router = APIRouter()
 
-""" async def add_system_(session: AsyncSession, system_name: str, system_kks: str = None):
+async def add_system(session: AsyncSession, system_name: str, system_kks: str = None):
     try:
         if system_kks:
             await System.add_system(session, system_name, system_kks)
@@ -51,9 +52,11 @@ defect_router = APIRouter()
                 system = await System.get_system_by_name(session, system_name)
     except (PendingRollbackError, IntegrityError):
         await session.rollback()
-        system: System = await System.get_system_by_kks(session, defect_p.defect_system_kks)
-        if defect_p.defect_system_name:
-            system.system_name = defect_p.defect_system_name """
+        system: System = await System.get_system_by_kks(session, system_kks)
+        if system_name:
+            system.system_name = system_name
+    return system
+
 
 @defect_router.post("/defect/add")
 async def add_new_defect(request: Request, response: Response, defect_p: New_defect_p, session: AsyncSession = Depends(get_db)):
@@ -61,23 +64,15 @@ async def add_new_defect(request: Request, response: Response, defect_p: New_def
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
 
-    try:
-        if defect_p.defect_system_kks:
-            await System.add_system(session, defect_p.defect_system_name, defect_p.defect_system_kks)
-            system = await System.get_system_by_kks(session, defect_p.defect_system_kks)
-        else:
-            try:
-                system = await System.get_system_by_name(session, defect_p.defect_system_name)
-            except NoResultFound:
-                await System.add_system(session, system_name=defect_p.defect_system_name, system_kks=None)
-                system = await System.get_system_by_name(session, defect_p.defect_system_name)
-    except (PendingRollbackError, IntegrityError):
-        await session.rollback()
-        system: System = await System.get_system_by_kks(session, defect_p.defect_system_kks)
-        if defect_p.defect_system_name:
-            system.system_name = defect_p.defect_system_name
+    system = await add_system(session, defect_p.defect_system_name, defect_p.defect_system_kks)
 
-    user: User = await User.get_user_by_id(session, int(user_id))
+    if AD:
+        passw = await decrypt_user_id(token_dec['subject']['userP'])
+        userAD = await get_user_by_uid_from_AD(user_id, passw, user_id)
+        user: UserAD = await get_user_from_EntryLDAP(session, request, userAD)
+    else:
+        user: User = await User.get_user_by_id(session, int(user_id))
+
     defect_type: TypeDefect = await TypeDefect.get_defect_by_name(session, defect_p.defect_type_defect_name)
     defect_status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, STATUS_REGISTRATION)
     if defect_p.defect_category_defect_id != 0:
@@ -117,7 +112,7 @@ async def add_new_defect(request: Request, response: Response, defect_p: New_def
         )
     return defect
  
-@defect_router.post("/defects/", response_model=Page[Defects_output])
+@defect_router.post("/defects/", response_model=Page[Defects_output]) # fix by AD
 async def get_defects(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     return await paginate(
@@ -211,21 +206,7 @@ async def confirm_defect(request: Request, response: Response,
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
 
-    try:
-        if system_kks.system_kks:
-            await System.add_system(session, system_name=system_name.system_name, system_kks=system_kks.system_kks)
-            system = await System.get_system_by_kks(session, system_kks.system_kks)
-        else:
-            try:
-                system = await System.get_system_by_name(session, system_name.system_name)
-            except NoResultFound:
-                await System.add_system(session, system_name=system_name.system_name, system_kks=None)
-                system = await System.get_system_by_name(session, system_name.system_name)
-    except (PendingRollbackError, IntegrityError):
-        await session.rollback()
-        system: System = await System.get_system_by_kks(session, system_kks=system_kks.system_kks)
-        if system_name.system_name:
-            system.system_name = system_name.system_name
+    system = await add_system(session, system_name.system_name, system_kks.system_kks)
 
     try:
         if direct_classification_code.direct_rarery_code:

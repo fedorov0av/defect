@@ -258,7 +258,7 @@ const appConfirmDefect = Vue.createApp({
         }
         tempDate = this.cardDateRegistration.split(' ')[0].split('-')
         cardDateRegistration = tempDate[2] + '-'+tempDate[1]+'-'+tempDate[0]
-        if (this.newCardDatePlannedFinish <= cardDateRegistration ) {
+        if (this.newCardDatePlannedFinish < cardDateRegistration ) {
           Swal.fire({html:"<b>Срок устранения должен быть позже даты регистрации дефекта</b>", heightAuto: false}); 
           return;  /* Если планируемая дата меньше даты то выходим из функции */
         }
