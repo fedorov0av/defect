@@ -100,8 +100,13 @@ const appVueFilter = Vue.createApp({
               appVueDefect.defects = response.data;
               for (defect in appVueDefect.defects){
                 let responsible = null
-                if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Зарегистрирован' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Устранен' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Закрыт' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Требует решения'){
-                  responsible = appVueDefect.defects[defect].defect_owner;
+                if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Зарегистрирован' ||
+                    appVueDefect.defects[defect].defect_status.status_defect_name === 'Устранен' ||
+                    appVueDefect.defects[defect].defect_status.status_defect_name === 'Закрыт' ||
+                    appVueDefect.defects[defect].defect_status.status_defect_name === 'Требует решения'||
+                    appVueDefect.defects[defect].defect_status.status_defect_name === 'Не устранен'||
+                    appVueDefect.defects[defect].defect_status.status_defect_name === 'Локализован'){
+                    responsible = appVueDefect.defects[defect].defect_owner;
                 } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Адресован'){
                   responsible = appVueDefect.defects[defect].defect_repair_manager.user_surname + ' ' + appVueDefect.defects[defect].defect_repair_manager.user_name;
                 } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Назначен исполнитель' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Принят в работу'){

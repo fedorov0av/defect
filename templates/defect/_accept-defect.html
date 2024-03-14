@@ -160,7 +160,7 @@
                       <!-- <select class="form-select" :class="{ 'is-valid': newWorker_id !== 0, 'is-invalid': check_worker === true & newWorker_id === 0 }" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledAcceptDefect' data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Исполнителя ремонта может выбрать только Руководитель ремонта"> -->
                       <select class="form-select" :class="{ 'is-valid': newWorker_id !== 0, 'is-invalid': newWorker_id === 0 }" aria-label="Default select example" v-model="newWorker_id" :disabled='isDisabledAcceptDefect' data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Исполнителя ремонта может выбрать только Руководитель ремонта">
                         <option selected disabled :value=0>Выберите исполнителя ремонта</option>
-                        <option v-for="worker in workers"  :value="worker.user_id">{{ worker.user_surname + ' ' + worker.user_name }}</option>
+                        <option v-for="worker in workers"  :value="worker.user_id">{{ worker.user_surname + ' ' + worker.user_name + ' ' + '(' + ' ' + worker.user_division  + ' ' + ')' }}</option>
                       </select> 
                     </div>
                   </div>
@@ -239,7 +239,7 @@
                       </div>
                       <div class="block_data_column1 width300px rr20">
                         <div class="block_input_data">
-                          <b class="label">Классификация оборудования по НП-00-97</b>
+                          <b class="label">Классификация оборудования по НП-001-97</b>
                         </div>
                         <input type="text" class="form-control" v-model="newClassSystemName" disabled>
                       </div>

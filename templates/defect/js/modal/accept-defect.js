@@ -40,7 +40,8 @@ const appAcceptDefect = Vue.createApp({
       cardWorkerDescription: '', /* Для отображения ВЫПОЛНЕННЫЕ РАБОТЫ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !!  */
       cardChecker: '', /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
       cardCheckerDescription: '', /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
-      newWorker_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
+      newWorker_id: 0, /* Для хранения ID ИСПОЛНИТЕЛЯ РЕМОНТА в карточке  */
+      newWorkerDivision: '',
       backgroundMainButtonCCS: "btn-primary",
       backgroundHistoryButtonCCS: "btn-outline-primary",
       backgroundСlassificationButtonCCS: "btn-outline-primary",
@@ -121,6 +122,7 @@ const appAcceptDefect = Vue.createApp({
           this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name : '';
           this.cardCheckerDescription = this.cardDefect.defect_check_result ? this.cardDefect.defect_check_result : '';
           this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
+          
           this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
           this.cardSafety = this.cardDefect.defect_safety;
           this.cardPnr = this.cardDefect.defect_pnr;
@@ -128,9 +130,11 @@ const appAcceptDefect = Vue.createApp({
           this.newCategoryDefect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : 0;
           this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
           this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
+          
           const categories_reason_array = Object.values(this.categories_reason); 
-          category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
-          this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
+          let category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
+
+          this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : '';
           this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
           this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';
               })
@@ -151,13 +155,20 @@ const appAcceptDefect = Vue.createApp({
     },
     clickbuttonclassification () {
       setSettingClickButtonClassification(this)
-    },
+    }, 
     acceptDefect() {
       if (this.newWorker_id == 0) {
         this.check_worker = true
         Swal.fire({html:"<b>Не назначен исполнитель ремонта!</b>", heightAuto: false}); 
         return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
       }
+      const workers_array = Object.values(this.workers); 
+      this.newWorkerDivision = workers_array.filter((user) => user.user_id === this.newWorker_id)
+      if (this.currentUser.user_division != this.newWorkerDivision[0].user_division) {
+        this.check_worker = true
+        Swal.fire({html:"<b>Это дефект не вашего подразделения! Исполнитель ремонта должен быть из подразделения '" + this.cardDivisionOwner + "' </b>", heightAuto: false}); 
+        return;  
+      }   
       Swal.fire({
         title: "Вы действительно хотите назначить исполнителя?",
         showDenyButton: true,

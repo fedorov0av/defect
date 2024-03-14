@@ -1,4 +1,4 @@
-from sqlalchemy import String, select
+from sqlalchemy import String, select, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,7 +7,7 @@ from db.base import Base
 class Division(Base):
     __tablename__ = "division" # система
     division_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
-    division_name: Mapped[str] = mapped_column(String(100), unique=True) # название роли
+    division_name: Mapped[str] = mapped_column(String(100), unique=True) # название подразделения
 
     @staticmethod
     async def get_division_by_name(session: AsyncSession, division_name:str): # получение системы по названию

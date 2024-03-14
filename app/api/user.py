@@ -54,6 +54,7 @@ async def get_current_user_role(request: Request, response: Response, session: A
             "user_id": user.user_id,
             "user_role": user.user_role[-1].role_name,
             "user_division": user.user_division.division_name,
+            "user_division_id": user.user_division.division_id,
             }
 
 @user_router.post("/user/add") # только в режиме работы "БД"

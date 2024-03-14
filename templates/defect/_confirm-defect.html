@@ -175,7 +175,7 @@
                         <!-- <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newRepairManager_id !== 0, 'is-invalid': check_repair_manager === true & newRepairManager_id === 0 }" aria-label="Disabled select example" v-model="newRepairManager_id" :disabled='isDisabledConfirmDefect'> -->
                         <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newRepairManager_id !== 0, 'is-invalid': newRepairManager_id === 0 }" aria-label="Disabled select example" v-model="newRepairManager_id" :disabled='isDisabledConfirmDefect'>
                           <option disabled selected :value=0>Выберите ответственного за устранение дефекта</option>
-                          <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name }}</option>
+                          <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name + ' ' + '(' + ' ' + repair_manager.user_division  + ' ' + ')'}}</option>
                         </select> 
                     </div>
                     <div class="block_data_column">
@@ -260,7 +260,7 @@
                       </div>
                       <div class="block_data_column1 width300px rr20">
                         <div class="block_input_data">
-                          <b class="label">Классификация оборудования по НП-00-97</b>
+                          <b class="label">Классификация оборудования по НП-001-97</b>
                         </div>
                         <input type="text" class="form-control" @input="changeTextWork15" placeholder="Введите классификацию оборудования" v-model="newClassSystemName" >
                       </div>

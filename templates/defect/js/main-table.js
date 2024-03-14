@@ -316,11 +316,11 @@ const appVueDefect = Vue.createApp({
           for (defect in this.defects) {
             let responsible = null;
             if (
-              this.defects[defect].defect_status.status_defect_name ===
-                "Зарегистрирован" ||
-              this.defects[defect].defect_status.status_defect_name ===
-                "Устранен" ||
-              this.defects[defect].defect_status.status_defect_name === "Закрыт"
+              this.defects[defect].defect_status.status_defect_name === "Зарегистрирован" ||
+              this.defects[defect].defect_status.status_defect_name === "Устранен" ||
+              this.defects[defect].defect_status.status_defect_name === "Закрыт"||
+              this.defects[defect].defect_status.status_defect_name === 'Не устранен'||
+              this.defects[defect].defect_status.status_defect_name === 'Локализован'
             ) {
               responsible = this.defects[defect].defect_owner;
             } else if (

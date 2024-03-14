@@ -36,7 +36,6 @@ class History(Base):
             history.history_comment = comment
           
         session.add(history)
-
         await session.commit()
         return history
     

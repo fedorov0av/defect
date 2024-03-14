@@ -89,6 +89,7 @@ class Defect(Base):
                           defect_pnr: bool, defect_exploitation: bool, defect_system_klass: str, defect_category_defect: CategoryDefect,
                           defect_core_category_reason: CategoryCoreReason, defect_direct_category_reason: CategoryDirectReason): # добавление системы в БД
         defects = await Defect.get_all_defect(session)
+        
         now_year = str(datetime.datetime.now().date().year)[2:]
         if len(defects):
             defect_last = defects[-1]
@@ -99,7 +100,7 @@ class Defect(Base):
                 last_defect_id = 0
         else:
             last_defect_id = 0
-        new_defect_id = now_year + '-' + ('0'*(7-len(str(last_defect_id + 1))) + str(last_defect_id + 1))
+        new_defect_id = now_year + '-' + ('0'*(7-len(str(last_defect_id + 1))) + str(last_defect_id + 1)) # приведение id дефекта к виду "24-0000034"
         now_time = get_time()
         defect = Defect(
             defect_id=new_defect_id,
@@ -146,11 +147,11 @@ class Defect(Base):
     @staticmethod
     async def update_defect_by_id(session: AsyncSession,
                                   defect_id: int, # OK
-                                  defect_registrator_id: int=None,
-                                  defect_owner_id: int=None,
+                                  defect_registrator_id: int|str=None,
+                                  defect_owner_id: int|str=None,
                                   defect_repair_manager_id: int=None, # OK
-                                  defect_worker_id: int=None, # OK
-                                  defect_checker_id: int=None, # OK
+                                  defect_worker_id: int|str =None, # OK
+                                  defect_checker_id: int|str =None, # OK
                                   defect_check_result: str=None, # OK
                                   defect_planned_finish_date: datetime.datetime=None, # OK
                                   defect_description: str=None, # OK

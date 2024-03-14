@@ -423,6 +423,11 @@ const appConfirmDefect = Vue.createApp({
         });
       },/* confirmDefect */
       cancelDefect() {
+        if (this.currentUser.user_division != this.defect_divisions[this.newDivisionOwner_id-1].division_name) {
+          this.check_checker_name = true;
+          Swal.fire({html:"<b>Это дефект не вашего подразделения!</b>", heightAuto: false}); 
+          return;  /* Если дефект чужой, то выходим из функции */
+        }
         Swal.fire({
           title: "Вы действительно хотите отменить дефект?",
           showDenyButton: true,

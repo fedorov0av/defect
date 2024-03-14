@@ -7,6 +7,7 @@ from db.user import User
 from db.role import Role
 from db.type_defect import TypeDefect
 from db.division import Division
+from db.division_ad import DivisionAD
 from db.defect import Defect
 from db.history_defect import History
 from db.type_defect import TypeDefect
@@ -14,9 +15,9 @@ from db.status_defect import StatusDefect
 from db.category_defect import CategoryDefect
 from db.defect_reason_core import CategoryCoreReason
 from db.defect_reason_direct import CategoryDirectReason
-
 from db.base import Base
 from db.utils import get_time
+from db.constants import DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME, DATABASE_IP, DATABASE_PORT, DATABASE_URL
 
 #from constants import ROLES, ROOT, GROUP_REESTR_SO, ENERGOBLOCKS
 
@@ -100,48 +101,47 @@ STATUS_DEFECT = ('Зарегистрирован', # 1
                  )
 
 DIVISIONS = (
-            'РЦ-1',
-            'РЦ-2',
-            'ТЦ-1',
-            'ТЦ-2',
-            'ХЦ',
-            'ЦВиК',
-            'СТУ',
-            'ЦОРОиОЯТ',
-            'ЦРБ',
-            'ЦД',
-            'ЭЦ',
-            'ЦТАИ',
-            'ЦИКТ',
-            'ОАиОБ',
-            'ОЯБ',
-            'ЦЦР',
-            'ОППР',
-            'ОУР',
-            'КТО',
-            'ОРЗиС',
-            'ЛТК',
-            'ОИТП',
-            'ОИОЭиРН',
-            'ЦТПК',
-            'ЦГТС',
-            'ЦСОБ',
-            'УКТиПБ',
-            'ОПК',
-            'УПНР',
-            'Руководство',
-            'РусАС'
+            ('РЦ-1', ('Reactor shop', 'Reactor shop of the 1st stage', 'Reactor Workshop 1st stage',)),
+            ('РЦ-2', ('Reactor shop – 2', 'Reactor shop of the 2nd stage',)),
+            ('ТЦ-1', ('Turbine shop of the 1st stage', 'Turbine Shop',)),
+            ('ТЦ-2', ('Turbine shop of the 2nd stage',)),
+            ('ХЦ', ('Chemical shop',)),
+            ('ЦВиК', ('Ventilation and Air Conditioning Shop',)),
+            ('СТУ', ('Process Control Service',)),
+            ('ЦОРОиОЯТ', ('Workshop for Radioactive Waste and Spent Nuclear Fuel Management',)),
+            ('ЦРБ', ('Radiation safety shop',)),
+            ('ЦД', ('Decontamination Shop',)),
+            ('ЭЦ', ('Electrical Shop',)),
+            ('ЦТАИ', ('Thermal Automation and Measurement Shop Head of Shop', 'Thermal instrumentation and control shop')),
+            ('ЦИКТ', ('Information and Communication Technology Shop',)),
+            ('ОАиОБ', ('Departament of Safety Analysis and Assessment',)),
+            ('ОЯБ', ('Nuclear Safety Department',)),
+            ('ЦЦР', ('Centralized repair shop',)),
+            ('ОППР', ('Repair Preparation and Performance Department',)),
+            ('ОУР', ('Repair Management Department',)),
+            ('КТО', ('Design and Technology Department',)),
+            ('ОРЗиС', ('Buildings And Structures Repair Department', 'Repair Department for Buildings and Structures',)),
+            ('ЛТК', ('Technical Inspection Laboratory', 'Technical Diagnostics Laboratory',)),
+            ('ОИТП', ('Engineering Support Departmen', 'Engineering Support Department',)),
+            ('ОИОЭиРН', ('Operating Experience Use & Violations Investigation Department',)),
+            ('ЦТПК', ('Shop for thermal and underground communications', 'Thermal and Underground Communications Shop')),
+            ('ЦГТС', ('Hydraulic Engineering Installations Shop',)),
+            ('ЦСОБ', ('Safety Assurance Systems Shop',)),
+            ('УКТиПБ', ('Technical and Industrial Safety Control Department', 'Technical and Industrial Safety Monitoring Department',)),
+            ('ОПК', ('Fire Safety Control Department',)),
+            ('УПНР', ('Commissioning Directorate',)),
+            ('ОУНиР', ('Reliability and Resource Management Department',)),
+            ('Руководство', ('Deputy Director of NPP Under Construction',
+                            'Administration',
+                            'Technical Unit',
+                            'Deputy Technical Director for Radiation Protection and RAW Manag',
+                            'Department of thermal automation and measurement',
+                            'Technical Affairs for Nuclear Safety Support',
+                            'Repair management',
+                            'Directorate for Engineering and Technical Support',
+                            )),
+            ('РусАС', ('Temp Departament',)),
             )
-
-DATABASE_USER = 'postgres'
-DATABASE_PASSWORD = 'defect0'
-DATABASE_NAME = 'defectdb'
-DATABASE_IP = '0.0.0.0'
-#DATABASE_IP = '172.17.0.3'
-
-DATABASE_PORT = '5432'
-
-DATABASE_URL = f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_IP}:{DATABASE_PORT}/defectdb"
 
 engine = create_async_engine(DATABASE_URL,)
 """ engine = create_async_engine(DATABASE_URL, echo=True) """
@@ -196,10 +196,15 @@ async def create_tables():
 
     ########### добавление подраздлений в БД #######
     async with async_session() as session:
-        for division_name in DIVISIONS:
+        for division in DIVISIONS:
+            division_name = division[0]
+            divisions_AD = division[1]
             division = Division(division_name=division_name)
             session.add(division)
-            await session.commit()
+            for division_AD in divisions_AD:
+                divisionAD =  DivisionAD(divisionAD_name=division_AD, divisionAD_division_id=division.division_id)
+                session.add(divisionAD)
+        await session.commit()
     ################################################
             
     ########### добавление категорий дефекта в БД #######

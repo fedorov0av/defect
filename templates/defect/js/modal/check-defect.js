@@ -142,9 +142,9 @@ const appCheckDefect = Vue.createApp({
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardPPR = this.cardDefect.defect_ppr;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
-            this.cardWorkerDescription = this.cardDefect.defect_work_comment
+            this.cardWorkerDescription = this.cardDefect.defect_work_comment;
             this.newCheckerId = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_id : 0;
-            this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false'
+            this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false';
             this.cardSafety = this.cardDefect.defect_safety;
             this.cardPnr = this.cardDefect.defect_pnr;
             this.cardExploitation = this.cardDefect.defect_exploitation;
@@ -307,6 +307,7 @@ const appCheckDefect = Vue.createApp({
             .then(response => {
                 document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()
+                console.log(response.data)
                 Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА УСТРАНЕНИЕ ЗАНОВО", "", "success");
                   })
             .catch(err => { 
