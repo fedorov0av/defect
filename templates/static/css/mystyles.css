@@ -1063,7 +1063,7 @@
   transform: translateY(-50%);
 }
 
-@media screen and (min-width:200px) and (max-width:2400px) {
+@media screen and (min-width:200px) and (max-width:8000px) {
 
   .h2 {
     margin: auto;

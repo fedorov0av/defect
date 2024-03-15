@@ -307,7 +307,6 @@ const appCheckDefect = Vue.createApp({
             .then(response => {
                 document.getElementById('closeCheckModalWindow').click();
                 appVueDefect.updateTables()
-                console.log(response.data)
                 Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА УСТРАНЕНИЕ ЗАНОВО", "", "success");
                   })
             .catch(err => { 

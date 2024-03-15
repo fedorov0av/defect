@@ -8,6 +8,7 @@ COPY templates/ /defects/templates/
 COPY utils/ /defects/utils/
 COPY cert/ /defects/cert/
 COPY create_db.py defects/
+COPY config.py defects/
 COPY main.py defects/
 COPY .env defects/
 

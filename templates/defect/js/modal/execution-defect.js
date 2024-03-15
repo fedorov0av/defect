@@ -171,7 +171,6 @@ const appExecutionDefect = Vue.createApp({
                 appVueDefect.updateTables()
                 Swal.fire("НАЗНАЧЕН НОВЫЙ ИСПОЛНИТЕЛЬ!", "", "success");
                 this.isDisabledWorker = true;
-                updateTableHistory(this.defect_id, this.cardHistorys);
                   }) /* axios */
             .catch(err => {
                     if (err.response.status === 401){
