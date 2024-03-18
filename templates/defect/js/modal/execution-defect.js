@@ -58,7 +58,7 @@ const appExecutionDefect = Vue.createApp({
       .then(response => {
           this.currentUser = response.data;
           this.currentUserRole = this.currentUser.user_role;
-          if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Исполнитель') {
+          if (this.currentUserRole !== 'Администратор' && this.currentUserRole !== 'Исполнитель') {
             this.isDisabledExecutionDefect = true;
           }
         })
@@ -95,6 +95,7 @@ const appExecutionDefect = Vue.createApp({
         this.clickbuttonmain();
       }, /* updateTables */
       updateCardDefect() {
+        this.isDisabledExecutionDefect = false;
         axios
           .post('/get_defect/',{
             "defect_id": this.defect_id,
@@ -128,7 +129,8 @@ const appExecutionDefect = Vue.createApp({
             this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
             this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
             this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';  
-            if (this.currentUser.user_role === 'Исполнитель' && this.currentUser.user_id !== this.cardDefect.defect_worker.user_id){
+            if ((this.currentUser.user_role === 'Исполнитель' && this.currentUser.user_id !== this.cardDefect.defect_worker.user_id) || 
+            (this.currentUser.user_role === 'Руководитель' && this.currentUser.user_id !== this.cardDefect.defect_repair_manager.user_id)){
               this.isDisabledExecutionDefect = true;
             }
                 })
@@ -148,7 +150,6 @@ const appExecutionDefect = Vue.createApp({
           confirmButtonText: "ДА",
           denyButtonText: `ОТМЕНА`
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
             new_worker = this.workers.filter(worker => Object.values(worker).some(value => value === this.newWorker_id))[0]
             data = {

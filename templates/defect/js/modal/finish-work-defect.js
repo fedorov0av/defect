@@ -176,7 +176,6 @@ const appFinishWorkDefect = Vue.createApp({
           confirmButtonText: "ПОДТВЕРЖДАЮ",
           denyButtonText: `ОТМЕНА`
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
             data = {
               "defect_id": {

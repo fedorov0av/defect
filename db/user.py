@@ -15,6 +15,8 @@ from db.utils import get_time
 class User(Base):
     __tablename__ = "user" # пользователь
     user_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
+    #user_id: Mapped[str] = mapped_column(String(100), primary_key=True) # первичный ключ
+
     user_name: Mapped[str] = mapped_column(String(100)) # имя пользователя
     user_fathername: Mapped[str] = mapped_column(String(100), nullable=True) # отчество пользователя
     user_surname: Mapped[str] = mapped_column(String(100)) # фамилия пользователя
@@ -40,7 +42,8 @@ class User(Base):
         now_time = get_time()  
         hash_salt: tuple[str, str] = security.get_hash_salt(user_password)
         user_password_hash, user_salt_for_password = hash_salt
-        user = User(user_name=user_name, user_fathername=user_fathername, user_surname=user_surname, user_position=user_position, user_division_id=user_division.division_id,
+        user_id = user_email.split('@')[0].lower()
+        user = User(user_id=user_id,user_name=user_name, user_fathername=user_fathername, user_surname=user_surname, user_position=user_position, user_division_id=user_division.division_id,
                     user_password_hash=user_password_hash, user_salt_for_password=user_salt_for_password, user_email=user_email, user_created_at=now_time)
         if user_role:
             user.user_role.append(user_role)
@@ -49,7 +52,7 @@ class User(Base):
         return user
 
     @staticmethod
-    async def update_user(session: AsyncSession, user_id, user_name: str, user_fathername: str, user_surname: str, user_position: str,
+    async def update_user(session: AsyncSession, user_id: str, user_name: str, user_fathername: str, user_surname: str, user_position: str,
                  user_division: Division, user_email:str, user_role: Role=None) -> None: # изменение пользователя в БД
         user = await User.get_user_by_id(session=session, user_id=user_id)
         user.user_name = user_name
