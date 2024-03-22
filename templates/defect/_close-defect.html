@@ -41,7 +41,7 @@
                       </div>
                       <input type="text" class="form-control" aria-label="readonly input example" v-model="cardDivisionOwner" disabled>
                     </div>
-                    <div class="block_data_column">
+                    <div class="block_data_column width50">
                         <div class="block_input_data">
                           <b class="label">Статус дефекта</b>
                         </div>
@@ -99,7 +99,7 @@
                       <div class="block_input_data">
                         <b class="label">Наименование оборудования</b> 
                       </div>
-                      <textarea class="form-control" v-model="cardSystemName" placeholder="Введите наименование оборудования" disabled></textarea>
+                      <textarea class="form-control textareanoneresize" v-model="cardSystemName" placeholder="Введите наименование оборудования" disabled></textarea>
                     </div>
                   </div>
                   <div class="block_data_column1">
@@ -108,7 +108,7 @@
                         <b class="label">Местоположение</b>
                       </div>
                     </div>
-                    <textarea class="form-control" v-model="cardLocation" placeholder="Введите местоположение" disabled></textarea>
+                    <textarea class="form-control textareanoneresize" v-model="cardLocation" placeholder="Введите местоположение" disabled></textarea>
                   </div>
                 </div>
     
@@ -116,7 +116,7 @@
                   <div class="block_input_data">
                     <b class="label">Описание дефекта</b> 
                   </div>
-                  <textarea class="form-control" v-model="cardDescription" placeholder="Введите описание дефекта" disabled></textarea>
+                  <textarea class="form-control textareanoneresize" v-model="cardDescription" placeholder="Введите описание дефекта" disabled></textarea>
                 </div>
                   
                 <div class="block_data4">
@@ -168,7 +168,7 @@
                         <b class="label">Выполненные работы</b>
                       </div>
                     </div>
-                    <textarea class="form-control height100" aria-label="Disabled input example" v-model="cardWorkerDescription" disabled readonly></textarea>
+                    <textarea class="form-control height100 textareanoneresize" aria-label="Disabled input example" v-model="cardWorkerDescription" disabled readonly></textarea>
                   </div>
                 </div>
               </div>
@@ -255,7 +255,7 @@
                             <option disabled :value="0" selected>Выберите код причины</option>
                             <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
                           </select> 
-                          <button @click="clickbuttonspravochnik" id="SpravochnikButton" class="btn btn-primary" type="button">Справочник кодов</button>
+                          <button @click="clickbuttonspravochnikcore" id="SpravochnikCoreButton" class="btn btn-primary" type="button">Справочник кодов</button> 
                         </div>
                       </div>
 
@@ -267,24 +267,31 @@
                       </div>
                     </div>
                   </div>
-    
+     
                   <br>
 
                   <div class="block_row componentWraper5">
                     <div class="block_data_column4">
 
-                      <div class="block_data_column width300px">
+                      <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <input type="text" class="form-control" v-model="newDirectClassificationCode">
+                        <div class="block_row1">
+                          <select class="form-select block_theme width300px" @change="changeDirectClassificationCode" v-model="newDirectClassificationCode">
+                            <option disabled :value="0" selected>Выберите код причины</option>
+                            <option v-for="category_reason_direct in categories_reason_direct" :value="category_reason_direct.category_reason_code">{{ category_reason_direct.category_reason_code }}</option>
+                          </select> 
+                          <!-- <input type="text" class="form-control" placeholder="Введите код причины" v-model="newDirectClassificationCode"> -->
+                          <button @click="clickbuttonspravochnikdirect" id="SpravochnikDirectButton" class="btn btn-primary" type="button">Справочник кодов</button>
+                        </div>
                       </div>
                       
                       <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" aria-label="Disabled input example" v-model="newDirectClassificationName"></textarea>
+                        <textarea class="form-control height100" v-model="newDirectClassificationName" disabled></textarea>
                       </div>
                     </div>
                   </div>

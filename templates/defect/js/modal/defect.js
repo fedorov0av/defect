@@ -63,7 +63,7 @@ const appVueAddDefect = Vue.createApp({
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appVueAddDefect.clearData();
         appVueAddDefect.style_input_type = "#dee2e6";
-        appVueDefect.updateTables(); // Что это?! - Ответ: Это обновление основной таблицы в main-table.js при закрытии модального окна
+        // appVueDefect.updateTables(); // Что это?! - Ответ: Это обновление основной таблицы в main-table.js при закрытии модального окна
         appVueAddDefect.updateTables();
         appVueAddDefect.setLimitNotes();
         appVueAddDefect.setLimitSystem();
@@ -225,7 +225,7 @@ const appVueAddDefect = Vue.createApp({
                 "defect_system_kks": this.newSystemKKS !== '' ? this.newSystemKKS : null,
                 "defect_type_defect_name": this.newTypeDefect,
                 "defect_location": this.newLocation,
-                "defect_user_division_id": parseInt(this.newDivisionOwner_id),
+                "defect_user_division_id": this.newDivisionOwner_id,
                 "defect_safety": this.newSafety,
                 "defect_pnr": this.newPnr,
                 "defect_exploitation": this.newExploitation,
@@ -239,6 +239,7 @@ const appVueAddDefect = Vue.createApp({
           .then(response => {
               Swal.fire({html:"<b>Дефект добавлен</b>", heightAuto: false}); 
               document.getElementById('closeModalAddDefect').click();
+              appVueFilter.useFilter();
                 })
           .catch(err => {
               if (err.response.status === 401){

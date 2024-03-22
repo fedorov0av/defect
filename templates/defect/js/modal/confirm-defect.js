@@ -4,6 +4,7 @@ const appConfirmDefect = Vue.createApp({
       return {
         defect_id: '0',
         categories_reason: {},
+        categories_reason_direct: {},
         categories_defect: {},
         defect_divisions: {},
         defect_type_defects: {},
@@ -47,7 +48,7 @@ const appConfirmDefect = Vue.createApp({
         newCoreClassificationName: '',
         newCategoryDefect_id: 0,
         newClassSystemName: '',
-        newDirectClassificationCode: '',   
+        newDirectClassificationCode: '0',   
         newDirectClassificationName: '',  
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
@@ -78,6 +79,7 @@ const appConfirmDefect = Vue.createApp({
       this.setLimitLocation();
       this.setPopover();
       updateCategoriesReason(this.categories_reason);
+      updateCategoriesReasonDirect(this.categories_reason_direct);
       updateCategoriesDefect(this.categories_defect);
       this.isHiddenblockhistory = 'true';
       this.isHiddenblockclassification  = 'true';
@@ -135,6 +137,11 @@ const appConfirmDefect = Vue.createApp({
         category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === event.target.value)
         this.newCoreClassificationName = category_reason[0].category_reason_name
       },
+      changeDirectClassificationCode(event){
+        const categories_reason_array_direct = Object.values(this.categories_reason_direct); 
+        category_reason_direct = categories_reason_array_direct.filter((category_reason_direct) => category_reason_direct.category_reason_code === event.target.value)
+        this.newDirectClassificationName = category_reason_direct[0].category_reason_name
+      },
       clearData() {
         this.newCardKKS = null;
         this.newDivisionOwner_id = 0;
@@ -143,7 +150,9 @@ const appConfirmDefect = Vue.createApp({
         this.check_repair_manager = false;
         this.check_date = false;
         this.newCoreClassificationName = 0;
+        this.newDirectClassificationName = 0;
         this.newCoreClassificationCode = '';
+        this.newDirectClassificationCode = '';
       }, /* clearData */
       updateTables() {
         updateTableDivision(this.defect_divisions);
@@ -191,17 +200,25 @@ const appConfirmDefect = Vue.createApp({
             this.newExploitation = this.cardDefect.defect_exploitation;
             this.newCategoryDefect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : 0;
             this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
+
             this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
             const categories_reason_array = Object.values(this.categories_reason); 
             category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
             this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
-            this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
-            this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';
+
+            this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '0';
+
+            const categories_reason_array_direct = Object.values(this.categories_reason_direct); 
+            category_reason_direct = categories_reason_array_direct.filter((category_reason_direct) => category_reason_direct.category_reason_code === this.newDirectClassificationCode)
+            this.newDirectClassificationName = category_reason_direct.length !== 0 ? category_reason_direct[0].category_reason_name : ''
+            /* this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : ''; */
+
             this.setLimitNotes();
             this.setLimitSystem();
             this.setLimitLocation();
                 })
           .catch(err => {
+              console.log(err)
               if (err.response.status === 401){
                 window.location.href = "/";
               } else {
@@ -222,14 +239,21 @@ const appConfirmDefect = Vue.createApp({
       clickbuttonclassification () {
         setSettingClickButtonClassification(this)
       },
-      clickbuttonspravochnik() {
-        appVueSpravochnik.clicklinkpage1();
-        appVueSpravochnik.parent_button_close_modal_name = 'closeModalAddDefect';
-        var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindow'), {
+      clickbuttonspravochnikcore() {
+        appVueSpravochnikCore.clicklinkpage1();
+        appVueSpravochnikCore.parent_button_close_modal_name = 'closeModalConfirmDefect';
+        var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindowCore'), {
           keyboard: false
         })
         myModal.show()
-      }, /* clickbuttonspravochnik */
+      }, /* clickbuttonspravochnikcore */
+       clickbuttonspravochnikdirect() {
+        appVueSpravochnikDirect.parent_button_close_modal_name = 'closeModalConfirmDefect';
+        var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindowDirect'), {
+          keyboard: false
+        })
+        myModal.show()
+      }, /* clickbuttonspravochnikdirect */
       confirmDefect() {
         if (this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') {
           this.check_date = true;
@@ -252,10 +276,10 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>KKS введен не полностью!</b>", heightAuto: false});
           return;
         }
-        if (this.newDirectClassificationName === '' && this.newDirectClassificationCode !== '') {
+        /* if (this.newDirectClassificationName === '' && this.newDirectClassificationCode !== '') {
           Swal.fire({html:"<b>Причина события в разделе 'Непосредственная причина события' должна быть заполнена!</b>", heightAuto: false});
           return;
-        }
+        } */
         tempDate = this.cardDateRegistration.split(' ')[0].split('-')
         cardDateRegistration = tempDate[2] + '-'+tempDate[1]+'-'+tempDate[0]
         if (this.newCardDatePlannedFinish < cardDateRegistration ) {
@@ -341,7 +365,7 @@ const appConfirmDefect = Vue.createApp({
                 "status_defect_name": this.statuses_defect[1].status_defect_name
               },
               "repair_manager_id": {
-                "user_id": parseInt(this.newRepairManager_id)
+                "user_id": this.newRepairManager_id
               },
               "defect_planned_finish_date_str": {
                 "date": this.isHiddenDate == 'false' ? this.newCardDatePlannedFinish : null
@@ -391,7 +415,7 @@ const appConfirmDefect = Vue.createApp({
               },
               "direct_classification_code": {
                 "direct_rarery_code": (this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '') !== this.newDirectClassificationCode ?
-                                    this.newDirectClassificationCode !== '' ? this.newDirectClassificationCode : null :
+                                    this.newDirectClassificationCode !== '0' ? this.newDirectClassificationCode : null :
                                     this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : null
               },
               "direct_classification_name": {
@@ -407,7 +431,8 @@ const appConfirmDefect = Vue.createApp({
             .post('/confirm_defect', data)
             .then(response => {
                 document.getElementById('closeConfirmDefectModalWindow').click();
-                appVueDefect.updateTables()
+                /* appVueDefect.updateTables() */
+                appVueFilter.useFilter()
                 Swal.fire("Дефект подтвержден", "", "success");
                   })
             .catch(err => {
@@ -441,7 +466,8 @@ const appConfirmDefect = Vue.createApp({
             .post('/update_status_defect', data)
             .then(response => {
                 document.getElementById('closeConfirmDefectModalWindow').click();
-                appVueDefect.updateTables()
+                /* appVueDefect.updateTables() */
+                appVueFilter.useFilter()
                 Swal.fire("ДЕФЕКТ ОТМЕНЕН", "", "success");
                   })
             .catch(err => {

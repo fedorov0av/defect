@@ -1,5 +1,5 @@
-const appVueSpravochnik= Vue.createApp({
-    data() {
+const appVueSpravochnikCore = Vue.createApp({
+    data() { 
       return {
         isHiddenblockcods1: 'false',
         isHiddenblockcods2: 'true',
@@ -36,5 +36,5 @@ const appVueSpravochnik= Vue.createApp({
       },
     },
   },
-).mount('#vueSpravochnik')
+).mount('#VueSpravochnikCore')
 

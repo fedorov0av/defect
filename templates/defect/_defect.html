@@ -48,7 +48,7 @@
                           <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
                         </select> 
                     </div>
-                    <div class="block_data_column">
+                    <div class="block_data_column width50">
                         <div class="block_input_data">
                           <b class="label">Статус дефекта</b>
                         </div>
@@ -110,7 +110,7 @@
                         <b class="zvezda"> * </b>
                       </div>
                      <!--  <textarea id="my-system" @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': check_defect_system === true & newSystemName === '' }" v-model.lazy="newSystemName" placeholder="Введите наименование оборудования" required></textarea> -->
-                      <textarea id="my-system" @input="changeTextWork100" class="form-control" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': newSystemName === '' }" v-model.lazy="newSystemName" placeholder="Введите наименование оборудования" required></textarea>
+                      <textarea id="my-system" @input="changeTextWork100" class="form-control textareanoneresize" @input="setLimitSystem" :class="{ 'is-valid': newSystemName !== '', 'is-invalid': newSystemName === '' }" v-model.lazy="newSystemName" placeholder="Введите наименование оборудования" required></textarea>
                       <p id="system" class="pos_a2"></p>
                     </div>
                   </div>
@@ -120,7 +120,7 @@
                         <b class="label">Местоположение</b>
                       </div>
                     </div>
-                    <textarea class="form-control" id="work-location" @input="changeTextWork100" v-model.lazy="newLocation" placeholder="Введите местоположение"></textarea>
+                    <textarea class="form-control textareanoneresize" id="work-location" @input="changeTextWork100" v-model.lazy="newLocation" placeholder="Введите местоположение"></textarea>
                     <p id="location" class="pos_a3"></p>
                   </div>
                 </div>
@@ -131,7 +131,7 @@
                     <b class="zvezda"> * </b> 
                   </div>
                   <!-- <textarea id="my-notes" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': check_defect_notes === true & newDefectNotes === '' }" v-model.lazy="newDefectNotes" placeholder="Введите описание дефекта" required></textarea> -->
-                  <textarea id="my-notes" @input="changeTextWork200" class="form-control" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': newDefectNotes === '' }" v-model.lazy="newDefectNotes" placeholder="Введите описание дефекта" required></textarea>
+                  <textarea id="my-notes" @input="changeTextWork200" class="form-control textareanoneresize" :class="{ 'is-valid': newDefectNotes !== '', 'is-invalid': newDefectNotes === '' }" v-model.lazy="newDefectNotes" placeholder="Введите описание дефекта" required></textarea>
                   <p id="notes" class="pos_a1"></p>
                 </div>
                   
@@ -184,7 +184,7 @@
                         <b class="label">Выполненные работы</b>
                       </div>
                     </div>
-                    <textarea class="form-control height100" aria-label="Disabled input example" disabled readonly></textarea>
+                    <textarea class="form-control height100 textareanoneresize" aria-label="Disabled input example" disabled readonly></textarea>
                   </div>
                 </div>
               </div>

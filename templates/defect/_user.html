@@ -50,41 +50,41 @@
 		  <div class="modal-body">
 			<form method="post">
 				<div class="block_data1">
-				  <div class="block_input_data"><b>Фамилия</b></div>
+				  <div class="block_input_data width30"><b>Фамилия</b></div>
 					<input type="text" class="form-control" name="surname" v-model="newUserSurname" placeholder="Фамилия">
 				</div>
 				<div class="block_data1">
-				  <div class="block_input_data"><b>Имя</b></div>
+				  <div class="block_input_data width30"><b>Имя</b></div>
 				  <input type="text" class="form-control" name="name" v-model="newUserName" placeholder="Имя">
 				</div>
 				<div class="block_data1">
-				  <div class="block_input_data"><b>Отчество</b></div>
+				  <div class="block_input_data width30"><b>Отчество</b></div>
 					<input type="text" class="form-control" name="fathername" v-model="newUserFathername" placeholder="Отчество">
 				</div>
 				<div class="block_data1">
-				  <div class="block_input_data"><b>Должность</b></div>
+				  <div class="block_input_data width30"><b>Должность</b></div>
 					<input type="text" class="form-control" name="position" v-model="newUserPosition" placeholder="Должность">
 				</div>
 				<div class="block_data1">
-				  <div class="block_input_data"><b>Отдел</b></div>
+				  <div class="block_input_data width30"><b>Отдел</b></div>
 					<select class="form-select" aria-label="Default select example" v-model="newUserDivision">
 					  <option disabled selected>Выберите подразделение</option>
 					  <option v-for="division in divisions">{{ division.division_name }}</option>
 					</select> 
 				</div>
 				<div class="block_data1">
-				  <div class="block_input_data"><b>Роль пользователя</b></div>
+				  <div class="block_input_data width30"><b>Роль пользователя</b></div>
 					<select class="form-select" aria-label="Default select example" v-model="newUserRole">
 					  <option disabled selected>Выберите роль пользователя</option>
 					  <option v-for="role in roles">{{ role.role_name }}</option>
 					</select>
 				</div>
 				<div class="block_data1">
-				  <div class="block_input_data"><b>E-mail</b></div>
+				  <div class="block_input_data width30"><b>E-mail</b></div>
 					<input type="email" class="form-control" name="email" v-model="newUserEmail" placeholder="E-mail">
 				</div>
 				<div class="block_data1">
-				  <div class="block_input_data"><b>Временный пароль</b></div>
+				  <div class="block_input_data width30"><b>Временный пароль</b></div>
 					<input type="text" class="form-control" name="password" v-model="newUserTempPassword" placeholder="Временный пароль">
 				</div>
 				<div class="modal-footer">

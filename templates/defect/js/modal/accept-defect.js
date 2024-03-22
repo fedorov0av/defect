@@ -195,7 +195,8 @@ const appAcceptDefect = Vue.createApp({
           .post('/accept_defect', data)
           .then(response => {
               document.getElementById('closeAcceptModalWindow').click();
-              appVueDefect.updateTables()
+              /* appVueDefect.updateTables() */
+              appVueFilter.useFilter()
               Swal.fire("НАЗНАЧЕН ИСПОЛНИТЕЛЬ!", "", "success");
                 }) /* axios */
           .catch(err => {

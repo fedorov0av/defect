@@ -19,7 +19,7 @@ class User_p(BaseModel):
     password: Optional[str]
 
 class User_update(BaseModel):
-    user_id: Optional[int]
+    user_id: Optional[str]
     user_surname: Optional[str]
     user_name: Optional[str]
     user_fathername: Optional[str] = ''
@@ -36,7 +36,7 @@ class User_update(BaseModel):
             return user_fathername or None
 
 class User_id(BaseModel):
-    user_id: Optional[int]
+    user_id: Optional[str]
 
 class UserAD(BaseModel):
     user_id: str # UID

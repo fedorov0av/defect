@@ -192,7 +192,8 @@ const appFinishWorkDefect = Vue.createApp({
             .post('/finish_work_defect', data)
             .then(response => {
                 document.getElementById('closeFinishWorkModalWindow').click();
-                appVueDefect.updateTables()
+                /* appVueDefect.updateTables() */
+                appVueFilter.useFilter()
                 Swal.fire("РАБОТЫ ПО ДЕФЕКТУ ЗАВЕРШЕНЫ", "", "success");
                   }) /* axios */
             .catch(err => {

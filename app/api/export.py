@@ -13,7 +13,12 @@ from db.defect import Defect
 from db.history_defect import History
 
 from app.schemas.defect import Defect_id
+from app.schemas.user import UserAD
+
 from app.middleware.auth import check_auth_api
+from config import AD
+from utils.jwt import decrypt_user_id, decode_token
+from utils.ldap import LdapConnection
 
 
 export_router = APIRouter()
@@ -29,20 +34,30 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
     df = pd.DataFrame(columns=COLUMNS_NAME)
     for defect_id in defect_list_ids.defect_list_ids:
         defect = await Defect.get_defect_by_id(session, defect_id)
+        if AD:
+            token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+            user_id = await decrypt_user_id(token_dec['subject']['userId'])
+            passw = await decrypt_user_id(token_dec['subject']['userP'])
+            ldap_connection = LdapConnection(user_id, passw)
+            defect_repair_managerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager.user_id)
+            defect_repair_manager: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_repair_managerAD) if defect.defect_repair_manager else None
+            defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else defect.defect_division.division_name
         df_defect = pd.DataFrame(
-                                [[defect.defect_id,
-                                 defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
-                                 (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '')
-                                  if not defect.defect_ppr else 'Устр. в ППР',
-                                 defect.defect_division.division_name,
-                                 defect.defect_system.system_kks if defect.defect_system else '',
-                                 defect.defect_system.system_name,
-                                 defect.defect_description,
-                                 defect.defect_status.status_defect_name,
-                                 defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
-                                 ],], 
-                                columns=COLUMNS_NAME
-                                )
+                            [[defect.defect_id,
+                            defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
+                            (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '')
+                            if not defect.defect_ppr else 'Устр. в ППР',
+                            defect.defect_division.division_name,
+                            defect.defect_system.system_kks if defect.defect_system else '',
+                            defect.defect_system.system_name,
+                            defect.defect_description,
+                            defect.defect_status.status_defect_name,
+                            (defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name if
+                                defect.defect_repair_manager else
+                                defect.defect_division.division_name) if not AD else defect_repair_manager_fullname
+                            ],], 
+                            columns=COLUMNS_NAME
+                            )
         df = pd.concat([df, df_defect], ignore_index=True)
     buffer = BytesIO()
     with pd.ExcelWriter(buffer) as writer:
@@ -74,7 +89,29 @@ async def export_history_excel_defect(request: Request, response: Response, defe
     df_head = pd.DataFrame()
     df_main = pd.DataFrame(columns=COLUMNS_NAME_HISTORY)
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
-   
+
+    if AD:
+        token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+        user_id = await decrypt_user_id(token_dec['subject']['userId'])
+        passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(user_id, passw)
+
+        defect_registrarAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrar.user_id) if defect.defect_registrar else None
+        defect_registrar: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_registrarAD) if defect.defect_registrar else None
+        defect_registrar_fullname = defect_registrar.user_surname + ' ' + defect_registrar.user_name if defect_registrar else ''
+
+        defect_checkerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker.user_id) if defect.defect_checker else None
+        defect_checker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_checkerAD) if defect.defect_checker else None
+        defect_checker_fullname = defect_checker.user_surname + ' ' + defect_checker.user_name if defect_checker else ''
+
+        defect_workerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker.user_id) if defect.defect_worker else None
+        defect_worker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_workerAD) if defect.defect_worker else None
+        defect_worker_fullname = defect_worker.user_surname + ' ' + defect_worker.user_name if defect_worker else ''
+
+        defect_repair_managerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager.user_id) if defect.defect_repair_manager else None
+        defect_repair_manager: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_repair_managerAD) if defect.defect_repair_manager else None
+        defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else ''
+
     df_header_left_title = pd.DataFrame({"Data": ['Номер дефекта:', 
                                                   'Тип дефекта:',
                                                   'KKS:', 
@@ -92,8 +129,9 @@ async def export_history_excel_defect(request: Request, response: Response, defe
                                                  defect.defect_division.division_name, 
                                                  defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                                                  (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '') if not defect.defect_ppr else 'Устр. в ППР', 
-                                                 defect.defect_work_comment, 
-                                                 defect.defect_checker.user_surname + ' ' + defect.defect_checker.user_name + ' ' + defect.defect_checker.user_fathername if defect.defect_checker else '']})
+                                                 defect.defect_work_comment,
+                                                 (defect.defect_checker.user_surname + ' ' + defect.defect_checker.user_name if defect.defect_checker else '') if not AD else defect_checker_fullname
+                                                 ]})
     
     df_header_right_title = pd.DataFrame({"Data": ['Статус дефекта', 
                                                   'Оборудование:',
@@ -107,19 +145,23 @@ async def export_history_excel_defect(request: Request, response: Response, defe
     df_header_right_data = pd.DataFrame({"Data": [defect.defect_status.status_defect_name, 
                                                  defect.defect_system.system_name, 
                                                  defect.defect_location, 
-                                                 defect.defect_registrar.user_surname + ' ' + defect.defect_registrar.user_name + ' ' + defect.defect_registrar.user_fathername if defect.defect_registrar else '',
-                                                 defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name + ' ' + defect.defect_repair_manager.user_fathername if defect.defect_repair_manager else '',
-                                                 defect.defect_worker.user_surname + ' ' + defect.defect_worker.user_name + ' ' + defect.defect_worker.user_fathername if defect.defect_worker else '',
+                                                 (defect.defect_registrar.user_surname + ' ' + defect.defect_registrar.user_name + ' ' + defect.defect_registrar.user_fathername if defect.defect_registrar else '') if AD else defect_registrar_fullname,
+                                                 (defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name if defect.defect_repair_manager else '') if not AD else defect_repair_manager_fullname,
+                                                 (defect.defect_worker.user_surname + ' ' + defect.defect_worker.user_name + ' ' + defect.defect_worker.user_fathername if defect.defect_worker else '') if AD else defect_worker_fullname,
                                                  '', 
                                                  defect.defect_check_result]})
      
     result: list[History] = await History.get_history_by_defect(session, defect)
     for count, history_defect in enumerate(result):
+        if AD:
+            history_userAD = await ldap_connection.get_user_by_uid_from_AD(history_defect.history_user.user_id)
+            history_user: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, history_userAD)
+            history_user_fullname = history_user.user_surname + ' ' + history_user.user_name
         df_history_defect = pd.DataFrame(
                                 [[count+1,
                                  history_defect.history_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                                  history_defect.history_status.status_defect_name,
-                                 history_defect.history_user.user_surname + ' ' + history_defect.history_user.user_name + ' ' + history_defect.history_user.user_fathername,
+                                 (history_defect.history_user.user_surname + ' ' + history_defect.history_user.user_name) if not AD else history_user_fullname,
                                  history_defect.history_comment,
                                  ],], 
                                 columns=COLUMNS_NAME_HISTORY

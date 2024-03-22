@@ -134,7 +134,7 @@ CATEGORIES_REASON_DIRECT  = (
     ('5.1.4.4.', 'Кавитация'),
     ('5.1.4.5.', 'Газовая пробка'),
     ('5.1.4.6.', 'Наличие влаги в воздушной системе'),
-    ('5.1.4.7', 'Помпаж'),
+    ('5.1.4.7.', 'Помпаж'),
 
     ('5.1.5.', 'ЯВЛЕНИЯ, ПРОЦЕССЫ В КОНТРОЛЬНО-ИЗМЕРИТЕЛЬНЫХ СИСТЕМАХ'),
     ('5.1.5.0.', 'Прочие причины, не вошедшие в данную группу причин'),
@@ -147,7 +147,7 @@ CATEGORIES_REASON_DIRECT  = (
     ('5.1.5.7.', 'Недостаток компьютерного программного обеспечения'),
 
     ('5.1.6.', 'УСЛОВИЯ ОКРУЖАЮЩЕЙ СРЕДЫ ДЛЯ ОБОРУДОВАНИЯ (АНОМАЛЬНЫЕ УСЛОВИЯ В ПОМЕЩЕНИЯХ АС)'),
-    ('5.1.6.0.', 'Прочие условия окружающей среды, не вошедшие в данную группу причин'),
+    ('5.1.6.0.', 'Прочие условия окружающей среды, не вошедшие в данную группу причин (АНОМАЛЬНЫЕ УСЛОВИЯ В ПОМЕЩЕНИЯХ АС)'),
     ('5.1.6.1.', 'Температура'),
     ('5.1.6.2.', 'Давление'),
     ('5.1.6.3.', 'Влажность'),
@@ -157,8 +157,8 @@ CATEGORIES_REASON_DIRECT  = (
     ('5.1.6.8.', 'Задымление'),
     ('5.1.6.9.', 'Взрыв'),
 
-    ('5.1.7.', 'УСЛОВИЯ ОКРУЖАЮЩЕЙ СРЕДЫ (АНОМАЛЬНЫЕ УСЛОВИЯ ВНЕ ПОМЕЩЕНИЙ АС'),
-    ('5.1.7.0.', 'Прочие условия окружающей среды, не вошедшие в данную группу причин'),
+    ('5.1.7.', 'УСЛОВИЯ ОКРУЖАЮЩЕЙ СРЕДЫ (АНОМАЛЬНЫЕ УСЛОВИЯ ВНЕ ПОМЕЩЕНИЙ АС)'),
+    ('5.1.7.0.', 'Прочие условия окружающей среды, не вошедшие в данную группу причин (АНОМАЛЬНЫЕ УСЛОВИЯ ВНЕ ПОМЕЩЕНИЙ АС)'),
     ('5.1.7.1.', 'Поражение молнией'),
     ('5.1.7.2.', 'Сильный дождь или снегопад, наводнение'),
     ('5.1.7.3.', 'Буря (ураган), торнадо, ветровая нагрузка'),
@@ -173,7 +173,7 @@ CATEGORIES_REASON_DIRECT  = (
     ('5.1.8.', 'ЧЕЛОВЕЧЕСКИЙ ФАКТОР, ПРИЧИНЫ ОШИБОК ПЕРСОНАЛА'),
     ('5.1.8.1.', 'Вид неправильных действий персонала'),
     ('5.1.8.1.0.', 'Прочие неправильные действия персонала'),
-    ('5.1.8.1.1.', 'Неправильное выполнение технологических операций ( втом числе при выполнении переключений, подключений), воздействие на элементы защиты, автоматики'),
+    ('5.1.8.1.1.', 'Неправильное выполнение технологических операций (в том числе при выполнении переключений, подключений), воздействие на элементы защиты, автоматики'),
     ('5.1.8.1.2.', 'Бездействие, пропуск необходимых действий'),
     ('5.1.8.1.3.', 'Нарушение технологии технического обслуживания'),
     ('5.1.8.2.', 'Неправильное, случайное воздействие на элементы защиты и автоматики'),
@@ -187,6 +187,7 @@ CATEGORIES_REASON_DIRECT  = (
     ('5.1.8.10.', 'Некачественная сварка'),
     ('5.1.8.11.', 'Некачественная сборка (ненадежная затяжка, обжатие разъемных соединений, уплотнений и др.)'),
     ('5.1.8.12.', 'Некачественные послеремонтные испытания, обкатка'),
+    ('5.1.8.13.', 'Ошибки при инспекции, техническом обслуживании, испытании или настройке'),
 )     
 
 CATEGORIES_REASON_OLD  = (
@@ -328,7 +329,7 @@ async def create_tables():
         for type_defect in TYPES_DEFECT:
             type_defect = TypeDefect(type_defect_name=type_defect)
             session.add(type_defect)
-            await session.commit()
+        await session.commit()
     ################################################
             
     ########### добавление статусов дефектов в БД #######
@@ -336,7 +337,7 @@ async def create_tables():
         for status_defect_name in STATUS_DEFECT:
             status_defect = StatusDefect(status_defect_name=status_defect_name)
             session.add(status_defect)
-            await session.commit()
+        await session.commit()
     ################################################
 
     ########### добавление списка ролей в БД #######
@@ -344,7 +345,7 @@ async def create_tables():
         for role_name in ROLES:
             role = Role(role_name=role_name)
             session.add(role)
-            await session.commit()
+        await session.commit()
     ################################################
 
     ########### добавление подраздлений в БД #######
@@ -354,10 +355,11 @@ async def create_tables():
             divisions_AD = division[1]
             division = Division(division_name=division_name)
             session.add(division)
+            await session.commit()
             for division_AD in divisions_AD:
                 divisionAD =  DivisionAD(divisionAD_name=division_AD, divisionAD_division_id=division.division_id)
                 session.add(divisionAD)
-        await session.commit()
+            await session.commit()
     ################################################
             
     ########### добавление категорий дефекта в БД #######
@@ -365,7 +367,7 @@ async def create_tables():
         for category_defect in CATEGORIES_DEFECT:
             category = CategoryDefect(category_defect_name=category_defect)
             session.add(category)
-            await session.commit()
+        await session.commit()
     ################################################
 
     ########### добавление коренных причин дефекта в БД #######
@@ -373,6 +375,14 @@ async def create_tables():
         for category_reason in CATEGORIES_REASON:
             category_r = CategoryCoreReason(category_reason_code=category_reason[0], category_reason_name=category_reason[1])
             session.add(category_r)
+        await session.commit()
+    ################################################
+            
+    ########### добавление непосредственных причин дефекта в БД #######
+    async with async_session() as session:
+        for categories_reason_direct in CATEGORIES_REASON_DIRECT:
+            category_r_d = CategoryDirectReason(category_reason_code=categories_reason_direct[0], category_reason_name=categories_reason_direct[1])
+            session.add(category_r_d)
             await session.commit()
     ################################################
 
@@ -387,6 +397,7 @@ async def create_tables():
         now_time = get_time()  
 
         root_user = User(
+            user_id = 'root',
             user_name = 'root',
             user_fathername = 'root',
             user_surname = 'root',
@@ -415,6 +426,7 @@ async def create_tables():
             division = result_division
 
             user = User(
+                user_id = USERS[user]['user_email'].split('@')[0],
                 user_name = USERS[user]['user_name'],
                 user_fathername = USERS[user]['user_fathername'],
                 user_surname = USERS[user]['user_surname'],

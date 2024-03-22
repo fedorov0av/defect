@@ -14,7 +14,8 @@ COPY .env defects/
 
 # Копирование requirements.txt и установка зависимостей
 COPY requirements.txt /defects/requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /defects/requirements.txt && \
+RUN apk update && apk upgrade && apk add mc && apk add vim && apk add nano && \
+    pip install --no-cache-dir --upgrade -r /defects/requirements.txt && \
     rm -rf /defects/requirements.txt
 
 # установка таймзоны
@@ -25,5 +26,7 @@ WORKDIR /defects
 
 # Открытие порта
 EXPOSE 80 443
+#EXPOSE 4000
 # Команда запуска приложения
+#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "4000", "--ssl-keyfile", "cert/private.key", "--ssl-certfile", "cert/defect-journal.akkuyu.local.cer"]
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "443", "--ssl-keyfile", "cert/private.key", "--ssl-certfile", "cert/defect-journal.akkuyu.local.cer"]

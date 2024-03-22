@@ -14,8 +14,8 @@ from db.utils import get_time
 
 class User(Base):
     __tablename__ = "user" # пользователь
-    user_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
-    #user_id: Mapped[str] = mapped_column(String(100), primary_key=True) # первичный ключ
+    #user_id: Mapped[int] = mapped_column(primary_key=True) # первичный ключ
+    user_id: Mapped[str] = mapped_column(String(100), primary_key=True) # первичный ключ
 
     user_name: Mapped[str] = mapped_column(String(100)) # имя пользователя
     user_fathername: Mapped[str] = mapped_column(String(100), nullable=True) # отчество пользователя

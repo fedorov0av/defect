@@ -84,6 +84,14 @@ function updateCategoriesReason(categories_reason) {
         }) /* axios */
     } /* updateCategoriesReason */
 
+function updateCategoriesReasonDirect(categories_reason_direct) {
+    axios
+    .post('/get_categories_direct_reason',)
+    .then(response => {
+        Object.assign(categories_reason_direct, response.data);
+        }) /* axios */
+    } /* updateCategoriesReason */
+    
 /* ################################### */
 
 function setSortTableDafects(defects){

@@ -44,7 +44,7 @@ class Showcloseddefect(BaseModel):
     Showcloseddefect: Optional[bool]
 
 class User_id(BaseModel):
-    user_id: Optional[int]
+    user_id: Optional[str]
 
 class Defects_output(BaseModel):
     defect_id: Optional[str]

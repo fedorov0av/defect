@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Response, Depends, Request, Response
 from utils.jwt import decrypt_user_id, decode_token
+from utils.ldap import LdapConnection
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.user import User
@@ -11,8 +12,9 @@ from db.database import get_db
 from app.schemas.defect import Defect_id
 from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Сomment
+from app.schemas.user import UserAD
 from app.middleware.auth import check_auth_api
-
+from config import AD
 
 status_defect_router = APIRouter()
 
@@ -21,8 +23,14 @@ async def update_status_defects(request: Request, response: Response, defect_id:
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
-    user: User = await User.get_user_by_id(session, int(user_id))
-
+    if AD:
+        token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+        passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(user_id, passw)
+        userAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
+        user: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, userAD)
+    else:
+        user: User = await User.get_user_by_id(session, user_id)
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
     status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
 

@@ -197,7 +197,7 @@ const appVueUser = Vue.createApp({
           id_user = event.target.parentNode.childNodes[0].textContent
           axios
             .post('/user/',{
-              "user_id": parseInt(id_user),
+              "user_id": id_user,
             })
             .then(response => {
               user = response.data;

@@ -211,7 +211,8 @@ const appExecutionDefect = Vue.createApp({
             .post('/update_status_defect', data)
             .then(response => {
                 document.getElementById('closeExecutionModalWindow').click();
-                appVueDefect.updateTables()
+                /* appVueDefect.updateTables() */
+                appVueFilter.useFilter()
                 Swal.fire("ДЕФЕКТ ПРИНЯТ В РАБОТУ", "", "success");
                   }) /* axios */
             .catch(err => {

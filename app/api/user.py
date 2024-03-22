@@ -25,7 +25,7 @@ async def get_current_user(request: Request, response: Response, session: AsyncS
         userAD = await get_user_by_uid_from_AD(user_id, passw, user_id)
         user: UserAD = await get_user_from_EntryLDAP(session, request, userAD)
     else: 
-        user: User = await User.get_user_by_id(session, int(user_id))
+        user: User = await User.get_user_by_id(session, user_id)
     return {
             "user_id": user.user_id,
             "user_surname": user.user_surname,
@@ -48,7 +48,7 @@ async def get_current_user_role(request: Request, response: Response, session: A
         userAD = await get_user_by_uid_from_AD(user_id, passw, user_id)
         user: UserAD = await get_user_from_EntryLDAP(session, request, userAD)
     else:
-        user: User = await User.get_user_by_id(session, int(user_id))
+        user: User = await User.get_user_by_id(session, user_id)
     return {
             "user_id": user.user_id,
             "user_role": user.user_role[-1].role_name,

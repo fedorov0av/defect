@@ -208,7 +208,8 @@ const appCheckDefect = Vue.createApp({
             .post('/check_defect', data)
             .then(response => {
                 document.getElementById('closeCheckModalWindow').click();
-                appVueDefect.updateTables()
+                /* appVueDefect.updateTables() */
+                appVueFilter.useFilter()
                 Swal.fire("ДЕФЕКТ УСТРАНЕН!", "", "success");
                   })
             .catch(err => {
@@ -255,7 +256,8 @@ const appCheckDefect = Vue.createApp({
             .post('/check_defect', data)
             .then(response => {
                 document.getElementById('closeCheckModalWindow').click();
-                appVueDefect.updateTables()
+                /* appVueDefect.updateTables() */
+                appVueFilter.useFilter()
                 Swal.fire("ДЕФЕКТ ЛОКАЛИЗОВАН!", "", "success");
                   })
             .catch(err => {
@@ -306,7 +308,8 @@ const appCheckDefect = Vue.createApp({
             .post('/check_defect', data)
             .then(response => {
                 document.getElementById('closeCheckModalWindow').click();
-                appVueDefect.updateTables()
+                /* appVueDefect.updateTables() */
+                appVueFilter.useFilter()
                 Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА УСТРАНЕНИЕ ЗАНОВО", "", "success");
                   })
             .catch(err => { 

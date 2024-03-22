@@ -31,6 +31,10 @@
   padding-right: 0;
 }
 
+.textareanoneresize {
+  resize: none;
+}
+
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
@@ -255,7 +259,7 @@
 }
 
 .width60 {
-  max-width: 60%;
+  max-width: 100%;
   margin-right: 5px;
 }
 
@@ -345,7 +349,7 @@
 }
 
 .rr20 {
-  margin-left: 20px;
+  margin-left: 15px;
 }
 
 .margin6px {
@@ -515,7 +519,7 @@
 }
 
 .block_input_data {
-  min-width: 230px;
+  
   padding: 0px 5px;
   text-align: left;
   font-size: 16px;

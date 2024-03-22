@@ -43,7 +43,8 @@
 			{% include "defect/_card-defect.html" %} <!-- Модальное окно "История закрытого дефекта" -->
 			{% include "defect/_correction-defect.html" %} <!-- Модальное окно "Корректировка дефекта" --> 
 			{% include "defect/_main-table.html" %} <!-- Модальное окно "Главное окно дефектов" --> 
-			{% include "defect/_classification-table.html" %} <!-- Модальное окно "Главное окно дефектов" --> 
+			{% include "defect/_classification-table-core.html" %} <!-- Модальное окно "Справочник корневых причин" --> 
+			{% include "defect/_classification-table-direct.html" %} <!-- Модальное окно "Справочник непосредственных причин" --> 
 		{% endblock content %}
 	</body>
 <script src="{{ url_for('static_js', path='defect-bootstrap.bundle.min.js') }}" crossorigin="anonymous"></script>

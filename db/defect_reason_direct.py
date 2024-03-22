@@ -7,7 +7,7 @@ from db.base import Base
 class CategoryDirectReason(Base): # категории коренной причины
     __tablename__ = "category_direct_reason" # категории коренной причины
     category_reason_code: Mapped[str] = mapped_column(String(50), primary_key=True) # первичный ключ
-    category_reason_name: Mapped[str] = mapped_column(String(200), unique=True) # название категории
+    category_reason_name: Mapped[str] = mapped_column(String(300), unique=True) # название категории
 
 
     @staticmethod

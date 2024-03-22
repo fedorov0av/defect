@@ -16,9 +16,6 @@ SEARCH_BASE = 'ou=Users,ou=_Akkuyu,dc=mbu,dc=invalid'
 server = Server(SERVER_URI, get_info=ALL)
 
 
-def get_user_model():
-    pass
-
 def get_user_by_mail(conn: Connection, mail: str) -> List[Entry]:
     conn.search(SEARCH_BASE, f"mail={mail}", attributes=['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department'])
     return conn.entries
@@ -75,12 +72,112 @@ async def get_user_by_uid_from_AD(username: str, passw: str, user_uid: str) -> E
 
 async def get_users_by_attr3_from_AD(username: str, passw: str, attr3: str) -> List[Entry]: # fix me
     ldap_connection = get_connection_ldap(username, passw)
-    if ldap_connection.search(SEARCH_BASE, f"(mailNickname={attr3})", attributes=ATTRS_USER):
+    if ldap_connection.search(SEARCH_BASE, f"(extensionAttribute3={attr3})", attributes=ATTRS_USER):
         return ldap_connection.entries
     else: return None
 
-async def get_users_by_dep_from_AD(username: str, passw: str, departament: str) -> List[Entry]: # fix me
+async def get_users_by_dep_from_AD(username: str, passw: str, departament: str) -> Entry: # fix me
     ldap_connection = get_connection_ldap(username, passw)
     if ldap_connection.search(SEARCH_BASE, f"(department={departament})", attributes=ATTRS_USER):
         return ldap_connection.entries[0]
     else: return None
+
+
+
+class LdapConnection:
+    def __init__(self, username:str, password:str) -> None:
+        self.username = username
+        self.password = password
+        self.attributes = ['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department']
+        self.attrs_user = ['description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName']
+        self.start_connection()
+
+    def start_connection(self): # осуществляем соединение
+        self.ldap_connection = Connection(server, user=f"MBU\\{self.username}", password=self.password)
+
+    async def check_user(self) -> bool: # аутентификация пользователя
+            if self.ldap_connection.bind():
+                return True
+            else:
+                return False
+
+    async def get_user_by_mail(self, mail: str) -> List[Entry]: # получаем пользователя из AD по АДРЕСУ ПОЧТЫ
+        if self.ldap_connection.bind():
+            self.ldap_connection.search(SEARCH_BASE, f"mail={mail}", attributes=self.attributes)
+        else:
+            self.start_connection(self)
+            self.ldap_connection.search(SEARCH_BASE, f"mail={mail}", attributes=self.attributes)
+        return self.ldap_connection.entries
+    
+    async def get_user_by_attr(self, attr: str) -> List[Entry]: # получаем пользователя из AD по НАЗВАНИЮ ОТДЕЛА В КИРИЛЛИЦЕ
+        if self.ldap_connection.bind():
+            self.ldap_connection.search(SEARCH_BASE, f"extensionAttribute3={attr}", attributes=self.attributes)
+        else:
+            self.start_connection(self)
+            self.ldap_connection.search(SEARCH_BASE, f"extensionAttribute3={attr}", attributes=self.attributes)
+        return self.ldap_connection.entries
+    
+    async def get_user_by_dep(self, dep: str) -> List[Entry]:
+        if self.ldap_connection.bind():
+            self.ldap_connection.search(SEARCH_BASE, f"department={dep}", attributes=self.attributes)
+        else:
+            self.start_connection(self)
+            self.ldap_connection.search(SEARCH_BASE, f"department={dep}", attributes=self.attributes)
+        return self.ldap_connection.entries
+
+    async def get_user_by_uid_from_AD(self, user_uid: str) -> Entry:
+        if self.ldap_connection.bind():
+            if self.ldap_connection.search(SEARCH_BASE, f"mailNickname={user_uid}", attributes=self.attrs_user):
+                return self.ldap_connection.entries[0]
+            else: return None
+        else:
+            self.start_connection(self)
+            if self.ldap_connection.search(SEARCH_BASE, f"mailNickname={user_uid}", attributes=self.attrs_user):
+                return self.ldap_connection.entries[0]
+            else: return None
+
+    async def get_users_by_attr3_from_AD(self, attr3: str) -> List[Entry]:
+        if self.ldap_connection.bind():
+            if self.ldap_connection.search(SEARCH_BASE, f"extensionAttribute3={attr3}", attributes=ATTRS_USER):
+                return self.ldap_connection.entries
+            else: return None
+        else:
+            self.start_connection(self)
+            if self.ldap_connection.search(SEARCH_BASE, f"extensionAttribute3={attr3}", attributes=ATTRS_USER):
+                return self.ldap_connection.entries
+            else: return None
+
+    async def get_users_by_dep_from_AD(self, departament: str) -> Entry:
+        if self.ldap_connection.bind():
+            if self.ldap_connection.search(SEARCH_BASE, f"department={departament}", attributes=ATTRS_USER):
+                return self.ldap_connection.entries[0]
+            else: return None
+        else:
+            self.start_connection(self)
+            if self.ldap_connection.search(SEARCH_BASE, f"department={departament}", attributes=ATTRS_USER):
+                return self.ldap_connection.entries[0]
+            else: return None
+
+    async def get_user_from_EntryLDAP(self, session: AsyncSession, userAD: Entry) -> UserAD:
+        user_FIO: str = userAD.description.value
+        user_name = user_FIO.split()[1]
+        user_fathername = user_FIO.split()[2] if len(user_FIO.split()) == 3 else None
+        user_surname = user_FIO.split()[0]
+        department_name_from_ad = userAD.department.value
+        divisionAD = await DivisionAD.get_divisionAD_by_name(session, department_name_from_ad)
+        division = await Division.get_division_by_id(session, divisionAD.divisionAD_division_id)
+        role_list = list()
+        role = await Role.get_role_by_rolename(session, 'Администратор') # сделать проверку на рабочие группы
+        role_list.append(role)
+        user = UserAD(
+            user_id = userAD.sAMAccountName.value,
+            user_name = user_name,
+            user_fathername = user_fathername,
+            user_surname = user_surname,
+            user_position = userAD.extensionAttribute2.value,
+            user_division_id = division.division_id,
+            user_division = division,
+            user_role = role_list,
+            user_email = userAD.mail.value,
+        )
+        return user
