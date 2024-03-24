@@ -301,17 +301,21 @@
                 <p>- обязательные элементы для заполнения</p>
               </div>
               <div>
+                <span class="d-inline-block button-margin" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для Администратора">
+                  <button @click="cancelDefect" id="checkCheckDefectButton1" :hidden='isDisabledCheckDefect1' class="btn btn-outline-danger" type="button">Отменить дефект</button>
+                </span>
+                <span class="verticalLine1" :hidden='isDisabledCheckDefect1'></span>
                 <span class="d-inline-block button-margin">
                   <button @click="exportHistoryExcel" class="btn btn-secondary" type="button">Выгрузить дефект в Excel</button>
                 </span>
                 <span class="verticalLine1" :hidden='isDisabledCheckDefect'></span>
-                <span class="d-inline-block" tabindex="0" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна для пользователя Регистратор дефекта">
+                <span class="d-inline-block" tabindex="0" data-toggle="popover_check1" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна для пользователя Регистратор дефекта">
                   <button @click="dangerDefect" id="checkDangerDefectButton" :hidden='isDisabledCheckDefect' class="btn btn-danger margin-right" type="button">Дефект не устранен</button>
                 </span>
-                <span class="d-inline-block" tabindex="0" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна для пользователя Регистратор дефекта">
+                <span class="d-inline-block" tabindex="0" data-toggle="popover_check1" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна для пользователя Регистратор дефекта">
                   <button @click="warningDefect" id="checkWarningDefectButton" :hidden='isDisabledCheckDefect' class="btn btn-warning margin-right" type="button">Дефект локализован</button>
                 </span>
-                <span class="d-inline-block" tabindex="0" data-toggle="popover_check" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна для пользователя Регистратор дефекта">
+                <span class="d-inline-block" tabindex="0" data-toggle="popover_check1" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна для пользователя Регистратор дефекта">
                   <button @click="successDefect" id="checkSuccessDefectButton" :hidden='isDisabledCheckDefect' class="btn btn-success" type="button">Дефект устранен</button>
                 </span>
               </div>

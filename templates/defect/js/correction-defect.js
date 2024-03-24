@@ -9,6 +9,8 @@ const appCorrectionDefect = Vue.createApp({
           cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
           cardDefectID: '', /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
           cardComment: '', /* Для отображения ВЫПОЛНЕННЫЕ РАБОТЫ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !!  */
+          modalTitle: 'Корректировка дефекта',
+          commentText: 'Комментарий при корректировке',
         }
       },
       mounted() {
@@ -42,48 +44,93 @@ const appCorrectionDefect = Vue.createApp({
           this.cardComment = '';
           this.parent_button_close_modal_name = '';
         }, /* clearData */
-        cancelDefect(event) {
-          if (this.cardComment == '') {
-            Swal.fire({html:"<b>Отсутствует комментарий</b>", heightAuto: false}); 
-            return;  /* Если комментарий не заполнен, то выходим из функции */
+        cancelDefect() {
+          if (this.cardComment == "") {
+            Swal.fire({
+              html: "<b>Отсутствует комментарий</b>",
+              heightAuto: false,
+            });
+            return;
           }
-          Swal.fire({
-            title: "Вы действительно хотите отправить дефект на корректировку?",
-            showDenyButton: true,
-            confirmButtonText: "ДА",
-            denyButtonText: `НЕТ`
-          }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-              data = {
-                "defect_id": {
-                  "defect_id": this.defect_id
-                },
-                "status_name": {
-                  "status_defect_name": this.statuses_defect[7].status_defect_name
-                },
-                "comment": {
-                  "comment": this.cardComment
+          if (appCheckDefect.isDefectLocalized) {
+            let data = {
+              defect_id: {
+                defect_id: appCheckDefect.defect_id,
+              },
+              status_name: {
+                status_defect_name:
+                  appCheckDefect.statuses_defect[10].status_defect_name,
+              },
+              checker_id: {
+                user_id: appCheckDefect.newCheckerId,
+              },
+              defect_check_result: {
+                comment: this.cardComment,
+              },
+            };
+            axios
+              .post("/check_defect", data)
+              .then((response) => {
+                document.getElementById("closeCorrectionDefectModalWindow").click();
+                appVueDefect.updateTables();
+                Swal.fire("ДЕФЕКТ ЛОКАЛИЗОВАН","","success");
+                document.getElementById(this.parent_button_close_modal_name).click();
+                appCheckDefect.isDefectLocalized = false;
+                this.modalTitle = 'Корректировка дефекта';
+                this.commentText = 'Комментарий при корректировке';
+              })
+              .catch((err) => {
+                if (err.response.status === 401) {
+                  window.location.href = "/";
+                } else {
+                  Swal.fire({
+                    html: "<b>Произошла ошибка при ЛОКАЛИЗАЦИИ ДЕФЕКТА! Обратитесь к администратору!</b>",
+                    heightAuto: false,
+                  });
+                  console.log(err);
                 }
-              }
-              axios
-              .post('/update_status_defect', data)
-              .then(response => {
-                  document.getElementById('closeCorrectionDefectModalWindow').click();
-                  appVueDefect.updateTables()
-                  Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ", "", "success");
-                  document.getElementById(this.parent_button_close_modal_name).click();
-                    }) /* axios */
-              .catch(err => {
-                      if (err.response.status === 401){
-                        window.location.href = "/";
-                      } else {
-                        Swal.fire({html:"<b>Произошла ошибка при ОТМЕНE ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
-                        console.log(err);
-                      }
+              });
+          } else {
+            Swal.fire({
+              title: "Вы действительно хотите отправить дефект на корректировку?",
+              showDenyButton: true,
+              confirmButtonText: "ДА",
+              denyButtonText: `НЕТ`,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                data = {
+                  defect_id: {
+                    defect_id: this.defect_id,
+                  },
+                  status_name: {
+                    status_defect_name: this.statuses_defect[7].status_defect_name,
+                  },
+                  comment: {
+                    comment: this.cardComment,
+                  },
+                };
+                axios
+                  .post("/update_status_defect", data)
+                  .then((response) => {
+                    document.getElementById("closeCorrectionDefectModalWindow").click();
+                    appVueDefect.updateTables();
+                    Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ", "", "success");
+                    document.getElementById(this.parent_button_close_modal_name).click();
                   }) /* axios */
+                  .catch((err) => {
+                    if (err.response.status === 401) {
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({
+                        html: "<b>Произошла ошибка при ОТМЕНE ДЕФЕКТА! Обратитесь к администратору!</b>",
+                        heightAuto: false,
+                      });
+                      console.log(err);
+                    }
+                  }); /* axios */
               }
-          });
+            });
+          }
         },/* cancelDefect */
       },  
   }).mount('#vueCorrectionDefect')

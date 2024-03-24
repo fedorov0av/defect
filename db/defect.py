@@ -135,7 +135,7 @@ class Defect(Base):
     @staticmethod
     async def get_defect_by_id(session: AsyncSession, defect_id: int): # получение дефекта по ID
         if AD:
-            query = select(Defect).order_by(Defect.defect_id).options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status))\
+            query = select(Defect).where(Defect.defect_id == defect_id).options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status))\
                     .options(selectinload(Defect.defect_division)).options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect))\
                     .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
         else:
@@ -288,7 +288,7 @@ class Defect(Base):
         if conditions:
             query = query.filter(*conditions)
         if AD:
-            query = select(Defect).order_by(Defect.defect_id).options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status))\
+            query = query.order_by(Defect.defect_id.desc()).options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status))\
                     .options(selectinload(Defect.defect_division)).options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect))\
                     .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
         else:

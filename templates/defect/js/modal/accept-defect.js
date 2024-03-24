@@ -12,6 +12,7 @@ const appAcceptDefect = Vue.createApp({
       workers: {},
       toggle: 'false',
       isDisabledAcceptDefect: false,
+      isDisabledAcceptDefect1: false,
       check_worker: false,
       isHiddenblockmain: 'false',
       isHiddenblockhistory: 'false',
@@ -58,6 +59,9 @@ const appAcceptDefect = Vue.createApp({
     .then(response => {
         this.currentUser = response.data;
         this.currentUserRole = this.currentUser.user_role;
+        if (this.currentUserRole != 'Администратор') {
+          this.isDisabledAcceptDefect1 = true;
+        }
         if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Руководитель') {
           this.isDisabledAcceptDefect = true;
         }
@@ -77,7 +81,7 @@ const appAcceptDefect = Vue.createApp({
   methods: {
     setPopover(){
       $(document).ready(function(){
-        if($("#acceptCancelDefectButton").is(":disabled") && $("#acceptAcceptDefectButton").is(":disabled"))  {
+        if($("#acceptCancelDefectButton"))  {
           $('[data-toggle="popover_accept"]').popover({
           placement : 'top'
         });
@@ -210,14 +214,43 @@ const appAcceptDefect = Vue.createApp({
         }
       });
     }, /* acceptDefect */
-    cancelDefect() {
+    requiresSolution() {
         appCorrectionDefect.defect_id = defect_id;
         appCorrectionDefect.parent_button_close_modal_name = 'closeAcceptModalWindow';
         var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
           keyboard: false
         })
         myModal.show()
-    }, /* cancelDefect */
+    }, /* requiresSolution */
+    cancelDefect() {
+      Swal.fire({
+        title: "Вы действительно хотите отменить дефект?",
+        showDenyButton: true,
+        confirmButtonText: "ДА",
+        denyButtonText: `НЕТ`
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[8].status_defect_name}}
+          axios
+          .post('/update_status_defect', data)
+          .then(response => {
+              document.getElementById('closeAcceptModalWindow').click();
+              /* appVueDefect.updateTables() */
+              appVueFilter.useFilter()
+              Swal.fire("ДЕФЕКТ ОТМЕНЕН", "", "success");
+                })
+          .catch(err => {
+                  if (err.response.status === 401){
+                    window.location.href = "/";
+                  } else {
+                    Swal.fire({html:"<b>Произошла ошибка при ОТМЕНЫ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                    console.log(err);
+                  }
+              }) /* axios */
+          }
+      });
+    },/* cancelDefect */
     exportHistoryExcel(){
       runExportHistoryExcel(this.defect_id);
     }, /* exportHistoryExcel */

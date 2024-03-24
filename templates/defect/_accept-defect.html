@@ -145,7 +145,7 @@
                     </div>
                   </div>
                 </div>
-    
+     
                 <div class="block_row componentWraper">
                   <div class="block_data_column1">
                     <div class="block_data_column">
@@ -296,14 +296,18 @@
                   <p>- обязательные элементы для заполнения</p>
                 </div>
                 <div>
+                  <span class="d-inline-block button-margin"  data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для Администратора">
+                    <button @click="cancelDefect" id="acceptCancelDefectButton" :hidden='isDisabledAcceptDefect1' class="btn btn-outline-danger" type="button">Отменить дефект</button>
+                  </span>
+                  <span class="verticalLine1" :hidden='isDisabledAcceptDefect1'></span>
                   <span class="d-inline-block button-margin">
                     <button @click="exportHistoryExcel" class="btn btn-secondary" type="button">Выгрузить дефект в Excel</button>
                   </span>
                   <span class="verticalLine1" :hidden='isDisabledAcceptDefect'></span>
-                  <span class="d-inline-block" tabindex="0" data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
-                    <button @click="cancelDefect" id="acceptCancelDefectButton" :hidden='isDisabledAcceptDefect' class="btn btn-warning margin-right" data-bs-target="#CorrectionDefectModalWindow" type="button">Требует решения</button>
+                  <span class="d-inline-block" tabindex="0" data-toggle="popover_accept1" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
+                    <button @click="requiresSolution" id="acceptCancelDefectButton" :hidden='isDisabledAcceptDefect' class="btn btn-warning margin-right" data-bs-target="#CorrectionDefectModalWindow" type="button">Требует решения</button>
                   </span>
-                  <span class="d-inline-block" tabindex="0" data-toggle="popover_accept" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
+                  <span class="d-inline-block" tabindex="0" data-toggle="popover_accept1" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Руководитель ремонта">
                     <button @click="acceptDefect" id="acceptAcceptDefectButton" :hidden='isDisabledAcceptDefect' class="btn btn-primary" type="button">Назначить исполнителя</button>
                   </span>
                 </div>

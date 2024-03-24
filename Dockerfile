@@ -28,5 +28,5 @@ WORKDIR /defects
 EXPOSE 80 443
 #EXPOSE 4000
 # Команда запуска приложения
-#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "4000", "--ssl-keyfile", "cert/private.key", "--ssl-certfile", "cert/defect-journal.akkuyu.local.cer"]
+#CMD ["uvicorn", "main:app", "--workers", "8", "--host", "0.0.0.0", "--port", "4000", "--ssl-keyfile", "cert/private.key", "--ssl-certfile", "cert/defect-journal.akkuyu.local.cer"]
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "443", "--ssl-keyfile", "cert/private.key", "--ssl-certfile", "cert/defect-journal.akkuyu.local.cer"]

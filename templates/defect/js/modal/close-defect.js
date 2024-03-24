@@ -13,6 +13,7 @@ const appCloseDefect = Vue.createApp({
         workers: {},
         toggle: 'false',
         isDisabledCloseDefect: false,
+        isDisabledCloseDefect1: false,
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
         cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
         cardStatusDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
@@ -60,9 +61,18 @@ const appCloseDefect = Vue.createApp({
       updateCategoriesDefect(this.categories_defect);
     },
     methods: {
-      setPopover(){
+      /*setPopover(){
         $(document).ready(function(){
           if($("#closeCloseDefectButton").is(":disabled")) {
+            $('[data-toggle="popover_close"]').popover({
+            placement : 'top'
+          });
+          }
+        });
+      },  setPopover */
+      setPopover(){
+        $(document).ready(function(){
+          if($("#closeCheckDefectButton1"))  {
             $('[data-toggle="popover_close"]').popover({
             placement : 'top'
           });
@@ -143,6 +153,9 @@ const appCloseDefect = Vue.createApp({
                 } else { this.isDisabledCloseDefect = false;}
                 if (this.currentUserRole == 'Администратор'){
                   this.isDisabledCloseDefect = false;
+                }
+                if (this.currentUserRole !== 'Администратор'){
+                  this.isDisabledCloseDefect1 = true;
                 }
               })
                 })
@@ -259,13 +272,42 @@ const appCloseDefect = Vue.createApp({
           }
         });
       },/* closeDefect */
-      cancelDefect() {
+      requiresSolution() {
         appCorrectionDefect.defect_id = defect_id;
         appCorrectionDefect.parent_button_close_modal_name = 'closeCloseDefectModalWindow';
         var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
           keyboard: false
         })
         myModal.show()
+      },/* requiresSolution */
+      cancelDefect() {
+        Swal.fire({
+          title: "Вы действительно хотите отменить дефект?",
+          showDenyButton: true,
+          confirmButtonText: "ДА",
+          denyButtonText: `НЕТ`
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[8].status_defect_name}}
+            axios
+            .post('/update_status_defect', data)
+            .then(response => {
+                document.getElementById('closeCloseDefectModalWindow').click();
+                /* appVueDefect.updateTables() */
+                appVueFilter.useFilter()
+                Swal.fire("ДЕФЕКТ ОТМЕНЕН", "", "success");
+                  })
+            .catch(err => {
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ОТМЕНЫ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
+                }) /* axios */
+            }
+        });
       },/* cancelDefect */
       exportHistoryExcel(){
         runExportHistoryExcel(this.defect_id);
