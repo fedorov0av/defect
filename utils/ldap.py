@@ -4,6 +4,8 @@ from ldap3.core.exceptions import LDAPBindError
 from fastapi import APIRouter, Depends, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
+from datetime import datetime
+import pandas as pd
 
 from db.division import Division
 from db.division_ad import DivisionAD
@@ -16,25 +18,59 @@ ATTRS_USER = ['description', 'department', 'memberOf', 'extensionAttribute2', 'm
 SEARCH_BASE = 'ou=Users,ou=_Akkuyu,dc=mbu,dc=invalid'
 server = Server(SERVER_URI, get_info=ALL)
 
+class UsersLDAP():
+    __users = {}
+    __create_at: datetime = False
+    __LIFE_TIME_SECONDS = 180
 
-def get_user_by_mail(conn: Connection, mail: str) -> List[Entry]:
-    conn.search(SEARCH_BASE, f"mail={mail}", attributes=['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department'])
-    return conn.entries
+    @classmethod
+    def get_users(cls) -> dict[dict[dict]]:
+        time_now = datetime.now()
+        if UsersLDAP.__create_at and ((time_now - UsersLDAP.__create_at).seconds > UsersLDAP.__LIFE_TIME_SECONDS):
+            UsersLDAP.__users = {}
+        return UsersLDAP.__users
+    
+    @classmethod
+    def set_users(cls, users):
+        UsersLDAP.__users = users
+        UsersLDAP.__create_at = datetime.now()
 
-def get_user_by_attr(conn: Connection, attr) -> List[Entry]:
-    conn.search(SEARCH_BASE, f"extensionAttribute3={attr}", attributes=['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department'])
-    return conn.entries
+class SaverConnectionLDAP():
+    __connection: Connection = {}
+    __create_at: datetime = False
+    __LIFE_TIME_SECONDS = 180
 
-def get_user_by_dep(conn: Connection, dep) -> List[Entry]:
-    conn.search(SEARCH_BASE, f"department={dep}", attributes=['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department'])
-    return conn.entries
+    @classmethod
+    def get_connection(cls):
+        time_now = datetime.now()
+        if SaverConnectionLDAP.__create_at and ((time_now - SaverConnectionLDAP.__create_at).seconds > SaverConnectionLDAP.__LIFE_TIME_SECONDS):
+            SaverConnectionLDAP.__connection = {}
+        return SaverConnectionLDAP.__connection
+    
+    @classmethod
+    def set_connection(cls, connection):
+        SaverConnectionLDAP.__connection = connection
+        SaverConnectionLDAP.__create_at = datetime.now()
+
+
+""" def get_user_by_mail(conn: Connection, mail: str) -> List[Entry]:
+    conn.search(SEARCH_BASE, f"(mail={mail})", attributes=['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department'])
+    return conn.entries """
+
+""" def get_user_by_attr(conn: Connection, attr) -> List[Entry]:
+    conn.search(SEARCH_BASE, f"(extensionAttribute3={attr})", attributes=['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department'])
+    return conn.entries """
+
+""" def get_user_by_dep(conn: Connection, dep) -> List[Entry]:
+    conn.search(SEARCH_BASE, f"(department={dep})", attributes=['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department'])
+    return conn.entries """
 
 def get_connection_ldap(username: str, password: str) -> Connection:
     ldap_connection = Connection(server, user=f"MBU\\{username}", password=password)
     if ldap_connection.bind():
         return ldap_connection
 
-async def check_user(username: str, password: str) -> bool:
+async def check_user(username: str, password: str) -> bool: # ИСПОЛЬЗУЕТСЯ В API AUTH
     ldap_connection = Connection(server, user=f"MBU\\{username}", password=password)
     if ldap_connection.bind():
         return True
@@ -86,42 +122,94 @@ async def get_users_by_dep_from_AD(username: str, passw: str, departament: str) 
 
 
 class LdapConnection:
-    def __init__(self, username:str, password:str) -> None:
+    def __init__(self, session:AsyncSession, username:str, password:str) -> None:
         self.username = username
         self.password = password
         self.attributes = ['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department']
-        self.attrs_user = ['description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName']
+        self.attrs_user = ['description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName', 'mailNickname']
         self.succes_connection = self.start_connection()
+        self.users = {}
+        self.session = session
 
     def start_connection(self): # осуществляем соединение
-        try:
-            self.ldap_connection = Connection(server, user=f"MBU\\{self.username}", password=self.password, client_strategy=ASYNC, auto_bind=True)
+        connection = SaverConnectionLDAP.get_connection()
+        if (not connection) or connection.closed:
+            try:
+                self.ldap_connection = Connection(server, user=f"MBU\\{self.username}", password=self.password, client_strategy=ASYNC, auto_bind=True)
+                SaverConnectionLDAP.set_connection(self.ldap_connection)
+                return True
+            except LDAPBindError as err:
+                return False
+        else: 
+            self.ldap_connection = connection
             return True
-        except LDAPBindError as err:
-            return False
-        
-    async def check_user(self) -> bool: # аутентификация пользователя
-            return self.succes_connection
 
-    async def get_user_by_mail(self, mail: str) -> List[Entry]: # получаем пользователя из AD по АДРЕСУ ПОЧТЫ
-        message_id =self.ldap_connection.search(SEARCH_BASE, f"(mail={mail})", attributes=self.attributes)
-        return self.ldap_connection.get_response(message_id)
-    
-    
-    async def get_user_by_attr(self, attr: str) -> List[Entry]: # получаем пользователя из AD по НАЗВАНИЮ ОТДЕЛА В КИРИЛЛИЦЕ
-        self.ldap_connection.search(SEARCH_BASE, f"(extensionAttribute3={attr})", attributes=self.attributes)
-        return self.ldap_connection.entries
-    
-    async def get_user_by_dep(self, dep: str) -> List[Entry]:
-        self.ldap_connection.search(SEARCH_BASE, f"(department={dep})", attributes=self.attributes)
-        return self.ldap_connection.entries
+    def get_connection(self) -> Connection:
+        connection = SaverConnectionLDAP.get_connection()
+        if not connection:
+            self.start_connection()
+            connection = SaverConnectionLDAP.get_connection()
+        return connection
+
+    async def check_user(self) -> bool: # аутентификация пользователя    
+        return self.succes_connection
+
+    async def update_users(self):
+        con = self.get_connection()
+        message_id = con.search(SEARCH_BASE, f"(objectclass=person)", attributes=self.attrs_user)
+        raw_users = con.get_response(message_id)[0]
+        users = {}
+        for raw_user in raw_users:
+            try:
+                users[raw_user['attributes']['sAMAccountName']] = {
+                    'description': raw_user['attributes']['description'][0],
+                    'department': raw_user['attributes']['department'],
+                    'memberOf': raw_user['attributes']['memberOf'],
+                    'extensionAttribute2': raw_user['attributes']['extensionAttribute2'],
+                    'mail': raw_user['attributes']['mail'],
+                    'mailNickname': raw_user['attributes']['mailNickname'],
+                    'sAMAccountName': raw_user['attributes']['sAMAccountName'],
+                }
+            except IndexError:
+                pass
+        UsersLDAP.set_users(users)
+
+    async def check_connection_usersLDAP(self):
+        self.get_connection()
+        if not UsersLDAP.get_users():
+            await self.update_users()
+
+    async def get_user_by_mail(self, mail: str) -> UserAD: # получаем пользователя из AD по АДРЕСУ ПОЧТЫ
+        await self.check_connection_usersLDAP()
+        users = UsersLDAP.get_users()
+        for user in users:
+            if users[user]['mail'] == mail:
+                return await self.get_user_from_EntryLDAP(users[user])
+
+    async def get_user_by_attr(self, attr: str) -> UserAD: # получаем пользователя из AD по НАЗВАНИЮ ОТДЕЛА В КИРИЛЛИЦЕ
+        await self.check_connection_usersLDAP()
+        users = UsersLDAP.get_users()
+        for user in users:
+            if users[user]['extensionAttribute3'] == attr:
+                return await self.get_user_from_EntryLDAP(users[user])
+
+    async def get_user_by_dep(self, dep: str) -> UserAD:
+        await self.check_connection_usersLDAP()
+        users = UsersLDAP.get_users()
+        for user in users:
+            if users[user]['department'] == dep:
+                return await self.get_user_from_EntryLDAP(users[user])
+
 
     async def get_user_by_uid_from_AD(self, user_uid: str) -> Entry:
-        if self.ldap_connection.search(SEARCH_BASE, f"(mailNickname={user_uid})", attributes=self.attrs_user):
-            return self.ldap_connection.entries[0]
-        else: return None
+        await self.check_connection_usersLDAP()
+        users = UsersLDAP.get_users()
+        for user in users:
+            if users[user]['mailNickname'] == user_uid:
+                return await self.get_user_from_EntryLDAP(users[user])
 
-    async def get_users_by_attr3_from_AD(self, attr3: str) -> List[Entry]:
+
+    """ async def get_users_by_attr3_from_AD(self, attr3: str) -> List[Entry]:
         if self.ldap_connection.bind():
             if self.ldap_connection.search(SEARCH_BASE, f"(extensionAttribute3={attr3})", attributes=ATTRS_USER):
                 return self.ldap_connection.entries
@@ -141,28 +229,28 @@ class LdapConnection:
             self.start_connection(self)
             if self.ldap_connection.search(SEARCH_BASE, f"(department={departament})", attributes=ATTRS_USER):
                 return self.ldap_connection.entries[0]
-            else: return None
+            else: return None """
 
-    async def get_user_from_EntryLDAP(self, session: AsyncSession, userAD: Entry) -> UserAD:
-        user_FIO: str = userAD.description.value
+    async def get_user_from_EntryLDAP(self, userAD: dict) -> UserAD:
+        user_FIO: str = userAD['description']
         user_name = user_FIO.split()[1]
         user_fathername = user_FIO.split()[2] if len(user_FIO.split()) == 3 else None
         user_surname = user_FIO.split()[0]
-        department_name_from_ad = userAD.department.value
-        divisionAD = await DivisionAD.get_divisionAD_by_name(session, department_name_from_ad)
-        division = await Division.get_division_by_id(session, divisionAD.divisionAD_division_id)
+        department_name_from_ad = userAD['department']
+        divisionAD = await DivisionAD.get_divisionAD_by_name(self.session, department_name_from_ad)
+        division = await Division.get_division_by_id(self.session, divisionAD.divisionAD_division_id)
         role_list = list()
-        role = await Role.get_role_by_rolename(session, 'Администратор') # сделать проверку на рабочие группы
+        role = await Role.get_role_by_rolename(self.session, 'Администратор') # сделать проверку на рабочие группы
         role_list.append(role)
         user = UserAD(
-            user_id = userAD.sAMAccountName.value,
+            user_id = userAD['sAMAccountName'],
             user_name = user_name,
             user_fathername = user_fathername,
             user_surname = user_surname,
-            user_position = userAD.extensionAttribute2.value,
+            user_position = userAD['extensionAttribute2'],
             user_division_id = division.division_id,
             user_division = division,
             user_role = role_list,
-            user_email = userAD.mail.value,
+            user_email = userAD['mail'],
         )
         return user

@@ -62,19 +62,18 @@ async def get_user_for_defect(session: AsyncSession, request: Request, token_dec
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
         passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(user_id, passw)
-        userAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
-        user: UserAD = await ldap_connection.get_user_from_EntryLDAP(session, userAD)
+        ldap_connection = LdapConnection(session, user_id, passw)
+        user: UserAD = await ldap_connection.get_user_by_uid_from_AD(session, user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
     return user
 
-async def get_user_if_ad(session: AsyncSession, request: Request, token_dec: dict, user_mail_nickname: str):
+""" async def get_user_if_ad(session: AsyncSession, request: Request, token_dec: dict, user_mail_nickname: str):
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     passw = await decrypt_user_id(token_dec['subject']['userP'])
     userAD = await get_user_by_uid_from_AD(user_id, passw, user_mail_nickname)
     user = await get_user_from_EntryLDAP(session, request, userAD)
-    return user
+    return user """
 
 class UserDefectFromAD:
     def __init__(self, session: AsyncSession, request: Request, token_dec: dict):
@@ -86,19 +85,15 @@ class UserDefectFromAD:
         result = list()
         user_id = await decrypt_user_id(self.token_dec['subject']['userId'])
         passw = await decrypt_user_id(self.token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(user_id, passw)
+        ldap_connection = LdapConnection(self.session, user_id, passw)
         for defect in defects:
-            defect_registrarAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
-            defect_registrar: UserAD =  await ldap_connection.get_user_from_EntryLDAP(self.session, defect_registrarAD)
-            defect_ownerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
-            defect_owner: UserAD =  await ldap_connection.get_user_from_EntryLDAP(self.session, defect_ownerAD) if defect.defect_owner_id else None
+            defect_registrar: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
+            defect_owner: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
             defect_owner_surname = defect_owner.user_surname if defect_owner else None
-            repair_managerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
-            repair_manager: UserAD =  await ldap_connection.get_user_from_EntryLDAP(self.session, repair_managerAD) if defect.defect_repair_manager_id else None
+            repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
             defect_repair_manager = {'user_surname': repair_manager.user_surname if repair_manager else '',
                                     'user_name': repair_manager.user_name if repair_manager else ''}
-            defect_workerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
-            defect_worker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(self.session, defect_workerAD) if defect.defect_worker_id else None
+            defect_worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
             result.append(
                 {'defect_id': defect.defect_id,
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
@@ -117,6 +112,7 @@ class UserDefectFromAD:
                 "defect_system": defect.defect_system,
                 "defect_system_kks": defect.defect_system.system_kks,}
                 )
+        return result
 
 
 @defect_router.post("/defect/add")
@@ -209,18 +205,13 @@ async def get_defect(request: Request, response: Response, defect_id: Defect_id,
         token_dec = await decode_token(request.cookies['jwt_refresh_token'])
         user_id = await decrypt_user_id(token_dec['subject']['userId'])
         passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(user_id, passw)
-        defect_registrarAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
-        defect_registrar = await ldap_connection.get_user_from_EntryLDAP(session, defect_registrarAD)
-        defect_ownerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
-        defect_owner: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_ownerAD) if defect.defect_owner_id else None
+        ldap_connection = LdapConnection(session, user_id, passw)
+        defect_registrar = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
+        defect_owner: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
         defect_owner_surname = defect_owner.user_surname if defect_owner else None
-        repair_managerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
-        repair_manager: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, repair_managerAD) if defect.defect_repair_manager_id else None
-        defect_workerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
-        defect_worker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_workerAD) if defect.defect_worker_id else None
-        defect_checkerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
-        checker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_checkerAD) if defect.defect_checker_id else None
+        repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id ) if defect.defect_repair_manager_id else None
+        defect_worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
+        checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
         defect_checker = {'user_surname': checker.user_surname if checker else '',
                                     'user_name': checker.user_name if checker else ''}
     return  {
@@ -309,14 +300,12 @@ async def confirm_defect(request: Request, response: Response,
         category_defect = None
     if AD:
         passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(user_id, passw)
-        userAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
-        user: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, userAD)
+        ldap_connection = LdapConnection(session, user_id, passw)
+        user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
     if AD:
-        repair_managerAD = await ldap_connection.get_user_by_uid_from_AD(repair_manager_id.user_id)
-        repair_manager: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, repair_managerAD)
+        repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(repair_manager_id.user_id)
     else:
         repair_manager: User = await User.get_user_by_id(session, repair_manager_id.user_id)
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
@@ -371,14 +360,12 @@ async def accept_defect(
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
         passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(user_id, passw)
-        userAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
-        user: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, userAD)
+        ldap_connection = LdapConnection(session, user_id, passw)
+        user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
     if AD:
-        workerAD = await ldap_connection.get_user_by_uid_from_AD(worker_id.user_id)
-        worker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, workerAD)
+        worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(worker_id.user_id)
     else:
         worker: User = await User.get_user_by_id(session, worker_id.user_id)
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
@@ -411,14 +398,12 @@ async def check_defect(
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
         passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(user_id, passw)
-        userAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
-        user: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, userAD)
+        ldap_connection = LdapConnection(session, user_id, passw)
+        user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
     if AD:
-        checkerAD = await ldap_connection.get_user_by_uid_from_AD(checker_id.user_id)
-        checker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, checkerAD)
+        checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(checker_id.user_id)
     else:
         checker: User = await User.get_user_by_id(session, checker_id.user_id)
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
@@ -452,9 +437,8 @@ async def finish_work_defect(
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
         passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(user_id, passw)
-        userAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
-        user: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, userAD)
+        ldap_connection = LdapConnection(session, user_id, passw)
+        user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
@@ -485,7 +469,7 @@ async def close_defect(
                     class_system_name: ClassSystem_name = None,
                     core_classification_code: CoreClassification_code = None,
                     direct_classification_code: DirectClassification_code = None,
-                    direct_classification_name: DirectClassification_name = None,
+                    #direct_classification_name: DirectClassification_name = None,
                     comment: Сomment = None,
                     session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
@@ -493,17 +477,17 @@ async def close_defect(
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     try:
         if direct_classification_code.direct_rarery_code:
-            await CategoryDirectReason.add_category_direct_reason(session=session,
-                                                              category_reason_code=direct_classification_code.direct_rarery_code,
-                                                              category_reason_name=direct_classification_name.direct_rarery_name)
+            #await CategoryDirectReason.add_category_direct_reason(session=session,
+            #                                                 category_reason_code=direct_classification_code.direct_rarery_code)
+            #                                                  #category_reason_name=direct_classification_name.direct_rarery_name)
             direct_classification = await CategoryDirectReason.get_category_direct_reason_by_code(session, direct_classification_code.direct_rarery_code)
         else:
             direct_classification = None
     except (PendingRollbackError, IntegrityError):
         await session.rollback()
         direct_classification = await CategoryDirectReason.get_category_direct_reason_by_code(session, direct_classification_code.direct_rarery_code)
-        if direct_classification_name.direct_rarery_name:
-            direct_classification.category_reason_name = direct_classification_name.direct_rarery_name
+        #if direct_classification_name.direct_rarery_name:
+         #   direct_classification.category_reason_name = direct_classification_name.direct_rarery_name
     if core_classification_code.core_rarery_code:
         core_classification = await CategoryCoreReason.get_category_core_reason_by_code(session, core_classification_code.core_rarery_code)
     else:
@@ -514,9 +498,8 @@ async def close_defect(
         category_defect = None
     if AD:
         passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(user_id, passw)
-        userAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
-        user: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, userAD)
+        ldap_connection = LdapConnection(session, user_id, passw)
+        user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
     defect: Defect = await Defect.get_defect_by_id(session, defect_id.defect_id)
@@ -563,21 +546,15 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
             token_dec = await decode_token(request.cookies['jwt_refresh_token'])
             user_id = await decrypt_user_id(token_dec['subject']['userId'])
             passw = await decrypt_user_id(token_dec['subject']['userP'])
-            ldap_connection = LdapConnection(user_id, passw)
-            defect_registrarAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
-            defect_registrar: UserAD = await ldap_connection.get_user_from_EntryLDAP(session, defect_registrarAD)
-            defect_ownerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
-            defect_owner: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_ownerAD) if defect.defect_owner_id else None
+            ldap_connection = LdapConnection(session, user_id, passw)
+            defect_registrar: UserAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
+            defect_owner: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
             defect_owner_surname = defect_owner.user_surname if defect_owner else None
-            repair_managerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
-            repair_manager: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, repair_managerAD) if defect.defect_repair_manager_id else None
-
-            checkerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
-            checker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, checkerAD) if defect.defect_checker_id else None
+            repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
+            checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
             defect_checker = {'user_surname': checker.user_surname if checker else '',
                                         'user_name': checker.user_name if checker else ''}            
-            workerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
-            defect_worker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, workerAD) if defect.defect_worker_id else None
+            defect_worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
         defects_with_filters.append(
             {
                 "defect_id": defect.defect_id,

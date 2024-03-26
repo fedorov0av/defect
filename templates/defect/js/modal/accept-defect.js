@@ -17,7 +17,7 @@ const appAcceptDefect = Vue.createApp({
       isHiddenblockmain: 'false',
       isHiddenblockhistory: 'false',
       isHiddenblockclassification: 'false',
-      newCoreClassificationCode: '0',
+      newCoreClassificationCode: '',
       newCoreClassificationName: '',
       newCategoryDefect_id: 0,
       newClassSystemName: '',
@@ -41,7 +41,7 @@ const appAcceptDefect = Vue.createApp({
       cardWorkerDescription: '', /* Для отображения ВЫПОЛНЕННЫЕ РАБОТЫ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !!  */
       cardChecker: '', /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
       cardCheckerDescription: '', /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
-      newWorker_id: 0, /* Для хранения ID ИСПОЛНИТЕЛЯ РЕМОНТА в карточке  */
+      newWorker_id: '', /* Для хранения ID ИСПОЛНИТЕЛЯ РЕМОНТА в карточке  */
       newWorkerDivision: '',
       backgroundMainButtonCCS: "btn-primary",
       backgroundHistoryButtonCCS: "btn-outline-primary",
@@ -89,7 +89,7 @@ const appAcceptDefect = Vue.createApp({
       });
     }, /* setPopover */
     clearData() {
-      this.newWorker_id = 0;
+      this.newWorker_id = '';
       this.check_worker = false;
     },
     updateTables() {
@@ -125,7 +125,7 @@ const appAcceptDefect = Vue.createApp({
           this.cardWorker = this.cardDefect.defect_worker;
           this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name : '';
           this.cardCheckerDescription = this.cardDefect.defect_check_result ? this.cardDefect.defect_check_result : '';
-          this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
+          this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : '';
           
           this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
           this.cardSafety = this.cardDefect.defect_safety;
@@ -133,7 +133,7 @@ const appAcceptDefect = Vue.createApp({
           this.cardExploitation = this.cardDefect.defect_exploitation;
           this.newCategoryDefect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : 0;
           this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
-          this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
+          this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '';
           
           const categories_reason_array = Object.values(this.categories_reason); 
           let category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
@@ -161,7 +161,7 @@ const appAcceptDefect = Vue.createApp({
       setSettingClickButtonClassification(this)
     }, 
     acceptDefect() {
-      if (this.newWorker_id == 0) {
+      if (this.newWorker_id == '') {
         this.check_worker = true
         Swal.fire({html:"<b>Не назначен исполнитель ремонта!</b>", heightAuto: false}); 
         return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */

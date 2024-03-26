@@ -38,9 +38,8 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
             token_dec = await decode_token(request.cookies['jwt_refresh_token'])
             user_id = await decrypt_user_id(token_dec['subject']['userId'])
             passw = await decrypt_user_id(token_dec['subject']['userP'])
-            ldap_connection = LdapConnection(user_id, passw)
-            defect_repair_managerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager.user_id)
-            defect_repair_manager: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_repair_managerAD) if defect.defect_repair_manager else None
+            ldap_connection = LdapConnection(session, user_id, passw)
+            defect_repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager.user_id) if defect.defect_repair_manager else None
             defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else defect.defect_division.division_name
         df_defect = pd.DataFrame(
                             [[defect.defect_id,
@@ -94,22 +93,18 @@ async def export_history_excel_defect(request: Request, response: Response, defe
         token_dec = await decode_token(request.cookies['jwt_refresh_token'])
         user_id = await decrypt_user_id(token_dec['subject']['userId'])
         passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(user_id, passw)
+        ldap_connection = LdapConnection(session, user_id, passw)
 
-        defect_registrarAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrar.user_id) if defect.defect_registrar else None
-        defect_registrar: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_registrarAD) if defect.defect_registrar else None
+        defect_registrar: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrar.user_id) if defect.defect_registrar else None
         defect_registrar_fullname = defect_registrar.user_surname + ' ' + defect_registrar.user_name if defect_registrar else ''
 
-        defect_checkerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker.user_id) if defect.defect_checker else None
-        defect_checker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_checkerAD) if defect.defect_checker else None
+        defect_checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker.user_id) if defect.defect_checker else None
         defect_checker_fullname = defect_checker.user_surname + ' ' + defect_checker.user_name if defect_checker else ''
 
-        defect_workerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker.user_id) if defect.defect_worker else None
-        defect_worker: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_workerAD) if defect.defect_worker else None
+        defect_worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker.user_id) if defect.defect_worker else None
         defect_worker_fullname = defect_worker.user_surname + ' ' + defect_worker.user_name if defect_worker else ''
 
-        defect_repair_managerAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager.user_id) if defect.defect_repair_manager else None
-        defect_repair_manager: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, defect_repair_managerAD) if defect.defect_repair_manager else None
+        defect_repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager.user_id) if defect.defect_repair_manager else None
         defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else ''
 
     df_header_left_title = pd.DataFrame({"Data": ['Номер дефекта:', 
@@ -145,17 +140,16 @@ async def export_history_excel_defect(request: Request, response: Response, defe
     df_header_right_data = pd.DataFrame({"Data": [defect.defect_status.status_defect_name, 
                                                  defect.defect_system.system_name, 
                                                  defect.defect_location, 
-                                                 (defect.defect_registrar.user_surname + ' ' + defect.defect_registrar.user_name + ' ' + defect.defect_registrar.user_fathername if defect.defect_registrar else '') if AD else defect_registrar_fullname,
+                                                 (defect.defect_registrar.user_surname + ' ' + defect.defect_registrar.user_name + ' ' + defect.defect_registrar.user_fathername if defect.defect_registrar else '') if not AD else defect_registrar_fullname,
                                                  (defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name if defect.defect_repair_manager else '') if not AD else defect_repair_manager_fullname,
-                                                 (defect.defect_worker.user_surname + ' ' + defect.defect_worker.user_name + ' ' + defect.defect_worker.user_fathername if defect.defect_worker else '') if AD else defect_worker_fullname,
+                                                 (defect.defect_worker.user_surname + ' ' + defect.defect_worker.user_name + ' ' + defect.defect_worker.user_fathername if defect.defect_worker else '') if not AD else defect_worker_fullname,
                                                  '', 
                                                  defect.defect_check_result]})
      
     result: list[History] = await History.get_history_by_defect(session, defect)
     for count, history_defect in enumerate(result):
         if AD:
-            history_userAD = await ldap_connection.get_user_by_uid_from_AD(history_defect.history_user.user_id)
-            history_user: UserAD =  await ldap_connection.get_user_from_EntryLDAP(session, history_userAD)
+            history_user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(history_defect.history_user.user_id)
             history_user_fullname = history_user.user_surname + ' ' + history_user.user_name
         df_history_defect = pd.DataFrame(
                                 [[count+1,

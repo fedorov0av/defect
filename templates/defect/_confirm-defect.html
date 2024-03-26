@@ -173,10 +173,17 @@
                         <b class="zvezda"> * </b>
                       </div>
                         <!-- <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newRepairManager_id !== 0, 'is-invalid': check_repair_manager === true & newRepairManager_id === 0 }" aria-label="Disabled select example" v-model="newRepairManager_id" :disabled='isDisabledConfirmDefect'> -->
-                        <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newRepairManager_id !== 0, 'is-invalid': newRepairManager_id === 0 }" aria-label="Disabled select example" v-model="newRepairManager_id" :disabled='isDisabledConfirmDefect'>
+
+                        <!-- <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newRepairManager_id !== 0, 'is-invalid': newRepairManager_id === 0 }" v-model="newRepairManager_id" :disabled='isDisabledConfirmDefect'>
                           <option disabled selected :value=0>Выберите ответственного за устранение дефекта</option>
                           <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name + ' ' + '(' + ' ' + repair_manager.user_division  + ' ' + ')'}}</option>
-                        </select> 
+                        </select>  -->
+
+                        <input class="form-control" list="datalistRepairManagers" placeholder="Введите ответственного за устранение дефекта..." :class="{ 'is-valid': isDisabledConfirmDefect === false & newRepairManager_id !== '', 'is-invalid': newRepairManager_id === '' }" v-model="newRepairManager_id" :disabled='isDisabledConfirmDefect'>
+                        <datalist id="datalistRepairManagers">
+                          <option v-for="repair_manager in repair_managers" :value="repair_manager.user_id">{{ repair_manager.user_surname + ' ' + repair_manager.user_name + ' ' + '(' + ' ' + repair_manager.user_division  + ' ' + ')'}}</option>
+                        </datalist>
+
                     </div>
                     <div class="block_data_column">
                       <div class="block_input_data">
@@ -253,7 +260,7 @@
                         <div class="block_input_data">
                           <b class="label">Категория дефекта</b>
                         </div>
-                        <select class="form-select" v-model="newCategoryDefect_id">
+                        <select class="form-select" v-model="newCategoryDefect_id" :disabled='isDisabledConfirmDefect'>
                           <option selected :value=0>Выберите категорию дефекта</option>
                           <option v-for="category_defect in categories_defect" :value="category_defect.category_defect_id">{{ category_defect.category_defect_name }}</option>
                         </select>  
@@ -262,7 +269,7 @@
                         <div class="block_input_data">
                           <b class="label">Классификация оборудования по НП-001-97</b>
                         </div>
-                        <input type="text" class="form-control" @input="changeTextWork15" placeholder="Введите классификацию оборудования" v-model="newClassSystemName" >
+                        <input type="text" class="form-control" @input="changeTextWork15" placeholder="Введите классификацию оборудования" v-model="newClassSystemName" :disabled='isDisabledConfirmDefect'>
                       </div>
                     </div>
                     <br>
@@ -275,7 +282,7 @@
                             <b class="label">Категория причины и код причины</b> 
                           </div>
                           <div class="block_row1">
-                            <select class="form-select block_theme width300px" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode">
+                            <select class="form-select block_theme width300px" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" :disabled='isDisabledConfirmDefect'>
                               <option disabled :value="0" selected>Выберите код причины</option>
                               <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
                             </select> 
@@ -287,7 +294,7 @@
                           <div class="block_input_data">
                             <b class="label">Причина события</b>
                           </div>
-                          <textarea class="form-control height100" v-model="newCoreClassificationName" aria-label="Disabled input example" disabled></textarea>
+                          <textarea class="form-control height100 textareanoneresize" v-model="newCoreClassificationName" aria-label="Disabled input example" disabled></textarea>
                         </div>
                       </div>
                     </div>
@@ -301,7 +308,7 @@
                             <b class="label">Категория причины и код причины</b>
                           </div>
                           <div class="block_row1">
-                            <select class="form-select block_theme width300px" @change="changeDirectClassificationCode" v-model="newDirectClassificationCode">
+                            <select class="form-select block_theme width300px" @change="changeDirectClassificationCode" v-model="newDirectClassificationCode" :disabled='isDisabledConfirmDefect'>
                               <option disabled :value="0" selected>Выберите код причины</option>
                               <option v-for="category_reason_direct in categories_reason_direct" :value="category_reason_direct.category_reason_code">{{ category_reason_direct.category_reason_code }}</option>
                             </select> 
@@ -313,7 +320,7 @@
                           <div class="block_input_data">
                             <b class="label">Причина события</b>
                           </div>
-                          <textarea class="form-control height100" v-model="newDirectClassificationName" disabled></textarea>
+                          <textarea class="form-control height100 textareanoneresize" v-model="newDirectClassificationName" disabled></textarea>
                         </div>
                       </div>
                     </div>

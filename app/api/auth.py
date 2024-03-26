@@ -11,7 +11,7 @@ from app.schemas.auth import AuthData
 from utils.jwt import access_security, refresh_security, encrypt_user_id, decrypt_user_id
 from utils.security import check_password
 
-from utils.ldap import check_user, LdapConnection
+from utils.ldap import LdapConnection
 
 from db.user import User
 from db.database import get_db
@@ -37,7 +37,7 @@ async def auth(request: Request,
     csrf_protect.unset_csrf_cookie(response)  # prevent token reuse
     if AD:
         username = auth_data.email.split('@')[0]
-        ldap_connection = LdapConnection(username, auth_data.password)
+        ldap_connection = LdapConnection(session, username, auth_data.password)
         if await ldap_connection.check_user():
             pass
         else:

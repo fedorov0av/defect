@@ -50,7 +50,7 @@ const appConfirmDefect = Vue.createApp({
         newClassSystemName: '',
         newDirectClassificationCode: '0',   
         newDirectClassificationName: '',  
-        newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
+        newRepairManager_id: '', /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
         newSafety: false,
         newPnr: false,
@@ -145,7 +145,7 @@ const appConfirmDefect = Vue.createApp({
       clearData() {
         this.newCardKKS = null;
         this.newDivisionOwner_id = 0;
-        this.newRepairManager_id = 0;
+        this.newRepairManager_id = '';
         this.isHiddenDate = 'false';
         this.check_repair_manager = false;
         this.check_date = false;
@@ -184,7 +184,7 @@ const appConfirmDefect = Vue.createApp({
             this.cardRepairManager = this.cardDefect.defect_repair_manager;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker;
-            this.repairManager_id = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_id : 0;
+            this.repairManager_id = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_id : '';
             this.divisionOwner_id = this.cardDefect.defect_division ? this.cardDefect.defect_division.division_id : 0;
             this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
             this.newCardLocation = this.cardLocation;
@@ -207,7 +207,6 @@ const appConfirmDefect = Vue.createApp({
             this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
 
             this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '0';
-
             const categories_reason_array_direct = Object.values(this.categories_reason_direct); 
             category_reason_direct = categories_reason_array_direct.filter((category_reason_direct) => category_reason_direct.category_reason_code === this.newDirectClassificationCode)
             this.newDirectClassificationName = category_reason_direct.length !== 0 ? category_reason_direct[0].category_reason_name : ''
@@ -260,7 +259,7 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>Срок устранения должен быть заполнен или переключатель 'Будет устранен в ППР' должен быть включен!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
-        if (this.newRepairManager_id == 0) {
+        if (this.newRepairManager_id == '') {
           this.check_repair_manager = true;
           Swal.fire({html:"<b>Поле Руководитель должно быть заполнено!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */

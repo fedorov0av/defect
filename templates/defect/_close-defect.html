@@ -228,7 +228,6 @@
                     <div class="block_data_column1 width300px rr20">
                       <div class="block_input_data">
                         <b class="label">Категория дефекта</b>
-                        <b class="zvezda"> * </b> 
                       </div>
                       <select class="form-select" v-model="newCategoryDefect_id" >
                         <option disabled selected :value=0>Выберите категорию дефекта</option>
@@ -239,7 +238,7 @@
                       <div class="block_input_data">
                         <b class="label">Классификация оборудования по НП-001-97</b>
                       </div>
-                      <input type="text" class="form-control" v-model="newClassSystemName" >
+                      <input type="text" class="form-control" placeholder="Введите классификацию оборудования" v-model="newClassSystemName" >
                     </div>
                   </div>
                   <br>
@@ -300,7 +299,11 @@
               </div>   
             </div>
 
-            <div class="modal-footer">
+            <div class="modal-footer modal-footer1">
+              <div class="block_data9">
+                <b class="zvezda"> &nbsp * &nbsp </b>
+                <p>- обязательные элементы для заполнения</p>
+              </div>
               <div>
                 <span class="d-inline-block button-margin" data-toggle="popover_close" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для Администратора">
                   <button @click="cancelDefect" id="closeCheckDefectButton1" :hidden='isDisabledCloseDefect1' class="btn btn-outline-danger" type="button">Отменить дефект</button>

@@ -180,11 +180,18 @@
                     <b  class="label">Выполнил проверку после ремонта</b>
                     <b class="zvezda"> * </b> 
                   </div>
+
                   <!-- <select class="form-select" v-model="newCheckerId" :class="{ 'is-valid': newCheckerId != 0, 'is-invalid': check_checker_name === true & newCheckerId == 0 }" :disabled='isDisabledCheckDefect'> -->
-                  <select class="form-select" v-model="newCheckerId" :class="{ 'is-valid': newCheckerId != 0, 'is-invalid': newCheckerId == 0 }" :disabled='isDisabledCheckDefect'>
+                  <!-- <select class="form-select" v-model="newCheckerId" :class="{ 'is-valid': newCheckerId != 0, 'is-invalid': newCheckerId == 0 }" :disabled='isDisabledCheckDefect'>
                     <option selected disabled :value=0 >Выберите проверяющего</option>
                     <option v-for="registrator in registrators" :value="registrator.user_id">{{ registrator.user_surname + ' ' + registrator.user_name + ' ' + '(' + ' ' + registrator.user_division  + ' ' + ')'}}</option>
-                  </select>
+                  </select> -->
+
+                  <input class="form-control" list="datalistRegistrators" placeholder="Введите проверяющего..." :class="{ 'is-valid': newCheckerId != '', 'is-invalid': newCheckerId == '' }" v-model="newCheckerId" :disabled='isDisabledCheckDefect'>
+                  <datalist id="datalistRegistrators">
+                    <option v-for="registrator in registrators" :value="registrator.user_id">{{ registrator.user_surname + ' ' + registrator.user_name + ' ' + '(' + ' ' + registrator.user_division  + ' ' + ')'}}</option>
+                  </datalist>
+
                 </div>
                 <div class="block_data_column1 margin6px">
                   <div class="block_input_data">
@@ -246,7 +253,7 @@
                       <div class="block_input_data">
                         <b class="label">Классификация оборудования по НП-001-97</b>
                       </div>
-                      <input type="text" class="form-control" v-model="newClassSystemName" disabled>
+                      <input type="text" class="form-control" placeholder="Введите классификацию оборудования" v-model="newClassSystemName" disabled>
                     </div>
                   </div>
                   <br>
@@ -256,10 +263,11 @@
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                        <select class="form-select block_theme width300px custom-select-withnot-arrow" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" disabled>
+                        <input type="text" class="form-control" placeholder="Выберите код причины" v-model="newCoreClassificationCode" disabled>
+                        <!-- <select class="form-select block_theme width300px custom-select-withnot-arrow" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" disabled>
                           <option disabled :value="0" selected>Выберите код причины</option>
-                          <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
-                        </select> 
+                          <option v-for="category_reason in categories_reason" :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
+                        </select>  -->
                       </div>
                       <div class="block_data_column">
                         <div class="block_input_data">
@@ -279,13 +287,13 @@
                         <div class="block_input_data">
                           <b class="label">Категория причины и код причины</b>
                         </div>
-                          <input type="text" class="form-control" v-model="newDirectClassificationCode" disabled>
+                        <input type="text" class="form-control" placeholder="Выберите код причины" v-model="newDirectClassificationCode" disabled>
                       </div>
                       <div class="block_data_column">
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" aria-label="Disabled input example" v-model="newDirectClassificationName" disabled></textarea>
+                        <textarea class="form-control height100" v-model="newDirectClassificationName" disabled></textarea>
                       </div>
                     </div>
                   </div>

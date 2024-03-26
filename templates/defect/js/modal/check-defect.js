@@ -35,9 +35,9 @@ const appCheckDefect = Vue.createApp({
         cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
-        newCheckerId: 0, /* Для хранения ID РЕГИСТРАТОРА в карточке  */
+        newCheckerId: '', /* Для хранения ID РЕГИСТРАТОРА в карточке  */
         cardCheckerDescription: '',
-        newCoreClassificationCode: '0',
+        newCoreClassificationCode: '',
         newCoreClassificationName: '',
         newCategoryDefect_id: 0,
         newClassSystemName: '',
@@ -87,7 +87,7 @@ const appCheckDefect = Vue.createApp({
         this.isDisabledWorker = false
       },
       clearData() {
-        this.newCheckerId = 0;
+        this.newCheckerId = '';
         this.cardCheckerDescription = '';
         this.check_checker_name = false;
         this.check_checker_discription = false;
@@ -156,14 +156,14 @@ const appCheckDefect = Vue.createApp({
             this.cardPPR = this.cardDefect.defect_ppr;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
             this.cardWorkerDescription = this.cardDefect.defect_work_comment;
-            this.newCheckerId = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_id : 0;
+            this.newCheckerId = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_id : '';
             this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false';
             this.cardSafety = this.cardDefect.defect_safety;
             this.cardPnr = this.cardDefect.defect_pnr;
             this.cardExploitation = this.cardDefect.defect_exploitation;
             this.newCategoryDefect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : 0;
             this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
-            this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
+            this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '';
             const categories_reason_array = Object.values(this.categories_reason);
             category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
             this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
@@ -189,7 +189,7 @@ const appCheckDefect = Vue.createApp({
         setSettingClickButtonClassification(this)
       },
       successDefect() {
-        if (this.newCheckerId === 0) {
+        if (this.newCheckerId === '') {
           this.check_checker_name = true;
           Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
@@ -237,7 +237,7 @@ const appCheckDefect = Vue.createApp({
         });
       },/* executionDefect */
       warningDefect() {
-        if (this.newCheckerId === 0) {
+        if (this.newCheckerId === '') {
           this.check_checker_name = true;
           Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
           return;  // Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции
@@ -248,7 +248,7 @@ const appCheckDefect = Vue.createApp({
         this.cancelDefect();
       },/* warningDefect */
       dangerDefect() {
-        if (this.newCheckerId === 0) {
+        if (this.newCheckerId === '') {
           this.check_checker_name = true;
           Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */

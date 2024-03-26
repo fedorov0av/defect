@@ -138,7 +138,8 @@ const appCloseDefect = Vue.createApp({
             this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '0';
             const categories_reason_array_direct = Object.values(this.categories_reason_direct); 
             category_reason_direct = categories_reason_array_direct.filter((category_reason_direct) => category_reason_direct.category_reason_code === this.newDirectClassificationCode)
-            this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';
+            this.newDirectClassificationName = category_reason_direct.length !== 0 ? category_reason_direct[0].category_reason_name : ''
+            /* this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : ''; */
             
             axios
             .post('/user/me')
@@ -241,14 +242,14 @@ const appCloseDefect = Vue.createApp({
                   },
                   "direct_classification_code": {
                     "direct_rarery_code": (this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '') !== this.newDirectClassificationCode ?
-                                        this.newDirectClassificationCode !== '' ? this.newDirectClassificationCode : null :
+                                        this.newDirectClassificationCode !== '0' ? this.newDirectClassificationCode : null :
                                         this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : null
                   },
-                  "direct_classification_name": {
+                   /* "direct_classification_name": {
                     "direct_rarery_name": (this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '') !== this.newDirectClassificationName ?
                                         this.newDirectClassificationName !== '' ? this.newDirectClassificationName : null :
                                         this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : null
-                  },
+                  },  */
                   "comment": {
                     "comment": textHistory !== '' ? textHistory : null
                   }

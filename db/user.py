@@ -42,7 +42,7 @@ class User(Base):
         now_time = get_time()  
         hash_salt: tuple[str, str] = security.get_hash_salt(user_password)
         user_password_hash, user_salt_for_password = hash_salt
-        user_id = user_email.split('@')[0].lower()
+        user_id = user_email.split('@')[0]
         user = User(user_id=user_id,user_name=user_name, user_fathername=user_fathername, user_surname=user_surname, user_position=user_position, user_division_id=user_division.division_id,
                     user_password_hash=user_password_hash, user_salt_for_password=user_salt_for_password, user_email=user_email, user_created_at=now_time)
         if user_role:

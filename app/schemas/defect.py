@@ -6,9 +6,11 @@ from db.status_defect import StatusDefect
 from db.division import Division
 from db.system import System
 
+from app.schemas.user import UserAD
 from sqlalchemy_to_pydantic import sqlalchemy_to_pydantic
+from config import AD
 
-PydanticUser = sqlalchemy_to_pydantic(User)
+PydanticUser = sqlalchemy_to_pydantic(User) if not AD else UserAD
 PydanticDefectType = sqlalchemy_to_pydantic(TypeDefect)
 PydanticStatusDefect = sqlalchemy_to_pydantic(StatusDefect)
 PydanticDivision = sqlalchemy_to_pydantic(Division)

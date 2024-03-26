@@ -29,7 +29,7 @@ ROOT = {
 
 USERS = {'Регистратор': {'user_name': 'Дмитрий', 'user_fathername': 'Игоревич', 'user_surname': 'Болдовский', 'password': '123', 'user_email': 'D.Boldovskii@akkuyu.com', 'division_name': 'ОППР'},
          'Владелец': {'user_name': 'Дмитрий', 'user_fathername': 'Владимирович', 'user_surname': 'Булатов', 'password': '123', 'user_email': 'D.Bulatov@akkuyu.com', 'division_name': 'ЦИКТ'},
-         'Руководитель': {'user_name': 'Николай', 'user_fathername': 'Игоревич', 'user_surname': 'Кудряшов', 'password': '123', 'user_email': 'N.Kudriashov@akkuyu.com', 'division_name': 'ОУР'},
+         'Руководитель': {'user_name': 'Александр', 'user_fathername': 'Леонидович', 'user_surname': 'Дербенев', 'password': '123', 'user_email': 'A.Derbenev@akkuyu.com', 'division_name': 'ЦИКТ'},
          'Исполнитель': {'user_name': 'Угур', 'user_fathername': 'Угурович', 'user_surname': 'Кочаг', 'password': '123', 'user_email': 'U.Kocak@akkuyu.com', 'division_name': 'ОЯБ'},
          'Инспектор': {'user_name': 'Василий', 'user_fathername': 'Анатольевич', 'user_surname': 'Токарев', 'password': '123', 'user_email': 'V.Tokarev@akkuyu.com', 'division_name': 'ЦТАИ'},
          'Администратор': {'user_name': 'Игорь', 'user_fathername': 'Иванович', 'user_surname': 'Лебедев', 'password': '123', 'user_email': 'ig.lebedev@akkuyu.com', 'division_name': 'Руководство'},
@@ -37,8 +37,11 @@ USERS = {'Регистратор': {'user_name': 'Дмитрий', 'user_fathern
 
 USERS_BONUS = (
     ({'user_name': 'Вера', 'user_fathername': 'Леонидовна', 'user_surname': 'Егошина', 'password': '123', 'user_email': 'V.Egoshina@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': 'Администратор'}),
+    ({'user_name': 'Александр', 'user_fathername': 'Владимирович', 'user_surname': 'Федоров', 'password': '123', 'user_email': 'A.Fedorov@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': 'Администратор'}),
     ({'user_name': 'Вадим', 'user_fathername': 'Альбертович', 'user_surname': 'Байбеков', 'password': '123', 'user_email': 'V.Baibekov@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': 'Администратор'}),
     ({'user_name': 'Лев', 'user_fathername': 'Глебович', 'user_surname': 'Алехин', 'password': '123', 'user_email': 'L.Alehin@akkuyu.com', 'division_name': 'ОУР', 'role_name': 'Администратор'}),
+    ({'user_name': 'Артем', 'user_fathername': 'Валерьевич', 'user_surname': 'Рыков', 'password': '123', 'user_email': 'A.Rykov@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': 'Администратор'}),
+    ({'user_name': 'Николай', 'user_fathername': 'Игоревич', 'user_surname': 'Кудряшов', 'password': '123', 'user_email': 'N.Kudriashov@akkuyu.com', 'division_name': 'ОУР', 'role_name': 'Администратор'}),
     ({'user_name': 'Максим', 'user_fathername': 'Геннадьевич', 'user_surname': 'Пластеев', 'password': '123', 'user_email': 'M.Plasteev@akkuyu.com', 'division_name': 'Руководство', 'role_name': 'Инспектор'}),
     ({'user_name': 'Владислав', 'user_fathername': 'Дмитриевич', 'user_surname': 'Митряев', 'password': '123', 'user_email': 'L.Mitriaev@akkuyu.com', 'division_name': 'Руководство', 'role_name': 'Инспектор'}),
 )
@@ -405,16 +408,16 @@ async def create_tables():
         now_time = get_time()  
 
         root_user = User(
-            user_id = 'A.Abbas',
-            user_name = 'Арслан',
+            user_id = 'D.Postnikov',
+            user_name = 'Денис',
             user_fathername = 'root',
-            user_surname = 'Аббас',
+            user_surname = 'Постников',
             user_position = 'root',
             user_password_hash = user_password_hash,
             user_salt_for_password = user_salt_for_password,
             user_temp_password = False,
             user_division_id = division_admin.division_id,
-            user_email = 'A.Abbas@akkuyu.com',
+            user_email = 'D.Postnikov@akkuyu.com',
             user_created_at=now_time,
         )
         root_user.user_role.append(role_admin)
