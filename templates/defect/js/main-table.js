@@ -186,7 +186,7 @@ const appVueDefect = Vue.createApp({
                     "-" +
                     date_defect_finish_temp[0]
                 );
-                if (finish_date - now <= 0) {
+                if (finish_date - now <= 0) { 
                   date_background = "table-danger";
                 } else if (finish_date - now <= 172800000) {
                   date_background = "table-warning";

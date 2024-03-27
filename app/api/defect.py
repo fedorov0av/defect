@@ -63,7 +63,7 @@ async def get_user_for_defect(session: AsyncSession, request: Request, token_dec
     if AD:
         passw = await decrypt_user_id(token_dec['subject']['userP'])
         ldap_connection = LdapConnection(session, user_id, passw)
-        user: UserAD = await ldap_connection.get_user_by_uid_from_AD(session, user_id)
+        user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
     return user
@@ -212,8 +212,10 @@ async def get_defect(request: Request, response: Response, defect_id: Defect_id,
         repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id ) if defect.defect_repair_manager_id else None
         defect_worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
         checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
-        defect_checker = {'user_surname': checker.user_surname if checker else '',
-                                    'user_name': checker.user_name if checker else ''}
+        defect_checker = {  'user_surname': checker.user_surname if checker else '',
+                            'user_name': checker.user_name if checker else '',
+                            'user_id': checker.user_id,
+                                    } if checker else None
     return  {
                 "defect_id": defect.defect_id,
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
@@ -273,6 +275,7 @@ async def confirm_defect(request: Request, response: Response,
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
+    system = await add_system(session, system_name.system_name, system_kks.system_kks)
     try:
         if direct_classification_code.direct_rarery_code:
             await CategoryDirectReason.add_category_direct_reason(session=session,
@@ -315,7 +318,6 @@ async def confirm_defect(request: Request, response: Response,
             defect_planned_finish_date = None
         else:
             defect_planned_finish_date = datetime.strptime(defect_planned_finish_date_str.date, "%Y-%m-%d").date() #    2023-12-23
-    system = await add_system(session, system_name.system_name, system_kks.system_kks)
     division: Division = await Division.get_division_by_id(session, division_id.division_id)
     status_defect: StatusDefect = await StatusDefect.get_status_defect_by_name(session=session, status_defect_name=status_name.status_defect_name)
     defect = await Defect.update_defect_by_id(session = session,

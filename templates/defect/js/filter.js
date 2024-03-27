@@ -23,6 +23,7 @@ const appVueFilter = Vue.createApp({
       this.updateAllTables()
       updateTableStatusDefect(this.statuses_defect)
       this.setDivisionByUser()
+      
     }, /* mounted */
     methods: {
         toggleApiOnSilent() {
@@ -120,9 +121,13 @@ const appVueFilter = Vue.createApp({
                   let now = new Date()
                   date_defect_finish_temp = appVueDefect.defects[defect].defect_planned_finish_date.split('-')
                   finish_date = Date.parse(date_defect_finish_temp[2]+'-'+date_defect_finish_temp[1]+'-'+date_defect_finish_temp[0])
-                  if (finish_date - now <= 0){
+                  if (finish_date - now <= 0 && 
+                    appVueDefect.defects[defect].defect_status.status_defect_name != 'Отменен' && 
+                    appVueDefect.defects[defect].defect_status.status_defect_name != 'Закрыт'){
                     date_background = "table-danger"
-                  } else if (finish_date - now <= 172800000){
+                  } else if (finish_date - now <= 172800000 && 
+                    appVueDefect.defects[defect].defect_status.status_defect_name != 'Отменен' && 
+                    appVueDefect.defects[defect].defect_status.status_defect_name != 'Закрыт'){
                     date_background = "table-warning"
                   }
                 }

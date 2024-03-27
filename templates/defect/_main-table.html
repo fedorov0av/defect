@@ -10,7 +10,9 @@
               <tr class="head_table myfont">
                 <th v-for="(colunmName, index) in colunmsName" class="th-sm" :class="{ 'active': sortColumn === index }" @click="sortTableColumn(index)">
                   <div class="th-content">
-                    <span>{{ colunmName.name }}</span>
+                    <div class="span-content">
+                      <span>{{ colunmName.name }}</span>
+                    </div>
                     <div class="arrow-container">
                       <span class="arrow arrow-up" :class="{ 'active-arrow-up': sortDirection === 1 && sortColumn === index }"></span>
                       <span class="arrow arrow-down" :class="{ 'active-arrow-down': sortDirection === -1 && sortColumn === index }"></span>  

@@ -12,6 +12,13 @@ th {
 
   .th-content {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+  }
+
+  .span-content {
+    display: flex;
     justify-content: center;
     align-items: center;
     margin: auto;
@@ -21,7 +28,7 @@ th {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+     user-select: none;
   }
 
   .arrow-container {
@@ -29,7 +36,7 @@ th {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-left: auto;
+    margin-left: 5px;
   }
   
   .arrow {
