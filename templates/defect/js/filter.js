@@ -23,7 +23,6 @@ const appVueFilter = Vue.createApp({
       this.updateAllTables()
       updateTableStatusDefect(this.statuses_defect)
       this.setDivisionByUser()
-      
     }, /* mounted */
     methods: {
         toggleApiOnSilent() {

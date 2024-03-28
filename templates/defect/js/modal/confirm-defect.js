@@ -14,6 +14,7 @@ const appConfirmDefect = Vue.createApp({
         workers: {},
         toggle: 'false',
         isDisabledConfirmDefect: false, 
+        isDisabledConfirmDefect1: false, 
         isHiddenDate: 'false',
         check_repair_manager: false,
         check_date: false,
@@ -70,6 +71,10 @@ const appConfirmDefect = Vue.createApp({
           this.currentUserRole = this.currentUser.user_role;
           if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Владелец') {
             this.isDisabledConfirmDefect = true;
+            this.isDisabledConfirmDefect1 = true;
+          }
+          if (this.currentUser.user_division != 'РусАС') {
+            this.isDisabledConfirmDefect1 = true;
           }
         })
     },
@@ -127,6 +132,7 @@ const appConfirmDefect = Vue.createApp({
         if (this.newPnr === true){ 
           this.newSafety = false;
           this.newExploitation = false;
+          this.isHiddenDate = 'false'; 
         } else {
           this.newSafety = this.cardDefect.defect_safety;
           this.newExploitation = this.cardDefect.defect_exploitation;
@@ -143,7 +149,7 @@ const appConfirmDefect = Vue.createApp({
         this.newDirectClassificationName = category_reason_direct[0].category_reason_name
       },
       clearData() {
-        this.newCardKKS = null;
+        this.newCardKKS = null; 
         this.newDivisionOwner_id = 0;
         this.newRepairManager_id = '';
         this.isHiddenDate = 'false';
@@ -254,6 +260,10 @@ const appConfirmDefect = Vue.createApp({
         myModal.show()
       }, /* clickbuttonspravochnikdirect */
       confirmDefect() {
+        if (this.currentUser.user_division != this.defect_divisions[this.newDivisionOwner_id-1].division_name && this.currentUser.user_division != 'РусАС') {
+          Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.defect_divisions[this.newDivisionOwner_id-1].division_name  + "'</b>", heightAuto: false}); 
+          return;  
+        }   
         if (this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') {
           this.check_date = true;
           Swal.fire({html:"<b>Срок устранения должен быть заполнен или переключатель 'Будет устранен в ППР' должен быть включен!</b>", heightAuto: false}); 

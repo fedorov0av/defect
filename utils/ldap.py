@@ -11,6 +11,11 @@ from db.division import Division
 from db.division_ad import DivisionAD
 from db.role import Role
 from app.schemas.user import UserAD
+from redis_dict import RedisDict
+
+
+REDIS_SERVER = '172.17.0.6'
+REDIS_NAMESPACE = 'users'
 
 SERVER_URI = 'ldaps://akk-s-dc02.mbu.invalid'
 ATTRS_ALL = ['*']
@@ -19,23 +24,17 @@ SEARCH_BASE = 'ou=Users,ou=_Akkuyu,dc=mbu,dc=invalid'
 server = Server(SERVER_URI, get_info=ALL)
 
 class UsersLDAP():
-    __users = {}
-    __create_at: datetime = False
-    __LIFE_TIME_SECONDS = 180
+    __users: RedisDict = RedisDict(host=REDIS_SERVER, namespace=REDIS_NAMESPACE)
 
     @classmethod
     def get_users(cls) -> dict[dict[dict]]:
-        time_now = datetime.now()
-        if UsersLDAP.__create_at and ((time_now - UsersLDAP.__create_at).seconds > UsersLDAP.__LIFE_TIME_SECONDS):
-            UsersLDAP.__users = {}
         return UsersLDAP.__users
     
     @classmethod
-    def set_users(cls, users):
-        UsersLDAP.__users = users
-        UsersLDAP.__create_at = datetime.now()
+    def add_user(cls, user_id: str, value:dict):
+        UsersLDAP.__users[user_id] = value
 
-class SaverConnectionLDAP():
+""" class SaverConnectionLDAP():
     __connection: Connection = {}
     __create_at: datetime = False
     __LIFE_TIME_SECONDS = 180
@@ -51,7 +50,7 @@ class SaverConnectionLDAP():
     def set_connection(cls, connection):
         SaverConnectionLDAP.__connection = connection
         SaverConnectionLDAP.__create_at = datetime.now()
-
+"""
 
 """ def get_user_by_mail(conn: Connection, mail: str) -> List[Entry]:
     conn.search(SEARCH_BASE, f"(mail={mail})", attributes=['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department'])
@@ -122,46 +121,39 @@ async def get_users_by_dep_from_AD(username: str, passw: str, departament: str) 
 
 
 class LdapConnection:
-    def __init__(self, session:AsyncSession, username:str, password:str) -> None:
+    def __init__(self, session:AsyncSession, username:str, password:str, auth=False) -> None:
         self.username = username
         self.password = password
         self.attributes = ['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department']
         self.attrs_user = ['description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName', 'mailNickname']
-        self.succes_connection = self.start_connection()
+        if auth:
+            self.succes_connection = self.start_connection()
         self.users = {}
         self.session = session
 
     def start_connection(self): # осуществляем соединение
-        connection = SaverConnectionLDAP.get_connection()
-        if (not connection) or connection.closed:
-            try:
-                self.ldap_connection = Connection(server, user=f"MBU\\{self.username}", password=self.password, client_strategy=ASYNC, auto_bind=True)
-                SaverConnectionLDAP.set_connection(self.ldap_connection)
-                return True
-            except LDAPBindError as err:
-                return False
-        else: 
-            self.ldap_connection = connection
+        try:
+            self.ldap_connection = Connection(server, user=f"MBU\\{self.username}", password=self.password, client_strategy=ASYNC, auto_bind=True)
+            if not UsersLDAP.get_users():
+                self.update_users()
             return True
+        except LDAPBindError as err:
+            return False
 
     def get_connection(self) -> Connection:
-        connection = SaverConnectionLDAP.get_connection()
-        if not connection:
-            self.start_connection()
-            connection = SaverConnectionLDAP.get_connection()
-        return connection
+        self.start_connection()
 
     async def check_user(self) -> bool: # аутентификация пользователя    
         return self.succes_connection
 
-    async def update_users(self):
-        con = self.get_connection()
+    def update_users(self):
+        con = self.ldap_connection
         message_id = con.search(SEARCH_BASE, f"(objectclass=person)", attributes=self.attrs_user)
         raw_users = con.get_response(message_id)[0]
-        users = {}
         for raw_user in raw_users:
             try:
-                users[raw_user['attributes']['sAMAccountName']] = {
+                UsersLDAP.add_user(user_id=[raw_user['attributes']['sAMAccountName']],
+                                   value = {
                     'description': raw_user['attributes']['description'][0],
                     'department': raw_user['attributes']['department'],
                     'memberOf': raw_user['attributes']['memberOf'],
@@ -169,32 +161,28 @@ class LdapConnection:
                     'mail': raw_user['attributes']['mail'],
                     'mailNickname': raw_user['attributes']['mailNickname'],
                     'sAMAccountName': raw_user['attributes']['sAMAccountName'],
-                }
-            except IndexError:
-                pass
-        UsersLDAP.set_users(users)
+                })
+            except IndexError as err:
+                print('err=== ', err)
 
-    async def check_connection_usersLDAP(self):
+    """ async def check_connection_usersLDAP(self):
         self.get_connection()
         if not UsersLDAP.get_users():
-            await self.update_users()
+            await self.update_users() """
 
     async def get_user_by_mail(self, mail: str) -> UserAD: # получаем пользователя из AD по АДРЕСУ ПОЧТЫ
-        await self.check_connection_usersLDAP()
         users = UsersLDAP.get_users()
         for user in users:
             if users[user]['mail'] == mail:
                 return await self.get_user_from_EntryLDAP(users[user])
 
     async def get_user_by_attr(self, attr: str) -> UserAD: # получаем пользователя из AD по НАЗВАНИЮ ОТДЕЛА В КИРИЛЛИЦЕ
-        await self.check_connection_usersLDAP()
         users = UsersLDAP.get_users()
         for user in users:
             if users[user]['extensionAttribute3'] == attr:
                 return await self.get_user_from_EntryLDAP(users[user])
 
     async def get_user_by_dep(self, dep: str) -> UserAD:
-        await self.check_connection_usersLDAP()
         users = UsersLDAP.get_users()
         for user in users:
             if users[user]['department'] == dep:
@@ -202,11 +190,8 @@ class LdapConnection:
 
 
     async def get_user_by_uid_from_AD(self, user_uid: str) -> Entry:
-        await self.check_connection_usersLDAP()
         users = UsersLDAP.get_users()
-        for user in users:
-            if users[user]['mailNickname'] == user_uid:
-                return await self.get_user_from_EntryLDAP(users[user])
+        return await self.get_user_from_EntryLDAP(users[[user_uid]])
 
 
     """ async def get_users_by_attr3_from_AD(self, attr3: str) -> List[Entry]:

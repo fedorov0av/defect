@@ -54,7 +54,6 @@ const appCheckDefect = Vue.createApp({
         cardPnr: false,
         cardExploitation: false,
         isHiddenDate: 'false',
-        isDefectLocalized: false,
       }
     },
     beforeMount() {
@@ -69,6 +68,9 @@ const appCheckDefect = Vue.createApp({
           if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Регистратор') {
             this.isDisabledCheckDefect = true;
           }
+/*           if (this.currentUser.user_division != this.cardDivisionOwner) {
+            this.isDisabledCheckDefect2 = true;
+          }  */  
         })
     }, 
     mounted() {
@@ -189,6 +191,10 @@ const appCheckDefect = Vue.createApp({
         setSettingClickButtonClassification(this)
       },
       successDefect() {
+        if (this.currentUser.user_division != this.cardDivisionOwner) {
+          Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDivisionOwner  + "'</b>", heightAuto: false}); 
+          return;  
+        }  
         if (this.newCheckerId === '') {
           this.check_checker_name = true;
           Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
@@ -237,17 +243,61 @@ const appCheckDefect = Vue.createApp({
         });
       },/* executionDefect */
       warningDefect() {
+        if (this.currentUser.user_division != this.cardDivisionOwner) {
+          Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDivisionOwner  + "'</b>", heightAuto: false}); 
+          return;  
+        }   
         if (this.newCheckerId === '') {
           this.check_checker_name = true;
           Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
-          return;  // Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции
+          return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
         }
-        this.isDefectLocalized = true;
-        appCorrectionDefect.modalTitle = 'Локализация дефекта';
-        appCorrectionDefect.commentText = 'Комментарий при локализации'; 
-        this.cancelDefect();
+        Swal.fire({
+          title: "Вы подтверждаете, что дефект локализован?",
+          showDenyButton: true,
+          confirmButtonText: "ПОДТВЕРЖДАЮ",
+          denyButtonText: `ОТМЕНА`
+        }).then((result) => {
+          if (result.isConfirmed) {
+            data =
+            {
+              "defect_id": {
+                "defect_id": this.defect_id
+              },
+              "status_name": {
+                "status_defect_name": this.statuses_defect[10].status_defect_name
+              },
+              "checker_id": {
+                "user_id": this.newCheckerId
+              },
+              "defect_check_result": {
+                "comment": 'Дефект локализован!'
+              }
+            } 
+            axios
+            .post('/check_defect', data)
+            .then(response => {
+                document.getElementById('closeCheckModalWindow').click();
+                /* appVueDefect.updateTables() */
+                appVueFilter.useFilter()
+                Swal.fire("ДЕФЕКТ ЛОКАЛИЗОВАН!", "", "success");
+                  })
+            .catch(err => {
+                    if (err.response.status === 401){
+                      window.location.href = "/";
+                    } else {
+                      Swal.fire({html:"<b>Произошла ошибка при ЛОКАЛИЗАЦИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
+                      console.log(err);
+                    }
+                }) /* axios */
+          }
+        });
       },/* warningDefect */
       dangerDefect() {
+        if (this.currentUser.user_division != this.cardDivisionOwner) {
+          Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDivisionOwner  + "'</b>", heightAuto: false}); 
+          return;  
+        }   
         if (this.newCheckerId === '') {
           this.check_checker_name = true;
           Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
@@ -298,15 +348,7 @@ const appCheckDefect = Vue.createApp({
                 }) /* axios */
             }
         });
-      },/* dangerDefect */
-      /*cancelDefect() {
-        appCorrectionDefect.defect_id = defect_id;
-        appCorrectionDefect.parent_button_close_modal_name = 'closeCheckModalWindow';
-        var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
-          keyboard: false
-        })
-        myModal.show()
-      }, cancelDefect */
+      },
       cancelDefect() {
         Swal.fire({
           title: "Вы действительно хотите отменить дефект?",

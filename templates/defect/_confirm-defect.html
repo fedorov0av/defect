@@ -46,7 +46,7 @@
                         </div>
                           <!-- <select class="form-select" v-model="newDivisionOwner_id" 
                           :class="{ 'is-valid': isDisabledConfirmDefect === false & newDivisionOwner_id !== '0', 'is-invalid': newDivisionOwner_id === '0' }" :disabled='isDisabledConfirmDefect' disabled> -->
-                          <select class="form-select" v-model="newDivisionOwner_id" :disabled='isDisabledConfirmDefect' disabled>
+                          <select class="form-select" v-model="newDivisionOwner_id" :disabled='isDisabledConfirmDefect || isDisabledConfirmDefect1'>
                             <option disabled selected :value=0>Выберите подразделение</option>
                             <option v-for="division in defect_divisions" :value="division.division_id">{{ division.division_name }}</option>
                           </select> 
@@ -279,12 +279,12 @@
                         
                         <div class="block_data_column">
                           <div class="block_input_data">
-                            <b class="label">Категория причины и код причины</b> 
+                            <b class="label">Код причины</b> 
                           </div>
                           <div class="block_row1">
                             <select class="form-select block_theme width300px" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" :disabled='isDisabledConfirmDefect'>
                               <option disabled :value="0" selected>Выберите код причины</option>
-                              <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code }}</option>
+                              <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code + ' ' +  category_reason.category_reason_name}}</option>
                             </select> 
                             <button @click="clickbuttonspravochnikcore" id="SpravochnikCoreButton" class="btn btn-primary" type="button">Справочник кодов</button> 
                           </div>
@@ -305,12 +305,12 @@
                       <div class="block_data_column4">
                         <div class="block_data_column">
                           <div class="block_input_data">
-                            <b class="label">Категория причины и код причины</b>
+                            <b class="label">Код причины</b>
                           </div>
                           <div class="block_row1">
                             <select class="form-select block_theme width300px" @change="changeDirectClassificationCode" v-model="newDirectClassificationCode" :disabled='isDisabledConfirmDefect'>
                               <option disabled :value="0" selected>Выберите код причины</option>
-                              <option v-for="category_reason_direct in categories_reason_direct" :value="category_reason_direct.category_reason_code">{{ category_reason_direct.category_reason_code }}</option>
+                              <option v-for="category_reason_direct in categories_reason_direct" :value="category_reason_direct.category_reason_code">{{ category_reason_direct.category_reason_code + ' ' +  category_reason_direct.category_reason_name }}</option>
                             </select> 
                             <!-- <input type="text" class="form-control" placeholder="Введите код причины" v-model="newDirectClassificationCode"> -->
                             <button @click="clickbuttonspravochnikdirect" id="SpravochnikDirectButton" class="btn btn-primary" type="button">Справочник кодов</button>

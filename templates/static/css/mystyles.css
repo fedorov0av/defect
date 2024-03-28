@@ -168,8 +168,13 @@
   padding-top: 5px;
 }
 
-.back{
+.back {
   background: no-repeat url("../img/fon.jpg");
+  background-size: 100% auto;
+}
+
+.back1 {
+  background: no-repeat url("../img/hellokitty.jpg");
   background-size: 100% auto;
 }
 
@@ -232,11 +237,11 @@
 }
 
 .block-checkbox3 {
-  margin: 15px 5px 5px 5px;
+  margin: 0px 5px 5px 5px;
 }
 
 .block-checkbox4 {
-  margin: 30px 5px 5px 5px;
+  margin: 0 35px 0 35px;
 }
 
 .height100 {
@@ -320,7 +325,7 @@
 }
 
 .block_checkbox1 {
-  margin-top: 30px;
+  margin-top: 25px;
 }
 
 .width100 {
@@ -370,7 +375,6 @@
   min-width: 170px;
   height: 38px;
   margin-right: 15px;
-  margin-bottom: 5px;
 }
 
 .type-defect2 {
@@ -378,7 +382,6 @@
   min-width: 170px;
   height: 38px;
   margin-right: 15px;
-  margin-bottom: 5px;
 }
 
 .mylabel {
@@ -645,7 +648,7 @@
 }
 
 .block_theme {
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 .pagination {
@@ -987,20 +990,58 @@
 }
 
 .componentWraper0 {
-  margin: 10px 5px 10px 0px;
+  margin: 15px 5px 10px 0;
   position: relative;
   border: 1px solid rgb(179, 160, 157);
   border-radius: 10px;
   padding: 10px;
+  min-height: 110px;
 }
 
 .componentWraper0::before {
   content: 'Состояние оборудования';
   position: absolute;
-  top: -12px;
+  top: -15px;
   padding: 0 10px;
   background: #fff;
   background-color:rgb(171, 207, 248)
+}
+
+.registrationFilterWrapper {
+  border: thin solid rgb(179, 160, 157);
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
+  margin: 10px 5px 15px 0;
+  min-height: 110px;
+}
+
+.registrationFilterWrapper::before {
+  content: 'Период регистрации';
+  position: absolute;
+  top: -15px;
+  padding: 0 10px;
+  background: #fff;
+  background-color: rgb(171, 207, 248);
+}
+
+.eliminationFilterWrapper {
+  width: 170px;
+  border: thin solid rgb(179, 160, 157);
+  border-radius: 10px;
+  position: relative;
+  margin: 10px 5px 15px 0;
+  min-height: 110px;
+}
+
+.eliminationFilterWrapper::before {
+  content: 'Срок устранения';
+  position: absolute;
+  top: -15px;
+  left: 15px;
+  padding: 0 10px;
+  background: #fff;
+  background-color: rgb(171, 207, 248);
 }
 
 .componentWraper3 {
@@ -1077,7 +1118,7 @@
 }
 
 @media screen and (min-width:200px) and (max-width:8000px) {
-
+  
   .h2 {
     margin: auto;
   }
@@ -1087,7 +1128,7 @@
   }
 
   .block_filter {
-    height: 100px;
+    height: 140px;
   }
 
   .block_filter_flex {
@@ -1098,6 +1139,7 @@
   .block_filter_flex1 {
     display: flex;
     flex-direction: row;
+    align-items: center;
     margin-right: 5px;
   }
 
@@ -1147,6 +1189,15 @@
 
   @media screen and (min-width: 200px) and (max-width: 1700px) {
     
+    .componentWraper0 {
+      margin: 0px 5px 0px 0px;
+      position: relative;
+      border: 1px solid rgb(179, 160, 157);
+      border-radius: 10px;
+      padding: 10px;
+      min-height: 80px;
+    }
+
     .block_data_column_KKS {
       display: flex;
       flex-direction: column;
@@ -1154,11 +1205,7 @@
     }
 
     .block_filter {
-        height: 190px;
-    }
-
-    .block-checkbox4 {
-      margin: 30px 5px 5px 5px;
+        height: 240px;
     }
 
     .block_data_filter {
@@ -1170,14 +1217,6 @@
       max-width: 214px;
       min-width: 170px;
       height: 38px;
-      margin-bottom: 5px;
-    }
-
-    .type-defect2 {
-      max-width: 300px;
-      min-width: 170px;
-      height: 38px;
-      margin-bottom: 5px;
     }
 
     .block-checkbox-left {

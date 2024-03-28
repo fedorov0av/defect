@@ -23,9 +23,9 @@
                       <a class="nav-link" href="#" @click="clicklinkpage3" :class="backgroundPage3CCS">Диапазон кодов: 5.2.9.6.2.4.2. - 5.2.9.7.3.</a>
                     </li>
                   </ul>
-                  
+                   
                   <div class="block-table" :class="{ hidden: isHiddenblockcods1 == 'true' }" :hidden='isHiddenblockcods1 == "true"'>
-                    <table class="table table-striped table-sm table-hover">
+                    <table class="table table-striped table-sm table-hover":columns="columns" :rows="rows" @on-row-dblclick="onRowDoubleClick">
                       <thead>
                         <tr>
                           <th class="table-column1">Код</th>
@@ -274,3 +274,4 @@
 </div>
 
 <script src="{{ url_for('defect_js', path='spravochnik-core.js') }}"></script>
+

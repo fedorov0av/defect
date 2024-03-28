@@ -28,7 +28,7 @@ ROOT = {
 }
 
 USERS = {'Регистратор': {'user_name': 'Дмитрий', 'user_fathername': 'Игоревич', 'user_surname': 'Болдовский', 'password': '123', 'user_email': 'D.Boldovskii@akkuyu.com', 'division_name': 'ОППР'},
-         'Владелец': {'user_name': 'Дмитрий', 'user_fathername': 'Владимирович', 'user_surname': 'Булатов', 'password': '123', 'user_email': 'D.Bulatov@akkuyu.com', 'division_name': 'ЦИКТ'},
+         'Владелец': {'user_name': 'Дмитрий', 'user_fathername': 'Владимирович', 'user_surname': 'Булатов', 'password': '123', 'user_email': 'dbulatov@akkunpp.com', 'division_name': 'ЦИКТ'},
          'Руководитель': {'user_name': 'Александр', 'user_fathername': 'Леонидович', 'user_surname': 'Дербенев', 'password': '123', 'user_email': 'A.Derbenev@akkuyu.com', 'division_name': 'ЦИКТ'},
          'Исполнитель': {'user_name': 'Угур', 'user_fathername': 'Угурович', 'user_surname': 'Кочаг', 'password': '123', 'user_email': 'U.Kocak@akkuyu.com', 'division_name': 'ОЯБ'},
          'Инспектор': {'user_name': 'Василий', 'user_fathername': 'Анатольевич', 'user_surname': 'Токарев', 'password': '123', 'user_email': 'V.Tokarev@akkuyu.com', 'division_name': 'ЦТАИ'},
@@ -281,7 +281,7 @@ DIVISIONS = (
             ('ЦИКТ', ('Information and Communication Technology Shop',)),
             ('ОАиОБ', ('Departament of Safety Analysis and Assessment',)),
             ('ОЯБ', ('Nuclear Safety Department',)),
-            ('ЦЦР', ('Centralized repair shop',)),
+            ('ЦЦР', ('Centralized repair shop', 'Centralized Repair Shop')),
             ('ОППР', ('Repair Preparation and Performance Department',)),
             ('ОУР', ('Repair Management Department',)),
             ('КТО', ('Design and Technology Department',)),

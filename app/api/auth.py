@@ -37,7 +37,7 @@ async def auth(request: Request,
     csrf_protect.unset_csrf_cookie(response)  # prevent token reuse
     if AD:
         username = auth_data.email.split('@')[0]
-        ldap_connection = LdapConnection(session, username, auth_data.password)
+        ldap_connection = LdapConnection(session, username, auth_data.password, auth=True)
         if await ldap_connection.check_user():
             pass
         else:

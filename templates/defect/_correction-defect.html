@@ -4,21 +4,21 @@
       <div class="modal-dialog modal2">
         <div class="modal-content">
           <div class="modal-header status_correction_defect">
-            <h4 class="modal-title" id="exampleModalLabel">{{ modalTitle }}</h4>
-            <h4 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h4>
+            <h2 class="modal-title" id="exampleModalLabel">Корректировка дефекта</h2>
+            <h2 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h2>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeCorrectionDefectModalWindow"></button>
           </div>
-          <div class="modal-body modal-body2">
+          <div class="modal-body">
             <form method="post">
                <div class="block_row pos_r">
                   <div class="block_data5 correction_area">
-                    <div class="block_input_data"><b>{{ commentText }}</b></div>
+                    <div class="block_input_data"><b>Комментарий при корректировке</b></div>
                     <textarea id="correction-text" @input="changeTextCorrection" class="form-control" placeholder="Комментарий" v-model.lazy="cardComment"></textarea>
                     <p id="correction-result" class="pos_a_cor"></p>
                   </div>
                 </div>
-                <div class="modal-footer modal-footer2">
-                  <button @click="cancelDefect" class="btn btn-primary" type="button">Отправить на рассмотрение</button>
+                <div class="modal-footer">
+                  <button @click="cancelDefect" class="btn btn-primary" type="button">Зарегистрировать заново</button>
                 </div>
               </form>
           </div>

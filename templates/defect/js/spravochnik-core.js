@@ -10,6 +10,9 @@ const appVueSpravochnikCore = Vue.createApp({
       }
     },
     methods: {
+      onRowDoubleClick(params){
+        alert(params.pageIndex)
+      }, /* onRowDoubleClick */
       clicklinkpage1 () {
         this.isHiddenblockcods1 = 'false';
         this.isHiddenblockcods2 = 'true';
