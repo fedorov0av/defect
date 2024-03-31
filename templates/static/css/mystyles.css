@@ -599,6 +599,12 @@
   padding: 0px 15px 0px 25px;
 }
 
+.status_info_defect {
+  background-color: #0dcaf0;
+  color: #000;
+  padding: 0px 15px 0px 25px;
+}
+
 .head_table {
   text-align: center;
   vertical-align: middle;
@@ -774,7 +780,7 @@
 
 .modal2 {
   position: relative;
-  top: 680px;
+  top: 670px;
 }
 
 .text_center {

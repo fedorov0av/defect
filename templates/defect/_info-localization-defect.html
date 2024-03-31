@@ -1,0 +1,29 @@
+{% raw %}
+<div id="vueInfoDefect">
+    <div class="modal fade" id="InfoDefectModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel"  aria-hidden="true">
+      <div class="modal-dialog modal2">
+        <div class="modal-content">
+          <div class="modal-header status_info_defect">
+            <h2 class="modal-title" id="exampleModalLabel">Информация по временной модификации</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeInfoDefectModalWindow"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post">
+               <div class="block_row pos_r">
+                  <div class="block_data5 correction_area">
+                    <div class="block_input_data block_theme"><b>Комментарий</b></div>
+                    <textarea id="correction-text" @input="changeTextCorrection" class="form-control textareanoneresize" placeholder="Комментарий" v-model.lazy="cardComment"></textarea>
+                    <p id="correction-result" class="pos_a_cor"></p>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button @click="SaveComment" class="btn btn-primary" type="button">Сохранить информацию</button>
+                </div>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endraw %}
+ <script src="{{ url_for('defect_js', path='info-localization-defect.js') }}"></script> 

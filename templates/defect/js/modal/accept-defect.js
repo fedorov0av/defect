@@ -101,6 +101,7 @@ const appAcceptDefect = Vue.createApp({
       updateTableWorkers(this.workers, true);
       this.updateCardDefect();
       this.clickbuttonmain();
+      this.newWorkerDivision;
     }, /* updateTables */
     updateCardDefect() {
       axios
@@ -161,6 +162,10 @@ const appAcceptDefect = Vue.createApp({
       setSettingClickButtonClassification(this)
     }, 
     acceptDefect() {
+      /* if (this.currentUser.user_division != this.cardDefect.defect_division.division_name) {
+        Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDefect.defect_division.division_name  + "'</b>", heightAuto: false}); 
+        return;  
+      }   Эта проверка в данный момент не нужна, но может понадобиться в будущем */
       if (this.newWorker_id == '') {
         this.check_worker = true
         Swal.fire({html:"<b>Не назначен исполнитель ремонта!</b>", heightAuto: false}); 
@@ -170,7 +175,7 @@ const appAcceptDefect = Vue.createApp({
       this.newWorkerDivision = workers_array.filter((user) => user.user_id === this.newWorker_id)
       if (this.currentUser.user_division != this.newWorkerDivision[0].user_division) {
         this.check_worker = true
-        Swal.fire({html:"<b>Это дефект не вашего подразделения! Исполнитель ремонта должен быть из подразделения '" + this.cardDivisionOwner + "' </b>", heightAuto: false}); 
+        Swal.fire({html:"<b>Исполнитель ремонта должен быть из подразделения '" + this.cardDivisionOwner + "' </b>", heightAuto: false}); 
         return;  
       }   
       Swal.fire({

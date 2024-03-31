@@ -170,6 +170,11 @@ class LdapConnection:
         if not UsersLDAP.get_users():
             await self.update_users() """
 
+    async def get_user_by_mail_from_AD(self, mail: str) -> Entry:
+        if self.ldap_connection.search(SEARCH_BASE, f"(mail={mail})", attributes=ATTRS_USER):
+            return self.ldap_connection.entries[0]
+        else: return None
+
     async def get_user_by_mail(self, mail: str) -> UserAD: # получаем пользователя из AD по АДРЕСУ ПОЧТЫ
         users = UsersLDAP.get_users()
         for user in users:

@@ -51,6 +51,7 @@ const appConfirmDefect = Vue.createApp({
         newClassSystemName: '',
         newDirectClassificationCode: '0',   
         newDirectClassificationName: '',  
+        newRepairManagerDivision: '',
         newRepairManager_id: '', /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
         newSafety: false,
@@ -260,8 +261,8 @@ const appConfirmDefect = Vue.createApp({
         myModal.show()
       }, /* clickbuttonspravochnikdirect */
       confirmDefect() {
-        if (this.currentUser.user_division != this.defect_divisions[this.newDivisionOwner_id-1].division_name && this.currentUser.user_division != 'РусАС') {
-          Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.defect_divisions[this.newDivisionOwner_id-1].division_name  + "'</b>", heightAuto: false}); 
+        if (this.currentUser.user_division != this.cardDefect.defect_division.division_name /* && this.currentUser.user_division != 'РусАС' */) {
+          Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDefect.defect_division.division_name  + "'</b>", heightAuto: false}); 
           return;  
         }   
         if (this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') {
@@ -274,6 +275,14 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>Поле Руководитель должно быть заполнено!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
+
+        /* const repair_managers_array = Object.values(this.repair_managers); 
+        this.newRepairManagerDivision = repair_managers_array.filter((user) => user.user_id === this.newRepairManager_id)
+        if (this.currentUser.user_division != this.newRepairManagerDivision[0].user_division) {
+          Swal.fire({html:"<b>Ответственный за устранение должен быть из подразделения '" + this.defect_divisions[this.newDivisionOwner_id-1].division_name + "' </b>", heightAuto: false}); 
+          return;  
+        }  Эта проверка в данный момент не нужна, но может понадобиться в будущем */ 
+
         if (this.newCardSystemName == '' || this.newCardDescription == '') {
           Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
@@ -459,7 +468,7 @@ const appConfirmDefect = Vue.createApp({
       cancelDefect() {
         if (this.currentUser.user_division != this.defect_divisions[this.newDivisionOwner_id-1].division_name) {
           this.check_checker_name = true;
-          Swal.fire({html:"<b>Это дефект не вашего подразделения!</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.defect_divisions[this.newDivisionOwner_id-1].division_name  + "'</b>", heightAuto: false}); 
           return;  /* Если дефект чужой, то выходим из функции */
         }
         Swal.fire({

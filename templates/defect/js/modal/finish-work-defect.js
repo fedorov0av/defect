@@ -55,7 +55,7 @@ const appFinishWorkDefect = Vue.createApp({
     },
     beforeMount() {
       axios
-      .post('/user/user_role')
+      .post('/user/me')
       .then(response => {
           this.currentUser = response.data;
           this.currentUserRole = this.currentUser.user_role;
@@ -128,7 +128,7 @@ const appFinishWorkDefect = Vue.createApp({
       updateCardDefect() {
         axios
           .post('/get_defect/',{
-            "defect_id": this.defect_id,
+            "defect_id": this.defect_id, 
           })
           .then(response => {
             this.cardDefect = response.data;
@@ -178,6 +178,10 @@ const appFinishWorkDefect = Vue.createApp({
         setSettingClickButtonClassification(this)
       },
       finishworkDefect() {
+        if (this.currentUser.user_surname != this.cardDefect.defect_worker.user_surname && this.currentUserRole != 'Администратор') {
+          Swal.fire({html:"<b>Исполнитель этого дефекта " + this.cardDefect.defect_worker.user_surname  + ' ' + this.cardDefect.defect_worker.user_name  + ". Только он может заверщить работы по этому дефекту!'</b>", heightAuto: false}); 
+          return;  
+        }   
         if (this.cardWorkerDescription == '') {
           this.check_worker_discription = true
           Swal.fire({html:"<b>Не заполнен комментарий о выполненных работах!</b>", heightAuto: false}); 

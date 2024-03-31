@@ -1,0 +1,77 @@
+{% raw %}
+<!----------------------------------------Модальное окно "Админка"------------------------------------------>
+<div id="vueAdmin">
+	<div class="modal fade" id="AdminModalWindow" aria-hidden="true">
+	    <div class="modal-dialog block-about">
+			<div class="modal-content back">
+				<div class="modal-header">
+					<h4 class="modal-title">Администрирование</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+                    <div class="block_row">
+                        <div class="block_data_column4">
+                          
+                          <div class="block_data_column">
+                            <div class="block_input_data">
+                              <b class="label">Поиск сотрудника по EMAIL в AD:</b> 
+                            </div>
+                            <div class="block_row1">
+                              <input type="text" class="form-control width60" v-model="emailUser" placeholder="Email">
+                              <button @click="searchUserByEmail" id="searchUserByEmailButton" class="btn btn-primary" type="button">Найти</button> 
+                            </div>
+
+                            
+                          </div>
+                          
+                          <div class="block_data_column">
+                            <div class="block_input_data">
+                              <b class="label">Результат:</b>
+                            </div>
+                            <textarea class="form-control height100 textareanoneresize" v-model="resultSearch" style="height: 400px" disabled></textarea>
+                            <button type="button" @click="authByUser" class="btn btn-success" :hidden='hiddenButtomAuthUser'>Авторизоваться под пользователем</button>
+                          </div>
+                        </div>
+                      </div>
+					
+				</div>
+<!-- 				<div class="modal-footer">
+					
+				</div> -->
+			</div>
+	    </div>
+	</div>
+  
+</div>
+
+<div id="vueAdminPass">
+
+  <div class="modal fade" id="AdminPassModalWindow" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Введите пароль для авторизации в AD:</h1>
+          <button type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="block_data_column">
+            <div class="block_row1">
+              <input type="password" class="form-control width60" v-model="passAdmin" placeholder="Пароль">
+            </div>
+            
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="closePassAdminModal" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button @click="sendPass" type="button" class="btn btn-primary">Отправить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endraw %}
+<script src="{{ url_for('defect_js', path='modal/admin.js') }}"></script>

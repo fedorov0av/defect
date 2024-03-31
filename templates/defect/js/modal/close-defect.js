@@ -14,6 +14,7 @@ const appCloseDefect = Vue.createApp({
         toggle: 'false',
         isDisabledCloseDefect: false,
         isDisabledCloseDefect1: false,
+        isDisabledCloseDefect2: false,
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
         cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
         cardStatusDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
@@ -33,11 +34,11 @@ const appCloseDefect = Vue.createApp({
         cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
-        newCoreClassificationCode: '0',
+        newCoreClassificationCode: '',
         newCoreClassificationName: '',
         newCategoryDefect_id: 0,
         newClassSystemName: '',
-        newDirectClassificationCode: '0',   
+        newDirectClassificationCode: '',   
         newDirectClassificationName: '', 
         cardHistorys: getDataCardHistoryes(),        
         backgroundMainButtonCCS: "btn-primary",
@@ -53,6 +54,7 @@ const appCloseDefect = Vue.createApp({
       }
     },
     mounted() {
+      
       this.setPopover();
       this.isHiddenblockhistory = 'true';
       this.isHiddenblockclassification  = 'true';
@@ -89,6 +91,11 @@ const appCloseDefect = Vue.createApp({
         this.updateCardDefect();
         this.clickbuttonmain();
       }, /* updateTables */
+      updateClassificationData(event) {
+        console.log(event)
+        /* this.newCoreClassificationCode = event.detail.code;
+        this.newCoreClassificationName = event.detail.name; */
+      },
       changeCoreClassificationCode(event){
         const categories_reason_array = Object.values(this.categories_reason);
         category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === event.target.value)
@@ -141,6 +148,12 @@ const appCloseDefect = Vue.createApp({
             this.newDirectClassificationName = category_reason_direct.length !== 0 ? category_reason_direct[0].category_reason_name : ''
             /* this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : ''; */
             
+            if (this.cardStatusDefectName  != 'Локализован'){
+              this.isDisabledCloseDefect2 = true;
+            } else {
+              this.isDisabledCloseDefect2 = false;
+            }
+
             axios
             .post('/user/me')
             .then(response => {
@@ -179,11 +192,14 @@ const appCloseDefect = Vue.createApp({
         setSettingClickButtonClassification(this)
       },
       clickbuttonspravochnikcore() {
+        appVueSpravochnikCore.parentVueObject = this
+
         appVueSpravochnikCore.clicklinkpage1();
         appVueSpravochnikCore.parent_button_close_modal_name = 'closeModalCloseDefect';
         var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindowCore'), {
           keyboard: false
         })
+        
         myModal.show()
       }, /* clickbuttonspravochnikcore */
       clickbuttonspravochnikdirect() {
@@ -273,8 +289,16 @@ const appCloseDefect = Vue.createApp({
           }
         });
       },/* closeDefect */
+      infoDefect() {
+        appInfoDefect.defect_id = this.defect_id;
+        appInfoDefect.parent_button_close_modal_name = 'closeInfoDefectModalWindow';
+        var myModal = new bootstrap.Modal(document.getElementById('InfoDefectModalWindow'), {
+          keyboard: false
+        })
+        myModal.show()
+      },/* infoDefect */
       requiresSolution() {
-        appCorrectionDefect.defect_id = defect_id;
+        appCorrectionDefect.defect_id = this.defect_id;
         appCorrectionDefect.parent_button_close_modal_name = 'closeCloseDefectModalWindow';
         var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
           keyboard: false

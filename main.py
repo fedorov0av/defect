@@ -19,6 +19,8 @@ from app.api.export import export_router
 from app.api.defect_reason_core import category_reason_router
 from app.api.category_defect import category_defect_router
 from app.api.other import other_router
+from app.api.admin import admin_router
+
 
 from fastapi_pagination import add_pagination
 
@@ -46,6 +48,7 @@ app.include_router(status_defect_router)
 app.include_router(export_router)
 app.include_router(category_reason_router)
 app.include_router(category_defect_router)
+app.include_router(admin_router)
 app.include_router(other_router)
 
 app.mount("/css", StaticFiles(directory="templates/static/css"), name="static_css")

@@ -286,7 +286,7 @@ DIVISIONS = (
             ('ОУР', ('Repair Management Department',)),
             ('КТО', ('Design and Technology Department',)),
             ('ОРЗиС', ('Buildings And Structures Repair Department', 'Repair Department for Buildings and Structures',)),
-            ('ЛТК', ('Technical Inspection Laboratory', 'Technical Diagnostics Laboratory',)),
+            ('ЛТД', ('Technical Inspection Laboratory', 'Technical Diagnostics Laboratory',)),
             ('ОИТП', ('Engineering Support Departmen', 'Engineering Support Department',)),
             ('ОИОЭиРН', ('Operating Experience Use & Violations Investigation Department',)),
             ('ЦТПК', ('Shop for thermal and underground communications', 'Thermal and Underground Communications Shop')),
