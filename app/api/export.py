@@ -6,7 +6,6 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Alignment
 from app.schemas.export import Defect_list_ids
 from sqlalchemy.ext.asyncio import AsyncSession
-from openpyxl import Workbook
 
 from db.database import get_db
 from db.defect import Defect

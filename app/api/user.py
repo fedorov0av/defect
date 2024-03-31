@@ -8,7 +8,7 @@ from db.division import Division
 from db.database import get_db
 from app.schemas.user import UserAD
 
-from utils.ldap import get_user_from_EntryLDAP, get_user_by_uid_from_AD, LdapConnection
+from utils.ldap import LdapConnection
 from app.schemas.user import User_p, User_id, User_update
 from app.middleware.auth import check_auth_api
 from config import AD
@@ -23,10 +23,7 @@ async def get_current_user(request: Request, response: Response, session: AsyncS
     if AD:
         passw = await decrypt_user_id(token_dec['subject']['userP'])
         ldap_connection = LdapConnection(session, user_id, passw)
-        user = await ldap_connection.get_user_by_uid_from_AD(user_id)
-
-        """ userAD = await get_user_by_uid_from_AD(user_id, passw, user_id)
-        user: UserAD = await get_user_from_EntryLDAP(session, request, userAD) """
+        user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
     else: 
         user: User = await User.get_user_by_id(session, user_id)
     return {
@@ -49,10 +46,7 @@ async def get_current_user_role(request: Request, response: Response, session: A
     if AD:
         passw = await decrypt_user_id(token_dec['subject']['userP'])
         ldap_connection = LdapConnection(session, user_id, passw)
-        user = await ldap_connection.get_user_by_uid_from_AD(user_id)
-        
-        """ userAD = await get_user_by_uid_from_AD(user_id, passw, user_id)
-        user: UserAD = await get_user_from_EntryLDAP(session, request, userAD) """
+        user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
     return {
@@ -128,7 +122,7 @@ async def get_user(request: Request, response: Response, user_id: User_id, sessi
         user_current_id = await decrypt_user_id(token_dec['subject']['userId'])
         passw = await decrypt_user_id(token_dec['subject']['userP'])
         ldap_connection = LdapConnection(session, user_current_id, passw)
-        user = await ldap_connection.get_user_by_uid_from_AD(user_id.user_id)
+        user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id.user_id)
 
         """ userAD = await get_user_by_uid_from_AD(user_current_id, passw, user_id.user_id)
         user: UserAD = await get_user_from_EntryLDAP(session, request, userAD) """

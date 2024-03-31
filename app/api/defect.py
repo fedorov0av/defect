@@ -19,7 +19,7 @@ from db.category_defect import CategoryDefect
 from db.defect_reason_core import CategoryCoreReason
 from db.defect_reason_direct import CategoryDirectReason
 
-from utils.ldap import get_user_from_EntryLDAP, get_user_by_uid_from_AD, LdapConnection
+from utils.ldap import LdapConnection
 from app.schemas.user import User_id, UserAD
 from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_description_p, Defect_location_p
 from app.schemas.status_defect import StatusDefect_name
@@ -67,13 +67,6 @@ async def get_user_for_defect(session: AsyncSession, request: Request, token_dec
     else:
         user: User = await User.get_user_by_id(session, user_id)
     return user
-
-""" async def get_user_if_ad(session: AsyncSession, request: Request, token_dec: dict, user_mail_nickname: str):
-    user_id = await decrypt_user_id(token_dec['subject']['userId'])
-    passw = await decrypt_user_id(token_dec['subject']['userP'])
-    userAD = await get_user_by_uid_from_AD(user_id, passw, user_mail_nickname)
-    user = await get_user_from_EntryLDAP(session, request, userAD)
-    return user """
 
 class UserDefectFromAD:
     def __init__(self, session: AsyncSession, request: Request, token_dec: dict):

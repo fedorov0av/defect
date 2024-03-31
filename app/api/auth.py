@@ -1,6 +1,6 @@
 from datetime import timedelta
 from fastapi import APIRouter, Security, HTTPException, Response, Depends, Request
-from fastapi_jwt import JwtAccessBearerCookie, JwtAuthorizationCredentials, JwtRefreshBearer, JwtAccessBearer
+from fastapi_jwt import JwtAuthorizationCredentials
 from fastapi_csrf_protect import CsrfProtect
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession

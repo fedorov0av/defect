@@ -1,9 +1,7 @@
-from fastapi_jwt import JwtAccessBearerCookie, JwtAuthorizationCredentials, JwtRefreshBearer, JwtAccessBearer, JwtRefreshBearerCookie
+from fastapi_jwt import JwtAccessBearerCookie, JwtRefreshBearerCookie
 from datetime import timedelta
 from cryptography.fernet import Fernet
 import jwt
-import base64
-
 
 SECRET_KEY = 'UhGa_2vRrIQRVeTxtSjSpj9xWKxR3X5zMRaJlFTyaNU='
 
