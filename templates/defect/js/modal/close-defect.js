@@ -91,11 +91,6 @@ const appCloseDefect = Vue.createApp({
         this.updateCardDefect();
         this.clickbuttonmain();
       }, /* updateTables */
-      updateClassificationData(event) {
-        console.log(event)
-        /* this.newCoreClassificationCode = event.detail.code;
-        this.newCoreClassificationName = event.detail.name; */
-      },
       changeCoreClassificationCode(event){
         const categories_reason_array = Object.values(this.categories_reason);
         category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === event.target.value)
@@ -137,12 +132,12 @@ const appCloseDefect = Vue.createApp({
             this.newCategoryDefect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : 0;
             this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
             
-            this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '0';
+            this.newCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '';
             const categories_reason_array = Object.values(this.categories_reason);
             category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
             this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
             
-            this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '0';
+            this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
             const categories_reason_array_direct = Object.values(this.categories_reason_direct); 
             category_reason_direct = categories_reason_array_direct.filter((category_reason_direct) => category_reason_direct.category_reason_code === this.newDirectClassificationCode)
             this.newDirectClassificationName = category_reason_direct.length !== 0 ? category_reason_direct[0].category_reason_name : ''
@@ -192,14 +187,11 @@ const appCloseDefect = Vue.createApp({
         setSettingClickButtonClassification(this)
       },
       clickbuttonspravochnikcore() {
-        appVueSpravochnikCore.parentVueObject = this
-
         appVueSpravochnikCore.clicklinkpage1();
         appVueSpravochnikCore.parent_button_close_modal_name = 'closeModalCloseDefect';
         var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindowCore'), {
           keyboard: false
         })
-        
         myModal.show()
       }, /* clickbuttonspravochnikcore */
       clickbuttonspravochnikdirect() {

@@ -28,19 +28,19 @@ class Defect(Base):
     defect_created_at: Mapped[datetime.datetime]
 
     #defect_registrator_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - регистратор дефекта.
-    defect_registrator_id: Mapped[str] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - регистратор дефекта.
+    defect_registrator_id: Mapped[str] = mapped_column(ForeignKey("user.user_id")) if not AD else mapped_column(String) # id поста из таблицы User - регистратор дефекта.
     defect_registrar: Mapped["User"] = relationship(foreign_keys=[defect_registrator_id]) #  для работы с таблицей User как с объектом
     #defect_owner_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - владелец оборудования.
-    defect_owner_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - владелец оборудования.
+    defect_owner_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String) # id поста из таблицы User - владелец оборудования.
     defect_owner: Mapped["User"] = relationship(foreign_keys=[defect_owner_id]) #  для работы с таблицей User как с объектом
     #defect_repair_manager_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - руководитель ремонта.
-    defect_repair_manager_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - руководитель ремонта.
+    defect_repair_manager_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String) # id поста из таблицы User - руководитель ремонта.
     defect_repair_manager: Mapped["User"] = relationship(foreign_keys=[defect_repair_manager_id]) #  для работы с таблицей User как с объектом
     #defect_worker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - исполнитель ремонта.
-    defect_worker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - исполнитель ремонта.
+    defect_worker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String) # id поста из таблицы User - исполнитель ремонта.
     defect_worker: Mapped["User"] = relationship(foreign_keys=[defect_worker_id]) #  для работы с таблицей User как с объектом
     #defect_checker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - выполняющий ОП проверку.
-    defect_checker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - выполняющий ОП проверку.
+    defect_checker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String) # id поста из таблицы User - выполняющий ОП проверку.
     defect_checker: Mapped["User"] = relationship(foreign_keys=[defect_checker_id]) #  для работы с таблицей User как с объектом
     
     defect_planned_finish_date: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=True)  # планируемая дата завершения ремонта
@@ -232,22 +232,6 @@ class Defect(Base):
     async def del_defect_by_defect(session: AsyncSession, defect):
         session.delete(defect)
         await session.commit() 
-
-
-    """ @staticmethod
-    async def get_defects_by_filter(session: AsyncSession, division: Division = None, date_start: str = None,
-                                     date_end: str = None, status_defect: StatusDefect = None,):
-        query = select(Defect).filter(or_(Defect.defect_division_id.like(division.division_id,),
-                                        Defect.defect_status_id.like(status_defect.status_defect_id),
-                                        Defect.defect_created_at).between(date_start, date_end)
-                                        ).order_by(Defect.defect_id)\
-                .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
-                .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
-                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
-                .options(selectinload(Defect.defect_system)) # запрос к БД
-        result = await session.scalars(query)
-        defects = result.all()
-        return defects """
     
     @staticmethod
     async def get_defects_by_filter(

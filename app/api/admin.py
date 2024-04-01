@@ -30,7 +30,10 @@ async def auth(request: Request,
             raise HTTPException(status_code=403, detail="Invalid password")
     else:
         raise HTTPException(status_code=418, detail="mode AD disabled")
-    user_LDAP = await ldap_connection.get_user_by_mail_from_AD(email.email)
+    try:
+        user_LDAP = await ldap_connection.get_user_by_mail_from_AD(email.email)
+    except IndexError:
+        raise HTTPException(status_code=417, detail="User not found!")
     return {"user_LDAP": user_LDAP}
 
 @admin_router.post("/auth_by_user_id", response_class=JSONResponse) # check me

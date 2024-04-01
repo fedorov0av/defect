@@ -36,7 +36,7 @@ const appVueAdmin = Vue.createApp({
           }
           axios
           .post('/auth_by_user_id', {
-              "user_id": this.lastUserUID
+              "user_id": this.lastUserUID.split('@')[0]
           },)
           .then(response => {
               window.location.replace("/defect")
@@ -81,7 +81,8 @@ const appVueAdminPass = Vue.createApp({
               "email": {"email": appVueAdmin.emailUser}
             },)
             .then(response => {
-                appVueAdmin.resultSearch = response;
+                user_info = response.data.user_LDAP;
+                appVueAdmin.resultSearch = 'description ='+user_info.description+'\n'+'department ='+user_info.department+'\n'+'extensionAttribute2 ='+user_info.extensionAttribute2+'\n'+'mail ='+user_info.mail+'\n'+'sAMAccountName ='+user_info.sAMAccountName+'\n'
                 appVueAdmin.lastUserMail = appVueAdmin.emailUser;
                 appVueAdmin.hiddenButtomAuthUser = false;
                 document.getElementById('closePassAdminModal').click();
@@ -91,17 +92,22 @@ const appVueAdminPass = Vue.createApp({
                 console.log(err.request)
                 Swal.fire({html:"<b>Проверьте правильность заполнения почтового адреса пользователя! Пример: @</b>", heightAuto: false});
                 document.getElementById('closePassAdminModal').click();
+                return
             }
             if (err.request.status == 401) {
               Swal.fire({html:"<b>Неправильный логин или пароль</b>", heightAuto: false}); 
               document.getElementById('closePassAdminModal').click();
-            }
-            if (err.request.status == 403) {
+              return
+            } else if (err.request.status == 403) {
               Swal.fire({html:"<b>Неправильный пароль</b>", heightAuto: false});
-            }
-            if (err.request.status == 418) {
+            } else if (err.request.status == 403) {
+              Swal.fire({html:"<b>Неправильный пароль</b>", heightAuto: false});
+            } else if (err.request.status == 418) {
               Swal.fire({html:"<b>Сервер работает в режиме 'База данных'!</b>", heightAuto: false}); 
               document.getElementById('closePassAdminModal').click();
+            } else {
+              Swal.fire({html:"<b>Произошла ошибка при выводе карточки дефекта! Обратитесь к администратору!</b>", heightAuto: false}); 
+              console.log(err); 
             }
             });
         }, /* sendPass */

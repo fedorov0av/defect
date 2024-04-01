@@ -32,9 +32,9 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="row in tab1" @dblclick="onRowDoubleClick">
-                          <td>{{ row.code }}</td>
-                          <td>{{ row.name }}</td> 
+                        <tr v-for="row in tab1" @dblclick="updateCoreClassification(row)">
+                          <td>{{ row.category_reason_code }}</td>
+                          <td>{{ row.category_reason_name }}</td> 
                         </tr>
                       </tbody>
                     </table>
@@ -49,9 +49,9 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="row in tab2" @dblclick="onRowDoubleClick">
-                          <td>{{ row.code }}</td>
-                          <td>{{ row.name }}</td> 
+                        <tr v-for="row in tab2" @dblclick="updateCoreClassification(row)">
+                          <td>{{ row.category_reason_code }}</td>
+                          <td>{{ row.category_reason_name }}</td> 
                         </tr>
                       </tbody>
                     </table>
@@ -66,9 +66,9 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="row in tab3" @dblclick="onRowDoubleClick">
-                          <td>{{ row.code }}</td>
-                          <td>{{ row.name }}</td> 
+                        <tr v-for="row in tab3" @dblclick="updateCoreClassification(row)">
+                          <td>{{ row.category_reason_code }}</td>
+                          <td>{{ row.category_reason_name }}</td> 
                         </tr>
                       </tbody>
                     </table>

@@ -286,7 +286,7 @@
                               <option disabled :value="0" selected>Выберите код причины</option>
                               <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code + ' ' +  category_reason.category_reason_name}}</option>
                             </select> 
-                            <button @click="clickbuttonspravochnikcore" id="SpravochnikCoreButton" class="btn btn-primary" type="button">Справочник кодов</button> 
+                            <button @click="clickbuttonspravochnikcore" class="btn btn-primary" type="button">Справочник кодов</button> 
                           </div>
                         </div>
 
@@ -313,7 +313,7 @@
                               <option v-for="category_reason_direct in categories_reason_direct" :value="category_reason_direct.category_reason_code">{{ category_reason_direct.category_reason_code + ' ' +  category_reason_direct.category_reason_name }}</option>
                             </select> 
                             <!-- <input type="text" class="form-control" placeholder="Введите код причины" v-model="newDirectClassificationCode"> -->
-                            <button @click="clickbuttonspravochnikdirect" id="SpravochnikDirectButton" class="btn btn-primary" type="button">Справочник кодов</button>
+                            <button @click="clickbuttonspravochnikdirect" class="btn btn-primary" type="button">Справочник кодов</button>
                           </div>
                         </div>
                         <div class="block_data_column">

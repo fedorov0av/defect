@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 import asyncpg
 
-from db.user import User
 from db.role import Role
 from db.type_defect import TypeDefect
 from db.division import Division
@@ -18,6 +17,11 @@ from db.defect_reason_direct import CategoryDirectReason
 from db.base import Base
 from db.utils import get_time
 from db.constants import DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME, DATABASE_IP, DATABASE_PORT, DATABASE_URL
+from config import AD
+
+if AD:
+    from db.user import User
+
 
 #from constants import ROLES, ROOT, GROUP_REESTR_SO, ENERGOBLOCKS
 
@@ -398,88 +402,91 @@ async def create_tables():
     ################################################
 
     ########### добавление ROOT пользователя в БД #######
-    async with async_session() as session:
-        hash_salt: tuple[str, str] = security.get_hash_salt(ROOT['password'])
-        user_password_hash, user_salt_for_password = hash_salt
-        result_roles = await Role.get_all_roles(session)
-        result_divisions = await Division.get_all_division(session)
-        role_admin = result_roles[-1]
-        division_admin = result_divisions[-1]
-        now_time = get_time()  
+    if not AD:
+        async with async_session() as session:
+            hash_salt: tuple[str, str] = security.get_hash_salt(ROOT['password'])
+            user_password_hash, user_salt_for_password = hash_salt
+            result_roles = await Role.get_all_roles(session)
+            result_divisions = await Division.get_all_division(session)
+            role_admin = result_roles[-1]
+            division_admin = result_divisions[-1]
+            now_time = get_time()  
 
-        root_user = User(
-            user_id = 'D.Postnikov',
-            user_name = 'Денис',
-            user_fathername = 'root',
-            user_surname = 'Постников',
-            user_position = 'root',
-            user_password_hash = user_password_hash,
-            user_salt_for_password = user_salt_for_password,
-            user_temp_password = False,
-            user_division_id = division_admin.division_id,
-            user_email = 'D.Postnikov@akkuyu.com',
-            user_created_at=now_time,
-        )
-        root_user.user_role.append(role_admin)
-        session.add(root_user)
+            root_user = User(
+                user_id = 'D.Postnikov',
+                user_name = 'Денис',
+                user_fathername = 'root',
+                user_surname = 'Постников',
+                user_position = 'root',
+                user_password_hash = user_password_hash,
+                user_salt_for_password = user_salt_for_password,
+                user_temp_password = False,
+                user_division_id = division_admin.division_id,
+                user_email = 'D.Postnikov@akkuyu.com',
+                user_created_at=now_time,
+            )
+            root_user.user_role.append(role_admin)
+            session.add(root_user)
 
-        await session.commit()
+            await session.commit()
 
     ########### добавление пользователей в БД #######
-    async with async_session() as session:
-        for user in USERS:
-            now_time = get_time()  
-            hash_salt: tuple[str, str] = security.get_hash_salt(USERS[user]['password'])
-            user_password_hash, user_salt_for_password = hash_salt
-            result_role = await Role.get_role_by_rolename(session, role_name=user)
-            result_division = await Division.get_division_by_name(session, division_name=USERS[user]['division_name'])
-            role = result_role
-            division = result_division
+    if not AD:
+        async with async_session() as session:
+            for user in USERS:
+                now_time = get_time()  
+                hash_salt: tuple[str, str] = security.get_hash_salt(USERS[user]['password'])
+                user_password_hash, user_salt_for_password = hash_salt
+                result_role = await Role.get_role_by_rolename(session, role_name=user)
+                result_division = await Division.get_division_by_name(session, division_name=USERS[user]['division_name'])
+                role = result_role
+                division = result_division
 
-            user = User(
-                user_id = USERS[user]['user_email'].split('@')[0],
-                user_name = USERS[user]['user_name'],
-                user_fathername = USERS[user]['user_fathername'],
-                user_surname = USERS[user]['user_surname'],
-                user_position = user,
-                user_password_hash = user_password_hash,
-                user_salt_for_password = user_salt_for_password,
-                user_temp_password = False,
-                user_division_id = division.division_id,
-                user_email = USERS[user]['user_email'],
-                user_created_at=now_time,
-            )
-            user.user_role.append(role)
-            session.add(user)
-            session.add(root_user)
-            
-        await session.commit()
+                user = User(
+                    user_id = USERS[user]['user_email'].split('@')[0],
+                    user_name = USERS[user]['user_name'],
+                    user_fathername = USERS[user]['user_fathername'],
+                    user_surname = USERS[user]['user_surname'],
+                    user_position = user,
+                    user_password_hash = user_password_hash,
+                    user_salt_for_password = user_salt_for_password,
+                    user_temp_password = False,
+                    user_division_id = division.division_id,
+                    user_email = USERS[user]['user_email'],
+                    user_created_at=now_time,
+                )
+                user.user_role.append(role)
+                session.add(user)
+                session.add(root_user)
+                
+            await session.commit()
 
 ########### добавление пользователей в БД #######
-    async with async_session() as session:
-        for user in USERS_BONUS:
-            now_time = get_time()  
-            hash_salt: tuple[str, str] = security.get_hash_salt(user['password'])
-            user_password_hash, user_salt_for_password = hash_salt
-            result_role = await Role.get_role_by_rolename(session, role_name=user['role_name'])
-            result_division = await Division.get_division_by_name(session, division_name=user['division_name'])
-            role = result_role
-            division = result_division
+    if not AD:
+        async with async_session() as session:
+            for user in USERS_BONUS:
+                now_time = get_time()  
+                hash_salt: tuple[str, str] = security.get_hash_salt(user['password'])
+                user_password_hash, user_salt_for_password = hash_salt
+                result_role = await Role.get_role_by_rolename(session, role_name=user['role_name'])
+                result_division = await Division.get_division_by_name(session, division_name=user['division_name'])
+                role = result_role
+                division = result_division
 
-            user = User(
-                user_id = user['user_email'].split('@')[0],
-                user_name = user['user_name'],
-                user_fathername = user['user_fathername'],
-                user_surname = user['user_surname'],
-                user_position = user['role_name'],
-                user_password_hash = user_password_hash,
-                user_salt_for_password = user_salt_for_password,
-                user_temp_password = False,
-                user_division_id = division.division_id,
-                user_email = user['user_email'],
-                user_created_at=now_time,
-            )
-            user.user_role.append(role)
-            session.add(user)
-            
-        await session.commit()
+                user = User(
+                    user_id = user['user_email'].split('@')[0],
+                    user_name = user['user_name'],
+                    user_fathername = user['user_fathername'],
+                    user_surname = user['user_surname'],
+                    user_position = user['role_name'],
+                    user_password_hash = user_password_hash,
+                    user_salt_for_password = user_salt_for_password,
+                    user_temp_password = False,
+                    user_division_id = division.division_id,
+                    user_email = user['user_email'],
+                    user_created_at=now_time,
+                )
+                user.user_role.append(role)
+                session.add(user)
+                
+            await session.commit()

@@ -9,7 +9,6 @@
         </div>
         <div class="modal-body modal-body1">
           <form method="post">
-            {% endraw %}
             <div>
                 <div class="block_data_column3">
                   <div class="block-table">
@@ -17,7 +16,7 @@
                       <div class="accordion-item"> 
                         <h2 class="accordion-header" id="flush-headingOne">
                           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                            5.1.1. МЕХАНИЧЕСКИЕ ЯВЛЕНИЯ, ПРОЦЕССЫ, СОСТОЯНИЯ
+                            {{ accordion1Header }}
                           </button>
                         </h2>
                         <div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
@@ -30,57 +29,9 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>5.1.1.0.</td>
-                                  <td>Прочие механические причины, не вошедшие в данную группу причин</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.1.</td>
-                                  <td>Коррозия, эрозия</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.2.</td>
-                                  <td>Износ, неудовлетворительная смазка</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.3.</td>
-                                  <td>Разрушение, усталость, дефект сварного шва, внутренний дефект материала</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.4.</td>
-                                  <td>Превышение допустимой нагрузки (перегрузка)</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.5.</td>
-                                  <td>Вибрация</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.6.</td>
-                                  <td>Исчерпание ресурса</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.7.</td>
-                                  <td>Неплотность</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.8.</td>
-                                  <td>Блокирование, ограничение движения, заклинивание, защемление</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.9.</td>
-                                  <td>Деформация, перекос, сдвиг, ложное перемещение, разъединение, ослабление связи</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.10.</td>
-                                  <td>Ослабление крепления к фундаменту, строительным конструкциям, разрушение фундамента, строительных конструкций</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.11.</td>
-                                  <td>Внешнее механическое воздействие</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.1.12.</td>
-                                  <td>Загрязнение, попадание инородных предметов</td>
+                                <tr v-for="row in accordion1" @dblclick="updateDirectClassification(row)">
+                                  <td>{{ row.category_reason_code }}</td>
+                                  <td>{{ row.category_reason_name }}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -90,7 +41,7 @@
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="flush-headingTwo">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                            5.1.2. ЭЛЕКТРИЧЕСКИЕ ЯВЛЕНИЯ, ПРОЦЕССЫ, СОСТОЯНИЯ
+                            {{ accordion2Header }}
                           </button>
                         </h2>
                         <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
@@ -104,49 +55,9 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>5.1.2.0.</td>
-                                  <td>Прочие электрические причины, не вошедшие в данную группу причин</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.1.</td>
-                                  <td>Короткое замыкание, искрение</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.2.</td>
-                                  <td>Перегрузка по току</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.3.</td>
-                                  <td>Отклонение по напряжению, частоте</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.4.</td>
-                                  <td>Плохой контакт, размыкание, обрыв цепи</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.5.</td>
-                                  <td>Замыкание на "землю"</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.6.</td>
-                                  <td>Снижение сопротивления, повреждение изоляции</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.8.</td>
-                                  <td>Внутреннее повреждение</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.9.</td>
-                                  <td>Непредусмотренная электрическая связь (перемекание)</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.10.</td>
-                                  <td>Помехи, наводки из-за неустойчивости (колебания) электрических параметров</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.2.11.</td>
-                                  <td>Снижение (потеря) емкости</td>
+                                <tr v-for="row in accordion2" @dblclick="updateDirectClassification(row)">
+                                  <td>{{ row.category_reason_code }}</td>
+                                  <td>{{ row.category_reason_name }}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -157,7 +68,7 @@
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingThree">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                            5.1.3. ХИМИЧЕСКИЕ ЯВЛЕНИЯ, ПРОЦЕССЫ, ФИЗИКА РЕАКТОРА
+                            {{ accordion3Header }}
                           </button>
                         </h2>
                         <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
@@ -171,33 +82,9 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>5.1.3.0.</td>
-                                  <td>Прочие химические причины, не вошедшие в данную группу причин</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.3.1.</td>
-                                  <td>Химическое загрязнение (отложения, шлам, накипь)</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.3.2.</td>
-                                  <td>Пожар, загорание, взрыв</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.3.3.</td>
-                                  <td>Неконтролируемая химическая реакция</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.3.4.</td>
-                                  <td>Проблемы физики реактора</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.3.5.</td>
-                                  <td>Неудовлетворительная химическая технология или не соответствующий требованиям химический контроль</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.3.6.</td>
-                                  <td>Радиоактивное загрязнение</td>
+                                <tr v-for="row in accordion3" @dblclick="updateDirectClassification(row)">
+                                  <td>{{ row.category_reason_code }}</td>
+                                  <td>{{ row.category_reason_name }}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -208,7 +95,7 @@
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingFour">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
-                            5.1.4. ГИДРАВЛИЧЕСКИЕ ЯВЛЕНИЯ, ПРОЦЕССЫ
+                            {{ accordion4Header }}
                           </button>
                         </h2>
                         <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
@@ -222,37 +109,9 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>5.1.4.0.</td>
-                                  <td>Прочие гидравлические причины, не вошедшие в данную группу причин</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.4.1.</td>
-                                  <td>Гидравлический удар, превышение давления</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.4.2.</td>
-                                  <td>Снижение давления</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.4.3.</td>
-                                  <td>Пульсация давления</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.4.4.</td>
-                                  <td>Кавитация</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.4.5.</td>
-                                  <td>Газовая пробка</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.4.6.</td>
-                                  <td>Наличие влаги в воздушной системе</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.4.7.</td>
-                                  <td>Помпаж</td>
+                                <tr v-for="row in accordion4" @dblclick="updateDirectClassification(row)">
+                                  <td>{{ row.category_reason_code }}</td>
+                                  <td>{{ row.category_reason_name }}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -263,7 +122,7 @@
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingFive">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
-                            5.1.5. ЯВЛЕНИЯ, ПРОЦЕССЫ В КОНТРОЛЬНО-ИЗМЕРИТЕЛЬНЫХ СИСТЕМАХ
+                            {{ accordion5Header }}
                           </button>
                         </h2>
                         <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
@@ -277,37 +136,9 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>5.1.5.0.</td>
-                                  <td>Прочие причины, не вошедшие в данную группу причин</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.5.1.</td>
-                                  <td>Ложный сигнал</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.5.2.</td>
-                                  <td>Колебания параметра</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.5.3.</td>
-                                  <td>Смещение уставки, смещение "нуля"</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.5.4.</td>
-                                  <td>Неправильное показание параметра</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.5.5.</td>
-                                  <td>Потеря сигнала, отсутствие сигнала</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.5.6.</td>
-                                  <td>Недостатки или дефекты компьютерных технических средств</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.5.7.</td>
-                                  <td>Недостаток компьютерного программного обеспечения</td>
+                                <tr v-for="row in accordion5" @dblclick="updateDirectClassification(row)">
+                                  <td>{{ row.category_reason_code }}</td>
+                                  <td>{{ row.category_reason_name }}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -318,7 +149,7 @@
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingSix">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
-                            5.1.6. УСЛОВИЯ ОКРУЖАЮЩЕЙ СРЕДЫ ДЛЯ ОБОРУДОВАНИЯ (АНОМАЛЬНЫЕ УСЛОВИЯ В ПОМЕЩЕНИЯХ АС)
+                            {{ accordion6Header }}
                           </button>
                         </h2>
                         <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix" data-bs-parent="#accordionFlushExample">
@@ -332,41 +163,9 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>5.1.6.0.</td>
-                                  <td>Прочие условия окружающей среды, не вошедшие в данную группу причин (АНОМАЛЬНЫЕ УСЛОВИЯ В ПОМЕЩЕНИЯХ АС)</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.6.1.</td>
-                                  <td>Температура</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.6.2.</td>
-                                  <td>Давление</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.6.3.</td>
-                                  <td>Влажность</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.6.4.</td>
-                                  <td>Затопление</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.6.5.</td>
-                                  <td>Замерзание</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.6.6.</td>
-                                  <td>Облучение узлов (элементов)</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.6.8.</td>
-                                  <td>Задымление</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.6.9.</td>
-                                  <td>Взрыв</td>
+                                <tr v-for="row in accordion6" @dblclick="updateDirectClassification(row)">
+                                  <td>{{ row.category_reason_code }}</td>
+                                  <td>{{ row.category_reason_name }}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -377,7 +176,7 @@
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingSeven">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
-                            5.1.7. УСЛОВИЯ ОКРУЖАЮЩЕЙ СРЕДЫ (АНОМАЛЬНЫЕ УСЛОВИЯ ВНЕ ПОМЕЩЕНИЙ АС)
+                            {{ accordion7Header }}
                           </button>
                         </h2>
                         <div id="flush-collapseSeven" class="accordion-collapse collapse" aria-labelledby="flush-headingSeven" data-bs-parent="#accordionFlushExample">
@@ -391,49 +190,9 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>5.1.7.0.</td>
-                                  <td>Прочие условия окружающей среды, не вошедшие в данную группу причин (АНОМАЛЬНЫЕ УСЛОВИЯ ВНЕ ПОМЕЩЕНИЙ АС)</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.1.</td>
-                                  <td>Поражение молнией</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.2.</td>
-                                  <td>Сильный дождь или снегопад, наводнение</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.3.</td>
-                                  <td>Буря (ураган), торнадо, ветровая нагрузка</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.4.</td>
-                                  <td>Землетрясение</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.5.</td>
-                                  <td>Низкая температура, замерзание</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.6.</td>
-                                  <td>Высокая температура</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.7.</td>
-                                  <td>Воздушная ударная волна</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.8.</td>
-                                  <td>Падающие, летящие предметы</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.9.</td>
-                                  <td>Обледенение</td> 
-                                </tr>
-                                <tr>
-                                  <td>5.1.7.10.</td>
-                                  <td>Неравномерность осадки фундамента</td>
+                                <tr v-for="row in accordion7" @dblclick="updateDirectClassification(row)">
+                                  <td>{{ row.category_reason_code }}</td>
+                                  <td>{{ row.category_reason_name }}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -444,7 +203,7 @@
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingEight">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEight" aria-expanded="false" aria-controls="flush-collapseEight">
-                            5.1.8. ЧЕЛОВЕЧЕСКИЙ ФАКТОР, ПРИЧИНЫ ОШИБОК ПЕРСОНАЛА
+                            {{ accordion8Header }}
                           </button>
                         </h2>
                         <div id="flush-collapseEight" class="accordion-collapse collapse" aria-labelledby="flush-headingEight" data-bs-parent="#accordionFlushExample">
@@ -458,73 +217,9 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>5.1.8.1.</td>
-                                  <td>Вид неправильных действий персонала</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.1.0.</td>
-                                  <td>Прочие неправильные действия персонала</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.1.1.</td>
-                                  <td>Неправильное выполнение технологических операций (в том числе при выполнении переключений, подключений), воздействие на элементы защиты, автоматики</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.1.2.</td>
-                                  <td>Бездействие, пропуск необходимых действий</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.1.3.</td>
-                                  <td>Нарушение технологии технического обслуживания</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.2.</td>
-                                  <td>Неправильное, случайное воздействие на элементы защиты и автоматики</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.3.</td>
-                                  <td>Самовольное производство работ, переключений и.т.д.</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.4.</td>
-                                  <td>Несогласованные действия</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.5.</td>
-                                  <td>Установка, ввод в работу непроверенной дефектной аппаратуры элементов (с неисправными устройствами, узлами); установка непроектных узлов, деталей</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.6.</td>
-                                  <td>Отсутствие контроля, некачественный контроль за состоянием систем (элементов) и выполняемыми технологическими операциями</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.7.</td>
-                                  <td>Преднамеренное вмешательство в работу автоматики</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.8.</td>
-                                  <td>Работа без программы, бланка переключений, наряда-допуска, отступление от программы работ, инструкции и других документов</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.9.</td>
-                                  <td>Некачественный ремонт, нарушение технологии ремонта</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.10.</td>
-                                  <td>Некачественная сварка</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.11.</td>
-                                  <td>Некачественная сборка (ненадежная затяжка, обжатие разъемных соединений, уплотнений и др.)</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.12.</td>
-                                  <td>Некачественные послеремонтные испытания, обкатка</td>
-                                </tr>
-                                <tr>
-                                  <td>5.1.8.13.</td>
-                                  <td>Ошибки при инспекции, техническом обслуживании, испытании или настройке</td>
+                                <tr v-for="row in accordion8" @dblclick="updateDirectClassification(row)">
+                                  <td>{{ row.category_reason_code }}</td>
+                                  <td>{{ row.category_reason_name }}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -544,5 +239,5 @@
     </div>
   </div>
 </div>
-
+{% endraw %}
 <script src="{{ url_for('defect_js', path='spravochnik-direct.js') }}"></script>

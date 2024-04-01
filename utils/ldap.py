@@ -77,8 +77,11 @@ class LdapConnection:
                 print('err=== ', err)
 
     async def get_user_by_mail_from_AD(self, mail: str) -> Entry:
-        if self.ldap_connection.search(SEARCH_BASE, f"(mail={mail})", attributes=ATTRS_USER):
-            return self.ldap_connection.entries[0]
+        message_id = self.ldap_connection.search(SEARCH_BASE, f"(mail={mail})", attributes=ATTRS_USER)
+        raw_user = self.ldap_connection.get_response(message_id)[0]
+        user = raw_user['attributes']
+        if user:
+            return user
         else: return None
 
     async def get_user_by_mail(self, mail: str) -> UserAD: # получаем пользователя из AD по АДРЕСУ ПОЧТЫ
