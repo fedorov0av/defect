@@ -12,7 +12,7 @@ from app.schemas.user import User_id
 
 admin_router = APIRouter()
 
-@admin_router.post("/get_user_info_by_mail", response_class=JSONResponse) # check me
+@admin_router.post("/get_user_info_by_mail", response_class=JSONResponse) # получение информации о пользователe с AD по почте
 async def auth(request: Request, 
                password: Password, 
                email: UserMail,
@@ -36,11 +36,10 @@ async def auth(request: Request,
         raise HTTPException(status_code=417, detail="User not found!")
     return {"user_LDAP": user_LDAP}
 
-@admin_router.post("/auth_by_user_id", response_class=JSONResponse) # check me
+@admin_router.post("/auth_by_user_id", response_class=JSONResponse) # авторизация под пользователем с админки
 async def auth(request: Request, 
                user_uid: User_id,
                response: Response, 
-               session: AsyncSession = Depends(get_db),
                ):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     token_user_id = await encrypt_user_id(str(user_uid.user_id))

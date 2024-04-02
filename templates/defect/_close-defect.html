@@ -133,11 +133,11 @@
                         <div class="block_input_data">
                           <b class="label">Срок устранения</b>
                         </div>
-                        <input id="date" class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
+                        <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
                       </div>
                       <div class="block_checkbox block_checkbox1">
                         <div class="form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false disabled>
+                          <input class="form-check-input" type="checkbox" v-model="isHiddenDate" true-value=true false-value=false disabled>
                           <label class="form-check-label margin-right" for="flexCheckChecked">Будет устранен в ППР</label>
                         </div>
                       </div>
@@ -253,7 +253,7 @@
                           <select class="form-select block_theme width300px" v-model="newCoreClassificationCode" disabled>
                             <option :value="newCoreClassificationCode">{{ newCoreClassificationCode }}</option>
                           </select>
-                          <button @click="clickbuttonspravochnikcore" id="SpravochnikCoreButton" class="btn btn-primary" type="button">Справочник кодов</button> 
+                          <button @click="clickButtonSpravochnikCore" id="SpravochnikCoreButton" class="btn btn-primary" type="button">Справочник кодов</button> 
                         </div>
                       </div>
 
@@ -279,7 +279,7 @@
                           <select class="form-select block_theme width300px" v-model="newDirectClassificationCode" disabled>
                             <option :value="newDirectClassificationCode">{{ newDirectClassificationCode }}</option>
                           </select> 
-                          <button @click="clickbuttonspravochnikdirect" id="SpravochnikDirectButton" class="btn btn-primary" type="button">Справочник кодов</button>
+                          <button @click="clickButtonSpravochnikDirect" id="SpravochnikDirectButton" class="btn btn-primary" type="button">Справочник кодов</button>
                         </div>
                       </div>
                       
@@ -287,7 +287,7 @@
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" v-model="newDirectClassificationCode" disabled></textarea>
+                        <textarea class="form-control height100" v-model="newDirectClassificationName" disabled></textarea>
                       </div>
                     </div>
                   </div>
@@ -310,8 +310,11 @@
                   <button @click="exportHistoryExcel" class="btn btn-secondary" type="button">Выгрузить дефект в Excel</button>
                 </span>
                 <span class="verticalLine1" :hidden='isDisabledFinishDefect'></span>
+                <span class="d-inline-block" tabindex="0" data-toggle="popover_close1" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна только если дефект локализован!">
+                  <button @click="infoDefect" id="infoCancelDefectButton" :hidden='isDisabledCloseDefect2' class="btn btn-info margin-right" type="button">Инфо по ВМ</button>
+                </span>
                 <span class="d-inline-block" tabindex="0" data-toggle="popover_close1" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна только для владельца обордования">
-                  <button @click="requiresSolution" id="finishCancelDefectButton" :hidden='isDisabledFinishDefect' class="btn btn-warning margin-right" type="button">Вернуть в работу</button>
+                  <button @click="requiresSolution" :hidden='isDisabledFinishDefect' class="btn btn-warning margin-right" type="button">Вернуть в работу</button>
                 </span>
                 <span class="d-inline-block" tabindex="0" data-toggle="popover_close1" data-bs-trigger="hover focus" data-bs-content="Закрыть дефект может владелец обордования">
                   <button @click="closeDefect" id="closeCloseDefectButton" :hidden='isDisabledCloseDefect' class="btn btn-success" type="button">Закрыть дефект</button>

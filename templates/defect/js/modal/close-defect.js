@@ -186,21 +186,25 @@ const appCloseDefect = Vue.createApp({
       clickbuttonclassification () {
         setSettingClickButtonClassification(this)
       },
-      clickbuttonspravochnikcore() {
+      clickButtonSpravochnikCore() {
         appVueSpravochnikCore.clicklinkpage1();
         appVueSpravochnikCore.parent_button_close_modal_name = 'closeModalCloseDefect';
         var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindowCore'), {
           keyboard: false
         })
+        appVueSpravochnikCore.parentVueObject = this;
+        appVueSpravochnikDirect.parentVueObject = this;
         myModal.show()
-      }, /* clickbuttonspravochnikcore */
-      clickbuttonspravochnikdirect() {
+      }, /* clickButtonSpravochnikCore */
+      clickButtonSpravochnikDirect() {
         appVueSpravochnikDirect.parent_button_close_modal_name = 'closeModalCloseDefect';
         var myModal = new bootstrap.Modal(document.getElementById('SpavochnikModalWindowDirect'), {
           keyboard: false
         })
+        appVueSpravochnikCore.parentVueObject = this;
+        appVueSpravochnikDirect.parentVueObject = this;
         myModal.show()
-      }, /* clickbuttonspravochnikdirect */
+      }, /* clickButtonSpravochnikDirect */
       closeDefect() {
         Swal.fire({
           title: "Закрыть дефект?",
@@ -208,7 +212,6 @@ const appCloseDefect = Vue.createApp({
           confirmButtonText: "ПОДТВЕРЖДАЮ",
           denyButtonText: `ОТМЕНА`
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           old_defect_category_defect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : this.cardDefect.defect_category_defect
 
           if (result.isConfirmed) {
@@ -304,7 +307,6 @@ const appCloseDefect = Vue.createApp({
           confirmButtonText: "ДА",
           denyButtonText: `НЕТ`
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
             data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[8].status_defect_name}}
             axios

@@ -12,8 +12,8 @@
         <div class="modal-body modal-body1">
           <form method="post">
             <div class="block_nav_modal">
-              <button @click="clickbuttonmain" type="button" id="isHiddenblockhistory" class="btn margin" :class="backgroundMainButtonCCS" >Общая информация</button>
-              <button @click="clickbuttonhistory" type="button" id="isHiddenblockmain" class="btn margin" :class="backgroundHistoryButtonCCS">История дефекта</button>
+              <button @click="clickbuttonmain" type="button" id="isHiddenblockExecHistory" class="btn margin" :class="backgroundMainButtonCCS" >Общая информация</button>
+              <button @click="clickbuttonhistory" type="button" id="isHiddenblockExecMain" class="btn margin" :class="backgroundHistoryButtonCCS">История дефекта</button>
               <button @click="clickbuttonclassification" type="button" class="btn margin" :class="backgroundСlassificationButtonCCS">Классификация дефекта</button>
             </div>
             <div :class="{ hidden: isHiddenblockmain == 'true' }" :hidden='isHiddenblockmain == "true"'>
@@ -128,11 +128,11 @@
                         <div class="block_input_data">
                           <b class="label">Срок устранения</b>
                         </div>
-                        <input id="date" class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
+                        <input class="form-control" type="date" v-model="cardDatePlannedFinish" disabled :hidden='cardPPR'>
                       </div>
                       <div class="block_checkbox block_checkbox1">
                         <div class="form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false disabled>
+                          <input class="form-check-input" type="checkbox" v-model="isHiddenDate" true-value=true false-value=false disabled>
                           <label class="form-check-label margin-right" for="flexCheckChecked">Будет устранен в ППР</label>
                         </div>
                       </div>

@@ -27,7 +27,7 @@ const appInfoDefect = Vue.createApp({
           }
         }, /* changeTextWork */
         setLimit(){
-          var myText = document.getElementById("correction-text");
+          var myText = document.getElementById("info-text");
           var result = document.getElementById("correction-result");
           var limit = 200;
           result.textContent = 0 + "/" + limit;

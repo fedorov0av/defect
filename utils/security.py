@@ -1,6 +1,6 @@
 import bcrypt
 
-def get_hash_salt(password:str) -> tuple[str, str]:
+def get_hash_salt(password:str) -> tuple[str, str]: # для хеширования пароля и получения соли
     salt: bytes = bcrypt.gensalt(12)
     password_b: bytes = password.encode()
     hashed: bytes = bcrypt.hashpw(password_b, salt)
@@ -12,6 +12,3 @@ def check_password(user, text:str) -> bool: # user: db.user.User
         return True
     else:
         return False
-
-if __name__ == "__main__":
-    pass

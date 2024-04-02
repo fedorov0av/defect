@@ -152,11 +152,11 @@
                             <b class="zvezda"> * </b>
                           </div>
                           <!-- <input id="date" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardDatePlannedFinish !== null, 'is-invalid': this.check_date == 1 & newCardDatePlannedFinish === null }" class="form-control" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'> -->
-                          <input id="date" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardDatePlannedFinish !== null, 'is-invalid': newCardDatePlannedFinish === null }" class="form-control" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
+                          <input :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardDatePlannedFinish !== null, 'is-invalid': newCardDatePlannedFinish === null }" class="form-control" :class="{ hidden: isHiddenDate == 'true' }" type="date" v-model="newCardDatePlannedFinish" :disabled='isDisabledConfirmDefect' :hidden='isHiddenDate == "true"'>
                         </div>
                         <div class="block_checkbox block_checkbox1">
                           <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="changeCheckbox" v-model="isHiddenDate" true-value=true false-value=false :disabled="newPnr===true || isDisabledConfirmDefect===true">
+                            <input class="form-check-input" type="checkbox" v-model="isHiddenDate" true-value=true false-value=false :disabled="newPnr===true || isDisabledConfirmDefect===true">
                             <label class="form-check-label margin-right" for="flexCheckChecked">Будет устранен в ППР</label>
                           </div>
                         </div>
@@ -282,11 +282,10 @@
                             <b class="label">Код причины</b> 
                           </div>
                           <div class="block_row1">
-                            <select class="form-select block_theme width300px" @change="changeCoreClassificationCode" v-model="newCoreClassificationCode" :disabled='isDisabledConfirmDefect'>
-                              <option disabled :value="0" selected>Выберите код причины</option>
-                              <option v-for="category_reason in categories_reason"  :value="category_reason.category_reason_code">{{ category_reason.category_reason_code + ' ' +  category_reason.category_reason_name}}</option>
-                            </select> 
-                            <button @click="clickbuttonspravochnikcore" class="btn btn-primary" type="button">Справочник кодов</button> 
+                            <select class="form-select block_theme width300px" v-model="newCoreClassificationCode" disabled>
+                              <option :value="newCoreClassificationCode">{{ newCoreClassificationCode }}</option>
+                            </select>
+                            <button @click="clickButtonSpravochnikCore" class="btn btn-primary" type="button">Справочник кодов</button> 
                           </div>
                         </div>
 
@@ -294,7 +293,7 @@
                           <div class="block_input_data">
                             <b class="label">Причина события</b>
                           </div>
-                          <textarea class="form-control height100 textareanoneresize" v-model="newCoreClassificationName" aria-label="Disabled input example" disabled></textarea>
+                          <textarea class="form-control height100" v-model="newCoreClassificationName" disabled></textarea>
                         </div>
                       </div>
                     </div>
@@ -304,23 +303,21 @@
                     <div class="block_row componentWraper5">
                       <div class="block_data_column4">
                         <div class="block_data_column">
-                          <div class="block_input_data">
+                          <div class="block_input_data"> 
                             <b class="label">Код причины</b>
                           </div>
                           <div class="block_row1">
-                            <select class="form-select block_theme width300px" @change="changeDirectClassificationCode" v-model="newDirectClassificationCode" :disabled='isDisabledConfirmDefect'>
-                              <option disabled :value="0" selected>Выберите код причины</option>
-                              <option v-for="category_reason_direct in categories_reason_direct" :value="category_reason_direct.category_reason_code">{{ category_reason_direct.category_reason_code + ' ' +  category_reason_direct.category_reason_name }}</option>
-                            </select> 
-                            <!-- <input type="text" class="form-control" placeholder="Введите код причины" v-model="newDirectClassificationCode"> -->
-                            <button @click="clickbuttonspravochnikdirect" class="btn btn-primary" type="button">Справочник кодов</button>
+                            <select class="form-select block_theme width300px" v-model="newDirectClassificationCode" disabled>
+                              <option :value="newDirectClassificationCode">{{ newDirectClassificationCode }}</option>
+                            </select>
+                            <button @click="clickButtonSpravochnikDirect" class="btn btn-primary" type="button">Справочник кодов</button>
                           </div>
                         </div>
                         <div class="block_data_column">
                           <div class="block_input_data">
                             <b class="label">Причина события</b>
                           </div>
-                          <textarea class="form-control height100 textareanoneresize" v-model="newDirectClassificationName" disabled></textarea>
+                          <textarea class="form-control height100" v-model="newDirectClassificationName" disabled></textarea>
                         </div>
                       </div>
                     </div>

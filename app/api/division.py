@@ -10,7 +10,7 @@ from app.middleware.auth import check_auth_api
 division_router = APIRouter()
 
 @division_router.post("/divisions/")
-async def get_divisions(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
+async def get_divisions(request: Request, response: Response, session: AsyncSession = Depends(get_db)) -> list[dict]:
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     result: list[Division] = await Division.get_all_division(session)
     division_l = list()

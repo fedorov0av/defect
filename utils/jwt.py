@@ -23,7 +23,7 @@ refresh_security = JwtRefreshBearerCookie(
     refresh_expires_delta=timedelta(minutes=TIME_REFRESH_TIME_TOKEN)  # change access token validation timedelta
 )
 
-async def decode_token(jwt_token:str) -> dict:
+async def decode_token(jwt_token:str) -> dict: # создание токена
     decoded_data = jwt.decode(jwt=jwt_token,
                               key=SECRET_KEY,
                               algorithms=["HS256"])

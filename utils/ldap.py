@@ -42,7 +42,7 @@ class LdapConnection:
         self.users = {}
         self.session = session
 
-    def start_connection(self): # осуществляем соединение
+    def start_connection(self) -> bool: # осуществляем соединение
         try:
             self.ldap_connection = Connection(server, user=f"MBU\\{self.username}", password=self.password, client_strategy=ASYNC, auto_bind=True)
             if not UsersLDAP.get_users():
@@ -76,7 +76,7 @@ class LdapConnection:
             except IndexError as err:
                 print('err=== ', err)
 
-    async def get_user_by_mail_from_AD(self, mail: str) -> Entry:
+    async def get_user_by_mail_from_AD(self, mail: str) -> Entry: # получение пользователя с AD по mail
         message_id = self.ldap_connection.search(SEARCH_BASE, f"(mail={mail})", attributes=ATTRS_USER)
         raw_user = self.ldap_connection.get_response(message_id)[0]
         user = raw_user['attributes']
