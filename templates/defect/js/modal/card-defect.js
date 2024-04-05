@@ -57,6 +57,7 @@ const appCardDefect = Vue.createApp({
     },
     methods: {
       updateTables() {
+        this.cardHistorys = getDataCardHistoryes();
         updateTableDivision(this.defect_divisions);
         updateTableTypeDefect(this.defect_type_defects);
         updateTableStatusDefect(this.statuses_defect);

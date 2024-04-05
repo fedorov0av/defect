@@ -97,6 +97,7 @@ const appExecutionDefect = Vue.createApp({
         });
       }, /* setPopover */
       updateTables() {
+        cardHistorys = getDataCardHistoryes();
         updateTableDivision(this.defect_divisions);
         updateTableTypeDefect(this.defect_type_defects);
         updateTableStatusDefect(this.statuses_defect);

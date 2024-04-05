@@ -71,6 +71,10 @@ const appVueFilter = Vue.createApp({
 
         }, /* searchResponsibleMainTable */
         useFilter() {
+          if (this.dataSearch !== ''){
+            this.searchResponsibleMainTable()
+            return
+          }
           if (this.startDate !== null && this.endDate !== null) {
             if (this.startDate >= this.endDate) {
               if (this.startDate != this.endDate){
@@ -104,10 +108,11 @@ const appVueFilter = Vue.createApp({
                     appVueDefect.defects[defect].defect_status.status_defect_name === 'Устранен' ||
                     appVueDefect.defects[defect].defect_status.status_defect_name === 'Закрыт' ||
                     appVueDefect.defects[defect].defect_status.status_defect_name === 'Требует решения'||
-                    appVueDefect.defects[defect].defect_status.status_defect_name === 'Не устранен'||
+                    /* appVueDefect.defects[defect].defect_status.status_defect_name === 'Не устранен'|| */
                     appVueDefect.defects[defect].defect_status.status_defect_name === 'Локализован'){
                     responsible = appVueDefect.defects[defect].defect_owner;
-                } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Адресован'){
+                } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Адресован' ||
+                appVueDefect.defects[defect].defect_status.status_defect_name === 'Не устранен'){
                   responsible = appVueDefect.defects[defect].defect_repair_manager.user_surname + ' ' + appVueDefect.defects[defect].defect_repair_manager.user_name;
                 } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Назначен исполнитель' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Принят в работу'){
                   responsible = appVueDefect.defects[defect].defect_worker.user_surname + ' ' + appVueDefect.defects[defect].defect_worker.user_name;

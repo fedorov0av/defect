@@ -136,35 +136,29 @@ const appVueDefect = Vue.createApp({
             let responsible = null;
             for (defect in this.defects) {
               if (
-                this.defects[defect].defect_status.status_defect_name ===
-                  "Зарегистрирован" ||
-                this.defects[defect].defect_status.status_defect_name ===
-                  "Устранен" ||
-                this.defects[defect].defect_status.status_defect_name ===
-                  "Закрыт"
+                this.defects[defect].defect_status.status_defect_name === "Зарегистрирован" ||
+                this.defects[defect].defect_status.status_defect_name === "Устранен" ||
+                this.defects[defect].defect_status.status_defect_name === "Закрыт"
               ) {
                 responsible = this.defects[defect].defect_owner;
               } else if (
-                this.defects[defect].defect_status.status_defect_name ===
-                "Адресован"
+                this.defects[defect].defect_status.status_defect_name === "Адресован" ||
+                this.defects[defect].defect_status.status_defect_name === "Не устранен"
               ) {
                 responsible =
                   this.defects[defect].defect_repair_manager.user_surname +
                   " " +
                   this.defects[defect].defect_repair_manager.user_name;
               } else if (
-                this.defects[defect].defect_status.status_defect_name ===
-                  "Назначен исполнитель" ||
-                this.defects[defect].defect_status.status_defect_name ===
-                  "Принят в работу"
+                this.defects[defect].defect_status.status_defect_name === "Назначен исполнитель" ||
+                this.defects[defect].defect_status.status_defect_name === "Принят в работу"
               ) {
                 responsible =
                   this.defects[defect].defect_worker.user_surname +
                   " " +
                   this.defects[defect].defect_worker.user_name;
               } else if (
-                this.defects[defect].defect_status.status_defect_name ===
-                "Работы завершены"
+                this.defects[defect].defect_status.status_defect_name === "Работы завершены"
               ) {
                 responsible = "ОП " + this.defects[defect].defect_owner;
               }
@@ -172,8 +166,7 @@ const appVueDefect = Vue.createApp({
 
               let date_background = null;
               if (
-                this.defects[defect].defect_planned_finish_date !==
-                  "Устр. в ППР" &&
+                this.defects[defect].defect_planned_finish_date !== "Устр. в ППР" &&
                 this.defects[defect].defect_planned_finish_date !== null
               ) {
                 let now = new Date();
@@ -319,13 +312,13 @@ const appVueDefect = Vue.createApp({
               this.defects[defect].defect_status.status_defect_name === "Зарегистрирован" ||
               this.defects[defect].defect_status.status_defect_name === "Устранен" ||
               this.defects[defect].defect_status.status_defect_name === "Закрыт"||
-              this.defects[defect].defect_status.status_defect_name === 'Не устранен'||
+              /* this.defects[defect].defect_status.status_defect_name === 'Не устранен'|| */
               this.defects[defect].defect_status.status_defect_name === 'Локализован'
             ) {
               responsible = this.defects[defect].defect_owner;
             } else if (
-              this.defects[defect].defect_status.status_defect_name ===
-              "Адресован"
+              this.defects[defect].defect_status.status_defect_name === "Адресован" ||
+              this.defects[defect].defect_status.status_defect_name === 'Не устранен'
             ) {
               responsible =
                 this.defects[defect].defect_repair_manager.user_surname +

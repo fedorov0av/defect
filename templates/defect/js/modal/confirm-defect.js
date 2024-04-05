@@ -120,8 +120,8 @@ const appConfirmDefect = Vue.createApp({
         this.newCardKKS = '';
         if (event.target.value) {this.style_input_type = "lime"};
       }, /* changeTextWork */
-      changeTextWork15(event){
-        if (event.target.value.length > 15) {event.target.value = event.target.value.slice(0, 15);}
+      changeTextWork40(event){
+        if (event.target.value.length > 40) {event.target.value = event.target.value.slice(0, 40);}
       }, /* changeTextWork15 */
       changeTextWork100(event){
         if (event.target.value.length > 100) {event.target.value = event.target.value.slice(0, 100);}
@@ -162,6 +162,7 @@ const appConfirmDefect = Vue.createApp({
         this.newDirectClassificationCode = '';
       }, /* clearData */
       updateTables() {
+        this.cardHistorys = getDataCardHistoryes();
         updateTableDivision(this.defect_divisions);
         updateTableTypeDefect(this.defect_type_defects);
         updateTableStatusDefect(this.statuses_defect);
@@ -314,15 +315,19 @@ const appConfirmDefect = Vue.createApp({
           confirmButtonText: "ПОДТВЕРЖДАЮ",
           denyButtonText: `ОТМЕНА`
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           const repair_managers_array = Object.values(this.repair_managers); 
           repairManager = this.repairManager_id != 0 ? this.repair_managers[repair_managers_array.findIndex(p => p.user_id == this.repairManager_id)].user_surname+' '+this.repair_managers[repair_managers_array.findIndex(p => p.user_id == this.repairManager_id)].user_name : ''
           newRepairManager = this.newRepairManager_id != 0 ? this.repair_managers[repair_managers_array.findIndex(p => p.user_id == this.newRepairManager_id)].user_surname+' '+this.repair_managers[repair_managers_array.findIndex(p => p.user_id == this.newRepairManager_id)].user_name : ''
 
-          old_defect_category_defect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : this.cardDefect.defect_category_defect
-
           if (result.isConfirmed) {
-            textHistory = ''
+            let textHistory = '';
+            const oldCategoryDefectId = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : null;
+            const oldClassSystemName = this.cardDefect.defect_system_klass;
+            const oldCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : null;
+            const oldCoreClassificationName = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_name : "НЕТ";
+            const oldDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : null;
+            const oldDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : "НЕТ";
+            
             if (this.newCardTypeDefectName !== this.cardTypeDefectName){
               textHistory = textHistory+'Тип дефекта изменился с "'+this.cardTypeDefectName+'" на "'+this.newCardTypeDefectName+'"\n';
             }
@@ -353,20 +358,34 @@ const appConfirmDefect = Vue.createApp({
             if (this.cardDefect.defect_exploitation !== this.newExploitation){
               textHistory = textHistory+'Влияет на режим нормальной эксплуатации изменился с "'+(this.cardDefect.defect_exploitation ? "ДА": "НЕТ")+'" на "'+(this.newExploitation ? "ДА": "НЕТ")+'"\n';
             }
-            if (this.newCategoryDefect_id !== old_defect_category_defect_id){
-              textHistory = textHistory+'Категория дефекта изменилась с "'+old_defect_category_defect_id ? old_defect_category_defect_id : "НЕТ" +'" на "'+this.categories_defect[this.newCategoryDefect_id-1].category_defect_name+'"\n';
+            if (this.newCategoryDefect_id !== oldCategoryDefectId && this.newCategoryDefect_id !== 0) {
+              const oldCategoryDefectName = oldCategoryDefectId ? this.categories_defect[oldCategoryDefectId - 1].category_defect_name : "НЕТ";
+              const newCategoryDefectName = this.categories_defect[this.newCategoryDefect_id - 1].category_defect_name;
+              textHistory += `Категория дефекта изменилась с "${oldCategoryDefectName}" на "${newCategoryDefectName}"\n`;
             }
-            if (this.newClassSystemName !== this.cardDefect.defect_system_klass){
-              textHistory = textHistory+'Класс оборудования изменился с "'+this.cardDefect.defect_system_klass+'" на "'+this.newClassSystemName+'"\n';
+        
+            if ((this.newClassSystemName !== oldClassSystemName && this.newClassSystemName !== '') || (!oldClassSystemName && this.newClassSystemName !== '')) {
+                if (oldClassSystemName) {
+                    textHistory += `Класс оборудования изменился с "${oldClassSystemName}" на "${this.newClassSystemName}"\n`;
+                } else {
+                    textHistory += `Класс оборудования был добавлен: "${this.newClassSystemName}"\n`;
+                }
             }
-            if (this.cardDefect.defect_core_category_reason !== null ? this.cardDefect.defect_core_category_reason.category_reason_code : '' !== this.newCoreClassificationCode){
-              textHistory = textHistory+'Код категории коренной причины изменился с "'+(this.cardDefect.defect_core_category_reason !== null ? this.cardDefect.defect_core_category_reason.category_reason_code : '')+'" на "'+this.newCoreClassificationCode+'"\n';
+        
+            if (this.newCoreClassificationCode && this.newCoreClassificationName && (this.newCoreClassificationCode !== oldCoreClassificationCode || this.newCoreClassificationName !== oldCoreClassificationName)) {
+                if (oldCoreClassificationCode !== null || oldCoreClassificationName !== "НЕТ") {
+                    textHistory += `Коренная причина дефекта изменилась с "${oldCoreClassificationCode} ${oldCoreClassificationName}" на "${this.newCoreClassificationCode} ${this.newCoreClassificationName}"\n`;
+                } else {
+                    textHistory += `Коренная причина дефекта была добавлена: "${this.newCoreClassificationCode} ${this.newCoreClassificationName}"\n`;
+                }
             }
-            if (this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_code : '' !== this.newDirectClassificationCode){
-              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+(this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_code : '')+'" на "'+this.newDirectClassificationCode+'"\n';
-            }
-            if (this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : '' !== this.newDirectClassificationName){
-              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+(this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : '')+'" на "'+this.newDirectClassificationName+'"\n';
+        
+            if (this.newDirectClassificationCode && this.newDirectClassificationName && (this.newDirectClassificationCode !== oldDirectClassificationCode || this.newDirectClassificationName !== oldDirectClassificationName)) {
+                if (oldDirectClassificationCode !== null || oldDirectClassificationName !== "НЕТ") {
+                    textHistory += `Непосредственная причина дефекта изменилась с "${oldDirectClassificationCode} ${oldDirectClassificationName}" на "${this.newDirectClassificationCode} ${this.newDirectClassificationName}"\n`;
+                } else {
+                    textHistory += `Непосредственная причина дефекта была добавлена: "${this.newDirectClassificationCode} ${this.newDirectClassificationName}"\n`;
+                }
             }
             if (this.cardDatePlannedFinish !== this.newCardDatePlannedFinish && this.cardStatusDefectName == 'Требует решения'){
               if (this.cardDatePlannedFinish === null){
@@ -423,7 +442,7 @@ const appConfirmDefect = Vue.createApp({
                 "type_defect_name": this.newCardTypeDefectName !== this.cardTypeDefectName ? this.newCardTypeDefectName : null
               },
               "category_defect_id": {
-                "category_defect_id": this.newCategoryDefect_id !== old_defect_category_defect_id ? this.newCategoryDefect_id : old_defect_category_defect_id
+                "category_defect_id": this.newCategoryDefect_id !== oldCategoryDefectId ? this.newCategoryDefect_id : oldCategoryDefectId
               },
               "class_system_name": {
                 "class_system_name": this.newClassSystemName !== this.cardDefect.defect_system_klass ?
@@ -453,7 +472,6 @@ const appConfirmDefect = Vue.createApp({
             .post('/confirm_defect', data)
             .then(response => {
                 document.getElementById('closeConfirmDefectModalWindow').click();
-                /* appVueDefect.updateTables() */
                 appVueFilter.useFilter()
                 Swal.fire("Дефект подтвержден", "", "success");
                   })
@@ -481,7 +499,6 @@ const appConfirmDefect = Vue.createApp({
           confirmButtonText: "ДА",
           denyButtonText: `НЕТ`
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
             data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[8].status_defect_name}}
             axios

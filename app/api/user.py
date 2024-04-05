@@ -49,6 +49,7 @@ async def get_current_user_role(request: Request, response: Response, session: A
         user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
+    print(user.user_role)
     return {
             "user_id": user.user_id,
             "user_role": user.user_role[-1].role_name,

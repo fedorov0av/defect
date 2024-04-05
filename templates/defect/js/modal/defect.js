@@ -81,6 +81,11 @@ const appVueAddDefect = Vue.createApp({
           event.target.value = event.target.value.slice(0, 200);
         }
       }, /* changeTextWork200 */
+      changeTextWork40(event){
+        if (event.target.value.length > 40){
+          event.target.value = event.target.value.slice(0, 40);
+        }
+      }, /* changeTextWork40 */
       setLimitNotes(event){
         setLimit("my-notes", "notes", 200)
       }, /* setLimitNotes */

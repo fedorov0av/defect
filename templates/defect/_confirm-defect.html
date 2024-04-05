@@ -269,7 +269,7 @@
                         <div class="block_input_data">
                           <b class="label">Классификация оборудования по НП-001-97</b>
                         </div>
-                        <input type="text" class="form-control" @input="changeTextWork15" placeholder="Введите классификацию оборудования" v-model="newClassSystemName" :disabled='isDisabledConfirmDefect'>
+                        <input type="text" class="form-control" @input="changeTextWork40" placeholder="Введите классификацию оборудования" v-model.lazy="newClassSystemName" :disabled='isDisabledConfirmDefect'>
                       </div>
                     </div>
                     <br>

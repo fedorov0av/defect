@@ -34,7 +34,7 @@ const appVueHead = Vue.createApp({
           this.currentUserRole = this.currentUser.user_role;
           if (this.currentUser.user_email == 'A.Fedorov@akkuyu.com') {
             this.fedorovCSS = true;
-          }
+          } // мега ФИЧА Вадима
         })
       if (typeof(appVueFilter) !== 'undefined'){
         appVueFilter.useFilter();

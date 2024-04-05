@@ -63,7 +63,7 @@ class Defect(Base):
     defect_division: Mapped["Division"] = relationship(foreign_keys=[defect_division_id]) #  для работы с таблицей User как с объектом
     defect_system_id: Mapped[int] = mapped_column(ForeignKey("system.system_id")) # вид дефекта
     defect_system: Mapped["System"] = relationship(foreign_keys=[defect_system_id]) #  для работы с таблицей System как с объектом
-    defect_system_klass: Mapped[str] = mapped_column(String(30), nullable=True) # Класс оборудования по 'НП-00-97'
+    defect_system_klass: Mapped[str] = mapped_column(String(50), nullable=True) # Класс оборудования по 'НП-00-97'
     defect_category_defect_id: Mapped[int] = mapped_column(ForeignKey("category_defect.category_defect_id"), nullable=True) # code из таблицы CategoryDefect
     defect_category_defect: Mapped["CategoryDefect"] = relationship(foreign_keys=[defect_category_defect_id]) #  для работы с таблицей CategoryDefect как с объектом
     defect_core_category_reason_code: Mapped[str] = mapped_column(ForeignKey("category_core_reason.category_reason_code"), nullable=True) # code из таблицы CategoryCoreReason

@@ -115,6 +115,7 @@ const appFinishWorkDefect = Vue.createApp({
         setLimit("my-text", "result", 200)
       }, /* setlimit*/
       updateTables() {
+        cardHistorys = getDataCardHistoryes();
         updateTableDivision(this.defect_divisions);
         updateTableTypeDefect(this.defect_type_defects);
         updateTableStatusDefect(this.statuses_defect);

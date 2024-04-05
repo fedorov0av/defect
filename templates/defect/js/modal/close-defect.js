@@ -34,10 +34,10 @@ const appCloseDefect = Vue.createApp({
         cardChecker: {}, /* Для отображения ВЫПОЛНИЛ ПРОВЕРКУ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
         cardCheckerDescription: {}, /* Для отображения РЕЗУЛЬТАТ ПРОВЕРКИ в карточке !! ПОКА В БД НЕТ ИНФОРМАЦИИ !! */
         newRepairManager_id: 0, /* Для хранения ID РУКОВОДИТЕЛЯ РЕМОНТА в карточке  */
-        newCoreClassificationCode: '',
-        newCoreClassificationName: '',
         newCategoryDefect_id: 0,
         newClassSystemName: '',
+        newCoreClassificationCode: '',
+        newCoreClassificationName: '',
         newDirectClassificationCode: '',   
         newDirectClassificationName: '', 
         cardHistorys: getDataCardHistoryes(),        
@@ -54,7 +54,6 @@ const appCloseDefect = Vue.createApp({
       }
     },
     mounted() {
-      
       this.setPopover();
       this.isHiddenblockhistory = 'true';
       this.isHiddenblockclassification  = 'true';
@@ -82,6 +81,7 @@ const appCloseDefect = Vue.createApp({
         });
       }, /* setPopover */
       updateTables() {
+        this.cardHistorys = getDataCardHistoryes();
         updateTableDivision(this.defect_divisions);
         updateTableTypeDefect(this.defect_type_defects);
         updateTableStatusDefect(this.statuses_defect);
@@ -91,16 +91,9 @@ const appCloseDefect = Vue.createApp({
         this.updateCardDefect();
         this.clickbuttonmain();
       }, /* updateTables */
-      changeCoreClassificationCode(event){
-        const categories_reason_array = Object.values(this.categories_reason);
-        category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === event.target.value)
-        this.newCoreClassificationName = category_reason[0].category_reason_name
-      },
-      changeDirectClassificationCode(event){
-        const categories_reason_array_direct = Object.values(this.categories_reason_direct); 
-        category_reason_direct = categories_reason_array_direct.filter((category_reason_direct) => category_reason_direct.category_reason_code === event.target.value)
-        this.newDirectClassificationName = category_reason_direct[0].category_reason_name
-      },
+      changeTextWork40(event){
+        if (event.target.value.length > 40) {event.target.value = event.target.value.slice(0, 40);}
+      }, /* changeTextWork15 */
       updateCardDefect() {
         axios
           .post('/get_defect/',{
@@ -212,75 +205,82 @@ const appCloseDefect = Vue.createApp({
           confirmButtonText: "ПОДТВЕРЖДАЮ",
           denyButtonText: `ОТМЕНА`
         }).then((result) => {
-          old_defect_category_defect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : this.cardDefect.defect_category_defect
-
           if (result.isConfirmed) {
-            textHistory = ''
-            if (this.newCategoryDefect_id !== old_defect_category_defect_id){
-              textHistory = textHistory+'Категория дефекта изменилась с "'+old_defect_category_defect_id ? old_defect_category_defect_id : "НЕТ" +'" на "'+this.categories_defect[this.newCategoryDefect_id-1].category_defect_name+'"\n';
+            let textHistory = '';
+            const oldCategoryDefectId = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : null;
+            const oldClassSystemName = this.cardDefect.defect_system_klass;
+            const oldCoreClassificationCode = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : null;
+            const oldCoreClassificationName = this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_name : "НЕТ";
+            const oldDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : null;
+            const oldDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : "НЕТ";
+        
+            if (this.newCategoryDefect_id !== oldCategoryDefectId && this.newCategoryDefect_id !== 0) {
+                const oldCategoryDefectName = oldCategoryDefectId ? this.categories_defect[oldCategoryDefectId - 1].category_defect_name : "НЕТ";
+                const newCategoryDefectName = this.categories_defect[this.newCategoryDefect_id - 1].category_defect_name;
+                textHistory += `Категория дефекта изменилась с "${oldCategoryDefectName}" на "${newCategoryDefectName}"\n`;
             }
-            if (this.newClassSystemName !== this.cardDefect.defect_system_klass){
-              textHistory = textHistory+'Класс оборудования изменился с "'+this.cardDefect.defect_system_klass+'" на "'+this.newClassSystemName+'"\n';
+        
+            if ((this.newClassSystemName !== oldClassSystemName && this.newClassSystemName !== '') || (!oldClassSystemName && this.newClassSystemName !== '')) {
+                if (oldClassSystemName) {
+                    textHistory += `Класс оборудования изменился с "${oldClassSystemName}" на "${this.newClassSystemName}"\n`;
+                } else {
+                    textHistory += `Класс оборудования был добавлен: "${this.newClassSystemName}"\n`;
+                }
             }
-            if (this.cardDefect.defect_core_category_reason !== null ? this.cardDefect.defect_core_category_reason.category_reason_code : '' !== this.newCoreClassificationCode){
-              textHistory = textHistory+'Код категории коренной причины изменился с "'+(this.cardDefect.defect_core_category_reason !== null ? this.cardDefect.defect_core_category_reason.category_reason_code : '')+'" на "'+this.newCoreClassificationCode+'"\n';
+        
+            if (this.newCoreClassificationCode && this.newCoreClassificationName && (this.newCoreClassificationCode !== oldCoreClassificationCode || this.newCoreClassificationName !== oldCoreClassificationName)) {
+                if (oldCoreClassificationCode !== null || oldCoreClassificationName !== "НЕТ") {
+                    textHistory += `Коренная причина дефекта изменилась с "${oldCoreClassificationCode} ${oldCoreClassificationName}" на "${this.newCoreClassificationCode} ${this.newCoreClassificationName}"\n`;
+                } else {
+                    textHistory += `Коренная причина дефекта была добавлена: "${this.newCoreClassificationCode} ${this.newCoreClassificationName}"\n`;
+                }
             }
-            if (this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_code : '' !== this.newDirectClassificationCode){
-              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+(this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_code : '')+'" на "'+this.newDirectClassificationCode+'"\n';
+        
+            if (this.newDirectClassificationCode && this.newDirectClassificationName && (this.newDirectClassificationCode !== oldDirectClassificationCode || this.newDirectClassificationName !== oldDirectClassificationName)) {
+                if (oldDirectClassificationCode !== null || oldDirectClassificationName !== "НЕТ") {
+                    textHistory += `Непосредственная причина дефекта изменилась с "${oldDirectClassificationCode} ${oldDirectClassificationName}" на "${this.newDirectClassificationCode} ${this.newDirectClassificationName}"\n`;
+                } else {
+                    textHistory += `Непосредственная причина дефекта была добавлена: "${this.newDirectClassificationCode} ${this.newDirectClassificationName}"\n`;
+                }
             }
-            if (this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : '' !== this.newDirectClassificationName){
-              textHistory = textHistory+'Код категории непосредственной причины изменился с "'+(this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : '')+'" на "'+this.newDirectClassificationName+'"\n';
-            }
-            data = { 
-                  "defect_id": {
+            data = {
+                "defect_id": {
                     "defect_id": this.defect_id
-                  },
-                  "status_name": {
+                },
+                "status_name": {
                     "status_defect_name": this.statuses_defect[9].status_defect_name
-                  },
-                  "category_defect_id": {
-                    "category_defect_id": this.newCategoryDefect_id !== old_defect_category_defect_id ? this.newCategoryDefect_id : old_defect_category_defect_id
-                  },
-                  "class_system_name": {
-                    "class_system_name": this.newClassSystemName !== this.cardDefect.defect_system_klass ?
-                                         this.newClassSystemName !== '' ? this.newClassSystemName : null:
-                                         this.cardDefect.defect_system_klass !== null ? this.cardDefect.defect_system_klass : null
-                  },
-                  "core_classification_code": {
-                    "core_rarery_code": (this.cardDefect.defect_core_category_reason ? this.cardDefect.defect_core_category_reason.category_reason_code : '') !== this.newCoreClassificationCode ?
-                                        this.newCoreClassificationCode !== '0' ? this.newCoreClassificationCode : null :
-                                        this.cardDefect.defect_core_category_reason !== null ? this.cardDefect.defect_core_category_reason.category_reason_code : null
-                  },
-                  "direct_classification_code": {
-                    "direct_rarery_code": (this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '') !== this.newDirectClassificationCode ?
-                                        this.newDirectClassificationCode !== '0' ? this.newDirectClassificationCode : null :
-                                        this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : null
-                  },
-                   /* "direct_classification_name": {
-                    "direct_rarery_name": (this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '') !== this.newDirectClassificationName ?
-                                        this.newDirectClassificationName !== '' ? this.newDirectClassificationName : null :
-                                        this.cardDefect.defect_direct_category_reason !== null ? this.cardDefect.defect_direct_category_reason.category_reason_name : null
-                  },  */
-                  "comment": {
+                },
+                "category_defect_id": {
+                    "category_defect_id": this.newCategoryDefect_id !== oldCategoryDefectId ? this.newCategoryDefect_id : oldCategoryDefectId
+                },
+                "class_system_name": {
+                    "class_system_name": this.newClassSystemName !== oldClassSystemName ? (this.newClassSystemName !== '' ? this.newClassSystemName : null) : (oldClassSystemName !== null ? oldClassSystemName : null)
+                },
+                "core_classification_code": {
+                    "core_rarery_code": this.newCoreClassificationCode !== oldCoreClassificationCode ? (this.newCoreClassificationCode !== '' ? this.newCoreClassificationCode : null) : (oldCoreClassificationCode !== null ? oldCoreClassificationCode : null)
+                },
+                "direct_classification_code": {
+                    "direct_rarery_code": this.newDirectClassificationCode !== oldDirectClassificationCode ? (this.newDirectClassificationCode !== '' ? this.newDirectClassificationCode : null) : (oldDirectClassificationCode !== null ? oldDirectClassificationCode : null)
+                },
+                "comment": {
                     "comment": textHistory !== '' ? textHistory : null
-                  }
-                  }
+                }
+              };
             axios
             .post('/close_defect', data)
             .then(response => {
                 document.getElementById('closeCloseDefectModalWindow').click();
-                /* appVueDefect.updateTables() */
-                appVueFilter.useFilter()
+                appVueFilter.useFilter();
                 Swal.fire("ДЕФЕКТ ЗАКРЫТ", "", "success");
                   })
             .catch(err => {
-                    if (err.response.status === 401){
+                    if (err.response.status === 401) {
                       window.location.href = "/";
                     } else {
                       Swal.fire({html:"<b>Произошла ошибка при ЗАКРЫТИИ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
                       console.log(err);
                     }
-                }) /* axios */
+                }); /* axios */
           }
         });
       },/* closeDefect */
@@ -313,7 +313,6 @@ const appCloseDefect = Vue.createApp({
             .post('/update_status_defect', data)
             .then(response => {
                 document.getElementById('closeCloseDefectModalWindow').click();
-                /* appVueDefect.updateTables() */
                 appVueFilter.useFilter()
                 Swal.fire("ДЕФЕКТ ОТМЕНЕН", "", "success");
                   })

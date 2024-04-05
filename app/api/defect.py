@@ -279,6 +279,7 @@ async def confirm_defect(request: Request, response: Response,
             direct_classification = None
     except (PendingRollbackError, IntegrityError):
         await session.rollback()
+        system = await add_system(session, system_name.system_name, system_kks.system_kks)
         direct_classification = await CategoryDirectReason.get_category_direct_reason_by_code(session, direct_classification_code.direct_rarery_code)
         if direct_classification_name.direct_rarery_name:
             direct_classification.category_reason_name = direct_classification_name.direct_rarery_name

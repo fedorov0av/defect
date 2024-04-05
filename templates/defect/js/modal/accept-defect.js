@@ -93,6 +93,7 @@ const appAcceptDefect = Vue.createApp({
       this.check_worker = false;
     },
     updateTables() {
+      this.cardHistorys = getDataCardHistoryes();
       updateTableDivision(this.defect_divisions);
       updateTableTypeDefect(this.defect_type_defects);
       updateTableStatusDefect(this.statuses_defect);
@@ -101,7 +102,6 @@ const appAcceptDefect = Vue.createApp({
       updateTableWorkers(this.workers, true);
       this.updateCardDefect();
       this.clickbuttonmain();
-      this.newWorkerDivision;
     }, /* updateTables */
     updateCardDefect() {
       axios
@@ -126,6 +126,7 @@ const appAcceptDefect = Vue.createApp({
           this.cardWorker = this.cardDefect.defect_worker;
           this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name : '';
           this.cardCheckerDescription = this.cardDefect.defect_check_result ? this.cardDefect.defect_check_result : '';
+          this.cardWorkerDescription = this.cardDefect.defect_work_comment ? this.cardDefect.defect_work_comment : '';
           this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : '';
           
           this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
@@ -173,11 +174,11 @@ const appAcceptDefect = Vue.createApp({
       }
       const workers_array = Object.values(this.workers); 
       this.newWorkerDivision = workers_array.filter((user) => user.user_id === this.newWorker_id)
-      if (this.currentUser.user_division != this.newWorkerDivision[0].user_division) {
+      /* if (this.currentUser.user_division != this.newWorkerDivision[0].user_division) {
         this.check_worker = true
         Swal.fire({html:"<b>Исполнитель ремонта должен быть из подразделения '" + this.cardDivisionOwner + "' </b>", heightAuto: false}); 
         return;  
-      }   
+      }   Эта проверка в данный момент не нужна, но может понадобиться в будущем */
       Swal.fire({
         title: "Вы действительно хотите назначить исполнителя?",
         showDenyButton: true,
