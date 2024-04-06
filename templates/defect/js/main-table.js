@@ -109,8 +109,7 @@ const appVueDefect = Vue.createApp({
         this.currentUserDivision = this.currentUser.user_division;
         /* var stat_color = document.getElementById("stat_color"); */
         if (
-          rowIndex ===
-          1 /*row.defect.defect_owner ==  this.currentUserDivision  && this.status_name == 'Зарегистрирован' */
+          rowIndex === 1 /*row.defect.defect_owner ==  this.currentUserDivision  && this.status_name == 'Зарегистрирован' */
         ) {
           return "success-row";
         }

@@ -70,7 +70,7 @@ const appConfirmDefect = Vue.createApp({
       .then(response => {
           this.currentUser = response.data;
           this.currentUserRole = this.currentUser.user_role;
-          if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Владелец') {
+          if (!this.currentUserRole.includes('Администратор') && !this.currentUserRole.includes('Владелец')) {
             this.isDisabledConfirmDefect = true;
             this.isDisabledConfirmDefect1 = true;
           }

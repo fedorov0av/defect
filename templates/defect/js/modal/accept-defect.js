@@ -59,10 +59,10 @@ const appAcceptDefect = Vue.createApp({
     .then(response => {
         this.currentUser = response.data;
         this.currentUserRole = this.currentUser.user_role;
-        if (this.currentUserRole != 'Администратор') {
+        if (!this.currentUserRole.includes('Администратор')) {
           this.isDisabledAcceptDefect1 = true;
         }
-        if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Руководитель') {
+        if (!this.currentUserRole.includes('Администратор') && !this.currentUserRole.includes('Руководитель')) {
           this.isDisabledAcceptDefect = true;
         }
       })

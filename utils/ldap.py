@@ -17,6 +17,16 @@ SERVER_URI = 'ldaps://akk-s-dc02.mbu.invalid'
 ATTRS_ALL = ['*']
 ATTRS_USER = ['description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName']
 SEARCH_BASE = 'ou=Users,ou=_Akkuyu,dc=mbu,dc=invalid'
+
+GROUPS_AD_FOR_ROLES = [
+    'CN=RegistrarsDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid',
+    'CN=OwnersDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid',
+    'CN=RepairManagersDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid',
+    'CN=WorkersDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid',
+    'CN=InspectorsDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid',
+    'CN=AdminsDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid',
+]
+
 server = Server(SERVER_URI, get_info=ALL)
 
 class UsersLDAP():
@@ -115,8 +125,9 @@ class LdapConnection:
         divisionAD = await DivisionAD.get_divisionAD_by_name(self.session, department_name_from_ad)
         division = await Division.get_division_by_id(self.session, divisionAD.divisionAD_division_id)
         role_list = list()
-        role = await Role.get_role_by_rolename(self.session, 'Администратор') # сделать проверку на рабочие группы
-        role_list.append(role)
+        for role_group_name_AD in GROUPS_AD_FOR_ROLES:
+            role = await Role.get_role_by_role_group_name_AD(self.session, role_group_name_AD) # сделать проверку на рабочие группы
+            role_list.append(role)
         user = UserAD(
             user_id = userAD['sAMAccountName'],
             user_name = user_name,

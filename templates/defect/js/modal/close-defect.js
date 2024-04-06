@@ -148,15 +148,15 @@ const appCloseDefect = Vue.createApp({
                 this.currentUser = response.data;
                 this.currentUserDivision = this.currentUser.user_division;
                 this.currentUserRole = this.currentUser.user_role;
-                if (this.currentUserRole != 'Владелец' ){
+                if (!this.currentUserRole.includes('Владелец')){
                   this.isDisabledCloseDefect = true;
                 } else if (this.currentUserDivision !== this.cardDivisionOwner ) {
                   this.isDisabledCloseDefect = true;
                 } else { this.isDisabledCloseDefect = false;}
-                if (this.currentUserRole == 'Администратор'){
+                if (!this.currentUserRole.includes('Администратор')){
                   this.isDisabledCloseDefect = false;
                 }
-                if (this.currentUserRole !== 'Администратор'){
+                if (!this.currentUserRole.includes('Администратор')){
                   this.isDisabledCloseDefect1 = true;
                 }
               })

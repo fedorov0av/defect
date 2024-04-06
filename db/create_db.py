@@ -19,13 +19,18 @@ from db.utils import get_time
 from db.constants import DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME, DATABASE_IP, DATABASE_PORT, DATABASE_URL
 from config import AD
 
-if AD:
+if not AD:
     from db.user import User
 
 
 #from constants import ROLES, ROOT, GROUP_REESTR_SO, ENERGOBLOCKS
 
-ROLES = ['Регистратор', 'Владелец', 'Руководитель', 'Исполнитель', 'Инспектор', 'Администратор']
+ROLES = (('Регистратор', 'CN=RegistrarsDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid'),
+        ('Владелец', 'CN=OwnersDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid'),
+        ('Руководитель', 'CN=RepairManagersDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid'),
+        ('Исполнитель', 'CN=WorkersDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid'),
+        ('Инспектор', 'CN=InspectorsDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid'),
+        ('Администратор', 'CN=AdminsDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid'))
 ROOT = {
     'qr_code': '45871209762859',
     'password': 'toor',
@@ -40,14 +45,17 @@ USERS = {'Регистратор': {'user_name': 'Дмитрий', 'user_fathern
          }
 
 USERS_BONUS = (
-    ({'user_name': 'Вера', 'user_fathername': 'Леонидовна', 'user_surname': 'Егошина', 'password': '123', 'user_email': 'V.Egoshina@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': 'Администратор'}),
-    ({'user_name': 'Александр', 'user_fathername': 'Владимирович', 'user_surname': 'Федоров', 'password': '123', 'user_email': 'A.Fedorov@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': 'Администратор'}),
-    ({'user_name': 'Вадим', 'user_fathername': 'Альбертович', 'user_surname': 'Байбеков', 'password': '123', 'user_email': 'V.Baibekov@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': 'Администратор'}),
-    ({'user_name': 'Лев', 'user_fathername': 'Глебович', 'user_surname': 'Алехин', 'password': '123', 'user_email': 'L.Alehin@akkuyu.com', 'division_name': 'ОУР', 'role_name': 'Администратор'}),
-    ({'user_name': 'Артем', 'user_fathername': 'Валерьевич', 'user_surname': 'Рыков', 'password': '123', 'user_email': 'A.Rykov@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': 'Администратор'}),
-    ({'user_name': 'Николай', 'user_fathername': 'Игоревич', 'user_surname': 'Кудряшов', 'password': '123', 'user_email': 'N.Kudriashov@akkuyu.com', 'division_name': 'ОУР', 'role_name': 'Администратор'}),
-    ({'user_name': 'Максим', 'user_fathername': 'Геннадьевич', 'user_surname': 'Пластеев', 'password': '123', 'user_email': 'M.Plasteev@akkuyu.com', 'division_name': 'Руководство', 'role_name': 'Инспектор'}),
-    ({'user_name': 'Владислав', 'user_fathername': 'Дмитриевич', 'user_surname': 'Митряев', 'password': '123', 'user_email': 'L.Mitriaev@akkuyu.com', 'division_name': 'Руководство', 'role_name': 'Инспектор'}),
+    ({'user_name': 'Вера', 'user_fathername': 'Леонидовна', 'user_surname': 'Егошина', 'password': '123', 'user_email': 'V.Egoshina@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': ('Администратор',)}),
+    ({'user_name': 'Александр', 'user_fathername': 'Владимирович', 'user_surname': 'Федоров', 'password': '123', 'user_email': 'A.Fedorov@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': ('Администратор',)}),
+    ({'user_name': 'Вадим', 'user_fathername': 'Альбертович', 'user_surname': 'Байбеков', 'password': '123', 'user_email': 'V.Baibekov@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': ('Администратор',)}),
+    ({'user_name': 'Лев', 'user_fathername': 'Глебович', 'user_surname': 'Алехин', 'password': '123', 'user_email': 'L.Alehin@akkuyu.com', 'division_name': 'ОУР', 'role_name': ('Администратор',)}),
+    ({'user_name': 'Артем', 'user_fathername': 'Валерьевич', 'user_surname': 'Рыков', 'password': '123', 'user_email': 'A.Rykov@akkuyu.com', 'division_name': 'ЦИКТ', 'role_name': ('Администратор',)}),
+    ({'user_name': 'Николай', 'user_fathername': 'Игоревич', 'user_surname': 'Кудряшов', 'password': '123', 'user_email': 'N.Kudriashov@akkuyu.com', 'division_name': 'ОУР', 'role_name': ('Администратор',)}),
+    ({'user_name': 'Максим', 'user_fathername': 'Геннадьевич', 'user_surname': 'Пластеев', 'password': '123', 'user_email': 'M.Plasteev@akkuyu.com', 'division_name': 'Руководство', 'role_name': ('Инспектор',)}),
+    ({'user_name': 'Владислав', 'user_fathername': 'Дмитриевич', 'user_surname': 'Митряев', 'password': '123', 'user_email': 'L.Mitriaev@akkuyu.com', 'division_name': 'Руководство', 'role_name': ('Инспектор',)}),
+
+    ({'user_name': 'Андрей', 'user_fathername': 'Юрьевич', 'user_surname': 'Кимишкин', 'password': '123', 'user_email': 'A.Kimishkin@akkuyu.com', 'division_name': 'ЦСОБ', 'role_name': ('Исполнитель', 'Руководитель',)}),
+    ({'user_name': 'Эдуард', 'user_fathername': 'Юльевич', 'user_surname': 'Дмитриев', 'password': '123', 'user_email': 'E.Dmitriev@akkuyu.com', 'division_name': 'ЦЦР', 'role_name': ('Владелец', 'Руководитель',)}),
 )
 
 CATEGORIES_REASON  = (
@@ -357,8 +365,8 @@ async def create_tables():
 
     ########### добавление списка ролей в БД #######
     async with async_session() as session:
-        for role_name in ROLES:
-            role = Role(role_name=role_name)
+        for role in ROLES:
+            role = Role(role_name=role[0], role_group_name_AD=role[1])
             session.add(role)
         await session.commit()
     ################################################
@@ -410,7 +418,7 @@ async def create_tables():
             result_divisions = await Division.get_all_division(session)
             role_admin = result_roles[-1]
             division_admin = result_divisions[-1]
-            now_time = get_time()  
+            now_time = get_time()
 
             root_user = User(
                 user_id = 'D.Postnikov',
@@ -441,7 +449,6 @@ async def create_tables():
                 result_division = await Division.get_division_by_name(session, division_name=USERS[user]['division_name'])
                 role = result_role
                 division = result_division
-
                 user = User(
                     user_id = USERS[user]['user_email'].split('@')[0],
                     user_name = USERS[user]['user_name'],
@@ -464,29 +471,28 @@ async def create_tables():
 ########### добавление пользователей в БД #######
     if not AD:
         async with async_session() as session:
-            for user in USERS_BONUS:
+            for user_bonus in USERS_BONUS:
                 now_time = get_time()  
-                hash_salt: tuple[str, str] = security.get_hash_salt(user['password'])
+                hash_salt: tuple[str, str] = security.get_hash_salt(user_bonus['password'])
                 user_password_hash, user_salt_for_password = hash_salt
-                result_role = await Role.get_role_by_rolename(session, role_name=user['role_name'])
-                result_division = await Division.get_division_by_name(session, division_name=user['division_name'])
-                role = result_role
+                result_division = await Division.get_division_by_name(session, division_name=user_bonus['division_name'])
                 division = result_division
-
                 user = User(
-                    user_id = user['user_email'].split('@')[0],
-                    user_name = user['user_name'],
-                    user_fathername = user['user_fathername'],
-                    user_surname = user['user_surname'],
-                    user_position = user['role_name'],
+                    user_id = user_bonus['user_email'].split('@')[0],
+                    user_name = user_bonus['user_name'],
+                    user_fathername = user_bonus['user_fathername'],
+                    user_surname = user_bonus['user_surname'],
+                    user_position = user_bonus['role_name'][0],
                     user_password_hash = user_password_hash,
                     user_salt_for_password = user_salt_for_password,
                     user_temp_password = False,
                     user_division_id = division.division_id,
-                    user_email = user['user_email'],
+                    user_email = user_bonus['user_email'],
                     user_created_at=now_time,
                 )
-                user.user_role.append(role)
+                for role_name in user_bonus['role_name']:
+                    role = await Role.get_role_by_rolename(session, role_name=role_name)
+                    user.user_role.append(role)
                 session.add(user)
                 
             await session.commit()

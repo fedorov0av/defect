@@ -59,10 +59,10 @@ const appExecutionDefect = Vue.createApp({
       .then(response => {
           this.currentUser = response.data;
           this.currentUserRole = this.currentUser.user_role;
-          if (this.currentUserRole != 'Администратор') {
+          if (!this.currentUserRole.includes('Администратор')) {
             this.isDisabledExecutionDefect1 = true;
           }
-          if (this.currentUserRole !== 'Администратор' && this.currentUserRole !== 'Исполнитель') {
+          if (!this.currentUserRole.includes('Администратор') && !this.currentUserRole.includes('Исполнитель')) {
             this.isDisabledExecutionDefect = true;
           }
         })
@@ -143,8 +143,8 @@ const appExecutionDefect = Vue.createApp({
             this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
             this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
             this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';  
-            if ((this.currentUser.user_role === 'Исполнитель' && this.currentUser.user_id !== this.cardDefect.defect_worker.user_id) || 
-            (this.currentUser.user_role === 'Руководитель' && this.currentUser.user_id !== this.cardDefect.defect_repair_manager.user_id)){
+            if ((this.currentUser.user_role.includes('Исполнитель') && this.currentUser.user_id !== this.cardDefect.defect_worker.user_id) || 
+            (this.currentUser.user_role.includes('Руководитель') && this.currentUser.user_id !== this.cardDefect.defect_repair_manager.user_id)){
               this.isDisabledExecutionDefect = true;
             }
                 })

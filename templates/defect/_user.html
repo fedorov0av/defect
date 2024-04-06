@@ -17,7 +17,9 @@
 				  </tr>
 				</thead>
 				<tbody>
-				  <tr @dblclick="handleDoubleClick" data-bs-target="#CardUserModalWindow" v-for="user in users">
+				  <!-- <tr @dblclick="handleDoubleClick" data-bs-target="#CardUserModalWindow" v-for="user in users"> -->
+				  <tr data-bs-target="#CardUserModalWindow" v-for="user in users">
+				  
 					<td >{{ user.user_id }}</td>
 					<td >{{ user.user_surname }}</td>
 					<td >{{ user.user_name }}</td>
@@ -32,7 +34,7 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button id="show-modal1" @click="updateTableRole" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUserModalWindow" style="width: 200px" type="button">Добавить</button>
+			<!-- <button id="show-modal1" @click="updateTableRole" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUserModalWindow" style="width: 200px" type="button">Добавить</button> -->
 			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width: 200px">Закрыть</button>
 		  </div>
 		</div>
@@ -40,7 +42,7 @@
 	</div>
   
 	<!----------------------------------------Модальное окно "Добавить пользователя"------------------------------------------>
-	<div id="AddUserModalWindow" class="modal fade"  ref="vueAddUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+	<!-- <div id="AddUserModalWindow" class="modal fade"  ref="vueAddUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
 	  <div class="modal-dialog modal1">
 		<div class="modal-content">
 		  <div class="modal-header">
@@ -94,9 +96,9 @@
 		  </div>
 		</div>
 	  </div>
-	</div>
+	</div> -->
 	<!----------------------------------------Модальное окно "Карточка пользователя"------------------------------------------>
-	<div class="modal modal1 fade" id="CardUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-target="#myModal">
+	<!-- <div class="modal modal1 fade" id="CardUserModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-target="#myModal">
 	  <div class="modal-dialog">
 		<div class="modal-content">
 		  <div class="modal-header">
@@ -146,7 +148,7 @@
 		  </div>
 		</div>
 	  </div>
-	</div>
+	</div> -->
   </div>
 {% endraw %}
 <script src="{{ url_for('defect_js', path='user.js') }}"></script>

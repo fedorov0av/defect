@@ -59,10 +59,10 @@ const appFinishWorkDefect = Vue.createApp({
       .then(response => {
           this.currentUser = response.data;
           this.currentUserRole = this.currentUser.user_role;
-          if (this.currentUserRole != 'Администратор') {
+          if (!this.currentUserRole.includes('Администратор')) {
             this.isDisabledFinishDefect1 = true;
           }
-          if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Исполнитель') {
+          if (!this.currentUserRole.includes('Администратор') && !this.currentUserRole.includes('Исполнитель')) {
             this.isDisabledFinishDefect = true;
           }
         })
@@ -179,7 +179,7 @@ const appFinishWorkDefect = Vue.createApp({
         setSettingClickButtonClassification(this)
       },
       finishworkDefect() {
-        if (this.currentUser.user_surname != this.cardDefect.defect_worker.user_surname && this.currentUserRole != 'Администратор') {
+        if (this.currentUser.user_surname != this.cardDefect.defect_worker.user_surname && !this.currentUserRole.includes('Администратор')) {
           Swal.fire({html:"<b>Исполнитель этого дефекта " + this.cardDefect.defect_worker.user_surname  + ' ' + this.cardDefect.defect_worker.user_name  + ". Только он может заверщить работы по этому дефекту!'</b>", heightAuto: false}); 
           return;  
         }   

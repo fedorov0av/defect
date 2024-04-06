@@ -62,10 +62,10 @@ const appCheckDefect = Vue.createApp({
       .then(response => {
           this.currentUser = response.data;
           this.currentUserRole = this.currentUser.user_role;
-          if (this.currentUserRole != 'Администратор') {
+          if (!this.currentUserRole.includes('Администратор')) {
             this.isDisabledCheckDefect1 = true;
           }
-          if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Регистратор') {
+          if (!this.currentUserRole.includes('Администратор') && !this.currentUserRole.includes('Регистратор')) {
             this.isDisabledCheckDefect = true;
           }
 /*           if (this.currentUser.user_division != this.cardDivisionOwner) {

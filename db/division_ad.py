@@ -16,29 +16,29 @@ class DivisionAD(Base):
     async def get_divisionAD_by_name(session: AsyncSession, division_name:str): # получение подразделений в AD по названию
         query = select(DivisionAD).where(DivisionAD.divisionAD_name == division_name)
         result = await session.scalars(query)
-        division = result.one()
-        return division
+        divisionAD = result.one()
+        return divisionAD
 
     @staticmethod
     async def get_divisionAD_by_id(session: AsyncSession, division_id: int): # получение подразделений в AD
         query = select(DivisionAD).where(DivisionAD.divisionAD_id == division_id)
         result = await session.scalars(query)
-        user = result.one()
-        return user
+        divisionAD = result.one()
+        return divisionAD
     
     @staticmethod
     async def add_divisionAD(session: AsyncSession, division_name: str): # добавление подразделений в AD
-        division = DivisionAD(division_name=division_name)
-        session.add(division)
+        divisionAD = DivisionAD(division_name=division_name)
+        session.add(divisionAD)
         await session.commit()
-        return division
+        return divisionAD
 
     @staticmethod
     async def get_all_divisionAD(session: AsyncSession): # получение всех подраздления в БД
         query = select(DivisionAD).order_by(DivisionAD.divisionAD_id)
         result = await session.scalars(query)
-        divisions = result.all()
-        return divisions
+        divisionsAD = result.all()
+        return divisionsAD
 
     @staticmethod
     async def get_division_by_divisionAD_name(session: AsyncSession, departament_name:str): # получение подраздления по названию из AD

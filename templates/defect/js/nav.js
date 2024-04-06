@@ -35,10 +35,10 @@ const appVueNav = Vue.createApp({
     .then(response => {
         this.currentUser = response.data;
         this.currentUserRole = this.currentUser.user_role;
-        if (this.currentUserRole != 'Администратор') {
+        if (!this.currentUserRole.includes('Администратор')) {
           this.isHiddenUsers = true;
         }
-        if (this.currentUserRole != 'Администратор' && this.currentUserRole != 'Регистратор') {
+        if (!this.currentUserRole.includes('Администратор') && !this.currentUserRole.includes('Регистратор')) {
           this.isDisabledAddDefect = true;
         }
       })

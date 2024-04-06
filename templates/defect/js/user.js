@@ -27,12 +27,12 @@ const appVueUser = Vue.createApp({
 
       }
     },
-    mounted() {
+    /* mounted() {
       var myModalEl = document.getElementById('AddUserModalWindow')
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
         appVueUser.clearData();
     })
-    },
+    }, */
     methods: {
         clearData() {
           this.newUserSurname = '';

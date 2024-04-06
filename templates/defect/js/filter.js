@@ -173,7 +173,7 @@ const appVueFilter = Vue.createApp({
           .post('/user/me')
           .then(response => {
               this.currentUser = response.data;
-              if (this.currentUser.user_role !== 'Инспектор'){
+              if (!this.currentUser.user_role.includes('Инспектор')){
                 this.filterDivision = this.currentUser.user_division_id;
               }
             })

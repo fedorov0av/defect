@@ -20,8 +20,8 @@ class Division(Base):
     async def get_division_by_id(session: AsyncSession, division_id: int): # получение пользователя по RFID коду
         query = select(Division).where(Division.division_id == division_id)
         result = await session.scalars(query)
-        user = result.one()
-        return user
+        division = result.one()
+        return division
     
     @staticmethod
     async def add_division(session: AsyncSession, division_name: str): # добавление системы в БД

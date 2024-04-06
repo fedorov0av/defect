@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Response
 from utils.jwt import decrypt_user_id, decode_token
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List
 
 from db.user import User
 from db.role import Role
@@ -14,6 +15,12 @@ from app.middleware.auth import check_auth_api
 from config import AD
 
 user_router = APIRouter()
+
+def get_list_roles_name(user_roles: List[Role]):
+    result = list()
+    for user_role in user_roles:
+        result.append(user_role.role_name)
+    return result
 
 @user_router.post("/user/me")
 async def get_current_user(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
@@ -32,7 +39,7 @@ async def get_current_user(request: Request, response: Response, session: AsyncS
             "user_name": user.user_name,
             "user_fathername": user.user_fathername,
             "user_position": user.user_position,
-            "user_role": user.user_role[-1].role_name,
+            "user_role": get_list_roles_name(user.user_role),
             "user_division": user.user_division.division_name,
             "user_division_id": user.user_division.division_id,
             "user_email": user.user_email
@@ -49,10 +56,9 @@ async def get_current_user_role(request: Request, response: Response, session: A
         user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
-    print(user.user_role)
     return {
             "user_id": user.user_id,
-            "user_role": user.user_role[-1].role_name,
+            "user_role": get_list_roles_name(user.user_role),
             "user_division": user.user_division.division_name,
             "user_division_id": user.user_division.division_id,
             }
@@ -108,7 +114,7 @@ async def get_users(request: Request, response: Response, session: AsyncSession 
                 'user_fathername': user.user_fathername,
                 'user_position': user.user_position,
                 'user_division': user.user_division.division_name,
-                'user_role': user.user_role[-1].role_name,
+                'user_role': get_list_roles_name(user.user_role),
                 "user_email": user.user_email
             }
         )
@@ -136,7 +142,7 @@ async def get_user(request: Request, response: Response, user_id: User_id, sessi
                 'user_fathername': user.user_fathername,
                 'user_position': user.user_position,
                 'user_division': user.user_division.division_name,
-                'user_role': user.user_role[-1].role_name,
+                'user_role': get_list_roles_name(user.user_role),
                 "user_email": user.user_email
             }
 
@@ -155,7 +161,7 @@ async def get_repair_managers(request: Request, response: Response, session: Asy
                 'user_fathername': user.user_fathername,
                 'user_position': user.user_position,
                 'user_division': user.user_division.division_name,
-                'user_role': user.user_role[-1].role_name,
+                'user_role': get_list_roles_name(user.user_role),
                 "user_email": user.user_email
             }
         )
@@ -176,7 +182,7 @@ async def get_worker(request: Request, response: Response, session: AsyncSession
                 'user_fathername': user.user_fathername,
                 'user_position': user.user_position,
                 'user_division': user.user_division.division_name,
-                'user_role': user.user_role[-1].role_name,
+                'user_role': get_list_roles_name(user.user_role),
                 "user_email": user.user_email
             }
         )
@@ -197,7 +203,7 @@ async def get_registrators(request: Request, response: Response, session: AsyncS
                 'user_fathername': user.user_fathername,
                 'user_position': user.user_position,
                 'user_division': user.user_division.division_name,
-                'user_role': user.user_role[-1].role_name,
+                'user_role': get_list_roles_name(user.user_role),
                 "user_email": user.user_email
             }
         )
