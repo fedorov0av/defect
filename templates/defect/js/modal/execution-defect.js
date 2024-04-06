@@ -130,6 +130,10 @@ const appExecutionDefect = Vue.createApp({
             this.cardPPR = this.cardDefect.defect_ppr;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            this.cardWorkerDescription = this.cardDefect.defect_work_comment;
+            this.cardCheckerDescription = this.cardDefect.defect_check_result;
+            this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name : "";
+
             this.newWorker_id = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_id : 0;
             this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
             this.cardSafety = this.cardDefect.defect_safety;

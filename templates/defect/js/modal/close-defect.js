@@ -148,7 +148,7 @@ const appCloseDefect = Vue.createApp({
                 this.currentUser = response.data;
                 this.currentUserDivision = this.currentUser.user_division;
                 this.currentUserRole = this.currentUser.user_role;
-                if (!this.currentUserRole.includes('Владелец')){
+                if (!this.currentUserRole.includes('Владелец') && !this.currentUserRole.includes('Администратор')){
                   this.isDisabledCloseDefect = true;
                 } else if (this.currentUserDivision !== this.cardDivisionOwner ) {
                   this.isDisabledCloseDefect = true;

@@ -191,7 +191,10 @@ const appConfirmDefect = Vue.createApp({
             this.cardDateRegistration = this.cardDefect.defect_created_at;
             this.cardRepairManager = this.cardDefect.defect_repair_manager;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
-            this.cardWorker = this.cardDefect.defect_worker;
+            this.cardWorker = this.cardDefect.defect_worker ? this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name : "";
+            this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name : "";
+            this.cardCheckerDescription = this.cardDefect.defect_check_result;
+            
             this.repairManager_id = this.cardDefect.defect_repair_manager ? this.cardDefect.defect_repair_manager.user_id : '';
             this.divisionOwner_id = this.cardDefect.defect_division ? this.cardDefect.defect_division.division_id : 0;
             this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
@@ -206,6 +209,7 @@ const appConfirmDefect = Vue.createApp({
             this.newSafety = this.cardDefect.defect_safety;
             this.newPnr = this.cardDefect.defect_pnr;
             this.newExploitation = this.cardDefect.defect_exploitation;
+            this.cardWorkerDescription = this.cardDefect.defect_work_comment;
             this.newCategoryDefect_id = this.cardDefect.defect_category_defect ? this.cardDefect.defect_category_defect.category_defect_id : 0;
             this.newClassSystemName = this.cardDefect.defect_system_klass ? this.cardDefect.defect_system_klass : '';
 

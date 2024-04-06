@@ -70,9 +70,10 @@ const appCorrectionDefect = Vue.createApp({
               .post('/update_status_defect', data)
               .then(response => {
                   document.getElementById('closeCorrectionDefectModalWindow').click();
-                  appVueDefect.updateTables()
+                  /* appVueDefect.updateTables() */
                   Swal.fire("ДЕФЕКТ ОТПРАВЛЕН НА КОРРЕКТИРОВКУ", "", "success");
                   document.getElementById(this.parent_button_close_modal_name).click();
+                  appVueFilter.useFilter()
                     }) /* axios */
               .catch(err => {
                       if (err.response.status === 401){

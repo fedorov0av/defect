@@ -54,6 +54,9 @@ const appVueFilter = Vue.createApp({
             this.oldDefects = {};
             return
           }
+          if (event === null){
+            this.oldDefects = {};
+          }
           if (Object.keys(this.oldDefects).length === 0){
             this.oldDefects = appVueDefect.defects;
           }
@@ -71,10 +74,6 @@ const appVueFilter = Vue.createApp({
 
         }, /* searchResponsibleMainTable */
         useFilter() {
-          if (this.dataSearch !== ''){
-            this.searchResponsibleMainTable()
-            return
-          }
           if (this.startDate !== null && this.endDate !== null) {
             if (this.startDate >= this.endDate) {
               if (this.startDate != this.endDate){
@@ -139,6 +138,10 @@ const appVueFilter = Vue.createApp({
               }
               appVueDefect.pages = 0;
 
+              if (this.dataSearch !== ''){
+                this.searchResponsibleMainTable(null)
+                return
+              }
               /* setSortTableDafects(appVueDefect.defects)  */
 
                 })

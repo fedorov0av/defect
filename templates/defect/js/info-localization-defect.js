@@ -70,7 +70,9 @@ const appInfoDefect = Vue.createApp({
               .post('/update_status_defect', data)
               .then(response => {
                   document.getElementById('closeInfoDefectModalWindow').click();
-                  appVueDefect.updateTables()
+                  /* appVueDefect.updateTables() */
+                  appVueFilter.useFilter()
+
                   appCloseDefect.updateTables()
                   Swal.fire("Комментарий сохранен!", "", "success");
                   /* document.getElementById(this.parent_button_close_modal_name).click(); */

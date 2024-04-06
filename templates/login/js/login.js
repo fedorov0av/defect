@@ -35,6 +35,12 @@ const app = Vue.createApp({
           console.log(err.request)
           Swal.fire({html:"<b>Проверьте правильность заполнения почтового адреса! Пример: @</b>", heightAuto: false}); 
       }
+      if (err.request.status == 400) {
+        console.log(err.request)
+        Swal.fire({html:"<b>Страница давно не обновлялась! Мы сделали это за Вас!</b>", heightAuto: false}); 
+        window.location.replace("/")
+        window.location.href = "/";
+      }
       if (err.request.status == 401) {
         Swal.fire({html:"<b>Неправильный логин или пароль</b>", heightAuto: false}); 
       }

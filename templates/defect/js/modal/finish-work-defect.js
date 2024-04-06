@@ -147,6 +147,8 @@ const appFinishWorkDefect = Vue.createApp({
             this.cardPPR = this.cardDefect.defect_ppr;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name : "";
+            this.cardCheckerDescription = this.cardDefect.defect_check_result;
             this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
             this.cardSafety = this.cardDefect.defect_safety;
             this.cardPnr = this.cardDefect.defect_pnr;
@@ -158,7 +160,15 @@ const appFinishWorkDefect = Vue.createApp({
             category_reason = categories_reason_array.filter((category_reason) => category_reason.category_reason_code === this.newCoreClassificationCode)
             this.newCoreClassificationName = category_reason.length !== 0 ? category_reason[0].category_reason_name : ''
             this.newDirectClassificationCode = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_code : '';
-            this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';  
+            this.newDirectClassificationName = this.cardDefect.defect_direct_category_reason ? this.cardDefect.defect_direct_category_reason.category_reason_name : '';
+
+            if (!this.currentUserRole.includes('Администратор') && !this.currentUserRole.includes('Исполнитель')) {
+              if (this.cardDefect.defect_repair_manager.user_id === this.cardDefect.defect_worker.user_id){
+                this.isDisabledFinishDefect = false;
+              } else {this.isDisabledFinishDefect = true;}
+            }
+            
+            
                 })
           .catch(err => {
               if (err.response.status === 401){
