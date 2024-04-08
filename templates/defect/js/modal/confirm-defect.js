@@ -270,7 +270,8 @@ const appConfirmDefect = Vue.createApp({
         myModal.show()
       }, /* clickbuttonspravochnikdirect */
       confirmDefect() {
-        if (this.currentUser.user_division != this.cardDefect.defect_division.division_name /* && this.currentUser.user_division != 'РусАС' */) {
+        if (this.currentUser.user_division != this.cardDefect.defect_division.division_name && !this.currentUserRole.includes('Администратор')
+          /* && this.currentUser.user_division != 'РусАС' */) {
           Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDefect.defect_division.division_name  + "'</b>", heightAuto: false}); 
           return;  
         }   
@@ -492,7 +493,8 @@ const appConfirmDefect = Vue.createApp({
         });
       },/* confirmDefect */
       cancelDefect() {
-        if (this.currentUser.user_division != this.defect_divisions[this.newDivisionOwner_id-1].division_name) {
+        if ((this.currentUser.user_division != this.defect_divisions[this.newDivisionOwner_id-1].division_name) &&
+            !this.currentUserRole.includes('Администратор')) {
           this.check_checker_name = true;
           Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.defect_divisions[this.newDivisionOwner_id-1].division_name  + "'</b>", heightAuto: false}); 
           return;  /* Если дефект чужой, то выходим из функции */

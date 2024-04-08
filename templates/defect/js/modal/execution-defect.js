@@ -212,9 +212,10 @@ const appExecutionDefect = Vue.createApp({
         setSettingClickButtonClassification(this)
       },
       executionDefect() {
-        if (this.cardWorker == '') {
-          Swal.fire({html:"<b>ИСПОЛНИТЕЛЬ РЕМОНТА!</b>", heightAuto: false}); 
-          return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
+        if ((this.currentUser.user_id != this.cardDefect.defect_worker.user_id) && !this.currentUserRole.includes('Администратор')) {
+          Swal.fire({html:"<b>Принять в работу может только назначенный исполнитель! "+this.cardDefect.defect_worker.user_surname+
+          " "+this.cardDefect.defect_worker.user_name+" или Администратор системы</b>", heightAuto: false}); 
+          return;  
         }
         Swal.fire({
           title: "Вы действительно хотите принять дефект в ремонт?",

@@ -137,6 +137,7 @@ const appVueDefect = Vue.createApp({
               if (
                 this.defects[defect].defect_status.status_defect_name === "Зарегистрирован" ||
                 this.defects[defect].defect_status.status_defect_name === "Устранен" ||
+                this.defects[defect].defect_status.status_defect_name === 'Требует решения'||
                 this.defects[defect].defect_status.status_defect_name === "Закрыт"
               ) {
                 responsible = this.defects[defect].defect_owner;
@@ -319,43 +320,26 @@ const appVueDefect = Vue.createApp({
               this.defects[defect].defect_status.status_defect_name === "Адресован" ||
               this.defects[defect].defect_status.status_defect_name === 'Не устранен'
             ) {
-              responsible =
-                this.defects[defect].defect_repair_manager.user_surname +
-                " " +
-                this.defects[defect].defect_repair_manager.user_name;
+              responsible = this.defects[defect].defect_repair_manager.user_surname + " " + this.defects[defect].defect_repair_manager.user_name;
             } else if (
-              this.defects[defect].defect_status.status_defect_name ===
-                "Назначен исполнитель" ||
-              this.defects[defect].defect_status.status_defect_name ===
-                "Принят в работу"
+              this.defects[defect].defect_status.status_defect_name === "Назначен исполнитель" ||
+              this.defects[defect].defect_status.status_defect_name === "Принят в работу"
             ) {
-              responsible =
-                this.defects[defect].defect_worker.user_surname +
-                " " +
-                this.defects[defect].defect_worker.user_name;
+              responsible = this.defects[defect].defect_worker.user_surname + " " + this.defects[defect].defect_worker.user_name;
             } else if (
-              this.defects[defect].defect_status.status_defect_name ===
-              "Работы завершены"
+              this.defects[defect].defect_status.status_defect_name === "Работы завершены"
             ) {
               responsible = "ОП " + this.defects[defect].defect_owner;
             }
             this.defects[defect].responsible = responsible;
             let date_background = null;
             if (
-              this.defects[defect].defect_planned_finish_date !==
-                "Устр. в ППР" &&
+              this.defects[defect].defect_planned_finish_date !== "Устр. в ППР" &&
               this.defects[defect].defect_planned_finish_date !== null
             ) {
               let now = new Date();
-              date_defect_finish_temp =
-                this.defects[defect].defect_planned_finish_date.split("-");
-              finish_date = Date.parse(
-                date_defect_finish_temp[2] +
-                  "-" +
-                  date_defect_finish_temp[1] +
-                  "-" +
-                  date_defect_finish_temp[0]
-              );
+              date_defect_finish_temp = this.defects[defect].defect_planned_finish_date.split("-");
+              finish_date = Date.parse(date_defect_finish_temp[2]+"-"+date_defect_finish_temp[1]+"-"+date_defect_finish_temp[0]);
               if (finish_date - now <= 0) {
                 date_background = "table-danger";
               } else if (finish_date - now <= 172800000) {

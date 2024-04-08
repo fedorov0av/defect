@@ -172,6 +172,11 @@ const appAcceptDefect = Vue.createApp({
         Swal.fire({html:"<b>Не назначен исполнитель ремонта!</b>", heightAuto: false}); 
         return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
       }
+      if ((this.currentUser.user_id != this.cardDefect.defect_repair_manager.user_id) && !this.currentUserRole.includes('Администратор')) {
+        Swal.fire({html:"<b>Назначить исполнителя может только назначенный ответственный за устранение! "+this.cardDefect.defect_repair_manager.user_surname+
+        " "+this.cardDefect.defect_repair_manager.user_name+" или Администратор системы</b>", heightAuto: false}); 
+        return;  
+      }
       const workers_array = Object.values(this.workers); 
       this.newWorkerDivision = workers_array.filter((user) => user.user_id === this.newWorker_id)
       /* if (this.currentUser.user_division != this.newWorkerDivision[0].user_division) {

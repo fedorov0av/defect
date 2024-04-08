@@ -189,7 +189,7 @@ const appFinishWorkDefect = Vue.createApp({
         setSettingClickButtonClassification(this)
       },
       finishworkDefect() {
-        if (this.currentUser.user_surname != this.cardDefect.defect_worker.user_surname && !this.currentUserRole.includes('Администратор')) {
+        if (this.currentUser.user_id != this.cardDefect.defect_worker.user_id && !this.currentUserRole.includes('Администратор')) {
           Swal.fire({html:"<b>Исполнитель этого дефекта " + this.cardDefect.defect_worker.user_surname  + ' ' + this.cardDefect.defect_worker.user_name  + ". Только он может заверщить работы по этому дефекту!'</b>", heightAuto: false}); 
           return;  
         }   
