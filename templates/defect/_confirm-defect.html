@@ -338,10 +338,10 @@
                   </span>
                   <span class="verticalLine1" :hidden='isDisabledConfirmDefect'></span>
                   <span class="d-inline-block button-margin"  data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
-                    <button @click="cancelDefect" id="confirmCancelDefectButton" :hidden='isDisabledConfirmDefect' class="btn btn-primary" type="button">Отменить дефект</button>
+                    <button @click="cancelDefect" id="confirmCancelDefectButton" :hidden='isDisabledConfirmDefect' class="btn btn-danger" type="button">Отменить дефект</button>
                   </span>
                   <span class="d-inline-block" tabindex="0" data-toggle="popover_confirm" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для пользователя с ролью Владелец оборудования">
-                    <button @click="confirmDefect" id="confirmConfirmDefectButton" :hidden='isDisabledConfirmDefect' class="btn btn-primary" type="button">Подтвердить дефект</button>
+                    <button @click="confirmDefect" id="confirmConfirmDefectButton" :hidden='isDisabledConfirmDefect' class="btn btn-success" type="button">Подтвердить дефект</button>
                   </span>
                 </div>
               </div>

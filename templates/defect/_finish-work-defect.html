@@ -286,16 +286,16 @@
                 <p>- обязательные элементы для заполнения</p>
               </div>
               <div>
-                <span class="d-inline-block button-margin"  data-toggle="popover_finish" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для Администратора">
-                  <button @click="cancelDefect" id="finishCancelDefectButton1" :hidden='isDisabledFinishDefect1' class="btn btn-outline-danger" type="button">Отменить дефект</button>
-                </span>
-                <span class="verticalLine1" :hidden='isDisabledFinishDefect1'></span>
+                
                 <span class="d-inline-block button-margin">
                   <button @click="exportHistoryExcel" class="btn btn-secondary" type="button">Выгрузить дефект в Excel</button>
                 </span>
-                <span class="verticalLine1" :hidden='isDisabledFinishDefect'></span>
+                <span class="verticalLine1" :hidden='isDisabledFinishDefect1'></span>
                 <span class="d-inline-block" tabindex="0" data-toggle="popover_finish1" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна только для пользователя с ролью Исполнитель ремонта">
                   <button @click="requiresSolution" id="finishCancelDefectButton" :hidden='isDisabledFinishDefect' class="btn btn-warning margin-right" type="button">Требует решения</button>
+                </span>
+                <span class="d-inline-block button-margin"  data-toggle="popover_finish" data-bs-trigger="hover focus" data-bs-content="Эта кнопка доступна только для Администратора">
+                  <button @click="cancelDefect" id="finishCancelDefectButton1" :hidden='isDisabledFinishDefect1' class="btn btn-danger" type="button">Отменить дефект</button>
                 </span>
                 <span class="d-inline-block" tabindex="0" data-toggle="popover_finish1" data-bs-trigger="hover focus" data-bs-content="Кнопка доступна только для пользователя с ролью Исполнитель ремонта">
                   <button @click="finishworkDefect" id="finishFinishDefectButton" :hidden='isDisabledFinishDefect' class="btn btn-primary" type="button">Работы завершены</button>
