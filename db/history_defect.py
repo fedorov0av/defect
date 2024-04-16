@@ -18,7 +18,8 @@ class History(Base):
     history_defect: Mapped["Defect"] = relationship(foreign_keys=[history_defect_id]) #  для работы с таблицей Defect как с объектом
     #history_user_id: Mapped[int] = mapped_column(ForeignKey("user.user_id")) # id поста из таблицы User - пользователь
     history_user_id: Mapped[str] = mapped_column(ForeignKey("user.user_id")) if not AD else mapped_column(String) # id поста из таблицы User - пользователь
-    history_user: Mapped["User"] = relationship(foreign_keys=[history_user_id]) #  для работы с таблицей User как с объектом
+    if not AD:
+        history_user: Mapped["User"] = relationship(foreign_keys=[history_user_id]) #  для работы с таблицей User как с объектом
     history_status_id: Mapped[int] = mapped_column(ForeignKey("status_defect.status_defect_id")) # статус (Этап) дефекта
     history_status: Mapped["StatusDefect"] = relationship(foreign_keys=[history_status_id]) #  для работы с таблицей StatusDefect как с объектом
     history_comment: Mapped[str] = mapped_column(String(3000), nullable=True) # Коммент.

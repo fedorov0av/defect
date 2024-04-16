@@ -88,7 +88,7 @@ class LdapConnection:
 
     async def get_user_by_mail_from_AD(self, mail: str) -> Entry: # получение пользователя с AD по mail
         message_id = self.ldap_connection.search(SEARCH_BASE, f"(mail={mail})", attributes=ATTRS_USER)
-        raw_user = self.ldap_connection.get_response(message_id)[0]
+        raw_user = self.ldap_connection.get_response(message_id)[0][0]
         user = raw_user['attributes']
         if user:
             return user

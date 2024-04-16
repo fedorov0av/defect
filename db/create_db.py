@@ -56,6 +56,8 @@ USERS_BONUS = (
 
     ({'user_name': 'Андрей', 'user_fathername': 'Юрьевич', 'user_surname': 'Кимишкин', 'password': '123', 'user_email': 'A.Kimishkin@akkuyu.com', 'division_name': 'ЦСОБ', 'role_name': ('Исполнитель', 'Руководитель',)}),
     ({'user_name': 'Эдуард', 'user_fathername': 'Юльевич', 'user_surname': 'Дмитриев', 'password': '123', 'user_email': 'E.Dmitriev@akkuyu.com', 'division_name': 'ЦЦР', 'role_name': ('Владелец', 'Руководитель',)}),
+    ({'user_name': 'Сергей', 'user_fathername': 'Владимирович', 'user_surname': 'Шульгин', 'password': '123', 'user_email': 'S.Shulgin@akkuyu.com', 'division_name': 'ОУР', 'role_name': ('Администратор',)}),
+
 )
 
 CATEGORIES_REASON  = (

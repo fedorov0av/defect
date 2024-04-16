@@ -4,7 +4,7 @@ const appVueAdmin = Vue.createApp({
         emailUser: '',
         resultSearch: '',
         hiddenButtomAuthUser: true,
-        lastUserUID: '',
+        lastUserMail: '',
       }
     }, 
     mounted() {
@@ -30,13 +30,13 @@ const appVueAdmin = Vue.createApp({
             myModal.show()
         }, /* searchUserByEmail */
         authByUser(){
-          if (this.lastUserUID === '') {
+          if (this.lastUserMail === '') {
             Swal.fire({html:"<b>Данных о пользователе нет!</b>", heightAuto: false}); 
             return;  
           }
           axios
           .post('/auth_by_user_id', {
-              "user_id": this.lastUserUID.split('@')[0]
+              "user_id": this.lastUserMail.split('@')[0]
           },)
           .then(response => {
               window.location.replace("/defect")
