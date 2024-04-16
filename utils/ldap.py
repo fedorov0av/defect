@@ -125,9 +125,11 @@ class LdapConnection:
         divisionAD = await DivisionAD.get_divisionAD_by_name(self.session, department_name_from_ad)
         division = await Division.get_division_by_id(self.session, divisionAD.divisionAD_division_id)
         role_list = list()
+        memberOfAD = userAD['memberOf']
         for role_group_name_AD in GROUPS_AD_FOR_ROLES:
-            role = await Role.get_role_by_role_group_name_AD(self.session, role_group_name_AD) # сделать проверку на рабочие группы
-            role_list.append(role)
+            if role_group_name_AD in memberOfAD:
+                role = await Role.get_role_by_role_group_name_AD(self.session, role_group_name_AD) # сделать проверку на рабочие группы
+                role_list.append(role)
         user = UserAD(
             user_id = userAD['sAMAccountName'],
             user_name = user_name,
