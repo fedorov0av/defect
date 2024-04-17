@@ -51,8 +51,9 @@ async def auth(request: Request,
             raise HTTPException(status_code=403, detail="Invalid password")
     if AD:
         token_user_id = await encrypt_user_id(str(username))
-        token_p = await encrypt_user_id(str(auth_data.password))
-        subject = {"userId": token_user_id, "userP": token_p}
+        """ token_p = await encrypt_user_id(str(auth_data.password))
+        subject = {"userId": token_user_id, "userP": token_p} """
+        subject = {"userId": token_user_id}
     else:
         token_user_id = await encrypt_user_id(str(user.user_id))
         subject = {"userId": token_user_id}

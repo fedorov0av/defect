@@ -25,8 +25,9 @@ async def update_status_defects(request: Request, response: Response, defect_id:
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
         token_dec = await decode_token(request.cookies['jwt_refresh_token'])
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)

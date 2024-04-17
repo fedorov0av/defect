@@ -36,8 +36,9 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
         if AD:
             token_dec = await decode_token(request.cookies['jwt_refresh_token'])
             user_id = await decrypt_user_id(token_dec['subject']['userId'])
-            passw = await decrypt_user_id(token_dec['subject']['userP'])
-            ldap_connection = LdapConnection(session, user_id, passw)
+            """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+            ldap_connection = LdapConnection(session, user_id, passw) """
+            ldap_connection = LdapConnection(session, user_id)
             defect_repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
             defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else defect.defect_division.division_name
         df_defect = pd.DataFrame(
@@ -91,9 +92,9 @@ async def export_history_excel_defect(request: Request, response: Response, defe
     if AD:
         token_dec = await decode_token(request.cookies['jwt_refresh_token'])
         user_id = await decrypt_user_id(token_dec['subject']['userId'])
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
-
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         defect_registrar: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id) if defect.defect_registrator_id else None
         defect_registrar_fullname = defect_registrar.user_surname + ' ' + defect_registrar.user_name if defect_registrar else ''
 

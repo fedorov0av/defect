@@ -42,7 +42,8 @@ class UsersLDAP():
 
 
 class LdapConnection:
-    def __init__(self, session:AsyncSession, username:str, password:str, auth=False) -> None:
+    """ def __init__(self, session:AsyncSession, username:str, password:str, auth=False) -> None: """
+    def __init__(self, session:AsyncSession, username:str, password:str=None, auth=False) -> None:
         self.username = username
         self.password = password
         self.attributes = ['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department']

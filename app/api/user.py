@@ -28,8 +28,9 @@ async def get_current_user(request: Request, response: Response, session: AsyncS
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
     else: 
         user: User = await User.get_user_by_id(session, user_id)
@@ -51,8 +52,9 @@ async def get_current_user_role(request: Request, response: Response, session: A
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
@@ -127,8 +129,9 @@ async def get_user(request: Request, response: Response, user_id: User_id, sessi
     if AD:
         token_dec = await decode_token(request.cookies['jwt_refresh_token'])
         user_current_id = await decrypt_user_id(token_dec['subject']['userId'])
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_current_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_current_id, passw) """
+        ldap_connection = LdapConnection(session, user_current_id)
         user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id.user_id)
 
         """ userAD = await get_user_by_uid_from_AD(user_current_id, passw, user_id.user_id)

@@ -46,11 +46,13 @@ async def update_jwt_tokens_by_refresh_token(request: Request, response: Respons
     token_dec = await decode_token(jwt_refresh_token)
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
-        user_p = await decrypt_user_id(token_dec['subject']['userP'])
-        token_user_p = await encrypt_user_id(str(user_p))
+        """ user_p = await decrypt_user_id(token_dec['subject']['userP'])
+        token_user_p = await encrypt_user_id(str(user_p)) """
+        pass
     token_user_id = await encrypt_user_id(str(user_id))
     if AD:
-        subject = {"userId": token_user_id, "userP": token_user_p}
+        """ subject = {"userId": token_user_id, "userP": token_user_p} """
+        subject = {"userId": token_user_id}
     else:
         subject = {"userId": token_user_id}
     access_token = access_security.create_access_token(subject=subject)

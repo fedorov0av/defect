@@ -61,8 +61,9 @@ async def add_system(session: AsyncSession, system_name: str, system_kks: str = 
 async def get_user_for_defect(session: AsyncSession, request: Request, token_dec: dict): # получаем объект User из БД или AD
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         user: UserAD = await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
@@ -77,8 +78,9 @@ class UserDefectFromAD:
     async def get_user_from_AD_for_paginate(self, defects: list[Defect]):
         result = list()
         user_id = await decrypt_user_id(self.token_dec['subject']['userId'])
-        passw = await decrypt_user_id(self.token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(self.session, user_id, passw)
+        """ passw = await decrypt_user_id(self.token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(self.session, user_id, passw) """
+        ldap_connection = LdapConnection(self.session, user_id)
         for defect in defects:
             defect_registrar: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
             defect_owner: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
@@ -197,8 +199,9 @@ async def get_defect(request: Request, response: Response, defect_id: Defect_id,
     if AD:
         token_dec = await decode_token(request.cookies['jwt_refresh_token'])
         user_id = await decrypt_user_id(token_dec['subject']['userId'])
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         defect_registrar = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
         defect_owner: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
         defect_owner_surname = defect_owner.user_surname if defect_owner else None
@@ -296,8 +299,9 @@ async def confirm_defect(request: Request, response: Response,
     else: 
         category_defect = None
     if AD:
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
@@ -355,8 +359,9 @@ async def accept_defect(
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
@@ -393,8 +398,9 @@ async def check_defect(
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
@@ -432,8 +438,9 @@ async def finish_work_defect(
     token_dec = await decode_token(request.cookies['jwt_refresh_token'])
     user_id = await decrypt_user_id(token_dec['subject']['userId'])
     if AD:
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
@@ -493,8 +500,9 @@ async def close_defect(
     else: 
         category_defect = None
     if AD:
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
         user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(user_id)
     else:
         user: User = await User.get_user_by_id(session, user_id)
@@ -541,8 +549,9 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
         if AD:
             token_dec = await decode_token(request.cookies['jwt_refresh_token'])
             user_id = await decrypt_user_id(token_dec['subject']['userId'])
-            passw = await decrypt_user_id(token_dec['subject']['userP'])
-            ldap_connection = LdapConnection(session, user_id, passw)
+            """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+            ldap_connection = LdapConnection(session, user_id, passw) """
+            ldap_connection = LdapConnection(session, user_id)
             defect_registrar: UserAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
             defect_owner: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
             defect_owner_surname = defect_owner.user_surname if defect_owner else None

@@ -24,8 +24,9 @@ async def get_history_by_defect(request: Request, response: Response, defect_id:
     if AD:
         token_dec = await decode_token(request.cookies['jwt_refresh_token'])
         user_id = await decrypt_user_id(token_dec['subject']['userId'])
-        passw = await decrypt_user_id(token_dec['subject']['userP'])
-        ldap_connection = LdapConnection(session, user_id, passw)
+        """ passw = await decrypt_user_id(token_dec['subject']['userP'])
+        ldap_connection = LdapConnection(session, user_id, passw) """
+        ldap_connection = LdapConnection(session, user_id)
     for history in result:
         if AD:
             user: UserAD =  await ldap_connection.get_user_by_uid_from_AD(history.history_user_id)
