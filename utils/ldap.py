@@ -74,18 +74,28 @@ class LdapConnection:
         raw_users = con.get_response(message_id)[0]
         for raw_user in raw_users:
             try:
-                UsersLDAP.add_user(user_id=[raw_user['attributes']['sAMAccountName']],
+                user_sAMAccountName = raw_user['attributes']['sAMAccountName']
+                user_departament = raw_user['attributes']['department']
+                user_mail = raw_user['attributes']['mail']
+                user_mailNickname = raw_user['attributes']['mailNickname']
+                UsersLDAP.add_user(user_id=user_sAMAccountName.lower(),
                                    value = {
                     'description': raw_user['attributes']['description'][0],
-                    'department': raw_user['attributes']['department'],
+                    'department': user_departament.lower(),
                     'memberOf': raw_user['attributes']['memberOf'],
                     'extensionAttribute2': raw_user['attributes']['extensionAttribute2'],
-                    'mail': raw_user['attributes']['mail'],
-                    'mailNickname': raw_user['attributes']['mailNickname'],
-                    'sAMAccountName': raw_user['attributes']['sAMAccountName'],
+                    'mail': user_mail.lower(),
+                    'mailNickname': user_mailNickname.lower(),
+                    'sAMAccountName': user_sAMAccountName.lower(),
                 })
             except IndexError as err:
-                print('err=== ', err)
+                print('Error Redis ==== ', err)
+                print('Ошибка вохникла на пользователе ==== ', raw_user)
+            except AttributeError as err:
+                print('Error Redis ==== ', err)
+                print('Ошибка вохникла на пользователе ==== ', raw_user)
+
+
 
     async def get_user_by_mail_from_AD(self, mail: str) -> Entry: # получение пользователя с AD по mail
         message_id = self.ldap_connection.search(SEARCH_BASE, f"(mail={mail})", attributes=ATTRS_USER)
@@ -98,7 +108,7 @@ class LdapConnection:
     async def get_user_by_mail(self, mail: str) -> UserAD: # получаем пользователя из AD по АДРЕСУ ПОЧТЫ
         users = UsersLDAP.get_users()
         for user in users:
-            if users[user]['mail'] == mail:
+            if users[user]['mail'] == mail.lower():
                 return await self.get_user_from_EntryLDAP(users[user])
 
     async def get_user_by_attr(self, attr: str) -> UserAD: # получаем пользователя из AD по НАЗВАНИЮ ОТДЕЛА В КИРИЛЛИЦЕ
@@ -110,12 +120,12 @@ class LdapConnection:
     async def get_user_by_dep(self, dep: str) -> UserAD:
         users = UsersLDAP.get_users()
         for user in users:
-            if users[user]['department'] == dep:
+            if users[user]['department'] == dep.lower():
                 return await self.get_user_from_EntryLDAP(users[user])
 
     async def get_user_by_uid_from_AD(self, user_uid: str) -> Entry:
         users = UsersLDAP.get_users()
-        return await self.get_user_from_EntryLDAP(users[[user_uid]])
+        return await self.get_user_from_EntryLDAP(users[user_uid])
 
     async def get_user_from_EntryLDAP(self, userAD: dict) -> UserAD:
         user_FIO: str = userAD['description']
@@ -143,35 +153,3 @@ class LdapConnection:
             user_email = userAD['mail'],
         )
         return user
-    
-
-""" def get_connection_ldap(username: str, password: str) -> Connection:
-    ldap_connection = Connection(server, user=f"MBU\\{username}", password=password)
-    if ldap_connection.bind():
-        return ldap_connection """
-
-""" async def check_user(username: str, password: str) -> bool: # ИСПОЛЬЗУЕТСЯ В API AUTH
-    ldap_connection = Connection(server, user=f"MBU\\{username}", password=password)
-    if ldap_connection.bind():
-        return True
-    else:
-        return False
- """
-""" async def get_user_by_uid_from_AD(username: str, passw: str, user_uid: str) -> Entry:
-    ldap_connection = get_connection_ldap(username, passw)
-    if ldap_connection.search(SEARCH_BASE, f"(mailNickname={user_uid})", attributes=ATTRS_USER):
-        return ldap_connection.entries[0]
-    else: return None
-
-async def get_users_by_attr3_from_AD(username: str, passw: str, attr3: str) -> List[Entry]: # fix me
-    ldap_connection = get_connection_ldap(username, passw)
-    if ldap_connection.search(SEARCH_BASE, f"(extensionAttribute3={attr3})", attributes=ATTRS_USER):
-        return ldap_connection.entries
-    else: return None
-
-async def get_users_by_dep_from_AD(username: str, passw: str, departament: str) -> Entry: # fix me
-    ldap_connection = get_connection_ldap(username, passw)
-    if ldap_connection.search(SEARCH_BASE, f"(department={departament})", attributes=ATTRS_USER):
-        return ldap_connection.entries[0]
-    else: return None
- """

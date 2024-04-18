@@ -1,4 +1,5 @@
 from utils import security
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 import asyncpg
@@ -57,6 +58,18 @@ USERS_BONUS = (
     ({'user_name': 'Андрей', 'user_fathername': 'Юрьевич', 'user_surname': 'Кимишкин', 'password': '123', 'user_email': 'A.Kimishkin@akkuyu.com', 'division_name': 'ЦСОБ', 'role_name': ('Исполнитель', 'Руководитель',)}),
     ({'user_name': 'Эдуард', 'user_fathername': 'Юльевич', 'user_surname': 'Дмитриев', 'password': '123', 'user_email': 'E.Dmitriev@akkuyu.com', 'division_name': 'ЦЦР', 'role_name': ('Владелец', 'Руководитель',)}),
     ({'user_name': 'Сергей', 'user_fathername': 'Владимирович', 'user_surname': 'Шульгин', 'password': '123', 'user_email': 'S.Shulgin@akkuyu.com', 'division_name': 'ОУР', 'role_name': ('Администратор',)}),
+
+    ({'user_name': 'Алексей', 'user_fathername': 'Александрович', 'user_surname': 'Серобабов', 'password': '123', 'user_email': 'A.Serobabov@akkuyu.com', 'division_name': 'ТЦ-1', 'role_name': ('Владелец', 'Инспектор',)}),
+    ({'user_name': 'Алексей', 'user_fathername': 'Николаевич', 'user_surname': 'Есин', 'password': '123', 'user_email': 'A.Esin@akkuyu.com', 'division_name': 'ТЦ-1', 'role_name': ('Владелец', 'Инспектор',)}),
+    ({'user_name': 'Михаил', 'user_fathername': 'Алексеевич', 'user_surname': 'Лакеев', 'password': '123', 'user_email': 'M.Lakeev@akkuyu.com', 'division_name': 'ТЦ-1', 'role_name': ('Регистратор',)}),
+    ({'user_name': 'Рашид', 'user_fathername': 'Владимирович', 'user_surname': 'Бесшапошников', 'password': '123', 'user_email': 'R.Besshaposhnikov@akkuyu.com', 'division_name': 'ТЦ-1', 'role_name': ('Руководитель',)}),
+    ({'user_name': 'Николай', 'user_fathername': 'Николаевич', 'user_surname': 'Воробьев', 'password': '123', 'user_email': 'N.Vorobyev@akkuyu.com', 'division_name': 'ТЦ-1', 'role_name': ('Исполнитель',)}),
+    ({'user_name': 'Владимир', 'user_fathername': 'Юрьевич', 'user_surname': 'Шматов', 'password': '123', 'user_email': 'V.Shmatov@akkuyu.com', 'division_name': 'ТЦ-1', 'role_name': ('Руководитель',)}),
+    ({'user_name': 'Александр', 'user_fathername': 'Алексеевич', 'user_surname': 'Мартынов', 'password': '123', 'user_email': 'Ale.Martynov@akkuyu.com', 'division_name': 'ТЦ-1', 'role_name': ('Исполнитель',)}),
+    ({'user_name': 'Александр', 'user_fathername': 'Николаевич', 'user_surname': 'Приходько', 'password': '123', 'user_email': 'Ale.Prikhodko@akkuyu.com', 'division_name': 'ЦЦР', 'role_name': ('Регистратор', 'Исполнитель',)}),
+    ({'user_name': 'Егор', 'user_fathername': 'Александрович', 'user_surname': 'Перфильев', 'password': '123', 'user_email': 'E.Perfilev@akkuyu.com', 'division_name': 'ЦЦР', 'role_name': ('Руководитель',)}),
+    ({'user_name': 'Вячеслав', 'user_fathername': 'Вадимович', 'user_surname': 'Гущин', 'password': '123', 'user_email': 'V.Gushchin@akkuyu.com', 'division_name': 'ЦЦР', 'role_name': ('Исполнитель',)}),
+
 
 )
 
@@ -280,33 +293,33 @@ STATUS_DEFECT = ('Зарегистрирован', # 1
                  )
 
 DIVISIONS = (
-            ('РЦ-1', ('Reactor shop', 'Reactor shop of the 1st stage', 'Reactor Workshop 1st stage',)),
-            ('РЦ-2', ('Reactor shop – 2', 'Reactor shop of the 2nd stage',)),
+            ('РЦ-1', ('Reactor shop', 'Reactor shop of the 1st stage', 'Reactor Workshop 1st stage', 'Pipeline and Valves Department', 'Reactor Shop of The 1st Stage',)),
+            ('РЦ-2', ('Reactor shop – 2', 'Reactor shop of the 2nd stage', 'Reactor shop of the 2nd stag',)),
             ('ТЦ-1', ('Turbine shop of the 1st stage', 'Turbine Shop',)),
             ('ТЦ-2', ('Turbine shop of the 2nd stage',)),
             ('ХЦ', ('Chemical shop',)),
-            ('ЦВиК', ('Ventilation and Air Conditioning Shop',)),
-            ('СТУ', ('Process Control Service',)),
-            ('ЦОРОиОЯТ', ('Workshop for Radioactive Waste and Spent Nuclear Fuel Management',)),
-            ('ЦРБ', ('Radiation safety shop',)),
-            ('ЦД', ('Decontamination Shop',)),
-            ('ЭЦ', ('Electrical Shop',)),
-            ('ЦТАИ', ('Thermal Automation and Measurement Shop Head of Shop', 'Thermal instrumentation and control shop')),
+            ('ЦВиК', ('Ventilation and Air Conditioning Shop', 'Deputy Chief Technology Officer for Operation', 'Ventilation and air conditioning shop')),
+            ('СТУ', ('Process Control Service', 'Process control service',)),
+            ('ЦОРОиОЯТ', ('Workshop for Radioactive Waste and Spent Nuclear Fuel Management', 'Radioactive Waste Management Department',)),
+            ('ЦРБ', ('Radiation safety shop', 'Radiation Safety Shop',)),
+            ('ЦД', ('Decontamination Shop', 'Decontamination shop',)),
+            ('ЭЦ', ('Electrical Shop', 'Electrical shop',)),
+            ('ЦТАИ', ('Thermal Automation and Measurement Shop Head of Shop', 'Thermal instrumentation and control shop', 'Thermal Instrumentation and Control Shop',)),
             ('ЦИКТ', ('Information and Communication Technology Shop',)),
             ('ОАиОБ', ('Departament of Safety Analysis and Assessment',)),
-            ('ОЯБ', ('Nuclear Safety Department',)),
+            ('ОЯБ', ('Nuclear Safety Department', 'Nuclear safety department',)),
             ('ЦЦР', ('Centralized repair shop', 'Centralized Repair Shop')),
             ('ОППР', ('Repair Preparation and Performance Department',)),
             ('ОУР', ('Repair Management Department',)),
             ('КТО', ('Design and Technology Department',)),
-            ('ОРЗиС', ('Buildings And Structures Repair Department', 'Repair Department for Buildings and Structures',)),
+            ('ОРЗиС', ('Buildings And Structures Repair Department', 'Repair Department for Buildings and Structures', 'Department for repair of buildings and structures', 'Buildings And Structures Repair Departments',)),
             ('ЛТД', ('Technical Inspection Laboratory', 'Technical Diagnostics Laboratory',)),
-            ('ОИТП', ('Engineering Support Departmen', 'Engineering Support Department',)),
-            ('ОИОЭиРН', ('Operating Experience Use & Violations Investigation Department',)),
-            ('ЦТПК', ('Shop for thermal and underground communications', 'Thermal and Underground Communications Shop')),
-            ('ЦГТС', ('Hydraulic Engineering Installations Shop',)),
-            ('ЦСОБ', ('Safety Assurance Systems Shop',)),
-            ('УКТиПБ', ('Technical and Industrial Safety Control Department', 'Technical and Industrial Safety Monitoring Department',)),
+            ('ОИТП', ('Engineering Support Departmen', 'Engineering Support Department', 'Engineering and Technical Support Department',)),
+            ('ОИОЭиРН', ('Operating Experience Use & Violations Investigation Department', 'Experience Utilization and Violations Investigation Department',)),
+            ('ЦТПК', ('Shop for thermal and underground communications', 'Thermal and Underground Communications Shop', 'Heat and Underground Networks Department',)),
+            ('ЦГТС', ('Hydraulic Engineering Installations Shop', 'Hydrotechnical Engineering Installation Shop', 'Hydraulic Engineering Installations Department',)),
+            ('ЦСОБ', ('Safety Assurance Systems Shop', 'Safety System Shop', 'Security Systems Workshop',)),
+            ('УКТиПБ', ('Technical and Industrial Safety Control Department', 'Technical and Industrial Safety Monitoring Department', 'Buildings, Structures and HTS Monitoring Group', 'Operation Control and Personnel Management Group',)),
             ('ОПК', ('Fire Safety Control Department',)),
             ('УПНР', ('Commissioning Directorate',)),
             ('ОУНиР', ('Reliability and Resource Management Department',)),
@@ -382,9 +395,12 @@ async def create_tables():
             session.add(division)
             await session.commit()
             for division_AD in divisions_AD:
-                divisionAD =  DivisionAD(divisionAD_name=division_AD, divisionAD_division_id=division.division_id)
+                divisionAD =  DivisionAD(divisionAD_name=division_AD.lower(), divisionAD_division_id=division.division_id)
                 session.add(divisionAD)
-            await session.commit()
+                try:
+                    await session.commit()
+                except IntegrityError as err:
+                    await session.rollback()
     ################################################
             
     ########### добавление категорий дефекта в БД #######
@@ -423,7 +439,7 @@ async def create_tables():
             now_time = get_time()
 
             root_user = User(
-                user_id = 'D.Postnikov',
+                user_id = 'D.Postnikov'.lower(),
                 user_name = 'Денис',
                 user_fathername = 'root',
                 user_surname = 'Постников',
@@ -432,7 +448,7 @@ async def create_tables():
                 user_salt_for_password = user_salt_for_password,
                 user_temp_password = False,
                 user_division_id = division_admin.division_id,
-                user_email = 'D.Postnikov@akkuyu.com',
+                user_email = 'D.Postnikov@akkuyu.com'.lower(),
                 user_created_at=now_time,
             )
             root_user.user_role.append(role_admin)
@@ -452,7 +468,7 @@ async def create_tables():
                 role = result_role
                 division = result_division
                 user = User(
-                    user_id = USERS[user]['user_email'].split('@')[0],
+                    user_id = USERS[user]['user_email'].split('@')[0].lower(),
                     user_name = USERS[user]['user_name'],
                     user_fathername = USERS[user]['user_fathername'],
                     user_surname = USERS[user]['user_surname'],
@@ -461,7 +477,7 @@ async def create_tables():
                     user_salt_for_password = user_salt_for_password,
                     user_temp_password = False,
                     user_division_id = division.division_id,
-                    user_email = USERS[user]['user_email'],
+                    user_email = USERS[user]['user_email'].lower(),
                     user_created_at=now_time,
                 )
                 user.user_role.append(role)
@@ -480,7 +496,7 @@ async def create_tables():
                 result_division = await Division.get_division_by_name(session, division_name=user_bonus['division_name'])
                 division = result_division
                 user = User(
-                    user_id = user_bonus['user_email'].split('@')[0],
+                    user_id = user_bonus['user_email'].split('@')[0].lower(),
                     user_name = user_bonus['user_name'],
                     user_fathername = user_bonus['user_fathername'],
                     user_surname = user_bonus['user_surname'],
@@ -489,7 +505,7 @@ async def create_tables():
                     user_salt_for_password = user_salt_for_password,
                     user_temp_password = False,
                     user_division_id = division.division_id,
-                    user_email = user_bonus['user_email'],
+                    user_email = user_bonus['user_email'].lower(),
                     user_created_at=now_time,
                 )
                 for role_name in user_bonus['role_name']:

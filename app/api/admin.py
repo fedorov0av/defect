@@ -42,7 +42,7 @@ async def auth(request: Request,
                response: Response, 
                ):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
-    token_user_id = await encrypt_user_id(str(user_uid.user_id))
+    token_user_id = await encrypt_user_id(str(user_uid.user_id.lower()))
     subject = {"userId": token_user_id}
     access_token = access_security.create_access_token(subject=subject)
     refresh_token = refresh_security.create_refresh_token(subject=subject)

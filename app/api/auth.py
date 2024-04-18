@@ -20,7 +20,6 @@ from app.schemas.auth import CsrfSettings
 
 auth_router = APIRouter()
 
-
 #------------------------------------csrf-start------------------------------------#
 
 @CsrfProtect.load_config
@@ -36,7 +35,7 @@ async def auth(request: Request,
     await csrf_protect.validate_csrf(request)
     csrf_protect.unset_csrf_cookie(response)  # prevent token reuse
     if AD:
-        username = auth_data.email.split('@')[0]
+        username = auth_data.email.split('@')[0].lower()
         ldap_connection = LdapConnection(session, username, auth_data.password, auth=True)
         if await ldap_connection.check_user():
             pass
@@ -44,7 +43,7 @@ async def auth(request: Request,
             raise HTTPException(status_code=403, detail="Invalid password")
     else:
         try:
-            user: User = await User.get_user_by_email(session=session, user_email=auth_data.email)
+            user: User = await User.get_user_by_email(session=session, user_email=auth_data.email.lower())
         except NoResultFound:
             raise HTTPException(status_code=401, detail="User not found")
         if not check_password(user=user, text=auth_data.password):
@@ -55,7 +54,7 @@ async def auth(request: Request,
         subject = {"userId": token_user_id, "userP": token_p} """
         subject = {"userId": token_user_id}
     else:
-        token_user_id = await encrypt_user_id(str(user.user_id))
+        token_user_id = await encrypt_user_id(str(user.user_id.lower()))
         subject = {"userId": token_user_id}
     # Create new access/refresh tokens pair
     access_token = access_security.create_access_token(subject=subject)
