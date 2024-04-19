@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Response
 from utils.jwt import decrypt_user_id, decode_token
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import NoResultFound
 from typing import List
 
 from db.user import User
@@ -153,7 +154,13 @@ async def get_user(request: Request, response: Response, user_id: User_id, sessi
 async def get_repair_managers(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     role_repair_manager: Role = await Role.get_role_by_rolename(session, "Руководитель")
-    result: list[User] = await User.get_user_by_role(session, role_repair_manager)
+    if AD:
+        token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+        user_id = await decrypt_user_id(token_dec['subject']['userId'])
+        ldap_connection = LdapConnection(session, user_id)
+        result: list[UserAD] = await ldap_connection.get_user_by_groupNameAD(role_repair_manager.role_group_name_AD)
+    else:
+        result: list[User] = await User.get_user_by_role(session, role_repair_manager)
     user_l = list()
     for user in result:
         user_l.append(
@@ -174,7 +181,13 @@ async def get_repair_managers(request: Request, response: Response, session: Asy
 async def get_worker(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     role_worker: Role = await Role.get_role_by_rolename(session, "Исполнитель")
-    result: list[User] = await User.get_user_by_role(session, role_worker)
+    if AD:
+        token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+        user_id = await decrypt_user_id(token_dec['subject']['userId'])
+        ldap_connection = LdapConnection(session, user_id)
+        result: list[UserAD] = await ldap_connection.get_user_by_groupNameAD(role_worker.role_group_name_AD)
+    else:
+        result: list[User] = await User.get_user_by_role(session, role_worker)
     user_l = list()
     for user in result:
         user_l.append(
@@ -195,7 +208,13 @@ async def get_worker(request: Request, response: Response, session: AsyncSession
 async def get_registrators(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     role_registrator: Role = await Role.get_role_by_rolename(session, "Регистратор")
-    result: list[User] = await User.get_user_by_role(session, role_registrator)
+    if AD:
+        token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+        user_id = await decrypt_user_id(token_dec['subject']['userId'])
+        ldap_connection = LdapConnection(session, user_id)
+        result: list[UserAD] = await ldap_connection.get_user_by_groupNameAD(role_registrator.role_group_name_AD)
+    else:
+        result: list[User] = await User.get_user_by_role(session, role_registrator)
     user_l = list()
     for user in result:
         user_l.append(

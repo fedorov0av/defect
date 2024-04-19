@@ -28,7 +28,9 @@
 									<option selected value=0>Журнал дефектов</option>
 									<option v-for="type_defect in type_defects" :value="type_defect.type_defect_id">{{ type_defect.type_defect_name	}}</option>
 								</select>
-								<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearch" @input="searchResponsibleMainTable" placeholder="Ответственный">
+								<form autocomplete="off">
+									<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearch" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Ответственный">
+								</form>
 							</div>
 							<div class="block_row">
 								<div class="block_filter_flex registrationFilterWrapper">

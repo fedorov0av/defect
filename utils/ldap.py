@@ -2,6 +2,7 @@ from ldap3 import Server, Connection, ALL, ASYNC
 from ldap3.abstract.entry import Entry
 from ldap3.core.exceptions import LDAPBindError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import NoResultFound
 
 from db.division import Division
 from db.division_ad import DivisionAD
@@ -15,7 +16,7 @@ REDIS_NAMESPACE = 'users'
 
 SERVER_URI = 'ldaps://akk-s-dc02.mbu.invalid'
 ATTRS_ALL = ['*']
-ATTRS_USER = ['description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName']
+ATTRS_USER = ['title', 'description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName', 'mailNickname']
 SEARCH_BASE = 'ou=Users,ou=_Akkuyu,dc=mbu,dc=invalid'
 
 GROUPS_AD_FOR_ROLES = [
@@ -47,7 +48,7 @@ class LdapConnection:
         self.username = username
         self.password = password
         self.attributes = ['cn', 'description', 'extensionAttribute2', 'extensionAttribute3', 'mail', 'department']
-        self.attrs_user = ['description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName', 'mailNickname']
+        self.attrs_user = ['title', 'description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName', 'mailNickname']
         if auth:
             self.succes_connection = self.start_connection()
         self.users = {}
@@ -117,6 +118,19 @@ class LdapConnection:
             if users[user]['extensionAttribute3'] == attr:
                 return await self.get_user_from_EntryLDAP(users[user])
 
+    async def get_user_by_groupNameAD(self, group_name: str) -> UserAD:
+        users = UsersLDAP.get_users()
+        result = list()
+        for user in users:
+            if group_name in users[user]['memberOf']:
+                try:
+                    userAD = await self.get_user_from_EntryLDAP(users[user])
+                except NoResultFound as err:
+                    print('erorr ==', err)
+                    print('userAD ==', userAD)
+                result.append(userAD)
+        return result
+            
     async def get_user_by_dep(self, dep: str) -> UserAD:
         users = UsersLDAP.get_users()
         for user in users:
