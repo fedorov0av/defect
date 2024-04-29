@@ -15,6 +15,7 @@ const appCloseDefect = Vue.createApp({
         isDisabledCloseDefect: false,
         isDisabledCloseDefect1: false,
         isDisabledCloseDefect2: false,
+        isDisabledFinishDefect: false,
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
         cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
         cardStatusDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
@@ -199,11 +200,16 @@ const appCloseDefect = Vue.createApp({
         myModal.show()
       }, /* clickButtonSpravochnikDirect */
       closeDefect() {
+        if (this.currentUser.user_division != this.cardDivisionOwner && !this.currentUserRole.includes('Администратор')
+          /* && this.currentUser.user_division != 'РусАС' */) {
+          Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDivisionOwner  + "'</b>", heightAuto: false}); 
+          return;  
+        }   
         Swal.fire({
           title: "Закрыть дефект?",
           showDenyButton: true,
           confirmButtonText: "ПОДТВЕРЖДАЮ",
-          denyButtonText: `ОТМЕНА`
+          denyButtonText: `ОТМЕНА` 
         }).then((result) => {
           if (result.isConfirmed) {
             let textHistory = '';
@@ -293,6 +299,11 @@ const appCloseDefect = Vue.createApp({
         myModal.show()
       },/* infoDefect */
       requiresSolution() {
+        if (this.currentUser.user_division != this.cardDivisionOwner && !this.currentUserRole.includes('Администратор')
+          /* && this.currentUser.user_division != 'РусАС' */) {
+          Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDivisionOwner  + "'</b>", heightAuto: false}); 
+          return;  
+        }  
         appCorrectionDefect.defect_id = this.defect_id;
         appCorrectionDefect.parent_button_close_modal_name = 'closeCloseDefectModalWindow';
         var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {

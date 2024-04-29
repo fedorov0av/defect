@@ -25,7 +25,7 @@ ENV TZ=Europe/Istanbul
 WORKDIR /defects
 
 # Открытие порта
-EXPOSE 80 443
+EXPOSE 443
 #EXPOSE 4000
 # Команда запуска приложения
 #CMD ["uvicorn", "main:app", "--workers", "9", "--host", "0.0.0.0", "--port", "4000", "--ssl-keyfile", "cert/private.key", "--ssl-certfile", "cert/defect-journal.akkuyu.local.cer"]

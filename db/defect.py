@@ -32,19 +32,19 @@ class Defect(Base):
     if not AD:
         defect_registrar: Mapped["User"] = relationship(foreign_keys=[defect_registrator_id]) #  для работы с таблицей User как с объектом
     #defect_owner_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - владелец оборудования.
-    defect_owner_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String) # id поста из таблицы User - владелец оборудования.
+    defect_owner_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String, nullable=True) # id поста из таблицы User - владелец оборудования.
     if not AD:
         defect_owner: Mapped["User"] = relationship(foreign_keys=[defect_owner_id]) #  для работы с таблицей User как с объектом
     #defect_repair_manager_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - руководитель ремонта.
-    defect_repair_manager_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String) # id поста из таблицы User - руководитель ремонта.
+    defect_repair_manager_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String, nullable=True) # id поста из таблицы User - руководитель ремонта.
     if not AD:
         defect_repair_manager: Mapped["User"] = relationship(foreign_keys=[defect_repair_manager_id]) #  для работы с таблицей User как с объектом
     #defect_worker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - исполнитель ремонта.
-    defect_worker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String) # id поста из таблицы User - исполнитель ремонта.
+    defect_worker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String, nullable=True) # id поста из таблицы User - исполнитель ремонта.
     if not AD:
         defect_worker: Mapped["User"] = relationship(foreign_keys=[defect_worker_id]) #  для работы с таблицей User как с объектом
     #defect_checker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - выполняющий ОП проверку.
-    defect_checker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String) # id поста из таблицы User - выполняющий ОП проверку.
+    defect_checker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String, nullable=True) # id поста из таблицы User - выполняющий ОП проверку.
     if not AD:
         defect_checker: Mapped["User"] = relationship(foreign_keys=[defect_checker_id]) #  для работы с таблицей User как с объектом
     

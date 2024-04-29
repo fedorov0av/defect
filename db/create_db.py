@@ -298,7 +298,7 @@ DIVISIONS = (
             ('ТЦ-1', ('Turbine shop of the 1st stage', 'Turbine Shop',)),
             ('ТЦ-2', ('Turbine shop of the 2nd stage',)),
             ('ХЦ', ('Chemical shop',)),
-            ('ЦВиК', ('Ventilation and Air Conditioning Shop', 'Deputy Chief Technology Officer for Operation', 'Ventilation and air conditioning shop')),
+            ('ЦВиК', ('Ventilation and Air Conditioning Shop', 'Deputy Chief Technology Officer for Operation', 'Ventilation and air conditioning shop', 'deputy chief technology officer for \noperation')),
             ('СТУ', ('Process Control Service', 'Process control service',)),
             ('ЦОРОиОЯТ', ('Workshop for Radioactive Waste and Spent Nuclear Fuel Management', 'Radioactive Waste Management Department',)),
             ('ЦРБ', ('Radiation safety shop', 'Radiation Safety Shop',)),

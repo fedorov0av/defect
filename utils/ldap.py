@@ -79,19 +79,20 @@ class LdapConnection:
                 user_departament = raw_user['attributes']['department']
                 user_mail = raw_user['attributes']['mail']
                 user_mailNickname = raw_user['attributes']['mailNickname']
+                user_fio = raw_user['attributes']['extensionAttribute2']
                 UsersLDAP.add_user(user_id=user_sAMAccountName.lower(),
                                    value = {
                     'description': raw_user['attributes']['description'][0],
                     'department': user_departament.lower(),
                     'memberOf': raw_user['attributes']['memberOf'],
-                    'extensionAttribute2': raw_user['attributes']['extensionAttribute2'],
+                    'extensionAttribute2': user_fio if user_fio else raw_user['attributes']['title'],
                     'mail': user_mail.lower(),
                     'mailNickname': user_mailNickname.lower(),
                     'sAMAccountName': user_sAMAccountName.lower(),
                 })
             except IndexError as err:
                 print('Error Redis ==== ', err)
-                print('Ошибка вохникла на пользователе ==== ', raw_user)
+                print('Ошибка возникла на пользователе ==== ', raw_user)
             except AttributeError as err:
                 print('Error Redis ==== ', err)
                 print('Ошибка вохникла на пользователе ==== ', raw_user)
@@ -128,7 +129,8 @@ class LdapConnection:
                 except NoResultFound as err:
                     print('erorr ==', err)
                     print('userAD ==', userAD)
-                result.append(userAD)
+                else:
+                    result.append(userAD)
         return result
             
     async def get_user_by_dep(self, dep: str) -> UserAD:
