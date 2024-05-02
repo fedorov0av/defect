@@ -154,7 +154,7 @@ const appCloseDefect = Vue.createApp({
                 } else if (this.currentUserDivision !== this.cardDivisionOwner ) {
                   this.isDisabledCloseDefect = true;
                 } else { this.isDisabledCloseDefect = false;}
-                if (!this.currentUserRole.includes('Администратор')){
+                if (this.currentUserRole.includes('Администратор')){
                   this.isDisabledCloseDefect = false;
                 }
                 if (!this.currentUserRole.includes('Администратор')){

@@ -192,7 +192,7 @@ const appCheckDefect = Vue.createApp({
         setSettingClickButtonClassification(this)
       },
       successDefect() {
-        if (this.currentUser.user_division != this.cardDivisionOwner) {
+        if (this.currentUser.user_division != this.cardDivisionOwner && !this.currentUserRole.includes('Администратор')) {
           Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDivisionOwner  + "'</b>", heightAuto: false}); 
           return;  
         }  
@@ -244,7 +244,7 @@ const appCheckDefect = Vue.createApp({
         });
       },/* executionDefect */
       warningDefect() {
-        if (this.currentUser.user_division != this.cardDivisionOwner) {
+        if (this.currentUser.user_division != this.cardDivisionOwner && !this.currentUserRole.includes('Администратор')) {
           Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDivisionOwner  + "'</b>", heightAuto: false}); 
           return;  
         }   
@@ -295,7 +295,7 @@ const appCheckDefect = Vue.createApp({
         });
       },/* warningDefect */
       dangerDefect() {
-        if (this.currentUser.user_division != this.cardDivisionOwner) {
+        if (this.currentUser.user_division != this.cardDivisionOwner && !this.currentUserRole.includes('Администратор')) {
           Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDivisionOwner  + "'</b>", heightAuto: false}); 
           return;  
         }   

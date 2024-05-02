@@ -77,9 +77,9 @@ const appVueFilter = Vue.createApp({
           if (this.startDate !== null && this.endDate !== null) {
             if (this.startDate >= this.endDate) {
               if (this.startDate != this.endDate){
-              Swal.fire({html:"<b>Дата окончания должна быть позже даты начала!</b>", heightAuto: false}); 
-              return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
-              } else return;
+                Swal.fire({html:"<b>Дата окончания должна быть позже даты начала!</b>", heightAuto: false}); 
+                return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
+              }
             }
           }
           if (this.pnr === true){ 
