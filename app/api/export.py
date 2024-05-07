@@ -20,10 +20,10 @@ from utils.jwt import decrypt_user_id, decode_token
 from utils.ldap import LdapConnection
 
 
-export_router = APIRouter()
+export_router = APIRouter() 
 
-COLUMNS_NAME = ['№', 'Дата регистрации', 'Срок устранения', 'Подразделение-владелец', 'KKS', 'Оборудование', 'Описание дефекта', 'Статус', 'Ответственный']
-COLUMNS_WIDTHS = {'№': 30, 'Дата регистрации': 60, 'Срок устранения': 60, 'Подразделение-владелец': 80, 'KKS': 40, 'Оборудование': 60, 'Описание дефекта': 100, 'Статус': 40, 'Ответственный': 50}
+COLUMNS_NAME = ['№', 'Дата регистрации', 'Срок устранения', 'Подразделение-владелец', 'KKS', 'Оборудование', 'Описание дефекта', 'Статус', 'Ответственный', 'Категория дефекта', 'Класс дефекта', 'Код кор. п', 'Коренная причина дефекта', 'Код неп. п', 'Непосредственная причина дефекта']
+COLUMNS_WIDTHS = {'№': 30, 'Дата регистрации': 60, 'Срок устранения': 60, 'Подразделение-владелец': 80, 'KKS': 40, 'Оборудование': 60, 'Описание дефекта': 100, 'Статус': 40, 'Ответственный': 50, 'Категория дефекта': 50, 'Класс дефекта': 50, 'Код кор. п': 40, 'Коренная причина дефекта': 60, 'Код неп. п': 40, 'Непосредственная причина дефекта': 60}
 
 COLUMNS_NAME_HISTORY = ['№', 'Дата', 'Статус', 'Ответственное лицо', 'Комментарий']
 
@@ -53,7 +53,13 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
                             defect.defect_status.status_defect_name,
                             (defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name if
                                 defect.defect_repair_manager else
-                                defect.defect_division.division_name) if not AD else defect_repair_manager_fullname
+                                defect.defect_division.division_name) if not AD else defect_repair_manager_fullname,
+                            (defect.defect_category_defect.category_defect_name) if defect.defect_category_defect else None,
+                            (defect.defect_system_klass) if defect.defect_system_klass else None,
+                            (defect.defect_core_category_reason.category_reason_code) if defect.defect_core_category_reason else None,
+                            (defect.defect_core_category_reason.category_reason_name) if defect.defect_core_category_reason else None,
+                            (defect.defect_direct_category_reason.category_reason_code) if defect.defect_direct_category_reason else None,
+                            (defect.defect_direct_category_reason.category_reason_name) if defect.defect_direct_category_reason else None,
                             ],], 
                             columns=COLUMNS_NAME
                             )
@@ -69,11 +75,17 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
         writer.book.worksheets[-1].column_dimensions['F'].width = 30 # Оборудование
         writer.book.worksheets[-1].column_dimensions['G'].width = 30 # Описание дефекта
         writer.book.worksheets[-1].column_dimensions['H'].width = 22 # Статус
-        writer.book.worksheets[-1].column_dimensions['I'].width = 20 # Ответственный
+        writer.book.worksheets[-1].column_dimensions['I'].width = 25 # Ответственный
+        writer.book.worksheets[-1].column_dimensions['J'].width = 25 # Категория дефекта
+        writer.book.worksheets[-1].column_dimensions['K'].width = 16 # Классификация дефекта
+        writer.book.worksheets[-1].column_dimensions['L'].width = 13 # Код коренной причины
+        writer.book.worksheets[-1].column_dimensions['M'].width = 80 # Коренная причина дефекта
+        writer.book.worksheets[-1].column_dimensions['N'].width = 13 # Код непосредственной причины
+        writer.book.worksheets[-1].column_dimensions['O'].width = 80 # Непосредственная причина дефекта
         row_count = 1 # номер стартовой строки для начала добавления рамки и переноса строки
         for row in dataframe_to_rows(df, index=True, header=False):
             row_count += 1
-            for row in writer.book.worksheets[-1]['A'+str(row_count):'I'+str(row_count)]:
+            for row in writer.book.worksheets[-1]['A'+str(row_count):'O'+str(row_count)]:
                 for cell in row:
                     cell.alignment = Alignment(wrap_text=True)
     return StreamingResponse(
@@ -107,44 +119,58 @@ async def export_history_excel_defect(request: Request, response: Response, defe
         defect_repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
         defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else ''
 
-    df_header_left_title = pd.DataFrame({"Data": ['Номер дефекта:', 
+    df_header_left_title = pd.DataFrame({"Data": ['ОБЩАЯ ИНФОРМАЦИЯ:',
+                                                  'Номер дефекта:', 
                                                   'Тип дефекта:',
                                                   'KKS:', 
-                                                  'Описание дефекта:', 
                                                   'Подразделение-владелец:', 
                                                   'Дата регистрации:',
                                                   'Срок устранения:', 
                                                   'Выполненные работы:',
-                                                  'Выполнил проверку:']})
+                                                  'Результат проверки:',
+                                                  '',
+                                                  'КЛАССИФИКАЦИЯ ДЕФЕКТА:',
+                                                  'Категория дефекта:',
+                                                  'Классификация оборудования:',
+                                                  'Коренная причина дефекта:',
+                                                  'Непосредственная причина дефекта:',
+                                                  '',
+                                                  'ИСТОРИЯ ДЕФЕКТА:',]})
 
-    df_header_left_data = pd.DataFrame({"Data": [defect.defect_id, 
+    df_header_left_data = pd.DataFrame({"Data": ['',
+                                                 defect.defect_id, 
                                                  defect.defect_type.type_defect_name, 
                                                  defect.defect_system.system_kks if defect.defect_system else '', 
-                                                 defect.defect_description, 
                                                  defect.defect_division.division_name, 
                                                  defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                                                  (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '') if not defect.defect_ppr else 'Устр. в ППР', 
                                                  defect.defect_work_comment,
-                                                 (defect.defect_checker.user_surname + ' ' + defect.defect_checker.user_name if defect.defect_checker else '') if not AD else defect_checker_fullname
-                                                 ]})
+                                                 defect.defect_check_result,
+                                                 '',
+                                                 '',
+                                                 (defect.defect_category_defect.category_defect_name) if defect.defect_core_category_reason else None,
+                                                 (defect.defect_system_klass) if defect.defect_system_klass else None,
+                                                 ((defect.defect_core_category_reason.category_reason_code) if defect.defect_core_category_reason else None) + ' ' + (defect.defect_core_category_reason.category_reason_name) if defect.defect_core_category_reason else None,
+                                                 ((defect.defect_direct_category_reason.category_reason_code) if defect.defect_direct_category_reason else None) + ' ' + (defect.defect_direct_category_reason.category_reason_name) if defect.defect_direct_category_reason else None,]})
     
-    df_header_right_title = pd.DataFrame({"Data": ['Статус дефекта', 
+    df_header_right_title = pd.DataFrame({"Data": ['Статус дефекта:', 
                                                   'Оборудование:',
+                                                  'Описание дефекта',
                                                   'Местоположение:', 
                                                   'Обнаружил дефект:', 
                                                   'Руководитель ремонта:', 
                                                   'Исполнитель ремонта:',
-                                                  '',
-                                                  'Результат проверки:']})
+                                                  'Выполнил проверку:']})
     
     df_header_right_data = pd.DataFrame({"Data": [defect.defect_status.status_defect_name, 
                                                  defect.defect_system.system_name, 
+                                                 defect.defect_description,
                                                  defect.defect_location, 
                                                  (defect.defect_registrar.user_surname + ' ' + defect.defect_registrar.user_name + ' ' + defect.defect_registrar.user_fathername if defect.defect_registrar else '') if not AD else defect_registrar_fullname,
                                                  (defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name if defect.defect_repair_manager else '') if not AD else defect_repair_manager_fullname,
                                                  (defect.defect_worker.user_surname + ' ' + defect.defect_worker.user_name + ' ' + defect.defect_worker.user_fathername if defect.defect_worker else '') if not AD else defect_worker_fullname,
-                                                 '', 
-                                                 defect.defect_check_result]})
+                                                 (defect.defect_checker.user_surname + ' ' + defect.defect_checker.user_name if defect.defect_checker else '') if not AD else defect_checker_fullname,
+                                                 '']})
      
     result: list[History] = await History.get_history_by_defect(session, defect)
     for count, history_defect in enumerate(result):
@@ -168,12 +194,12 @@ async def export_history_excel_defect(request: Request, response: Response, defe
         df_header_right_title.style.set_properties(**{'font-weight': 'bold'}).to_excel(writer, index=False, header=False, startcol=3, startrow=2)
         df_header_right_data.to_excel(writer, index=False, header=False, startcol=4, startrow=2)
         """ df_head.to_excel(writer, index=False, header=False, startrow=2) """
-        df_main.to_excel(writer, index=False, header=True, startrow=11)
+        df_main.to_excel(writer, index=False, header=True, startrow=18)
         writer.book.worksheets[-1].column_dimensions['A'].width = 5 # №
-        writer.book.worksheets[-1].column_dimensions['B'].width = 30 # Дата
-        writer.book.worksheets[-1].column_dimensions['C'].width = 30 # Статус
-        writer.book.worksheets[-1].column_dimensions['D'].width = 30 # Ответственное лицо
-        writer.book.worksheets[-1].column_dimensions['E'].width = 60 # Комментарий
+        writer.book.worksheets[-1].column_dimensions['B'].width = 40 # Дата
+        writer.book.worksheets[-1].column_dimensions['C'].width = 25 # Статус
+        writer.book.worksheets[-1].column_dimensions['D'].width = 25 # Ответственное лицо
+        writer.book.worksheets[-1].column_dimensions['E'].width = 80 # Комментарий
 
     return StreamingResponse(
         BytesIO(buffer.getvalue()),

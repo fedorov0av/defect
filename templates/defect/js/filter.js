@@ -10,6 +10,7 @@ const appVueFilter = Vue.createApp({
         filterDivision: 0,
         startDate: null,
         endDate: null,
+        srokDate: null,
         filterStatusDefect: 0,
         ppr: 'false',
         pnr: false,
@@ -20,11 +21,35 @@ const appVueFilter = Vue.createApp({
       }
     },
     mounted() {
+      this.setPopoverSafety()
+      this.setPopoverExploitation()
       this.updateAllTables()
       updateTableStatusDefect(this.statuses_defect)
-      this.setDivisionByUser()
+      /* this.setDivisionByUser() */
     }, /* mounted */
     methods: {
+        setPopoverSafety(){
+          $(document).ready(function(){
+            $("#flexSafetyFilter").focus(function () {
+            if(appVueFilter.safety == false)  { 
+              $('[data-toggle="popover_safety"]').popover("show")
+            } else {
+              $('[data-toggle="popover_safety"]').popover('dispose')
+            } 
+          }); 
+        })
+        },  /* setPopoverSafety */
+        setPopoverExploitation(){
+          $(document).ready(function(){
+            $("#flexExploitationFilter").focus(function () {
+            if(appVueFilter.exploitation == false)  { 
+              $('[data-toggle="popover_exploitation"]').popover("show")
+            } else {
+              $('[data-toggle="popover_exploitation"]').popover('dispose')
+            } 
+          });  
+        })
+        }, /* setPopoverExploitation */
         toggleApiOnSilent() {
           document.getElementById('toggle-silent').switchButton('on', true);
         },
@@ -84,8 +109,9 @@ const appVueFilter = Vue.createApp({
           }
           if (this.pnr === true){ 
             this.safety = false;
-            this.exploitation = false;
+            this.exploitation = false; 
           }
+          
           axios
             .post('/get_defect_by_filter/', 
               {"date_start": this.startDate,
@@ -97,6 +123,7 @@ const appVueFilter = Vue.createApp({
                "safety": this.safety === true ? true : null,
                "exploitation": this.exploitation === true ? true : null,
                "type_defect_id":  this.filterType,
+               "date_srok":  this.srokDate,
               }
             )
             .then(response => {
@@ -154,6 +181,8 @@ const appVueFilter = Vue.createApp({
               }
                 }) /* axios */
             document.dispatchEvent(new Event('resetSorting'));
+            this.setPopoverSafety();
+            this.setPopoverExploitation();
         }, /* useFilter */
         nouseFilter() {
           this.clearData();
@@ -171,7 +200,7 @@ const appVueFilter = Vue.createApp({
             }
               }) /* axios */
         }, /* nouseFilter */
-        setDivisionByUser(){
+        /* setDivisionByUser(){
           axios
           .post('/user/me')
           .then(response => {

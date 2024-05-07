@@ -331,6 +331,7 @@ DIVISIONS = (
                             'Technical Affairs for Nuclear Safety Support',
                             'Repair management',
                             'Directorate for Engineering and Technical Support',
+                            'deputy director of npp under construction - chief technology off'
                             )),
             ('РусАС', ('Temp Departament',)),
             )

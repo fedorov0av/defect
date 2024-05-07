@@ -74,7 +74,7 @@ const appCloseDefect = Vue.createApp({
       },  setPopover */
       setPopover(){
         $(document).ready(function(){
-          if($("#closeCheckDefectButton1"))  {
+          if($("#closeCheckDefectButton1"))  { 
             $('[data-toggle="popover_close"]').popover({
             placement : 'top'
           });
@@ -312,7 +312,14 @@ const appCloseDefect = Vue.createApp({
         myModal.show()
       },/* requiresSolution */
       cancelDefect() {
-        Swal.fire({
+        appCancelDefect.defect_id = this.defect_id;
+        appCancelDefect.parent_button_close_modal_name = 'closeCloseDefectModalWindow';
+        var myModal = new bootstrap.Modal(document.getElementById('CancelDefectModalWindow'), {
+          keyboard: false
+        })
+        myModal.show()
+
+        /* Swal.fire({
           title: "Вы действительно хотите отменить дефект?",
           showDenyButton: true,
           confirmButtonText: "ДА",
@@ -334,9 +341,9 @@ const appCloseDefect = Vue.createApp({
                       Swal.fire({html:"<b>Произошла ошибка при ОТМЕНЫ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
                       console.log(err);
                     }
-                }) /* axios */
+                }) 
             }
-        });
+        }); */
       },/* cancelDefect */
       exportHistoryExcel(){
         runExportHistoryExcel(this.defect_id);

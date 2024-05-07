@@ -38,6 +38,7 @@ class Filter(BaseModel):
     safety: Optional[bool] = None
     exploitation: Optional[bool] = None
     type_defect_id: Optional[int] = 0 
+    """ date_srok: Optional[str] = None """
 
 class DivisionAD(BaseModel):
     division_id: Optional[int]

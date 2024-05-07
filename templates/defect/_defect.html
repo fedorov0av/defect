@@ -63,12 +63,15 @@
                       <b class="label">KKS</b>
                     </div>
                     <div class="block_data8">
-                      <div class="form-floating block_row1 margin6px">
-                        <input type="text" id="inputKKS" class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newTypeDefect]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
-                        v-model="newSystemKKS" :disabled="newTypeDefect==='0'" :placeholder="placeholders[newTypeDefect]" />
-                        <label for="inputKKS" :hidden="newTypeDefect==='0'">{{ placeholders[newTypeDefect] }}</label>
+                      <div class="block_row1 margin6px">
+                        <!-- <input type="text" id="inputKKS" class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newTypeDefect]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
+                        v-model="newSystemKKS" :disabled="newTypeDefect==='0'" :placeholder="placeholders[newTypeDefect]" /> -->
+                        <input type="text" id="inputKKS" class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska data-maska="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH" data-maska-tokens="H:[0-9a-zA-Z]" v-model="newSystemKKS"
+                        :disabled="newTypeDefect==='0'" />
+                        <!-- <label for="inputKKS" :hidden="newTypeDefect==='0'">{{ placeholders[newTypeDefect] }}</label> -->
                         <div class="KKS_discr">
-                          <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
+                          <p class="text-muted">KKS должен состоять только из цифр и латинских букв!</p>
+                          <!-- <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p> -->
                         </div>
                       </div>
                     </div>
@@ -91,11 +94,11 @@
                     </div>
                     <div class="block_data_column2">
                       <div class="form-check form-switch ">
-                        <input class="form-check-input" type="checkbox" id="flexSafetyAddDefect" v-model="newSafety" :disabled="newPnr===true">
+                        <input class="form-check-input" type="checkbox" id="flexSafetyAddDefect" v-model="newSafety" :disabled="newPnr===true" data-toggle="popover_safety_add_defect" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 72 часов">
                         <label class="form-check-label margin-right" for="flexSafetyAddDefect">Влияет на безопасность и несение нагрузки</label>
                       </div>
                       <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexExploitationAddDefect" v-model="newExploitation" :disabled="newPnr===true">
+                        <input class="form-check-input" type="checkbox" id="flexExploitationAddDefect" v-model="newExploitation" :disabled="newPnr===true" data-toggle="popover_exploitation_add_defect" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 15 рабочих дней">
                         <label class="form-check-label margin-right" for="flexExploitationAddDefect">Влияет на режим нормальной эксплуатации</label>
                       </div>
                     </div>
@@ -276,7 +279,7 @@
                         <textarea class="form-control height100 textareanoneresize" aria-label="Disabled input example" v-model="newDirectClassificationName" disabled></textarea>
                       </div>
                     </div>
-                  </div>
+                  </div> 
                   <br>
                 </div>
               </div>   
@@ -297,4 +300,4 @@
   </div>
 </div>
 {% endraw %}
-<script src="{{ url_for('defect_js', path='modal/defect.js') }}"></script>
+<script src="{{ url_for('defect_js', path='modal/defect.js?v=0.2') }}"></script>

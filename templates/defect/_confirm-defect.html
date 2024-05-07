@@ -66,12 +66,15 @@
                         <b class="label">KKS</b>
                       </div>
                       <div class="block_data8">
-                        <div class="form-floating block_row1 margin6px">
-                          <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
-                          v-model="newCardKKS" :placeholder="placeholders[newCardTypeDefectName]" />
-                          <label for="inputConfirmKKS" :hidden="newCardTypeDefectName==='0'">{{ placeholders[newCardTypeDefectName] }}</label>
+                        <div class="block_row1 margin6px">
+                          <!-- <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
+                          v-model="newCardKKS" :placeholder="placeholders[newCardTypeDefectName]" /> -->
+                          <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska data-maska="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH" data-maska-tokens="H:[0-9a-zA-Z]"
+                          v-model="newCardKKS"/>
+                          <!-- <label for="inputConfirmKKS" :hidden="newCardTypeDefectName==='0'">{{ placeholders[newCardTypeDefectName] }}</label> -->
                           <div class="KKS_discr">
-                            <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
+                            <p class="text-muted">KKS должен состоять только из цифр и латинских букв!</p>
+                            <!-- <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p> -->
                           </div>
                         </div>
                       </div>
@@ -94,11 +97,11 @@
                       </div>
                       <div class="block_data_column2">
                         <div class="form-check form-switch ">
-                          <input class="form-check-input" type="checkbox" id="flexSafetyConfirm" v-model="newSafety" :disabled="newPnr===true || isDisabledConfirmDefect===true">
+                          <input class="form-check-input" type="checkbox" id="flexSafetyConfirm" v-model="newSafety" :disabled="newPnr===true || isDisabledConfirmDefect===true" data-toggle="popover_safety_confirm_defect" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 72 часов">
                           <label class="form-check-label margin-right" for="flexSafetyConfirm">Влияет на безопасность и несение нагрузки</label>
                         </div>
                         <div class="form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="flexExploitationConfirm" v-model="newExploitation" :disabled="newPnr===true || isDisabledConfirmDefect===true">
+                          <input class="form-check-input" type="checkbox" id="flexExploitationConfirm" v-model="newExploitation" :disabled="newPnr===true || isDisabledConfirmDefect===true" data-toggle="popover_exploitation_confirm_defect" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 15 рабочих дней">
                           <label class="form-check-label margin-right" for="flexExploitationConfirm">Влияет на режим нормальной эксплуатации</label>
                         </div>
                       </div>
@@ -261,7 +264,7 @@
                           <b class="label">Категория дефекта</b>
                         </div>
                         <select class="form-select" v-model="newCategoryDefect_id" :disabled='isDisabledConfirmDefect'>
-                          <option selected :value=0>Выберите категорию дефекта</option>
+                          <option selected :value=0>Выберите категорию</option>
                           <option v-for="category_defect in categories_defect" :value="category_defect.category_defect_id">{{ category_defect.category_defect_name }}</option>
                         </select>  
                       </div>
@@ -269,8 +272,17 @@
                         <div class="block_input_data">
                           <b class="label">Классификация оборудования по НП-001-97</b>
                         </div>
-                        <input type="text" class="form-control" @input="changeTextWork40" placeholder="Введите классификацию оборудования" v-model.lazy="newClassSystemName" :disabled='isDisabledConfirmDefect'>
+                        <input type="text" class="form-control" @input="changeTextWork40" placeholder="Введите классификацию" v-model.lazy="newClassSystemName" :disabled='isDisabledConfirmDefect'>
                       </div>
+
+                      <div class="block_data_column rr20 width100">
+                        <div class="block_input_data">
+                          <b class="label">Описание дефекта</b> 
+                        </div>
+                        <input type="text" class="form-control" v-model.lazy="newCardDescription" placeholder="Введите описание дефекта" disabled>
+                        <p id="notes-confirm" class="pos_a1"></p>
+                      </div>
+
                     </div>
                     <br>
                     <br>
@@ -353,4 +365,4 @@
 
   </div>
   {% endraw %}
-  <script src="{{ url_for('defect_js', path='modal/confirm-defect.js') }}"></script>
+  <script src="{{ url_for('defect_js', path='modal/confirm-defect.js?v=0.2') }}"></script>

@@ -80,6 +80,8 @@ const appConfirmDefect = Vue.createApp({
         })
     },
     mounted() {
+      this.setPopoverSafetyConfirmDefect()
+      this.setPopoverExploitationConfirmDefect()
       this.setLimitNotes();
       this.setLimitSystem();
       this.setLimitLocation();
@@ -98,6 +100,28 @@ const appConfirmDefect = Vue.createApp({
       })
     },
     methods: {
+      setPopoverSafetyConfirmDefect(){
+        $(document).ready(function(){
+          $("#flexSafetyConfirm").focus(function () {
+          if(appConfirmDefect.newSafety == false)  { 
+            $('[data-toggle="popover_safety_confirm_defect"]').popover("show")
+          } else {
+            $('[data-toggle="popover_safety_confirm_defect"]').popover('dispose')
+          } 
+        }); 
+      })
+      },  /* setPopoverSafetyConfirmDefect */
+      setPopoverExploitationConfirmDefect(){
+        $(document).ready(function(){
+          $("#flexExploitationConfirm").focus(function () {
+          if(appConfirmDefect.newExploitation == false)  { 
+            $('[data-toggle="popover_exploitation_confirm_defect"]').popover("show")
+          } else {
+            $('[data-toggle="popover_exploitation_confirm_defect"]').popover('dispose')
+          } 
+        }); 
+      })
+      }, /* setPopoverExploitationConfirmDefect */
       setLimitNotes(event){
         setLimit("my-notes-confirm", "notes-confirm", 200, this.newCardDescription)
       }, /* setLimitNotes */
@@ -282,7 +306,7 @@ const appConfirmDefect = Vue.createApp({
         }
         if (this.newRepairManager_id == '') {
           this.check_repair_manager = true;
-          Swal.fire({html:"<b>Поле Руководитель должно быть заполнено!</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Поле 'Ответсвенный за уcтранение' должно быть заполнено!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
 
@@ -297,13 +321,13 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
-        if ((this.cardKKS !== '' && this.newCardKKS !== '' && this.newCardKKS !== null) && this.placeholders[this.newCardTypeDefectName] === '##XXX##XN##AAAAAA') {
+        /* if ((this.cardKKS !== '' && this.newCardKKS !== '' && this.newCardKKS !== null) && this.placeholders[this.newCardTypeDefectName] === '##XXX##XN##AAAAAA') {
           this.checkMask()
         }
         if ((this.cardKKS !== '' && this.newCardKKS !== '' && this.newCardKKS !== null) && !this.maskObject.completed) {
           Swal.fire({html:"<b>KKS введен не полностью!</b>", heightAuto: false});
           return;
-        }
+        } */
         /* if (this.newDirectClassificationName === '' && this.newDirectClassificationCode !== '') {
           Swal.fire({html:"<b>Причина события в разделе 'Непосредственная причина события' должна быть заполнена!</b>", heightAuto: false});
           return;
@@ -499,7 +523,17 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.defect_divisions[this.newDivisionOwner_id-1].division_name  + "'</b>", heightAuto: false}); 
           return;  /* Если дефект чужой, то выходим из функции */
         }
-        Swal.fire({
+
+
+        appCancelDefect.defect_id = this.defect_id;
+        appCancelDefect.parent_button_close_modal_name = 'closeConfirmDefectModalWindow';
+        var myModal = new bootstrap.Modal(document.getElementById('CancelDefectModalWindow'), {
+          keyboard: false
+        })
+        myModal.show()
+
+
+        /* Swal.fire({
           title: "Вы действительно хотите отменить дефект?",
           showDenyButton: true,
           confirmButtonText: "ДА",
@@ -511,7 +545,6 @@ const appConfirmDefect = Vue.createApp({
             .post('/update_status_defect', data)
             .then(response => {
                 document.getElementById('closeConfirmDefectModalWindow').click();
-                /* appVueDefect.updateTables() */
                 appVueFilter.useFilter()
                 Swal.fire("ДЕФЕКТ ОТМЕНЕН", "", "success");
                   })
@@ -521,10 +554,11 @@ const appConfirmDefect = Vue.createApp({
                     } else {
                       Swal.fire({html:"<b>Произошла ошибка при ОТМЕНЫ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
                       console.log(err);
-                    }
-                }) /* axios */
+                    } 
+                }) 
             }
-        });
+        }); */
+
       },/* cancelDefect */
       exportHistoryExcel(){
         runExportHistoryExcel(this.defect_id);

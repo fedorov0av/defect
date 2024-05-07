@@ -543,7 +543,8 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                                             pnr = filter.pnr,
                                             safety = filter.safety,
                                             exploitation = filter.exploitation,
-                                            type_defect_id = filter.type_defect_id)
+                                            type_defect_id = filter.type_defect_id,
+                                            )
     defects_with_filters = list()
     for defect in result:
         if AD:
@@ -576,6 +577,8 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                 'defect_worker': defect.defect_worker if not AD else defect_worker,
                 'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
                                         if not defect.defect_ppr else 'Устр. в ППР',
+                """ 'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
+                                        if not defect.defect_ppr else 'Устр. в ППР', """
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,

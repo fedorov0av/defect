@@ -51,10 +51,16 @@
 										</div>
 									</div>
 								</div>
+
 								<div class="block_filter_flex eliminationFilterWrapper">
 									<div class="form-check form-switch block-checkbox4">
 										<input class="form-check-input" type="checkbox" @change="useFilter" id="flexCheckChecked" v-model="ppr">
 										<label class="form-check-label margin-right" for="flexCheckChecked">В ППР</label>
+									</div>
+									<div class="mydatechoise justify-content-center">
+										<div class="block_data_ppr col-lg-3 col-sm-6">
+											<input id="srokDate" class="form-control" type="date" @change="useFilter" v-model="srokDate"/>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -81,12 +87,12 @@
 								</div>
 								<div class="block_data_column2">
 									<div class="form-check form-switch ">
-									<input class="form-check-input" type="checkbox" id="flexSafetyFilter" v-model="safety" :disabled="pnr===true" @change="useFilter">
-									<label class="form-check-label margin-right" for="flexSafetyFilter">Влияет на безопасность и несение нагрузки</label>
+										<input class="form-check-input" type="checkbox" id="flexSafetyFilter" v-model="safety" :disabled="pnr===true" @change="useFilter" data-toggle="popover_safety" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 72 часов">
+										<label class="form-check-label margin-right" for="flexSafetyFilter">Влияет на безопасность и несение нагрузки</label> 
 									</div>
 									<div class="form-check form-switch">
-									<input class="form-check-input" type="checkbox" id="flexExploitationFilter" v-model="exploitation" :disabled="pnr===true" @change="useFilter">
-									<label class="form-check-label margin-right" for="flexExploitationFilter">Влияет на режим нормальной эксплуатации</label>
+										<input class="form-check-input" type="checkbox" id="flexExploitationFilter" v-model="exploitation" :disabled="pnr===true" @change="useFilter" data-toggle="popover_exploitation" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 15 рабочих дней">
+										<label class="form-check-label margin-right" for="flexExploitationFilter">Влияет на режим нормальной эксплуатации</label>
 									</div>
 								</div>
 							</div>	
@@ -109,4 +115,4 @@
 </div>
 {% endraw %}
 
-<script src="{{ url_for('defect_js', path='filter.js?v=0.1') }}"></script>
+<script src="{{ url_for('defect_js', path='filter.js?v=0.2') }}"></script>

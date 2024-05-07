@@ -188,6 +188,12 @@
   margin: 0px 5px 5px 5px;
 }
 
+.container_about {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .block_data_filter {
   display: flex;
   flex-direction: row;
@@ -247,7 +253,7 @@
 }
 
 .block-checkbox4 {
-  margin: 0 35px 0 35px;
+  margin: 10px 35px 0 35px;
 }
 
 .height100 {
@@ -262,10 +268,6 @@
   width: 50%;
 }
 
-.width100 {
-  width: 100%;
-}
-
 .width300px {
   width: 350px;
 }
@@ -275,6 +277,7 @@
 }
 
 .widthKKS {
+  height: 60px;
   width: 50%;
 }
 
@@ -315,7 +318,7 @@
 .KKS_discr {
   text-align: left;
   vertical-align: middle;
-  padding-top: 5px;
+  padding-top: 15px;
 }
 
 .block_nav_modal {
@@ -360,6 +363,7 @@
     }
 
     .widthKKS {
+      height: 60px;
       width: 100%;
     }
 }
@@ -429,6 +433,11 @@
 .modal3 {
   --bs-modal-width: 80% !important;
   background-color: grey;
+}
+
+.block_data_ppr {
+  width: 80%;
+  margin: 0px 0px 5px 0px;
 }
 
 .block_data1 {

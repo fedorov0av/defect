@@ -97,7 +97,7 @@ const appExecutionDefect = Vue.createApp({
         });
       }, /* setPopover */
       updateTables() {
-        cardHistorys = getDataCardHistoryes();
+        this.cardHistorys = getDataCardHistoryes();
         updateTableDivision(this.defect_divisions);
         updateTableTypeDefect(this.defect_type_defects);
         updateTableStatusDefect(this.statuses_defect);
@@ -254,20 +254,24 @@ const appExecutionDefect = Vue.createApp({
         myModal.show()
       },/* requiresSolution */
       cancelDefect() {
-        Swal.fire({
+        appCancelDefect.defect_id = this.defect_id;
+        appCancelDefect.parent_button_close_modal_name = 'closeExecutionModalWindow';
+        var myModal = new bootstrap.Modal(document.getElementById('CancelDefectModalWindow'), {
+          keyboard: false
+        })
+        myModal.show()
+        /* Swal.fire({
           title: "Вы действительно хотите отменить дефект?",
           showDenyButton: true,
           confirmButtonText: "ДА",
           denyButtonText: `НЕТ`
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
             data = {"defect_id": {"defect_id": this.defect_id},"status_name": {"status_defect_name": this.statuses_defect[8].status_defect_name}}
             axios
             .post('/update_status_defect', data)
             .then(response => {
                 document.getElementById('closeExecutionModalWindow').click();
-                /* appVueDefect.updateTables() */
                 appVueFilter.useFilter()
                 Swal.fire("ДЕФЕКТ ОТМЕНЕН", "", "success");
                   })
@@ -278,9 +282,9 @@ const appExecutionDefect = Vue.createApp({
                       Swal.fire({html:"<b>Произошла ошибка при ОТМЕНЫ ДЕФЕКТА! Обратитесь к администратору!</b>", heightAuto: false}); 
                       console.log(err);
                     }
-                }) /* axios */
+                })
             }
-        });
+        }); */
       },/* cancelDefect */
       exportHistoryExcel(){
         runExportHistoryExcel(this.defect_id);

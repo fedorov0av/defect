@@ -50,6 +50,8 @@ const appVueAddDefect = Vue.createApp({
         })
     },
     mounted() {
+      this.setPopoverSafetyAddDefect()
+      this.setPopoverExploitationAddDefect()
       this.setLimitNotes()
       this.setLimitSystem()
       this.setLimitLocation()
@@ -71,6 +73,28 @@ const appVueAddDefect = Vue.createApp({
     })
     },
     methods: {
+      setPopoverSafetyAddDefect(){
+        $(document).ready(function(){
+          $("#flexSafetyAddDefect").focus(function () {
+          if(appVueAddDefect.newSafety == false)  { 
+            $('[data-toggle="popover_safety_add_defect"]').popover("show")
+          } else {
+            $('[data-toggle="popover_safety_add_defect"]').popover('dispose')
+          } 
+        }); 
+      })
+      },  /* setPopoverSafetyAddDefect */
+      setPopoverExploitationAddDefect(){
+        $(document).ready(function(){
+          $("#flexExploitationAddDefect").focus(function () {
+          if(appVueAddDefect.newExploitation == false)  { 
+            $('[data-toggle="popover_exploitation_add_defect"]').popover("show")
+          } else {
+            $('[data-toggle="popover_exploitation_add_defect"]').popover('dispose')
+          } 
+        }); 
+      })
+      }, /* setPopoverExploitationAddDefect */
       changeTextWork100(event){
         if (event.target.value.length > 100){
           event.target.value = event.target.value.slice(0, 100);
@@ -196,9 +220,9 @@ const appVueAddDefect = Vue.createApp({
         myModal.show()
       }, /* clickbuttonspravochnik */
       addNewDefect() {
-        if (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA') {
+        /* if (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA') {
           this.checkMask()
-        }
+        } */
         if (this.newTypeDefect == '0'){
           this.style_input_type = "#ff2851"
           this.check_defect_type = true
@@ -215,9 +239,9 @@ const appVueAddDefect = Vue.createApp({
         else if (this.newDivisionOwner_id == '0' ){
               Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены!</b>", heightAuto: false}); 
         } /* else if */
-        else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
+        /* else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
           Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
-        } 
+        }  */
         /*else if (this.newCategoryDefect === 0) {
           Swal.fire({html:"<b>Категория дефекта должна быть заполнена!</b>", heightAuto: false});
         }  */
