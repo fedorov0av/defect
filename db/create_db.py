@@ -395,8 +395,9 @@ async def create_tables():
             division = Division(division_name=division_name)
             session.add(division)
             await session.commit()
+            division_id = division.division_id
             for division_AD in divisions_AD:
-                divisionAD =  DivisionAD(divisionAD_name=division_AD.lower(), divisionAD_division_id=division.division_id)
+                divisionAD =  DivisionAD(divisionAD_name=division_AD.lower(), divisionAD_division_id=division_id)
                 session.add(divisionAD)
                 try:
                     await session.commit()

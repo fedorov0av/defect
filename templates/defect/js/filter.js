@@ -13,14 +13,17 @@ const appVueFilter = Vue.createApp({
         srokDate: null,
         filterStatusDefect: 0,
         ppr: 'false',
+        overdue: 'false',
         pnr: false,
         safety: false,
         exploitation: false,
         dataSearch: '',
+        dataSearchDefectID: '',
         oldDefects: {},
       }
     },
     mounted() {
+      this.setPopoverDevelop()
       this.setPopoverSafety()
       this.setPopoverExploitation()
       this.updateAllTables()
@@ -28,6 +31,15 @@ const appVueFilter = Vue.createApp({
       /* this.setDivisionByUser() */
     }, /* mounted */
     methods: {
+        setPopoverDevelop(){
+          $(document).ready(function(){
+            if($("#flexOverdueChecked1"))  {
+              $('[data-toggle="popover_develop"]').popover({
+              placement : 'top'
+            });
+            }
+          });
+        }, /* setPopover */
         setPopoverSafety(){
           $(document).ready(function(){
             $("#flexSafetyFilter").focus(function () {
@@ -64,6 +76,7 @@ const appVueFilter = Vue.createApp({
           this.endDate = null;
           this.filterStatusDefect = 0;
           this.ppr = 'false';
+          this.overdue = 'false';
           this.dataSearch = '';
         }, /* clearData */        
         updateAllTables() {
@@ -90,7 +103,7 @@ const appVueFilter = Vue.createApp({
               if (this.oldDefects[defect].responsible.toUpperCase().includes(this.dataSearch.toUpperCase())){
                 tempArray[count] = this.oldDefects[defect];
                 count ++;
-              }
+              } 
             }
           }
           /* console.log(tempArray);
@@ -98,6 +111,39 @@ const appVueFilter = Vue.createApp({
           appVueDefect.defects = tempArray
 
         }, /* searchResponsibleMainTable */
+        searchResponsibleMainTableDefectID(event) {
+
+          document.dispatchEvent(new Event('resetSorting'));
+          let tempArray = {}
+          let count = 0
+          if (this.dataSearchDefectID === ''){
+            this.useFilter();
+            this.oldDefects = {};
+            return
+          }
+          if (event === null){
+            this.oldDefects = {};
+          }
+          if (Object.keys(this.oldDefects).length === 0){
+            this.oldDefects = appVueDefect.defects;
+          }
+          for (defect in this.oldDefects){
+
+            if (this.dataSearchDefectID !== ''){
+              if (this.oldDefects[defect].defect_id.includes(this.dataSearchDefectID)){
+                console.log(';sxdsa')
+
+                tempArray[count] = this.oldDefects[defect];
+                count ++;
+              }
+            }
+          }
+          /* console.log(tempArray);
+          console.log(appVueDefect.defects); */
+          appVueDefect.defects = tempArray
+
+        }, /* searchResponsibleMainTableDefectID */
+
         useFilter() {
           if (this.startDate !== null && this.endDate !== null) {
             if (this.startDate >= this.endDate) {
@@ -123,7 +169,7 @@ const appVueFilter = Vue.createApp({
                "safety": this.safety === true ? true : null,
                "exploitation": this.exploitation === true ? true : null,
                "type_defect_id":  this.filterType,
-               "date_srok":  this.srokDate,
+               /* "date_srok":  this.srokDate, */
               }
             )
             .then(response => {

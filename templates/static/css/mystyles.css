@@ -44,6 +44,13 @@
   resize: none;
 }
 
+.adapt-block {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 80px;
+}
+
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
@@ -70,6 +77,10 @@
 .bi {
   vertical-align: -.125em;
   fill: currentColor;
+}
+
+.block_margin_adapt {
+  margin-bottom: 15px;
 }
 
 .nav-scroller {
@@ -337,6 +348,10 @@
   margin-top: 25px;
 }
 
+.width80 {
+  width: 80%;
+}
+
 .width100 {
   width: 100%;
 }
@@ -344,6 +359,8 @@
 .nav-link:hover {
   background-color: bisque;
 }
+
+
 
 @media screen and (max-width: 1430px) {
     .button-text {
@@ -363,7 +380,7 @@
     }
 
     .widthKKS {
-      height: 60px;
+      height: 55px;
       width: 100%;
     }
 }
@@ -414,6 +431,18 @@
 .block_filter_flex {
   display: flex;
   flex-direction: row;
+  align-items: center;
+}
+
+.block_filter_flex_status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.block_overdue {
+  width: 210px;
+  margin: 10px 0px;
 }
 
 .block_data {
@@ -426,7 +455,7 @@
 }
 
 .modal1 {
-  --bs-modal-width: 50% !important;
+  width: 50% !important;
   background-color: grey;
 }
 
@@ -669,6 +698,7 @@
 }
 
 .block_theme {
+  width: 230x;
   margin-right: 10px;
 }
 
@@ -736,6 +766,10 @@
 }
 
 .w190 {
+  width: 190px;
+}
+
+.w190_adapt {
   width: 190px;
 }
 
@@ -894,7 +928,14 @@
 .block_filter_flex1 {
   display: flex;
   flex-direction: row;
-  margin-right: 15px;
+  margin: 17px 15px 0px 0px;
+}
+
+.block_filter_flex2 {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  margin-top: 5px;
 }
 
 .verticalLine {
@@ -1023,6 +1064,7 @@
   content: 'Состояние оборудования';
   position: absolute;
   top: -15px;
+  left: 85px;
   padding: 0 10px;
   background: #fff;
   background-color:rgb(171, 207, 248)
@@ -1046,10 +1088,29 @@
   background-color: rgb(171, 207, 248);
 }
 
+.commonFilterWrapper {
+  border: thin solid rgb(179, 160, 157);
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
+  margin: 10px 5px 15px 0;
+  min-height: 110px;
+}
+
+.commonFilterWrapper::before {
+  content: 'Общие фильтры';
+  position: absolute;
+  top: -15px;
+  padding: 0 10px;
+  background: #fff;
+  background-color: rgb(171, 207, 248);
+}
+
 .eliminationFilterWrapper {
   width: 170px;
   border: thin solid rgb(179, 160, 157);
   border-radius: 10px;
+  padding: 10px 0px;
   position: relative;
   margin: 10px 5px 15px 0;
   min-height: 110px;
@@ -1060,6 +1121,25 @@
   position: absolute;
   top: -15px;
   left: 15px;
+  padding: 0 10px;
+  background: #fff;
+  background-color: rgb(171, 207, 248);
+}
+
+.overDueFilterWrapper {
+  width: 230px;
+  border: thin solid rgb(179, 160, 157);
+  border-radius: 10px;
+  position: relative;
+  margin: 10px 5px 15px 0;
+  min-height: 110px;
+}
+
+.overDueFilterWrapper::before {
+  content: 'Статусы дефектов';
+  position: absolute;
+  top: -15px;
+  left: 25px;
   padding: 0 10px;
   background: #fff;
   background-color: rgb(171, 207, 248);
@@ -1125,7 +1205,7 @@
 }
 
 .block_margin {
-  margin: 5px 0px;
+  margin-bottom: 20px;
 }
 
 .outer {
@@ -1155,13 +1235,6 @@
   .block_filter_flex {
     flex-direction: column;
     justify-content: space-around;
-  }
-  
-  .block_filter_flex1 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: 5px;
   }
 
   .type-defect1 {
@@ -1209,6 +1282,49 @@
 
 
   @media screen and (min-width: 200px) and (max-width: 1700px) {
+
+    .block_filter_flex2 {
+      display: flex;
+      flex-direction: row;
+      margin: 15px 15px 0px 0px;
+    }
+
+    .block_margin_adapt {
+      margin-bottom: 0px;
+    }
+
+    .block_theme {
+      width: 276px;
+      margin-right: 10px;
+    }
+
+    .block_overdue {
+      width: 53%;
+      margin: 10px;
+    }
+
+    .block_filter_flex1 {
+      display: flex;
+      flex-direction: row;
+      margin: 17px 15px 0px 0px;
+    }
+
+    .overDueFilterWrapper {
+      display: flex;
+      flex-direction: row;
+      width: 440px;
+      border: thin solid rgb(179, 160, 157);
+      border-radius: 10px;
+      position: relative;
+      margin: 0px 5px 0px 0px;
+      min-height: 80px;
+    }
+
+    .block_row_pnr {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
     
     .componentWraper0 {
       margin: 0px 5px 0px 0px;
@@ -1217,6 +1333,16 @@
       border-radius: 10px;
       padding: 10px;
       min-height: 80px;
+    }
+
+    .componentWraper0::before {
+      content: 'Состояние оборудования';
+      position: absolute;
+      top: -15px;
+      left: 15px;
+      padding: 0 10px;
+      background: #fff;
+      background-color:rgb(171, 207, 248)
     }
 
     .block_data_column_KKS {
@@ -1246,14 +1372,63 @@
     
   }
 
-/*   @media screen and (min-width:200px) and (max-width:1430px) {
+   @media screen and (min-width:200px) and (max-width:1255px) {
 
-    .block-checkbox-left {
-      display: none;
-      padding-left: 0px;
+    .componentWraper0 {
+      display: flex;
+      flex-direction: column;
+      margin: 0px 5px 0px 0px;
+      position: relative;
+      border: 1px solid rgb(179, 160, 157);
+      border-radius: 10px;
+      padding: 10px;
+      width: 56.5%;
+      min-height: 90px;
     }
 
-  } */
+    .block-checkbox3 {
+      margin: 0px 5px;
+    }
+
+    .form-check {
+      margin-bottom: 0px;
+    }
+
+    .overDueFilterWrapper {
+      display: flex;
+      flex-direction: row;
+      width: 440px;
+      border: thin solid rgb(179, 160, 157);
+      border-radius: 10px;
+      position: relative;
+      margin: 0px 5px 0px 0px;
+      min-height: 90px;
+    }
+
+    .adapt-block {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      height: 90px;
+    }
+
+    .w190_adapt {
+      width: 100px;
+    }
+
+    .block_filter {
+      height: 250px;
+  }
+
+ 
+
+  .block_filter_flex2 {
+    display: flex;
+    flex-direction: row;
+    margin: 0px 15px 0px 0px;
+  }
+
+  } 
 
 }
 

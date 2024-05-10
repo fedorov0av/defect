@@ -141,13 +141,13 @@ const appFinishWorkDefect = Vue.createApp({
             this.cardDescription = this.cardDefect.defect_description;
             this.cardLocation = this.cardDefect.defect_location;
             this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
-            this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name;
+            this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name + ' (' + this.cardDefect.defect_registrar.user_division.division_name + ')';
             this.cardDateRegistration = this.cardDefect.defect_created_at;
-            this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
+            this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name + ' (' + this.cardDefect.defect_repair_manager.user_division.division_name + ')';
             this.cardPPR = this.cardDefect.defect_ppr;
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
-            this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
-            this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name : "";
+            this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name + ' (' + this.cardDefect.defect_worker.user_division.division_name + ')';
+            this.cardChecker = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_surname + ' ' + this.cardDefect.defect_checker.user_name + ' (' + this.cardDefect.defect_checker.user_division.division_name + ')': "";
             this.cardCheckerDescription = this.cardDefect.defect_check_result;
             this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false' 
             this.cardSafety = this.cardDefect.defect_safety;

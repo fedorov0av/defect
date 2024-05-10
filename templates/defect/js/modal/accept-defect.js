@@ -118,9 +118,9 @@ const appAcceptDefect = Vue.createApp({
           this.cardDescription = this.cardDefect.defect_description;
           this.cardLocation = this.cardDefect.defect_location;
           this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
-          this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name;
+          this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name + ' (' + this.cardDefect.defect_registrar.user_division.division_name + ')';
           this.cardDateRegistration = this.cardDefect.defect_created_at;
-          this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
+          this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name + ' (' + this.cardDefect.defect_repair_manager.user_division.division_name + ')';
           this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date != null ? this.cardDefect.defect_planned_finish_date : null;
           this.cardPPR = this.cardDefect.defect_ppr;
           this.cardWorker = this.cardDefect.defect_worker;
@@ -173,8 +173,8 @@ const appAcceptDefect = Vue.createApp({
         return;  /* Если ИСПОЛНИТЕЛЬ РЕМОНТА не заполнен, то выходим из функции */
       }
       if ((this.currentUser.user_id != this.cardDefect.defect_repair_manager.user_id) && !this.currentUserRole.includes('Администратор')) {
-        Swal.fire({html:"<b>Назначить исполнителя может только назначенный ответственный за устранение! "+this.cardDefect.defect_repair_manager.user_surname+
-        " "+this.cardDefect.defect_repair_manager.user_name+" или Администратор системы</b>", heightAuto: false}); 
+        Swal.fire({html:"<b>Назначить исполнителя может только назначенный ответственный за устранение: "+this.cardDefect.defect_repair_manager.user_surname+
+        " "+this.cardDefect.defect_repair_manager.user_name+" или Администратор системы!</b>", heightAuto: false}); 
         return;  
       }
       const workers_array = Object.values(this.workers); 

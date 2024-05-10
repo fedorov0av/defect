@@ -1,6 +1,6 @@
 {% raw %}
 <!----------------------------------------Модальное окно "Завершение работ"------------------------------------------> 
-<div id="vueFinishWorkDefect">
+<div id="vueFinishWorkDefect"> 
   <div class="modal fade" id="FinishWorkModalWindow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content pos_r1">
@@ -60,7 +60,8 @@
                       <div class="form-floating block_row1 margin6px">
                         <input type="text" class="form-control widthKKS margin-right" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx" disabled>
                         <div class="KKS_discr">
-                          <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
+                          <p class="text-muted">KKS должен состоять только из цифр и латинских букв!</p>
+                          <!-- <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p> -->
                         </div>
                       </div>
                     </div>
@@ -255,7 +256,7 @@
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" v-model="newCoreClassificationName" disabled></textarea>
+                        <textarea class="form-control height100 textareanoneresize" v-model="newCoreClassificationName" disabled></textarea>
                       </div>
                     </div>
                   </div>
@@ -272,7 +273,7 @@
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" v-model="newDirectClassificationName" disabled></textarea>
+                        <textarea class="form-control height100 textareanoneresize" v-model="newDirectClassificationName" disabled></textarea>
                       </div>
                     </div>
                   </div>
@@ -309,4 +310,4 @@
   </div>
 </div>
 {% endraw %}
-<script src="{{ url_for('defect_js', path='modal/finish-work-defect.js?v=0.1') }}"></script>
+<script src="{{ url_for('defect_js', path='modal/finish-work-defect.js?v=0.2') }}"></script>

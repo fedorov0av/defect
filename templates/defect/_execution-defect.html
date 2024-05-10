@@ -58,7 +58,8 @@
                       <div class="form-floating block_row1 margin6px">
                         <input type="text" class="form-control widthKKS margin-right" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx" disabled>
                         <div class="KKS_discr">
-                          <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
+                          <p class="text-muted">KKS должен состоять только из цифр и латинских букв!</p>
+                          <!-- <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p> -->
                         </div>
                       </div>
                     </div>
@@ -311,4 +312,4 @@
 </div>
 
 {% endraw %}
-<script src="{{ url_for('defect_js', path='modal/execution-defect.js?v=0.1') }}"></script>
+<script src="{{ url_for('defect_js', path='modal/execution-defect.js?v=0.4') }}"></script>

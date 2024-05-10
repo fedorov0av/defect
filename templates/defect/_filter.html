@@ -13,25 +13,29 @@
 				<div class="d-flex justify-content-start block_filter block_row">
 					<div class="block_data_filter">
 						<div class="mydatechoise">
-							<div class="block_filter_flex block_theme">
-								<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterDivision">
-									<option selected value=0>Подразделение-владелец</option>
-									<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
-								</select>
-								<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterStatusDefect">
-									<option selected value=0>Статус дефекта</option>
-									<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
-								</select>
+							<div class="block_row commonFilterWrapper">
+
+							
+								<div class="block_filter_flex block_theme">
+									<form autocomplete="off" class="width100">
+										<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearchDefectID" autocomplete="off" @input="searchResponsibleMainTableDefectID" placeholder="Номер дефекта">
+									</form>
+									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterDivision">
+										<option selected value=0>Подразделение-владелец</option>
+										<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
+									</select>
+								</div>
+								<div class="block_filter_flex">
+									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterType">
+										<option selected value=0>Журнал дефектов</option>
+										<option v-for="type_defect in type_defects" :value="type_defect.type_defect_id">{{ type_defect.type_defect_name	}}</option>
+									</select>
+									<form autocomplete="off" class="width100">
+										<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearch" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Ответственный">
+									</form>
+								</div>
 							</div>
-							<div class="block_filter_flex block_theme">
-								<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterType">
-									<option selected value=0>Журнал дефектов</option>
-									<option v-for="type_defect in type_defects" :value="type_defect.type_defect_id">{{ type_defect.type_defect_name	}}</option>
-								</select>
-								<form autocomplete="off">
-									<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearch" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Ответственный">
-								</form>
-							</div>
+
 							<div class="block_row">
 								<div class="block_filter_flex registrationFilterWrapper">
 									<div class="mydatechoise justify-content-center">
@@ -53,25 +57,23 @@
 								</div>
 
 								<div class="block_filter_flex eliminationFilterWrapper">
-									<div class="form-check form-switch block-checkbox4">
-										<input class="form-check-input" type="checkbox" @change="useFilter" id="flexCheckChecked" v-model="ppr">
-										<label class="form-check-label margin-right" for="flexCheckChecked">В ППР</label>
-									</div>
 									<div class="mydatechoise justify-content-center">
 										<div class="block_data_ppr col-lg-3 col-sm-6">
-											<input id="srokDate" class="form-control" type="date" @change="useFilter" v-model="srokDate"/>
+											<input id="srokDate" class="form-control" type="date" @change="useFilter" v-model="srokDate" hidden/>
 										</div>
+									</div>
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" @change="useFilter" id="flexCheckChecked" v-model="ppr">
+										<label class="form-check-label margin-right" for="flexCheckChecked">В ППР</label>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="block_filter_flex">
-				
-							<div class="verticalLine"></div>
-				
-							<div class="block_row componentWraper0">
+
+						<div class="adapt-block">
+							<div class="block_row_pnr componentWraper0">
 								<div class="block_row">
-									<div class="block_filter_flex1">
+									<div class="block_filter_flex2">
 									<div class = "form-check form-switch block-checkbox-left block-checkbox3">
 										<label class = "form-check-label" for = "flexPnrFilter">
 										В эксплуатации
@@ -79,7 +81,7 @@
 									</div>
 									<div class = "form-check form-switch block-checkbox3">
 										<input class="form-check-input" type="checkbox" id="flexPnrFilter"  v-model="pnr" @change="useFilter">
-										<label class = "form-check-label margin-right1" for = "flexPnrFilter">
+										<label class = "form-check-label" for = "flexPnrFilter">
 										В ПНР
 										</label>
 									</div>
@@ -88,19 +90,30 @@
 								<div class="block_data_column2">
 									<div class="form-check form-switch ">
 										<input class="form-check-input" type="checkbox" id="flexSafetyFilter" v-model="safety" :disabled="pnr===true" @change="useFilter" data-toggle="popover_safety" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 72 часов">
-										<label class="form-check-label margin-right" for="flexSafetyFilter">Влияет на безопасность и несение нагрузки</label> 
+										<label class="form-check-label" for="flexSafetyFilter">Влияет на безопасность и несение нагрузки</label> 
 									</div>
 									<div class="form-check form-switch">
 										<input class="form-check-input" type="checkbox" id="flexExploitationFilter" v-model="exploitation" :disabled="pnr===true" @change="useFilter" data-toggle="popover_exploitation" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 15 рабочих дней">
-										<label class="form-check-label margin-right" for="flexExploitationFilter">Влияет на режим нормальной эксплуатации</label>
+										<label class="form-check-label" for="flexExploitationFilter">Влияет на режим нормальной эксплуатации</label>
 									</div>
 								</div>
-							</div>	
-							<div class="verticalLine"></div>
+							</div>
+							
+							<div class="block_filter_flex overDueFilterWrapper">
+								<select class="form-select block_overdue" @change="useFilter" aria-label="Default select example" v-model="filterStatusDefect">
+									<option selected value=0>Статус дефекта</option>
+									<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
+								</select>
+								<div class="form-check form-switch block_margin_adapt">
+									<input class="form-check-input" type="checkbox" @change="useFilter" id="flexOverdueChecked" v-model="overdue" hidden>
+									<label class="form-check-label margin-right" for="flexOverdueChecked" id="flexOverdueChecked1" data-toggle="popover_develop" data-bs-trigger="hover focus" data-bs-content="В разработке" hidden>Просроченные</label>
+								</div>
+							</div>
 						</div>
+						
 					</div>
 					<div class="block_filter_flex lastbutton">
-						<button type="button" @click="nouseFilter" class="btn btn-primary w190">Очистить фильтры</button>
+						<button type="button" @click="nouseFilter" class="btn btn-primary w190_adapt">Очистить фильтры</button>
 					</div>
 
 				</div>

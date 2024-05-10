@@ -59,7 +59,8 @@
                       <div class="form-floating block_row1 margin6px">
                         <input type="text" class="form-control widthKKS margin-right" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx" disabled>
                         <div class="KKS_discr">
-                          <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p>
+                          <p class="text-muted">KKS должен состоять только из цифр и латинских букв!</p>
+                          <!-- <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p> -->
                         </div>
                       </div>
                     </div>
@@ -230,7 +231,7 @@
                         <b class="label">Категория дефекта</b>
                       </div>
                       <select class="form-select" v-model="newCategoryDefect_id" >
-                        <option disabled selected :value=0>Выберите категорию дефекта</option>
+                        <option disabled selected :value=0>Выберите категорию</option>
                         <option v-for="category_defect in categories_defect" :value="category_defect.category_defect_id">{{ category_defect.category_defect_name }}</option>
                       </select>  
                     </div>
@@ -238,7 +239,13 @@
                       <div class="block_input_data">
                         <b class="label">Классификация оборудования по НП-001-97</b>
                       </div>
-                      <input type="text" class="form-control" @input="changeTextWork40" placeholder="Введите классификацию оборудования" v-model.lazy="newClassSystemName" >
+                      <input type="text" class="form-control" @input="changeTextWork40" placeholder="Введите классификацию" v-model.lazy="newClassSystemName" >
+                    </div>
+                    <div class="block_data_column rr20 width100">
+                      <div class="block_input_data">
+                        <b class="label">Описание дефекта</b> 
+                      </div>
+                      <input type="text" class="form-control" v-model="cardDescription" disabled>
                     </div>
                   </div>
                   <br>
@@ -261,7 +268,7 @@
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" v-model="newCoreClassificationName" disabled></textarea>
+                        <textarea class="form-control height100 textareanoneresize" v-model="newCoreClassificationName" disabled></textarea>
                       </div>
                     </div>
                   </div>
@@ -287,7 +294,7 @@
                         <div class="block_input_data">
                           <b class="label">Причина события</b>
                         </div>
-                        <textarea class="form-control height100" v-model="newDirectClassificationName" disabled></textarea>
+                        <textarea class="form-control height100 textareanoneresize" v-model="newDirectClassificationName" disabled></textarea>
                       </div>
                     </div>
                   </div>
@@ -330,4 +337,4 @@
 </div>
 
 {% endraw %}
-<script src="{{ url_for('defect_js', path='modal/close-defect.js?v=0.1') }}"></script>
+<script src="{{ url_for('defect_js', path='modal/close-defect.js?v=0.4') }}"></script>

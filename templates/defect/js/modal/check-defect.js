@@ -152,12 +152,12 @@ const appCheckDefect = Vue.createApp({
             this.cardDescription = this.cardDefect.defect_description;
             this.cardLocation = this.cardDefect.defect_location;
             this.cardDivisionOwner = this.cardDefect.defect_division.division_name;
-            this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name;
+            this.cardRegistrator = this.cardDefect.defect_registrar.user_surname + ' ' + this.cardDefect.defect_registrar.user_name + ' (' + this.cardDefect.defect_registrar.user_division.division_name + ')';
             this.cardDateRegistration = this.cardDefect.defect_created_at;
-            this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name;
+            this.cardRepairManager = this.cardDefect.defect_repair_manager.user_surname + ' ' + this.cardDefect.defect_repair_manager.user_name + ' (' + this.cardDefect.defect_repair_manager.user_division.division_name + ')';
             this.cardDatePlannedFinish = this.cardDefect.defect_planned_finish_date;
             this.cardPPR = this.cardDefect.defect_ppr;
-            this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name;
+            this.cardWorker = this.cardDefect.defect_worker.user_surname + ' ' + this.cardDefect.defect_worker.user_name + ' (' + this.cardDefect.defect_worker.user_division.division_name + ')';
             this.cardWorkerDescription = this.cardDefect.defect_work_comment;
             this.newCheckerId = this.cardDefect.defect_checker ? this.cardDefect.defect_checker.user_id : '';
             this.isHiddenDate = this.cardDefect.defect_ppr === true ? 'true' : 'false';
