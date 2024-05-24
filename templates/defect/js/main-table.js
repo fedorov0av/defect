@@ -119,6 +119,17 @@ const appVueDefect = Vue.createApp({
       this.updateTableDefect();
       this.resetSorting();
     },
+
+    updateTablesalldefects() {
+      this.updateTableDefectwithalldefects();
+      this.resetSorting();
+    },
+
+    updateTablesoverduedefects() {
+      this.updateTableDefectwithoverduedefects();
+      this.resetSorting();
+    },
+
     updateTableDefect(start = false) {
       if (start) {
         appVueFilter.useFilter();
@@ -179,7 +190,7 @@ const appVueDefect = Vue.createApp({
                     "-" +
                     date_defect_finish_temp[0]
                 );
-                if (finish_date - now <= 0) { 
+                if (finish_date - now < -86400000) { 
                   date_background = "table-danger";
                 } else if (finish_date - now <= 172800000) {
                   date_background = "table-warning";
@@ -201,6 +212,173 @@ const appVueDefect = Vue.createApp({
           }); /* axios */
       } /* else */
     } /* updateTableDefect */,
+
+    updateTableDefectwithalldefects(start = false) {
+      if (start) {
+        appVueFilter.useFilter();
+      } else {
+        axios
+          .post("/all_defects", null, {
+            params: { page: 1, size: parseInt(this.pageSize) },
+          })
+          .then((response) => {
+            /*               this.temp_resp = response.data; */
+            this.pageNumber = response.data.page;
+            this.pages = response.data.pages;
+            this.defects = response.data.items;
+            let responsible = null;
+            for (defect in this.defects) {
+              if (
+                this.defects[defect].defect_status.status_defect_name === "Зарегистрирован" ||
+                this.defects[defect].defect_status.status_defect_name === "Устранен" ||
+                this.defects[defect].defect_status.status_defect_name === 'Требует решения'||
+                this.defects[defect].defect_status.status_defect_name === "Закрыт"
+              ) {
+                responsible = this.defects[defect].defect_owner;
+              } else if (
+                this.defects[defect].defect_status.status_defect_name === "Адресован" ||
+                this.defects[defect].defect_status.status_defect_name === "Не устранен"
+              ) {
+                responsible =
+                  this.defects[defect].defect_repair_manager.user_surname +
+                  " " +
+                  this.defects[defect].defect_repair_manager.user_name;
+              } else if (
+                this.defects[defect].defect_status.status_defect_name === "Назначен исполнитель" ||
+                this.defects[defect].defect_status.status_defect_name === "Принят в работу"
+              ) {
+                responsible =
+                  this.defects[defect].defect_worker.user_surname +
+                  " " +
+                  this.defects[defect].defect_worker.user_name;
+              } else if (
+                this.defects[defect].defect_status.status_defect_name === "Работы завершены"
+              ) {
+                responsible = "ОП " + this.defects[defect].defect_owner;
+              }
+              this.defects[defect].responsible = responsible;
+
+              let date_background = null;
+              if (
+                this.defects[defect].defect_planned_finish_date !== "Устр. в ППР" &&
+                this.defects[defect].defect_planned_finish_date !== null
+              ) {
+                let now = new Date();
+                date_defect_finish_temp =
+                  this.defects[defect].defect_planned_finish_date.split("-");
+                finish_date = Date.parse(
+                  date_defect_finish_temp[2] +
+                    "-" +
+                    date_defect_finish_temp[1] +
+                    "-" +
+                    date_defect_finish_temp[0]
+                );
+                if (finish_date - now < -86400000) { 
+                  date_background = "table-danger";
+                } else if (finish_date - now <= 172800000) {
+                  date_background = "table-warning";
+                }
+              }
+              this.defects[defect].dateBackgroundColor = date_background;
+            }
+          })
+          .catch((err) => {
+            if (err.response.status === 401) {
+              window.location.href = "/";
+            } else {
+              Swal.fire({
+                html: "<b>Произошла ошибка! Обратитесь к администратору!</b>",
+                heightAuto: false,
+              });
+              console.log(err);
+            }
+          }); /* axios */
+      } /* else */
+    } /* updateTableDefectwithalldefects */,
+
+    updateTableDefectwithoverduedefects(start = false) {
+      if (start) {
+        appVueFilter.useFilter();
+      } else {
+        axios
+          .post("/overdue_defects", null, {
+            params: { page: 1, size: parseInt(this.pageSize) },
+          })
+          .then((response) => {
+            /*               this.temp_resp = response.data; */
+            this.pageNumber = response.data.page;
+            this.pages = response.data.pages;
+            this.defects = response.data.items;
+            let responsible = null;
+            for (defect in this.defects) {
+              if (
+                this.defects[defect].defect_status.status_defect_name === "Зарегистрирован" ||
+                this.defects[defect].defect_status.status_defect_name === "Устранен" ||
+                this.defects[defect].defect_status.status_defect_name === 'Требует решения'||
+                this.defects[defect].defect_status.status_defect_name === "Закрыт"
+              ) {
+                responsible = this.defects[defect].defect_owner;
+              } else if (
+                this.defects[defect].defect_status.status_defect_name === "Адресован" ||
+                this.defects[defect].defect_status.status_defect_name === "Не устранен"
+              ) {
+                responsible =
+                  this.defects[defect].defect_repair_manager.user_surname +
+                  " " +
+                  this.defects[defect].defect_repair_manager.user_name;
+              } else if (
+                this.defects[defect].defect_status.status_defect_name === "Назначен исполнитель" ||
+                this.defects[defect].defect_status.status_defect_name === "Принят в работу"
+              ) {
+                responsible =
+                  this.defects[defect].defect_worker.user_surname +
+                  " " +
+                  this.defects[defect].defect_worker.user_name;
+              } else if (
+                this.defects[defect].defect_status.status_defect_name === "Работы завершены"
+              ) {
+                responsible = "ОП " + this.defects[defect].defect_owner;
+              }
+              this.defects[defect].responsible = responsible;
+
+              let date_background = null;
+              if (
+                this.defects[defect].defect_planned_finish_date !== "Устр. в ППР" &&
+                this.defects[defect].defect_planned_finish_date !== null
+              ) {
+                let now = new Date();
+                date_defect_finish_temp =
+                  this.defects[defect].defect_planned_finish_date.split("-");
+                finish_date = Date.parse(
+                  date_defect_finish_temp[2] +
+                    "-" +
+                    date_defect_finish_temp[1] +
+                    "-" +
+                    date_defect_finish_temp[0]
+                );
+                if (finish_date - now < -86400000) { 
+                  date_background = "table-danger";
+                } else if (finish_date - now <= 172800000) {
+                  date_background = "table-warning";
+                }
+              }
+              this.defects[defect].dateBackgroundColor = date_background;
+            }
+          })
+          .catch((err) => {
+            if (err.response.status === 401) {
+              window.location.href = "/";
+            } else {
+              Swal.fire({
+                html: "<b>Произошла ошибка! Обратитесь к администратору!</b>",
+                heightAuto: false,
+              });
+              console.log(err);
+            }
+          }); /* axios */
+      } /* else */
+    } /* updateTableDefect */,
+
     handleDoubleClick(event) {
       defect_id = event.target.parentNode.childNodes[0].textContent;
       status_name = event.target.parentNode.childNodes[7].textContent;
@@ -340,7 +518,8 @@ const appVueDefect = Vue.createApp({
               let now = new Date();
               date_defect_finish_temp = this.defects[defect].defect_planned_finish_date.split("-");
               finish_date = Date.parse(date_defect_finish_temp[2]+"-"+date_defect_finish_temp[1]+"-"+date_defect_finish_temp[0]);
-              if (finish_date - now <= 0) {
+              /* console.log(finish_date - now) */
+              if (finish_date - now < -86400000) {
                 date_background = "table-danger";
               } else if (finish_date - now <= 172800000) {
                 date_background = "table-warning";

@@ -190,7 +190,7 @@ const appFinishWorkDefect = Vue.createApp({
       },
       finishworkDefect() {
         if (this.currentUser.user_id != this.cardDefect.defect_worker.user_id && !this.currentUserRole.includes('Администратор')) {
-          Swal.fire({html:"<b>Исполнитель этого дефекта " + this.cardDefect.defect_worker.user_surname  + ' ' + this.cardDefect.defect_worker.user_name  + ". Только он может заверщить работы по этому дефекту!'</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Исполнитель этого дефекта " + this.cardDefect.defect_worker.user_surname  + ' ' + this.cardDefect.defect_worker.user_name  + ". Только он может заверщить работы по этому дефекту!</b>", heightAuto: false}); 
           return;  
         }   
         if (this.cardWorkerDescription == '') {
@@ -236,12 +236,17 @@ const appFinishWorkDefect = Vue.createApp({
         });
       },/* finishworkDefect */
       requiresSolution() {
-        appCorrectionDefect.defect_id = defect_id;
-        appCorrectionDefect.parent_button_close_modal_name = 'closeFinishWorkModalWindow';
-        var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
-          keyboard: false
-        })
-        myModal.show()
+        if (this.currentUser.user_id != this.cardDefect.defect_worker.user_id && !this.currentUserRole.includes('Администратор')) {
+          Swal.fire({html:"<b>Исполнитель этого дефекта " + this.cardDefect.defect_worker.user_surname  + ' ' + this.cardDefect.defect_worker.user_name  + ". Только он может принять решение по этому дефекту!</b>", heightAuto: false}); 
+          return;  
+        }   else {
+          appCorrectionDefect.defect_id = defect_id;
+          appCorrectionDefect.parent_button_close_modal_name = 'closeFinishWorkModalWindow';
+          var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
+            keyboard: false
+          })
+          myModal.show()
+        }
       },/* requiresSolution */
       cancelDefect() {
         appCancelDefect.defect_id = this.defect_id;

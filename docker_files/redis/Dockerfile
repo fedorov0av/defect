@@ -1,5 +1,6 @@
 # Базовый образ
-FROM redis:7.2.4-alpine
+#FROM redis:7.2.4-alpine
+FROM spectralwind/customredis
 
 # Копируем файл конфигурации Redis без сохранения данных на диск
 COPY redis.conf /usr/local/etc/redis/redis.conf

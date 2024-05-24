@@ -21,7 +21,6 @@ from app.api.category_defect import category_defect_router
 from app.api.other import other_router
 from app.api.admin import admin_router
 
-
 from fastapi_pagination import add_pagination
 
 from app.middleware.auth import auth_required
@@ -31,8 +30,13 @@ from fastapi_csrf_protect.exceptions import CsrfProtectError
 from fastapi.responses import JSONResponse
 from app.schemas.auth import CsrfSettings
 
+from config import AD
 
-app = FastAPI()
+if AD:
+  app = FastAPI(docs_url=None, redoc_url=None)
+else:
+  app = FastAPI()
+
 add_pagination(app)
 
 router = APIRouter()

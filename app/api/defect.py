@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -170,6 +170,81 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                 .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)) if not AD else
         select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID, Defect.defect_status_id != STATUS_CANCEL_DEFECT_ID)\
+                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                .options(selectinload(Defect.defect_system)),
+        transformer=(lambda defects: [{"defect_id": defect.defect_id,
+                'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
+                'defect_registrar': defect.defect_registrar.user_surname if not AD else '',
+                'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
+                'defect_owner': defect.defect_division.division_name,
+                'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
+                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
+                                          },
+                'defect_worker': defect.defect_worker,
+                'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
+                                             if not defect.defect_ppr else 'Устр. в ППР',
+                "defect_description": defect.defect_description,
+                "defect_location": defect.defect_location,
+                "defect_type": defect.defect_type,
+                "defect_status": defect.defect_status,
+                "defect_division": defect.defect_division,
+                "defect_system": defect.defect_system,
+                "defect_system_kks": defect.defect_system.system_kks,} for defect in defects if defect]) if not AD else user_defect.get_user_from_AD_for_paginate
+        )
+
+@defect_router.post("/all_defects/", response_model=Page[Defects_output]) # fix by AD
+async def get_defects(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
+    if AD:
+        token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+        user_defect = UserDefectFromAD(session, request, token_dec)
+    return await paginate(
+        session,
+        select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != None)\
+                .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
+                .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
+                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)) if not AD else
+        select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != None)\
+                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                .options(selectinload(Defect.defect_system)),
+        transformer=(lambda defects: [{"defect_id": defect.defect_id,
+                'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
+                'defect_registrar': defect.defect_registrar.user_surname if not AD else '',
+                'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
+                'defect_owner': defect.defect_division.division_name,
+                'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
+                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
+                                          },
+                'defect_worker': defect.defect_worker,
+                'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
+                                             if not defect.defect_ppr else 'Устр. в ППР',
+                "defect_description": defect.defect_description,
+                "defect_location": defect.defect_location,
+                "defect_type": defect.defect_type,
+                "defect_status": defect.defect_status,
+                "defect_division": defect.defect_division,
+                "defect_system": defect.defect_system,
+                "defect_system_kks": defect.defect_system.system_kks,} for defect in defects if defect]) if not AD else user_defect.get_user_from_AD_for_paginate
+        )
+
+@defect_router.post("/overdue_defects/", response_model=Page[Defects_output]) # fix by AD
+async def get_defects(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
+    await check_auth_api(request, response) # проверка на истечение времени jwt токена
+    if AD:
+        token_dec = await decode_token(request.cookies['jwt_refresh_token'])
+        user_defect = UserDefectFromAD(session, request, token_dec)
+    return await paginate(
+        session,
+        select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_planned_finish_date - datetime.now() < timedelta(days=-1), 
+                                                               Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID, 
+                                                               Defect.defect_status_id != STATUS_CANCEL_DEFECT_ID)\
+        
+                .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
+                .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
+                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)) if not AD else
+        select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != None)\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                 .options(selectinload(Defect.defect_system)),
         transformer=(lambda defects: [{"defect_id": defect.defect_id,
@@ -563,6 +638,7 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                                             safety = filter.safety,
                                             exploitation = filter.exploitation,
                                             type_defect_id = filter.type_defect_id,
+                                            
                                             )
     defects_with_filters = list()
     for defect in result:
@@ -594,7 +670,9 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                                           'user_name': repair_manager.user_name if repair_manager else ''
                                           }),
                 'defect_worker': defect.defect_worker if not AD else defect_worker,
-                'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
+                'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") 
+                                               if defect.defect_planned_finish_date
+                                               else defect.defect_planned_finish_date)
                                         if not defect.defect_ppr else 'Устр. в ППР',
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,

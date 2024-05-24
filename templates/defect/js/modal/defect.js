@@ -219,6 +219,13 @@ const appVueAddDefect = Vue.createApp({
         })
         myModal.show()
       }, /* clickbuttonspravochnik */
+      AKK_SAHA () {
+        if (this.newTypeDefect=='0'){ 
+          Swal.fire({html:"<b>Журнал дефекта должен быть заполнен!</b>", heightAuto: false}); 
+        } else {
+          this.newSystemKKS = 'AKK-SAHA';
+        }
+      }, /* AKK_SAHA */  
       addNewDefect() {
         /* if (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA') {
           this.checkMask()
@@ -237,8 +244,21 @@ const appVueAddDefect = Vue.createApp({
           Swal.fire({html:"<b>Оборудование должно быть заполнено!</b>", heightAuto: false}); 
         } /* else if */
         else if (this.newDivisionOwner_id == '0' ){
-              Swal.fire({html:"<b>Все значения (кроме KSS и Местоположения) должны быть заполнены!</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Все значения (кроме Местоположения) должны быть заполнены!</b>", heightAuto: false}); 
         } /* else if */
+        else if (this.newSystemKKS == '' ) {
+          Swal.fire({html:"<b>Код KKS или номенклатурный номер не введен!</b>", heightAuto: false});
+        }  
+        else if ((this.newSystemKKS.includes('AKK-SAHA') && this.newSystemKKS.length < 12) || (this.newSystemKKS.includes('AKK-SAHA') && this.newSystemKKS.length > 15)) {
+          Swal.fire({html:"<b>Номенклатурный номер AKK-SAHA должен иметь от 4 до 7 цифр!</b>", heightAuto: false});
+        }  
+        else if (this.newSystemKKS.includes('AKK-SAHA') && (
+        isNaN(parseInt(this.newSystemKKS[8])) || 
+        isNaN(parseInt(this.newSystemKKS[9])) || 
+        isNaN(parseInt(this.newSystemKKS[10])) || 
+        isNaN(parseInt(this.newSystemKKS[11])))) {
+          Swal.fire({html:"<b>После AKK-SAHA введены не цифры!</b>", heightAuto: false});
+        }  
         /* else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
           Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});
         }  */

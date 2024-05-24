@@ -246,12 +246,18 @@ const appExecutionDefect = Vue.createApp({
         });
       },/* executionDefect */ 
       requiresSolution() {
-        appCorrectionDefect.defect_id = defect_id;
-        appCorrectionDefect.parent_button_close_modal_name = 'closeExecutionModalWindow';
-        var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
-          keyboard: false
-        })
-        myModal.show()
+        if ((this.currentUser.user_id != this.cardDefect.defect_worker.user_id) && !this.currentUserRole.includes('Администратор')) {
+          Swal.fire({html:"<b>Принять решение по этому дефекту может только назначенный исполнитель: "+this.cardDefect.defect_worker.user_surname+
+          " "+this.cardDefect.defect_worker.user_name+" или Администратор системы!</b>", heightAuto: false}); 
+          return;  
+        } else {
+          appCorrectionDefect.defect_id = defect_id;
+          appCorrectionDefect.parent_button_close_modal_name = 'closeExecutionModalWindow';
+          var myModal = new bootstrap.Modal(document.getElementById('CorrectionDefectModalWindow'), {
+            keyboard: false
+          })
+          myModal.show()
+        }
       },/* requiresSolution */
       cancelDefect() {
         appCancelDefect.defect_id = this.defect_id;

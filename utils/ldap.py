@@ -14,10 +14,12 @@ from redis_dict import RedisDict
 REDIS_SERVER = '172.17.0.6'
 REDIS_NAMESPACE = 'users'
 
+
 SERVER_URI = 'ldaps://akk-s-dc02.mbu.invalid'
 ATTRS_ALL = ['*']
 ATTRS_USER = ['title', 'description', 'department', 'memberOf', 'extensionAttribute2', 'mail', 'sAMAccountName', 'mailNickname']
-SEARCH_BASE = 'ou=Users,ou=_Akkuyu,dc=mbu,dc=invalid'
+SEARCH_BASE = ',ou=_Akkuyu,dc=mbu,dc=invalid'
+SEARCH_OU_USERS = ['ou=Users', 'ou=Disabled users']
 
 GROUPS_AD_FOR_ROLES = [
     'CN=RegistrarsDJ,OU=Defect_Journal,OU=Security groups,OU=_Global,DC=mbu,DC=invalid',
@@ -71,31 +73,32 @@ class LdapConnection:
 
     def update_users(self):
         con = self.ldap_connection
-        message_id = con.search(SEARCH_BASE, f"(objectclass=person)", attributes=self.attrs_user)
-        raw_users = con.get_response(message_id)[0]
-        for raw_user in raw_users:
-            try:
-                user_sAMAccountName = raw_user['attributes']['sAMAccountName']
-                user_departament = raw_user['attributes']['department']
-                user_mail = raw_user['attributes']['mail']
-                user_mailNickname = raw_user['attributes']['mailNickname']
-                user_fio = raw_user['attributes']['extensionAttribute2']
-                UsersLDAP.add_user(user_id=user_sAMAccountName.lower(),
-                                   value = {
-                    'description': raw_user['attributes']['description'][0],
-                    'department': user_departament.lower(),
-                    'memberOf': raw_user['attributes']['memberOf'],
-                    'extensionAttribute2': user_fio if user_fio else raw_user['attributes']['title'],
-                    'mail': user_mail.lower(),
-                    'mailNickname': user_mailNickname.lower(),
-                    'sAMAccountName': user_sAMAccountName.lower(),
-                })
-            except IndexError as err:
-                print('Error Redis ==== ', err)
-                print('Ошибка возникла на пользователе ==== ', raw_user)
-            except AttributeError as err:
-                print('Error Redis ==== ', err)
-                print('Ошибка вохникла на пользователе ==== ', raw_user)
+        for search_user_ou in SEARCH_OU_USERS:
+            message_id = con.search(search_user_ou+SEARCH_BASE, f"(objectclass=person)", attributes=self.attrs_user)
+            raw_users = con.get_response(message_id)[0]
+            for raw_user in raw_users:
+                try:
+                    user_sAMAccountName = raw_user['attributes']['sAMAccountName']
+                    user_departament = raw_user['attributes']['department']
+                    user_mail = raw_user['attributes']['mail']
+                    user_mailNickname = raw_user['attributes']['mailNickname']
+                    user_fio = raw_user['attributes']['extensionAttribute2']
+                    UsersLDAP.add_user(user_id=user_sAMAccountName.lower(),
+                                    value = {
+                        'description': raw_user['attributes']['description'][0],
+                        'department': user_departament.lower(),
+                        'memberOf': raw_user['attributes']['memberOf'],
+                        'extensionAttribute2': user_fio if user_fio else raw_user['attributes']['title'],
+                        'mail': user_mail.lower(),
+                        'mailNickname': user_mailNickname.lower(),
+                        'sAMAccountName': user_sAMAccountName.lower(),
+                    })
+                except IndexError as err:
+                    print('Error Redis ==== ', err)
+                    print('Ошибка возникла на пользователе ==== ', raw_user)
+                except AttributeError as err:
+                    print('Error Redis ==== ', err)
+                    print('Ошибка вохникла на пользователе ==== ', raw_user)
 
 
 

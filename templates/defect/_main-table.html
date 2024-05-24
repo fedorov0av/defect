@@ -29,7 +29,7 @@
                 <td class="main-table_td160 myfont">{{ defect.defect_created_at }}</td>
                 <td class="main-table_td110 myfont">{{ defect.defect_planned_finish_date }}</td>
                 <td class="main-table_td160 myfont">{{ defect.defect_owner }}</td>
-                <td class="main-table_td110 myfont">{{ defect.defect_system.system_kks }}</td>
+                <td class="main-table_td130 myfont">{{ defect.defect_system.system_kks }}</td>
                 <td>{{ defect.defect_system.system_name }}</td>
                 <td>{{ defect.defect_description }}</td>
                 <td id="status" class="main-table_td180 myfont">{{ defect.defect_status.status_defect_name }}</td>
@@ -65,4 +65,4 @@
 </div>
 
 {% endraw %}
-<script src="{{ url_for('defect_js', path='main-table.js') }}"></script>
+<script src="{{ url_for('defect_js', path='main-table.js?v=0.2') }}"></script>

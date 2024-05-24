@@ -196,7 +196,7 @@ const appConfirmDefect = Vue.createApp({
         this.updateCardDefect();
         this.check_date = false;
         this.clickbuttonmain();
-      }, /* updateTables */       
+      }, /* updateTables */   
       updateCardDefect() {
         axios
           .post('/get_defect/',{
@@ -301,6 +301,10 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDefect.defect_division.division_name  + "'</b>", heightAuto: false}); 
           return;  
         }   
+        if (this.cardKKS == null && this.newCardKKS == null) {
+          Swal.fire({html:"<b>Код KKS или номенклатурный номер не введен!</b>", heightAuto: false});
+          return; /* Если KKS не заполнены то выходим из функции */
+        }  
         if (this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') {
           this.check_date = true;
           Swal.fire({html:"<b>Срок устранения должен быть заполнен или переключатель 'Будет устранен в ППР' должен быть включен!</b>", heightAuto: false}); 
@@ -308,7 +312,7 @@ const appConfirmDefect = Vue.createApp({
         }
         if (this.newRepairManager_id == '') {
           this.check_repair_manager = true;
-          Swal.fire({html:"<b>Поле 'Ответсвенный за уcтранение' должно быть заполнено!</b>", heightAuto: false}); 
+          Swal.fire({html:"<b>Поле 'Ответственный за уcтранение' должно быть заполнено!</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
 
@@ -323,9 +327,11 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>Заполните все необходимые поля. Укажите руководителя ремонта и срок устранения.</b>", heightAuto: false}); 
           return;  /* Если дата или руководитель ремонта не заполнены то выходим из функции */
         }
+        
         /* if ((this.cardKKS !== '' && this.newCardKKS !== '' && this.newCardKKS !== null) && this.placeholders[this.newCardTypeDefectName] === '##XXX##XN##AAAAAA') {
           this.checkMask()
         }
+        
         if ((this.cardKKS !== '' && this.newCardKKS !== '' && this.newCardKKS !== null) && !this.maskObject.completed) {
           Swal.fire({html:"<b>KKS введен не полностью!</b>", heightAuto: false});
           return;

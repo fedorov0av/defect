@@ -83,6 +83,10 @@
   margin-bottom: 15px;
 }
 
+.block_margin_bottom10 {
+  margin-bottom: 10px;
+}
+
 .nav-scroller {
   position: relative;
   z-index: 2;
@@ -255,6 +259,12 @@
   margin: 10px;
 }
 
+.text-down {
+  display: flex;
+  align-items: flex-end;
+  padding: 0px 0px 15px 10px;
+}
+
 .block_height100 {
   height: 100%;
 }
@@ -290,6 +300,12 @@
 .widthKKS {
   height: 60px;
   width: 50%;
+}
+
+.KKS_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .width60 {
@@ -332,6 +348,16 @@
   padding-top: 15px;
 }
 
+.KKS_discr_confirm {
+  text-align: left;
+  vertical-align: middle;
+  padding: 5px 0px;
+}
+
+.KKS_discr_p {
+  margin: 0;
+}
+
 .block_nav_modal {
   display: flex;
   align-items: center;
@@ -363,26 +389,33 @@
 
 
 @media screen and (max-width: 1430px) {
-    .button-text {
-        display: none;
-    }
+  
 
-    .block_data_column_KKS {
-      width: 35%;
-    }
+  .widthKKS {
+    height: 40px;
+    width: 100%;
+  } 
 
-    .KKS_discr {
-      display: none;
-    }
-    
-    .width650 {
-      min-width: 650px;
-    }
+  .button-text {
+    display: none;
+  }
 
-    .widthKKS {
-      height: 55px;
-      width: 100%;
-    }
+  .block_data_column_KKS {
+    width: 35%;
+  }
+
+  .KKS_discr {
+    display: none;
+  }
+
+  .KKS_discr_confirm {
+    display: none;
+  }
+  
+  .width650 {
+    min-width: 650px;
+  }
+
 }
 
 .rr {
@@ -804,6 +837,10 @@
   width: 110px;
 }
 
+.main-table_td130 {
+  width: 130px;
+}
+
 .main-table_td160 {
   width: 160px;
 }
@@ -836,6 +873,12 @@
   text-align: center;
   margin-bottom: 0px;
 }
+
+.text_left {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
 
 .text_center1 {
   text-align: center;
@@ -1219,6 +1262,7 @@
 }
 
 @media screen and (min-width:200px) and (max-width:8000px) {
+
   
   .h2 {
     margin: auto;
@@ -1282,6 +1326,32 @@
 
 
   @media screen and (min-width: 200px) and (max-width: 1700px) {
+
+    .text-down {
+      display: flex;
+      align-items: flex-end;
+      padding: 0px 0px 0px 10px;
+    }
+
+    .KKS_button {
+      display: flex;
+      justify-content: left;
+      align-items: center;
+    }
+
+    .text_left {
+      text-align: left;
+      margin-bottom: 0px;
+    }
+
+    .widthKKS {
+      height: 40px;
+      width: 100%;
+    } 
+
+    .KKS_discr_p {
+      display: none;
+    }
 
     .block_filter_flex2 {
       display: flex;
@@ -1426,6 +1496,10 @@
     display: flex;
     flex-direction: row;
     margin: 0px 15px 0px 0px;
+  }
+
+  .block_margin_bottom10 {
+    margin-bottom: 0px;
   }
 
   } 

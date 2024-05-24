@@ -46,8 +46,12 @@ async def auth(request: Request,
     subject = {"userId": token_user_id}
     access_token = access_security.create_access_token(subject=subject)
     refresh_token = refresh_security.create_refresh_token(subject=subject)
-    response.set_cookie(key="jwt_access_token", value=access_token, httponly=True)
-    response.set_cookie(key="jwt_refresh_token", value=refresh_token, httponly=True)
+    if AD:
+        response.set_cookie(key="jwt_access_token", value=access_token, httponly=True, samesite='strict', secure=True)
+        response.set_cookie(key="jwt_refresh_token", value=refresh_token, httponly=True, samesite='strict', secure=True)
+    else:
+        response.set_cookie(key="jwt_access_token", value=access_token, httponly=True, samesite='strict',)
+        response.set_cookie(key="jwt_refresh_token", value=refresh_token, httponly=True, samesite='strict',)
     return {"access_token": access_token, "refresh_token": refresh_token}
     
 

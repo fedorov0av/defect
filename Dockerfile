@@ -1,5 +1,5 @@
 # Базовый образ
-FROM python:3.10-alpine
+FROM python:3.11-alpine
 
 # Копирование исходных файлов в контейнер
 COPY app/ /defects/app/

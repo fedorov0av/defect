@@ -59,12 +59,18 @@
 								<div class="block_filter_flex eliminationFilterWrapper">
 									<div class="mydatechoise justify-content-center">
 										<div class="block_data_ppr col-lg-3 col-sm-6">
-											<input id="srokDate" class="form-control" type="date" @change="useFilter" v-model="srokDate" hidden/>
+											<input id="srokDate" class="form-control" type="date" @change="useFilter" v-model="srokDate"/>
 										</div>
 									</div>
-									<div class="form-check form-switch">
-										<input class="form-check-input" type="checkbox" @change="useFilter" id="flexCheckChecked" v-model="ppr">
-										<label class="form-check-label margin-right" for="flexCheckChecked">В ППР</label>
+									<div class="block_data_column2">
+										<div class="form-check form-switch">
+											<input class="form-check-input" type="checkbox" @change="useFilter" id="flexCheckChecked" v-model="ppr">
+											<label class="form-check-label" for="flexCheckChecked">В ППР</label>
+										</div>
+										<div class="form-check form-switch">
+											<input class="form-check-input" type="checkbox" @change="showOverduedefects" id="flexOverdueChecked" v-model="overdue">
+											<label class="form-check-label" for="flexOverdueChecked" id="flexOverdueChecked1">Просроченные</label>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -72,7 +78,7 @@
 
 						<div class="adapt-block">
 							<div class="block_row_pnr componentWraper0">
-								<div class="block_row">
+								<div class="block_row block_margin_bottom10">
 									<div class="block_filter_flex2">
 									<div class = "form-check form-switch block-checkbox-left block-checkbox3">
 										<label class = "form-check-label" for = "flexPnrFilter">
@@ -105,8 +111,8 @@
 									<option v-for="status in statuses_defect" :value="status.status_defect_id">{{ status.status_defect_name }}</option>
 								</select>
 								<div class="form-check form-switch block_margin_adapt">
-									<input class="form-check-input" type="checkbox" @change="useFilter" id="flexOverdueChecked" v-model="overdue" hidden>
-									<label class="form-check-label margin-right" for="flexOverdueChecked" id="flexOverdueChecked1" data-toggle="popover_develop" data-bs-trigger="hover focus" data-bs-content="В разработке" hidden>Просроченные</label>
+									<input class="form-check-input" type="checkbox" @change="showAlldefects" id="toogleAllDefects" v-model="allDefects">
+									<label class="form-check-label margin-right" for="toogleAllDefects" id="labelAllDefects" data-toggle="popover_allDefects" data-bs-trigger="hover focus" data-bs-content="Отображаются все дефекты, включая закрытые и отмененные">Все дефекты</label>
 								</div>
 							</div>
 						</div>
@@ -128,4 +134,4 @@
 </div>
 {% endraw %}
 
-<script src="{{ url_for('defect_js', path='filter.js?v=0.2') }}"></script>
+<script src="{{ url_for('defect_js', path='filter.js?v=0.3') }}"></script>

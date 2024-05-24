@@ -13,6 +13,7 @@ const appVueFilter = Vue.createApp({
         srokDate: null,
         filterStatusDefect: 0,
         ppr: 'false',
+        allDefects: 'false',
         overdue: 'false',
         pnr: false,
         safety: false,
@@ -20,6 +21,7 @@ const appVueFilter = Vue.createApp({
         dataSearch: '',
         dataSearchDefectID: '',
         oldDefects: {},
+        srokDate: '',
       }
     },
     mounted() {
@@ -27,14 +29,16 @@ const appVueFilter = Vue.createApp({
       this.setPopoverSafety()
       this.setPopoverExploitation()
       this.updateAllTables()
+      this.showAlldefects()
+      this.showOverduedefects()
       updateTableStatusDefect(this.statuses_defect)
       /* this.setDivisionByUser() */
     }, /* mounted */
     methods: {
         setPopoverDevelop(){
           $(document).ready(function(){
-            if($("#flexOverdueChecked1"))  {
-              $('[data-toggle="popover_develop"]').popover({
+            if($("#labelAllDefects"))  {
+              $('[data-toggle="popover_allDefects"]').popover({
               placement : 'top'
             });
             }
@@ -76,7 +80,8 @@ const appVueFilter = Vue.createApp({
           this.endDate = null;
           this.filterStatusDefect = 0;
           this.ppr = 'false';
-          this.overdue = 'false';
+          this.allDefects = 'false',
+          this.overdue = 'false',
           this.dataSearch = '';
         }, /* clearData */        
         updateAllTables() {
@@ -112,8 +117,7 @@ const appVueFilter = Vue.createApp({
 
         }, /* searchResponsibleMainTable */
         searchResponsibleMainTableDefectID(event) {
-
-          document.dispatchEvent(new Event('resetSorting'));
+          document.dispatchEvent(new Event('resetSorting')); 
           let tempArray = {}
           let count = 0
           if (this.dataSearchDefectID === ''){
@@ -131,8 +135,6 @@ const appVueFilter = Vue.createApp({
 
             if (this.dataSearchDefectID !== ''){
               if (this.oldDefects[defect].defect_id.includes(this.dataSearchDefectID)){
-                console.log(';sxdsa')
-
                 tempArray[count] = this.oldDefects[defect];
                 count ++;
               }
@@ -158,6 +160,7 @@ const appVueFilter = Vue.createApp({
             this.exploitation = false; 
           }
           
+          
           axios
             .post('/get_defect_by_filter/', 
               {"date_start": this.startDate,
@@ -169,7 +172,6 @@ const appVueFilter = Vue.createApp({
                "safety": this.safety === true ? true : null,
                "exploitation": this.exploitation === true ? true : null,
                "type_defect_id":  this.filterType,
-               /* "date_srok":  this.srokDate, */
               }
             )
             .then(response => {
@@ -194,10 +196,23 @@ const appVueFilter = Vue.createApp({
                 appVueDefect.defects[defect].responsible = responsible;
                 let date_background = null
                 if ((appVueDefect.defects[defect].defect_planned_finish_date !== "Устр. в ППР") && (appVueDefect.defects[defect].defect_planned_finish_date !== null)){
+                  
+                  
+
                   let now = new Date()
                   date_defect_finish_temp = appVueDefect.defects[defect].defect_planned_finish_date.split('-')
                   finish_date = Date.parse(date_defect_finish_temp[2]+'-'+date_defect_finish_temp[1]+'-'+date_defect_finish_temp[0])
-                  if (finish_date - now <= 0 && 
+
+                  date_srok_filter = Date.parse(appVueFilter.srokDate)
+                  
+                 /*  console.log(appVueDefect.defects[defect].defect_planned_finish_date)
+                  console.log(this.srokDate) 
+                  console.log(date_srok_filter == finish_date) */
+                  
+
+                  /* console.log(finish_date - now) 
+                  if (finish_date - now <= 0 && - так было*/
+                  if (finish_date - now < -86400000 && 
                     appVueDefect.defects[defect].defect_status.status_defect_name != 'Отменен' && 
                     appVueDefect.defects[defect].defect_status.status_defect_name != 'Закрыт'){
                     date_background = "table-danger"
@@ -208,6 +223,13 @@ const appVueFilter = Vue.createApp({
                   }
                 }
                 appVueDefect.defects[defect].dateBackgroundColor = date_background;
+
+                if (this.srokDate !== ''){ 
+                  console.log('dawdad') 
+                  console.log(date_srok_filter == finish_date) 
+                  finish_date == date_srok_filter;
+                } 
+
               }
               appVueDefect.pages = 0;
 
@@ -246,6 +268,31 @@ const appVueFilter = Vue.createApp({
             }
               }) /* axios */
         }, /* nouseFilter */
+        
+        showAlldefects() {
+          if (this.allDefects == true){ 
+            axios
+            .post('/all_defects',)
+            .then(response => {
+                appVueDefect.updateTablesalldefects();
+                  }) 
+          } else {
+            this.nouseFilter();
+          }
+        }, /* showAlldefects */
+
+        showOverduedefects() {
+          if (this.overdue == true){ 
+            axios
+            .post('/overdue_defects',)
+            .then(response => {
+                appVueDefect.updateTablesoverduedefects();
+                  })
+          } else {
+            this.nouseFilter();
+          }
+        }, /* showOverduedefects */
+
         /* setDivisionByUser(){
           axios
           .post('/user/me')
