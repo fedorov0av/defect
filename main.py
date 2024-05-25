@@ -29,6 +29,7 @@ from fastapi_csrf_protect import CsrfProtect
 from fastapi_csrf_protect.exceptions import CsrfProtectError
 from fastapi.responses import JSONResponse
 from app.schemas.auth import CsrfSettings
+from app.middleware.http_header import AddHeadersMiddleware
 
 from config import AD
 
@@ -60,6 +61,8 @@ app.mount("/js", StaticFiles(directory="templates/static/js"), name="static_js")
 app.mount("/img", StaticFiles(directory="templates/static/img"), name="static_img")
 app.mount("/login_js", StaticFiles(directory="templates/login/js"), name="login_js")
 app.mount("/defect_js", StaticFiles(directory="templates/defect/js"), name="defect_js")
+
+app.add_middleware(AddHeadersMiddleware)
 
 #app.add_middleware(HTTPSRedirectMiddleware) # для переадресации с 80 порта на 443
 #------------------------------------test_modal_page------------------------------------#

@@ -38,7 +38,7 @@ const appVueAddDefect = Vue.createApp({
         isDisabledAddDefect: false,
       }
     },
-    beforeMount() {
+    /* beforeMount() {
       axios
       .post('/user/user_role')
       .then(response => {
@@ -48,17 +48,26 @@ const appVueAddDefect = Vue.createApp({
             this.isDisabledAddDefect = true;
           }
         })
-    },
+    }, */
     mounted() {
+      axios
+      .post('/user/user_role')
+      .then(response => {
+          this.currentUser = response.data;
+          this.currentUserDivision = this.currentUser.user_division;
+          if (this.currentUserDivision != 'РусАС') {
+            this.isDisabledAddDefect = true;
+          }
+        this.getDivision();
+        this.updateTableDivision();
+        })
       this.setPopoverSafetyAddDefect()
       this.setPopoverExploitationAddDefect()
       this.setLimitNotes()
       this.setLimitSystem()
       this.setLimitLocation()
-      this.getDivision();
       updateCategoriesReason(this.categories_reason);
       updateCategoriesDefect(this.categories_defect);
-      this.updateTableDivision();
       this.updateTableTypeDefect();
       this.isHiddenblockclassification  = 'true';
       var myModalEl = document.getElementById('AddDefectModalWindow');
@@ -219,7 +228,7 @@ const appVueAddDefect = Vue.createApp({
         })
         myModal.show()
       }, /* clickbuttonspravochnik */
-      AKK_SAHA () {
+      AKK_SAHA() {
         if (this.newTypeDefect=='0'){ 
           Swal.fire({html:"<b>Журнал дефекта должен быть заполнен!</b>", heightAuto: false}); 
         } else {
@@ -258,6 +267,18 @@ const appVueAddDefect = Vue.createApp({
         isNaN(parseInt(this.newSystemKKS[10])) || 
         isNaN(parseInt(this.newSystemKKS[11])))) {
           Swal.fire({html:"<b>После AKK-SAHA введены не цифры!</b>", heightAuto: false});
+        }  
+        else if ((this.newSystemKKS.includes('AKK-SAHA') && this.newSystemKKS.length > 12) && 
+        (isNaN(parseInt(this.newSystemKKS[12])))){
+          Swal.fire({html:"<b>После AKK-SAHA должны быть цифры!</b>", heightAuto: false});
+        }  
+        else if ((this.newSystemKKS.includes('AKK-SAHA') && this.newSystemKKS.length > 13) && 
+        (isNaN(parseInt(this.newSystemKKS[13])))){
+          Swal.fire({html:"<b>После AKK-SAHA должны быть цифры!</b>", heightAuto: false});
+        }  
+        else if ((this.newSystemKKS.includes('AKK-SAHA') && this.newSystemKKS.length > 14) && 
+        (isNaN(parseInt(this.newSystemKKS[14])))){
+          Swal.fire({html:"<b>После AKK-SAHA должны быть цифры!</b>", heightAuto: false});
         }  
         /* else if (this.newSystemKKS !== '' && !this.maskObject.completed) {
           Swal.fire({html:"<b>Код KKS введен не полностью!</b>", heightAuto: false});

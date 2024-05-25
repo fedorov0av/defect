@@ -244,10 +244,13 @@ class Defect(Base):
                                 division_id = None,
                                 date_start: str = None, 
                                 date_end: str = None,
+                                srok_date: str = None,
                                 status_id = None,
-                                ppr = None,
-                                pnr = None,
-                                safety = None,
+                                ppr: bool = None,
+                                pnr: bool = None,
+                                overdue: bool = None,
+                                safety: bool = None,
+                                allDefects: bool = None,
                                 exploitation = None,
                                 type_defect_id = None):
         conditions = []
@@ -272,6 +275,12 @@ class Defect(Base):
         if date_end:
             end_date = (datetime.datetime.strptime(date_end, "%Y-%m-%d") + datetime.timedelta(days=1))
             conditions.append(Defect.defect_created_at <= end_date)
+        if srok_date:
+            date_srok = datetime.datetime.strptime(srok_date, "%Y-%m-%d")
+            conditions.append(Defect.defect_planned_finish_date == date_srok)
+        if overdue:
+            date_overdue = datetime.datetime.now().date()
+            conditions.append(Defect.defect_planned_finish_date < date_overdue)
             
         query = select(Defect)
         if conditions:
@@ -287,7 +296,10 @@ class Defect(Base):
                         .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                         .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect)).options(selectinload(Defect.defect_checker))\
                         .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
-        if status_id not in (STATUS_CLOSE_DEFECT_ID, STATUS_CANCEL_DEFECT_ID):
+        if allDefects:
+            print('fdf')
+            result = await session.scalars(query)
+        elif status_id not in (STATUS_CLOSE_DEFECT_ID, STATUS_CANCEL_DEFECT_ID):
             result = await session.scalars(query.filter(Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID, Defect.defect_status_id != STATUS_CANCEL_DEFECT_ID))
         else:
             result = await session.scalars(query)

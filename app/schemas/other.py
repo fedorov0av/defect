@@ -39,6 +39,8 @@ class Filter(BaseModel):
     exploitation: Optional[bool] = None
     type_defect_id: Optional[int] = 0 
     srok_date: Optional[str] = None
+    overdue: Optional[bool] = None
+    allDefects: Optional[bool] = None
 
 class DivisionAD(BaseModel):
     division_id: Optional[int]

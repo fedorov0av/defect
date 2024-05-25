@@ -13,8 +13,8 @@ const appVueFilter = Vue.createApp({
         srokDate: null,
         filterStatusDefect: 0,
         ppr: 'false',
-        allDefects: 'false',
-        overdue: 'false',
+        allDefects: false,
+        overdue: false,
         pnr: false,
         safety: false,
         exploitation: false,
@@ -29,8 +29,8 @@ const appVueFilter = Vue.createApp({
       this.setPopoverSafety()
       this.setPopoverExploitation()
       this.updateAllTables()
-      this.showAlldefects()
-      this.showOverduedefects()
+      /* this.showAlldefects() */
+      /* this.showOverduedefects() */
       updateTableStatusDefect(this.statuses_defect)
       /* this.setDivisionByUser() */
     }, /* mounted */
@@ -78,10 +78,11 @@ const appVueFilter = Vue.createApp({
           this.filterDivision = 0;
           this.startDate = null;
           this.endDate = null;
+          this.srokDate = null;
           this.filterStatusDefect = 0;
           this.ppr = 'false';
-          this.allDefects = 'false',
-          this.overdue = 'false',
+          this.allDefects = false,
+          this.overdue = false,
           this.dataSearch = '';
         }, /* clearData */        
         updateAllTables() {
@@ -111,8 +112,6 @@ const appVueFilter = Vue.createApp({
               } 
             }
           }
-          /* console.log(tempArray);
-          console.log(appVueDefect.defects); */
           appVueDefect.defects = tempArray
 
         }, /* searchResponsibleMainTable */
@@ -159,22 +158,25 @@ const appVueFilter = Vue.createApp({
             this.safety = false;
             this.exploitation = false; 
           }
-          
-          
+
           axios
             .post('/get_defect_by_filter/', 
               {"date_start": this.startDate,
                "date_end": this.endDate,
+               "srok_date": this.srokDate,
                "division_id":  this.filterDivision,
                "status_id":  this.filterStatusDefect,
                "ppr": this.ppr === true ? true : null,
                "pnr": this.pnr === true ? true : null,
+               "overdue": this.overdue === true ? true : null,
+               "allDefects": this.allDefects === true ? true : null,
                "safety": this.safety === true ? true : null,
                "exploitation": this.exploitation === true ? true : null,
                "type_defect_id":  this.filterType,
               }
             )
             .then(response => {
+              console.log(response.data)
               appVueDefect.defects = response.data;
               for (defect in appVueDefect.defects){
                 let responsible = null
@@ -225,8 +227,8 @@ const appVueFilter = Vue.createApp({
                 appVueDefect.defects[defect].dateBackgroundColor = date_background;
 
                 if (this.srokDate !== ''){ 
-                  console.log('dawdad') 
-                  console.log(date_srok_filter == finish_date) 
+                  /* console.log('dawdad') 
+                  console.log(date_srok_filter == finish_date)  */
                   finish_date == date_srok_filter;
                 } 
 
@@ -269,7 +271,7 @@ const appVueFilter = Vue.createApp({
               }) /* axios */
         }, /* nouseFilter */
         
-        showAlldefects() {
+        /* showAlldefects() {
           if (this.allDefects == true){ 
             axios
             .post('/all_defects',)
@@ -279,9 +281,8 @@ const appVueFilter = Vue.createApp({
           } else {
             this.nouseFilter();
           }
-        }, /* showAlldefects */
-
-        showOverduedefects() {
+        }, */ /* showAlldefects */
+        /* showOverduedefects() {
           if (this.overdue == true){ 
             axios
             .post('/overdue_defects',)
@@ -291,7 +292,18 @@ const appVueFilter = Vue.createApp({
           } else {
             this.nouseFilter();
           }
-        }, /* showOverduedefects */
+        }, */
+        /* showOverduedefects() {
+          if (this.overdue == true){ 
+            axios
+            .post('/overdue_defects',)
+            .then(response => {
+                appVueDefect.updateTablesoverduedefects();
+                  })
+          } else {
+            this.nouseFilter();
+          }
+        }, */ /* showOverduedefects Вадим */
 
         /* setDivisionByUser(){
           axios

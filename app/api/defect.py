@@ -632,13 +632,15 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                                             division_id = filter.division_id,
                                             date_start = filter.date_start,
                                             date_end = filter.date_end,
+                                            srok_date = filter.srok_date,
                                             status_id = filter.status_id,
                                             ppr = filter.ppr,
                                             pnr = filter.pnr,
+                                            overdue = filter.overdue,
+                                            allDefects = filter.allDefects,
                                             safety = filter.safety,
                                             exploitation = filter.exploitation,
                                             type_defect_id = filter.type_defect_id,
-                                            
                                             )
     defects_with_filters = list()
     for defect in result:

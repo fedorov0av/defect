@@ -301,10 +301,37 @@ const appConfirmDefect = Vue.createApp({
           Swal.fire({html:"<b>Это дефект не вашего подразделения! Вы из '" + this.currentUser.user_division  + "', а этот дефект относится к '" + this.cardDefect.defect_division.division_name  + "'</b>", heightAuto: false}); 
           return;  
         }   
-        if (this.cardKKS == null && this.newCardKKS == null) {
+        if (this.newCardKKS == '') {
           Swal.fire({html:"<b>Код KKS или номенклатурный номер не введен!</b>", heightAuto: false});
           return; /* Если KKS не заполнены то выходим из функции */
         }  
+        if ((this.newCardKKS.includes('AKK-SAHA') && this.newCardKKS.length < 12) || (this.newCardKKS.includes('AKK-SAHA') && this.newCardKKS.length > 15)) {
+          Swal.fire({html:"<b>Номенклатурный номер AKK-SAHA должен иметь от 4 до 7 цифр!</b>", heightAuto: false});
+          return; /* Если номенклатурный номер меньше 12 илли больше 15 символов */
+        }  
+        if (this.newCardKKS.includes('AKK-SAHA') && (
+          isNaN(parseInt(this.newCardKKS[8])) || 
+          isNaN(parseInt(this.newCardKKS[9])) || 
+          isNaN(parseInt(this.newCardKKS[10])) || 
+          isNaN(parseInt(this.newCardKKS[11])))) {
+          Swal.fire({html:"<b>После AKK-SAHA введены не цифры!</b>", heightAuto: false});
+          return;
+        }  
+        if ((this.newCardKKS.includes('AKK-SAHA') && this.newCardKKS.length > 12) && 
+          (isNaN(parseInt(this.newCardKKS[12])))){
+          Swal.fire({html:"<b>После AKK-SAHA должны быть цифры!</b>", heightAuto: false});
+          return;
+        }  
+        if ((this.newCardKKS.includes('AKK-SAHA') && this.newCardKKS.length > 13) && 
+          (isNaN(parseInt(this.newCardKKS[13])))){
+          Swal.fire({html:"<b>После AKK-SAHA должны быть цифры!</b>", heightAuto: false});
+          return;
+        }  
+        if ((this.newCardKKS.includes('AKK-SAHA') && this.newCardKKS.length > 14) && 
+          (isNaN(parseInt(this.newCardKKS[14])))){
+          Swal.fire({html:"<b>После AKK-SAHA должны быть цифры!</b>", heightAuto: false});
+          return;
+        } 
         if (this.newCardDatePlannedFinish == null && this.isHiddenDate == 'false') {
           this.check_date = true;
           Swal.fire({html:"<b>Срок устранения должен быть заполнен или переключатель 'Будет устранен в ППР' должен быть включен!</b>", heightAuto: false}); 
