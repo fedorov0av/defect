@@ -84,12 +84,62 @@ const appVueFilter = Vue.createApp({
           this.allDefects = false,
           this.overdue = false,
           this.dataSearch = '';
+          this.dataSearchDefectID = '';
+          this.oldDefects = {};
         }, /* clearData */        
         updateAllTables() {
           updateTableDivision(this.divisions)
           updateTableTypeDefect(this.type_defects)
         }, /* updateAllTables */
+
         searchResponsibleMainTable(event) {
+          if (appVueDefect.pages){
+            this.allDefects = true;
+            this.useFilter();
+            this.allDefects = false;
+          }
+          document.dispatchEvent(new Event('resetSorting'));
+          let tempArray = {}
+          let count = 0
+          if (this.dataSearch === '' && this.dataSearchDefectID === ''){
+            this.useFilter();
+            this.oldDefects = {};
+            return
+          }
+          if (Object.keys(this.oldDefects).length === 0){
+            this.oldDefects = appVueDefect.defects;
+          }
+
+          searchDefects = this.oldDefects
+          twix = true ? (this.dataSearch && this.dataSearchDefectID) : false
+
+          for (defect in searchDefects){
+            if ((searchDefects[defect].responsible && this.dataSearch !== '') || (this.dataSearchDefectID !== '')){
+
+              defectID = searchDefects[defect].defect_id.includes(this.dataSearchDefectID) ? this.dataSearchDefectID !== '' : false 
+              if (searchDefects[defect].responsible){
+                repairManager = searchDefects[defect].responsible.toUpperCase().includes(this.dataSearch.toUpperCase()) ? this.dataSearch : false 
+              } else {
+                repairManager = false
+              }
+              if (twix){
+                if (defectID && repairManager){
+                  tempArray[count] = searchDefects[defect];
+                  count ++;
+                } 
+              } else {
+                if (defectID || repairManager){
+                  tempArray[count] = searchDefects[defect];
+                  count ++;
+                }
+              }
+            } 
+          }
+          
+          appVueDefect.defects = tempArray
+
+        }, /* searchResponsibleMainTable */
+        /* searchResponsibleMainTable(event) {
           document.dispatchEvent(new Event('resetSorting'));
           let tempArray = {}
           let count = 0
@@ -114,8 +164,8 @@ const appVueFilter = Vue.createApp({
           }
           appVueDefect.defects = tempArray
 
-        }, /* searchResponsibleMainTable */
-        searchResponsibleMainTableDefectID(event) {
+        }, */ /* searchResponsibleMainTable */
+        /* searchResponsibleMainTableDefectID(event) {
           document.dispatchEvent(new Event('resetSorting')); 
           let tempArray = {}
           let count = 0
@@ -139,11 +189,9 @@ const appVueFilter = Vue.createApp({
               }
             }
           }
-          /* console.log(tempArray);
-          console.log(appVueDefect.defects); */
           appVueDefect.defects = tempArray
 
-        }, /* searchResponsibleMainTableDefectID */
+        }, */ /* searchResponsibleMainTableDefectID */
 
         useFilter() {
           if (this.startDate !== null && this.endDate !== null) {
@@ -158,7 +206,10 @@ const appVueFilter = Vue.createApp({
             this.safety = false;
             this.exploitation = false; 
           }
-
+          if (this.dataSearch || this.dataSearchDefectID){
+            this.dataSearch = '';
+            this.dataSearchDefectID = '';
+          }
           axios
             .post('/get_defect_by_filter/', 
               {"date_start": this.startDate,
@@ -176,7 +227,6 @@ const appVueFilter = Vue.createApp({
               }
             )
             .then(response => {
-              console.log(response.data)
               appVueDefect.defects = response.data;
               for (defect in appVueDefect.defects){
                 let responsible = null
@@ -270,40 +320,6 @@ const appVueFilter = Vue.createApp({
             }
               }) /* axios */
         }, /* nouseFilter */
-        
-        /* showAlldefects() {
-          if (this.allDefects == true){ 
-            axios
-            .post('/all_defects',)
-            .then(response => {
-                appVueDefect.updateTablesalldefects();
-                  }) 
-          } else {
-            this.nouseFilter();
-          }
-        }, */ /* showAlldefects */
-        /* showOverduedefects() {
-          if (this.overdue == true){ 
-            axios
-            .post('/overdue_defects',)
-            .then(response => {
-                appVueDefect.updateTablesoverduedefects();
-                  })
-          } else {
-            this.nouseFilter();
-          }
-        }, */
-        /* showOverduedefects() {
-          if (this.overdue == true){ 
-            axios
-            .post('/overdue_defects',)
-            .then(response => {
-                appVueDefect.updateTablesoverduedefects();
-                  })
-          } else {
-            this.nouseFilter();
-          }
-        }, */ /* showOverduedefects Вадим */
 
         /* setDivisionByUser(){
           axios

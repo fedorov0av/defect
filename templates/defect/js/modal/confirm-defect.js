@@ -411,7 +411,9 @@ const appConfirmDefect = Vue.createApp({
               textHistory = textHistory+'Оборудование изменилось с "'+this.cardSystemName+'" на "'+this.newCardSystemName+'"\n';
             }
             if (this.newRepairManager_id !== this.repairManager_id && this.cardStatusDefectName !== 'Зарегистрирован'){
-              textHistory = textHistory+'Руководитель ремонта изменился с "'+repairManager+'" на "'+newRepairManager+'"\n';
+              textHistory = textHistory+'Ответственный за устранение изменился с "'+repairManager+'" на "'+newRepairManager+'"\n';
+            } else {
+              textHistory = textHistory+'Назначен ответственный за устранение: '+newRepairManager+'\n';
             }
             if (this.cardDefect.defect_safety !== this.newSafety){
               textHistory = textHistory+'Влияет на безопасность и несение нагрузки изменился с "'+(this.cardDefect.defect_safety ? "ДА": "НЕТ")+'" на "'+(this.newSafety ? "ДА": "НЕТ")+'"\n';

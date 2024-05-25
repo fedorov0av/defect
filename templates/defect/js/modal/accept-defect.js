@@ -179,6 +179,7 @@ const appAcceptDefect = Vue.createApp({
       }
       const workers_array = Object.values(this.workers); 
       this.newWorkerDivision = workers_array.filter((user) => user.user_id === this.newWorker_id)
+      this.newWorker = this.newWorkerDivision[0]
       /* if (this.currentUser.user_division != this.newWorkerDivision[0].user_division) {
         this.check_worker = true
         Swal.fire({html:"<b>Исполнитель ремонта должен быть из подразделения '" + this.cardDivisionOwner + "' </b>", heightAuto: false}); 
@@ -203,7 +204,7 @@ const appAcceptDefect = Vue.createApp({
             "user_id": this.newWorker_id
           },
           "comment": {
-            "comment": null
+            "comment": 'Назначен исполнитель: '+this.newWorker.user_surname+' '+this.newWorker.user_name
           }
           }
           axios
