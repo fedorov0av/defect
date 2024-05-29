@@ -11,25 +11,25 @@
 		<script src="{{ url_for('static_js', path='axios.min.js') }}"></script>
 		<script src="{{ url_for('static_js', path='bootstrap-table.min.js') }}"></script>
 		<script src="{{ url_for('defect_js', path='utils/update-tables.js') }}"></script>
-		<script src="{{ url_for('defect_js', path='utils/export.js?v=0.2') }}"></script>
+		<script src="{{ url_for('defect_js', path='utils/export.js?v=0.3') }}"></script>
 		<script src="{{ url_for('defect_js', path='utils/get-setting.js') }}"></script>
 		<script src="{{ url_for('defect_js', path='utils/get-data.js') }}"></script>
 
 
 		<meta charset="utf-8">
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self' ; 
+<!-- 		<meta http-equiv="Content-Security-Policy" content="default-src 'self' ; 
 															img-src * 'self' data: https:; 
 															style-src 'self' 'unsafe-inline';
 															script-src 	'self' 
                           												'sha256-v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA=' 
-                          												'unsafe-eval';">
+                          												'unsafe-eval';"> -->
 																		
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="Journal of defects">
 		<meta name="author" content="Fedorov A., Baibekov V., Petrov T., Leskov S., Rykov A.">
 		<title>Журнал учета дефектов</title>
 		<link rel="stylesheet" href="{{ url_for('static_css', path='defect-styles.css') }}">
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static_css', path='mystyles.css?v=0.5') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static_css', path='mystyles.css?v=0.7') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static_css', path='tablesort.css') }}">
 		<!-- Custom styles for this template -->
 		<link href="{{ url_for('static_css', path='defect.css') }}" rel="stylesheet">

@@ -81,6 +81,9 @@ const appVueFilter = Vue.createApp({
           this.srokDate = null;
           this.filterStatusDefect = 0;
           this.ppr = 'false';
+          this.pnr = 'false';
+          this.safety = 'false';
+          this.exploitation = 'false';
           this.allDefects = false,
           this.overdue = false,
           this.dataSearch = '';
@@ -251,7 +254,7 @@ const appVueFilter = Vue.createApp({
                   
                   
 
-                  let now = new Date()
+                  let now = new Date() 
                   date_defect_finish_temp = appVueDefect.defects[defect].defect_planned_finish_date.split('-')
                   finish_date = Date.parse(date_defect_finish_temp[2]+'-'+date_defect_finish_temp[1]+'-'+date_defect_finish_temp[0])
 

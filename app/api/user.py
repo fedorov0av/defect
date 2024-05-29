@@ -65,64 +65,64 @@ async def get_current_user_role(request: Request, response: Response, session: A
             "user_division": user.user_division.division_name,
             "user_division_id": user.user_division.division_id,
             }
-
-@user_router.post("/user/add") # только в режиме работы "БД"
-async def add_new_user(request: Request, response: Response, user_p: User_p, session: AsyncSession = Depends(get_db)):
-    await check_auth_api(request, response) # проверка на истечение времени jwt токена
-    division = await Division.get_division_by_name(session, user_p.user_division)
-    role = await Role.get_role_by_rolename(session, user_p.user_role)
-    user: User = await User.add_user(
-        session=session,
-        user_name=user_p.user_name,
-        user_fathername=user_p.user_fathername,
-        user_surname=user_p.user_surname,
-        user_position=user_p.user_position,
-        user_division=division,
-        user_password=user_p.password,
-        user_role=role,
-        user_email=user_p.email
-        )
-    return user
-
-@user_router.post("/user/update") # только в режиме работы "БД"
-async def update_user(request: Request, response: Response, user_update: User_update, session: AsyncSession = Depends(get_db)):
-    await check_auth_api(request, response) # проверка на истечение времени jwt токена
-    user = await User.get_user_by_id(session, user_update.user_id)
-    division = await Division.get_division_by_name(session, user_update.user_division)
-    role = await Role.get_role_by_rolename(session, user_update.user_role)
-    user: User = await User.update_user(
-        session=session,
-        user_id=user_update.user_id,
-        user_name=user_update.user_name,
-        user_fathername=user_update.user_fathername,
-        user_surname=user_update.user_surname,
-        user_position=user_update.user_position,
-        user_division=division,
-        user_role=role,
-        user_email=user_update.email
-        )
-    return user
- 
-@user_router.post("/users/") # только в режиме работы "БД"
-async def get_users(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
-    await check_auth_api(request, response) # проверка на истечение времени jwt токена
-    result: list[User] = await User.get_all_users(session)
-    user_l = list()
-    for user in result:
-        user_l.append(
-            {
-                "user_id": user.user_id,
-                'user_surname': user.user_surname,
-                'user_name': user.user_name,
-                'user_fathername': user.user_fathername,
-                'user_position': user.user_position,
-                'user_division': user.user_division.division_name,
-                'user_role': get_list_roles_name(user.user_role),
-                "user_email": user.user_email
-            }
-        )
-    """ user_l  = sorted(user_l, key=lambda x: x[2], reverse=True) """
-    return user_l
+if not AD:  
+    @user_router.post("/user/add") # только в режиме работы "БД"
+    async def add_new_user(request: Request, response: Response, user_p: User_p, session: AsyncSession = Depends(get_db)):
+        await check_auth_api(request, response) # проверка на истечение времени jwt токена
+        division = await Division.get_division_by_name(session, user_p.user_division)
+        role = await Role.get_role_by_rolename(session, user_p.user_role)
+        user: User = await User.add_user(
+            session=session,
+            user_name=user_p.user_name,
+            user_fathername=user_p.user_fathername,
+            user_surname=user_p.user_surname,
+            user_position=user_p.user_position,
+            user_division=division,
+            user_password=user_p.password,
+            user_role=role,
+            user_email=user_p.email
+            )
+        return user
+if not AD:
+    @user_router.post("/user/update") # только в режиме работы "БД"
+    async def update_user(request: Request, response: Response, user_update: User_update, session: AsyncSession = Depends(get_db)):
+        await check_auth_api(request, response) # проверка на истечение времени jwt токена
+        user = await User.get_user_by_id(session, user_update.user_id)
+        division = await Division.get_division_by_name(session, user_update.user_division)
+        role = await Role.get_role_by_rolename(session, user_update.user_role)
+        user: User = await User.update_user(
+            session=session,
+            user_id=user_update.user_id,
+            user_name=user_update.user_name,
+            user_fathername=user_update.user_fathername,
+            user_surname=user_update.user_surname,
+            user_position=user_update.user_position,
+            user_division=division,
+            user_role=role,
+            user_email=user_update.email
+            )
+        return user
+if not AD:
+    @user_router.post("/users/") # только в режиме работы "БД"
+    async def get_users(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
+        await check_auth_api(request, response) # проверка на истечение времени jwt токена
+        result: list[User] = await User.get_all_users(session)
+        user_l = list()
+        for user in result:
+            user_l.append(
+                {
+                    "user_id": user.user_id,
+                    'user_surname': user.user_surname,
+                    'user_name': user.user_name,
+                    'user_fathername': user.user_fathername,
+                    'user_position': user.user_position,
+                    'user_division': user.user_division.division_name,
+                    'user_role': get_list_roles_name(user.user_role),
+                    "user_email": user.user_email
+                }
+            )
+        """ user_l  = sorted(user_l, key=lambda x: x[2], reverse=True) """
+        return user_l
 
 @user_router.post("/user/")
 async def get_user(request: Request, response: Response, user_id: User_id, session: AsyncSession = Depends(get_db)):
@@ -231,13 +231,14 @@ async def get_registrators(request: Request, response: Response, session: AsyncS
         )
     return user_l
 
-@user_router.post("/users/emails") # только в режиме работы "БД"
-async def get_users_emails(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
-    await check_auth_api(request, response) # проверка на истечение времени jwt токена
-    result: list[User] = await User.get_all_users(session)
-    user_l = list()
-    for user in result:
-        user_l.append(
-            user.user_email
-        )
-    return user_l
+if not AD:
+    @user_router.post("/users/emails") # только в режиме работы "БД"
+    async def get_users_emails(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
+        await check_auth_api(request, response) # проверка на истечение времени jwt токена
+        result: list[User] = await User.get_all_users(session)
+        user_l = list()
+        for user in result:
+            user_l.append(
+                user.user_email
+            )
+        return user_l

@@ -22,6 +22,9 @@ from app.api.other import other_router
 from app.api.admin import admin_router
 
 from fastapi_pagination import add_pagination
+from fastapi.exceptions import RequestValidationError
+from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
+from fastapi.encoders import jsonable_encoder
 
 from app.middleware.auth import auth_required
 
@@ -88,6 +91,14 @@ async def get_defects(request:Request,):
 async def get_defects(request:Request):
     return templates.TemplateResponse("temp/temp_modal.html",context={"request":request})
 
+@app.exception_handler(RequestValidationError)
+async def request_validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
+    print(exc.errors())
+    return JSONResponse(
+        status_code=HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"detail": jsonable_encoder({"ValueError":"ValueError"}, exclude={"input"})})
 
 #------------------------------------csrf-start------------------------------------#
 

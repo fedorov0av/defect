@@ -5,21 +5,21 @@ FROM python:3.11-alpine
 WORKDIR /defects
 
 # Копирование requirements.txt и установка зависимостей
-COPY requirements.txt /defects/requirements.txt
+COPY requirements.txt ./requirements.txt
 RUN apk update && apk upgrade && apk add mc && apk add vim && apk add nano && \
-    pip install --no-cache-dir --upgrade -r /defects/requirements.txt && \
-    rm -rf /defects/requirements.txt
+    pip install --no-cache-dir --upgrade -r ./requirements.txt && \
+    rm -rf ./requirements.txt
 
 # Копирование исходных файлов в контейнер
-COPY app/ /defects/app/
-COPY db/ /defects/db/
-COPY templates/ /defects/templates/
-COPY utils/ /defects/utils/
-COPY cert/ /defects/cert/
-COPY create_db.py defects/
-COPY config.py defects/
-COPY main.py defects/
-COPY .env defects/
+COPY app/ ./app/
+COPY db/ ./db/
+COPY templates/ ./templates/
+COPY utils/ ./utils/
+COPY cert/ ./cert/
+COPY create_db.py ./
+COPY config.py ./
+COPY main.py ./
+COPY .env ./
 
 # установка таймзоны
 ENV TZ=Europe/Istanbul
