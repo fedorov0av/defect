@@ -201,6 +201,9 @@ const appCheckDefect = Vue.createApp({
           Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
         }
+        const checkers_array = Object.values(this.registrators); 
+        this.newCheckerDivision = checkers_array.filter((user) => user.user_id === this.newCheckerId)
+        this.newChecker = this.newCheckerDivision[0]
         Swal.fire({
           title: "Вы подтверждаете, что дефект устранен?",
           showDenyButton: true,
@@ -221,7 +224,7 @@ const appCheckDefect = Vue.createApp({
                 "user_id": this.newCheckerId
               },
               "defect_check_result": {
-                "comment": 'Дефект устранен!'
+                "comment": 'Дефект устранен! Выполнил проверку: ' + this.newChecker.user_surname +' '+ this.newChecker.user_name
               }
             } 
             axios
@@ -253,6 +256,9 @@ const appCheckDefect = Vue.createApp({
           Swal.fire({html:"<b>Не выбран проверяющий!</b>", heightAuto: false}); 
           return;  /* Если ПРОВЕРЯЮЩИЙ не заполнен, то выходим из функции */
         }
+        const checkers_array = Object.values(this.registrators); 
+        this.newCheckerDivision = checkers_array.filter((user) => user.user_id === this.newCheckerId)
+        this.newChecker = this.newCheckerDivision[0]
         Swal.fire({
           title: "Вы подтверждаете, что дефект локализован?",
           showDenyButton: true,
@@ -263,7 +269,7 @@ const appCheckDefect = Vue.createApp({
             data =
             {
               "defect_id": {
-                "defect_id": this.defect_id
+                "defect_id": this.defect_id 
               },
               "status_name": {
                 "status_defect_name": this.statuses_defect[10].status_defect_name
@@ -272,7 +278,7 @@ const appCheckDefect = Vue.createApp({
                 "user_id": this.newCheckerId
               },
               "defect_check_result": {
-                "comment": 'Дефект локализован!'
+                "comment": 'Дефект локализован! Выполнил проверку: ' + this.newChecker.user_surname +' '+ this.newChecker.user_name
               }
             } 
             axios
@@ -309,6 +315,9 @@ const appCheckDefect = Vue.createApp({
           Swal.fire({html:"<b>Не заполнен результат проверки!</b>", heightAuto: false}); 
           return;  /* Если комментарий проверяющего не заполнен, то выходим из функции */
         }
+        const checkers_array = Object.values(this.registrators); 
+        this.newCheckerDivision = checkers_array.filter((user) => user.user_id === this.newCheckerId)
+        this.newChecker = this.newCheckerDivision[0]
         Swal.fire({
           title: "Вы подтверждаете, что дефект не устранен?",
           showDenyButton: true,
@@ -328,7 +337,7 @@ const appCheckDefect = Vue.createApp({
                 "user_id": this.newCheckerId
               },
               "defect_check_result": {
-                "comment": this.cardCheckerDescription
+                "comment": this.cardCheckerDescription + ' (Выполнил проверку: ' + this.newChecker.user_surname +' '+ this.newChecker.user_name +')'
               }
             }
             axios

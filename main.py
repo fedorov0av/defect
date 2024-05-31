@@ -1,7 +1,6 @@
-from fastapi import FastAPI, Request, APIRouter, Depends
+from fastapi import FastAPI, Request, APIRouter, Depends, Response
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from starlette.templating import Jinja2Templates
 import os
 
@@ -33,13 +32,17 @@ from fastapi_csrf_protect.exceptions import CsrfProtectError
 from fastapi.responses import JSONResponse
 from app.schemas.auth import CsrfSettings
 from app.middleware.http_header import AddHeadersMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 from config import AD
+
 
 if AD:
   app = FastAPI(docs_url=None, redoc_url=None)
 else:
   app = FastAPI()
+
+app.add_middleware(GZipMiddleware)
 
 add_pagination(app)
 
@@ -73,6 +76,7 @@ app.mount("/temp_css_js", StaticFiles(directory="templates/temp/temp_modal_stati
 #----------------------------------------------------------------------------------------#
 
 templates = Jinja2Templates(directory="templates")
+
 
 @app.get('/favicon.ico')
 async def favicon():
