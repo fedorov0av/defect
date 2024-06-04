@@ -38,7 +38,12 @@ async def auth(request: Request,
         username = auth_data.email.split('@')[0].lower()
         ldap_connection = LdapConnection(session, username, auth_data.password, auth=True)
         if await ldap_connection.check_user():
-            pass
+            try:
+                user = ldap_connection.get_user_by_uid_from_AD(username)
+            except KeyError:
+                raise HTTPException(status_code=401, detail="User not found")
+            if not user.user_role:
+                raise HTTPException(status_code=401, detail="User without role")
         else:
             raise HTTPException(status_code=403, detail="Invalid password")
     else:
@@ -46,6 +51,8 @@ async def auth(request: Request,
             user: User = await User.get_user_by_email(session=session, user_email=auth_data.email.lower())
         except NoResultFound:
             raise HTTPException(status_code=401, detail="User not found")
+        if not user.user_role:
+            raise HTTPException(status_code=402, detail="User without role")
         if not check_password(user=user, text=auth_data.password):
             raise HTTPException(status_code=403, detail="Invalid password")
     if AD:

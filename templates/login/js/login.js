@@ -42,10 +42,13 @@ const app = Vue.createApp({
         window.location.href = "/";
       }
       if (err.request.status == 401) {
-        Swal.fire({html:"<b>Неправильный логин или пароль</b>", heightAuto: false}); 
+        Swal.fire({html:"<b>Неправильный логин или пароль!</b>", heightAuto: false}); 
+      }
+      if (err.request.status == 402) {
+        Swal.fire({html:"<b>Доступ запрещен!</b>", heightAuto: false}); 
       }
       if (err.request.status == 403) {
-        Swal.fire({html:"<b>Неправильный пароль</b>", heightAuto: false}); 
+        Swal.fire({html:"<b>Неправильный пароль!</b>", heightAuto: false}); 
       }
       });
     },
