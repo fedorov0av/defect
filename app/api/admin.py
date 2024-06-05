@@ -34,6 +34,8 @@ async def auth(request: Request,
         user_LDAP = await ldap_connection.get_user_by_mail_from_AD(email.email)
     except IndexError:
         raise HTTPException(status_code=417, detail="User not found!")
+    if user_LDAP == None:
+        raise HTTPException(status_code=417, detail="User not found!")
     return {"user_LDAP": user_LDAP}
 
 @admin_router.post("/auth_by_user_id", response_class=JSONResponse) # авторизация под пользователем с админки

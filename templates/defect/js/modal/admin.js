@@ -100,8 +100,8 @@ const appVueAdminPass = Vue.createApp({
               return
             } else if (err.request.status == 403) {
               Swal.fire({html:"<b>Неправильный пароль</b>", heightAuto: false});
-            } else if (err.request.status == 403) {
-              Swal.fire({html:"<b>Неправильный пароль</b>", heightAuto: false});
+            } else if (err.request.status == 417) {
+              Swal.fire({html:"<b>Не найден пользователь!</b>", heightAuto: false});
             } else if (err.request.status == 418) {
               Swal.fire({html:"<b>Сервер работает в режиме 'База данных'!</b>", heightAuto: false}); 
               document.getElementById('closePassAdminModal').click();

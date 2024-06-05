@@ -39,7 +39,7 @@ async def auth(request: Request,
         ldap_connection = LdapConnection(session, username, auth_data.password, auth=True)
         if await ldap_connection.check_user():
             try:
-                user = ldap_connection.get_user_by_uid_from_AD(username)
+                user = await ldap_connection.get_user_by_uid_from_AD(username)
             except KeyError:
                 raise HTTPException(status_code=401, detail="User not found")
             if not user.user_role:
