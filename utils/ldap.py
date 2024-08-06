@@ -90,7 +90,7 @@ class LdapConnection:
                         'memberOf': raw_user['attributes']['memberOf'],
                         'extensionAttribute2': user_fio if user_fio else raw_user['attributes']['title'],
                         'mail': user_mail.lower(),
-                        'mailNickname': user_mailNickname.lower(),
+                        'mailNickname': user_mailNickname.lower() if user_mailNickname else user_mail.lower().split('@')[0],
                         'sAMAccountName': user_sAMAccountName.lower(),
                     })
                 except IndexError as err:
