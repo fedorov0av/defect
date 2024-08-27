@@ -451,7 +451,7 @@
 }
 
 .block_filter {
-  padding: 10px 15px 5px 15px;
+  padding: -1px 15px -1px 15px;
   height: 50px;
   background-color: rgb(171, 207, 248);
 }
@@ -1137,7 +1137,7 @@
   padding: 10px;
   position: relative;
   margin: 10px 5px 15px 0;
-  min-height: 110px;
+  min-height: 135px;
 }
 
 .commonFilterWrapper::before {
@@ -1273,7 +1273,7 @@
   }
 
   .block_filter {
-    height: 140px;
+    height: 180px;
   }
 
   .block_filter_flex {

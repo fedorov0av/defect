@@ -159,7 +159,8 @@ const appVueDefect = Vue.createApp({
                 responsible =
                   this.defects[defect].defect_repair_manager.user_surname +
                   " " +
-                  this.defects[defect].defect_repair_manager.user_name;
+                  this.defects[defect].defect_repair_manager.user_name +
+                  " (" + this.defects[defect].defect_repair_manager.user_division_name + ")";
               } else if (
                 this.defects[defect].defect_status.status_defect_name === "Назначен исполнитель" ||
                 this.defects[defect].defect_status.status_defect_name === "Принят в работу"
@@ -167,7 +168,8 @@ const appVueDefect = Vue.createApp({
                 responsible =
                   this.defects[defect].defect_worker.user_surname +
                   " " +
-                  this.defects[defect].defect_worker.user_name;
+                  this.defects[defect].defect_worker.user_name +
+                  " (" + this.defects[defect].defect_worker.user_division_name + ")";
               } else if (
                 this.defects[defect].defect_status.status_defect_name === "Работы завершены"
               ) {
@@ -242,7 +244,8 @@ const appVueDefect = Vue.createApp({
                 responsible =
                   this.defects[defect].defect_repair_manager.user_surname +
                   " " +
-                  this.defects[defect].defect_repair_manager.user_name;
+                  this.defects[defect].defect_repair_manager.user_name +
+                  " (" + this.defects[defect].defect_repair_manager.user_division_name + ")";
               } else if (
                 this.defects[defect].defect_status.status_defect_name === "Назначен исполнитель" ||
                 this.defects[defect].defect_status.status_defect_name === "Принят в работу"
@@ -250,7 +253,9 @@ const appVueDefect = Vue.createApp({
                 responsible =
                   this.defects[defect].defect_worker.user_surname +
                   " " +
-                  this.defects[defect].defect_worker.user_name;
+                  this.defects[defect].defect_worker.user_name +
+                  " (" + this.defects[defect].defect_worker.user_division_name + ")";
+
               } else if (
                 this.defects[defect].defect_status.status_defect_name === "Работы завершены"
               ) {
@@ -325,7 +330,8 @@ const appVueDefect = Vue.createApp({
                 responsible =
                   this.defects[defect].defect_repair_manager.user_surname +
                   " " +
-                  this.defects[defect].defect_repair_manager.user_name;
+                  this.defects[defect].defect_repair_manager.user_name +
+                  " (" + this.defects[defect].defect_repair_manager.user_division_name + ")";
               } else if (
                 this.defects[defect].defect_status.status_defect_name === "Назначен исполнитель" ||
                 this.defects[defect].defect_status.status_defect_name === "Принят в работу"
@@ -333,7 +339,8 @@ const appVueDefect = Vue.createApp({
                 responsible =
                   this.defects[defect].defect_worker.user_surname +
                   " " +
-                  this.defects[defect].defect_worker.user_name;
+                  this.defects[defect].defect_worker.user_name +
+                  " (" + this.defects[defect].defect_worker.user_division_name + ")";
               } else if (
                 this.defects[defect].defect_status.status_defect_name === "Работы завершены"
               ) {
@@ -498,12 +505,18 @@ const appVueDefect = Vue.createApp({
               this.defects[defect].defect_status.status_defect_name === "Адресован" ||
               this.defects[defect].defect_status.status_defect_name === 'Не устранен'
             ) {
-              responsible = this.defects[defect].defect_repair_manager.user_surname + " " + this.defects[defect].defect_repair_manager.user_name;
+              responsible = this.defects[defect].defect_repair_manager.user_surname +
+              " " +
+              this.defects[defect].defect_repair_manager.user_name +
+              " (" + this.defects[defect].defect_repair_manager.user_division_name + ")";
             } else if (
               this.defects[defect].defect_status.status_defect_name === "Назначен исполнитель" ||
               this.defects[defect].defect_status.status_defect_name === "Принят в работу"
             ) {
-              responsible = this.defects[defect].defect_worker.user_surname + " " + this.defects[defect].defect_worker.user_name;
+              responsible = this.defects[defect].defect_worker.user_surname +
+              " " +
+              this.defects[defect].defect_worker.user_name +
+              " (" + this.defects[defect].defect_worker.user_division_name + ")";
             } else if (
               this.defects[defect].defect_status.status_defect_name === "Работы завершены"
             ) {

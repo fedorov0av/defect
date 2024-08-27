@@ -24,6 +24,10 @@
 										<option selected value=0>Подразделение-владелец</option>
 										<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
 									</select>
+									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterRepairDivision">
+										<option selected value=0>Ответственный за устр.</option>
+										<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
+									</select>
 								</div>
 								<div class="block_filter_flex">
 									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterType">
@@ -31,9 +35,13 @@
 										<option v-for="type_defect in type_defects" :value="type_defect.type_defect_id">{{ type_defect.type_defect_name	}}</option>
 									</select>
 									<form autocomplete="off" class="width100">
-										<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearch" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Ответственный">
+										<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearch" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Ответственный на тек. статусе">
+									</form>
+									<form autocomplete="off" class="width100">
+										<input type="text" class="form-control" name="KKS" v-model.laze="kksSearch" autocomplete="off" @input="searchKksMainTable" placeholder="KSS">
 									</form>
 								</div>
+								
 							</div>
 
 							<div class="block_row">

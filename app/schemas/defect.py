@@ -55,7 +55,7 @@ class Defects_output(BaseModel):
     defect_owner_surname: Optional[str]
     defect_owner: Optional[str]
     defect_repair_manager: Optional[dict]
-    defect_worker: Optional[PydanticUser]
+    defect_worker: Optional[dict]
     defect_planned_finish_date: Optional[str]
     defect_description: Optional[str]
     defect_location: Optional[str]

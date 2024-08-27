@@ -38,11 +38,11 @@ class Defect(Base):
     #defect_repair_manager_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - руководитель ремонта.
     defect_repair_manager_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String, nullable=True) # id поста из таблицы User - руководитель ремонта.
     if not AD:
-        defect_repair_manager: Mapped["User"] = relationship(foreign_keys=[defect_repair_manager_id]) #  для работы с таблицей User как с объектом
+        defect_repair_manager: Mapped["User"] = relationship(foreign_keys=[defect_repair_manager_id], lazy='selectin') #  для работы с таблицей User как с объектом
     #defect_worker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - исполнитель ремонта.
     defect_worker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String, nullable=True) # id поста из таблицы User - исполнитель ремонта.
     if not AD:
-        defect_worker: Mapped["User"] = relationship(foreign_keys=[defect_worker_id]) #  для работы с таблицей User как с объектом
+        defect_worker: Mapped["User"] = relationship(foreign_keys=[defect_worker_id], lazy='selectin') #  для работы с таблицей User как с объектом
     #defect_checker_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=True) # id поста из таблицы User - выполняющий ОП проверку.
     defect_checker_id: Mapped[str] = mapped_column(ForeignKey("user.user_id"), nullable=True) if not AD else mapped_column(String, nullable=True) # id поста из таблицы User - выполняющий ОП проверку.
     if not AD:
@@ -292,7 +292,7 @@ class Defect(Base):
         else:
             query = query.order_by(Defect.defect_id.desc())\
                         .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
-                        .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
+                        .options(selectinload(Defect.defect_worker)).options(selectinload(Defect.defect_repair_manager))\
                         .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                         .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect)).options(selectinload(Defect.defect_checker))\
                         .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))

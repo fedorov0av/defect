@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Journal of defects">
-    <meta name="author" content="Fedorov A., Baibekov V., Petrov T., Rykov A.">
+    <meta name="author" content="Fedorov A., Baibekov V., Petrov T.">
     <title>Электронный журнал дефектов АЭС "АККУЮ"</title>
    
 <link rel="stylesheet" href="{{ url_for('static_css', path='login-styles.css') }}">    
@@ -114,6 +114,12 @@
     <button @click="createPost" v-on:keyup.enter="createPost" class="btn btn-primary w-100 py-2" style="font-size: 25px; background-color: #004aac;" :type="typeButton">Войти</button>
 
 {% endraw %}
+<p>
+</p>
+<p style="text-align: center;" class="mt-3 mb-3 text-body-secondary">При возникновении проблем и вопросов:</p>
+<div style="text-align: center;" >
+  <a href="mailto:A.Fedorov@akkuyu.com, N.Kudriashov@akkuyu.com, V.Baibekov@akkuyu.com" >Отправить письмо разработчикам!</a>
+</div>
 <p style="text-align: center;" class="mt-3 mb-3 text-body-secondary">&copy; Аккую Нуклеар 2024</p>
 </main>
 <script src="{{ url_for('static_js', path='bootstrap.bundle.min.js') }}" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

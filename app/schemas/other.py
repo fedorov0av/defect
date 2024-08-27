@@ -29,8 +29,9 @@ class Exploitation(BaseModel):
     exploitation: Optional[bool]
 
 class Filter(BaseModel):
-    division_id: Optional[int] = 0 
-    status_id: Optional[int] = 0 
+    division_id: Optional[int] = 0
+    repair_division_id: Optional[int] = 0
+    status_id: Optional[int] = 0
     date_start: Optional[str] = None
     date_end: Optional[str] = None
     ppr: Optional[bool] = None

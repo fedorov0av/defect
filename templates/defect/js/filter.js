@@ -8,6 +8,7 @@ const appVueFilter = Vue.createApp({
         filterType: 0,
         filterManager: 0,
         filterDivision: 0,
+        filterRepairDivision: 0,
         startDate: null,
         endDate: null,
         srokDate: null,
@@ -19,6 +20,7 @@ const appVueFilter = Vue.createApp({
         safety: false,
         exploitation: false,
         dataSearch: '',
+        kksSearch: '',
         dataSearchDefectID: '',
         oldDefects: {},
         srokDate: '',
@@ -76,6 +78,7 @@ const appVueFilter = Vue.createApp({
           this.filterType = 0;
           this.filterManager = 0;
           this.filterDivision = 0;
+          this.filterRepairDivision = 0;
           this.startDate = null;
           this.endDate = null;
           this.srokDate = null;
@@ -94,7 +97,9 @@ const appVueFilter = Vue.createApp({
           updateTableDivision(this.divisions)
           updateTableTypeDefect(this.type_defects)
         }, /* updateAllTables */
-
+        searchKksMainTable(event) {
+          console.log(event)
+        },
         searchResponsibleMainTable(event) {
           if (appVueDefect.pages){
             this.allDefects = true;
@@ -219,6 +224,7 @@ const appVueFilter = Vue.createApp({
                "date_end": this.endDate,
                "srok_date": this.srokDate,
                "division_id":  this.filterDivision,
+               "repair_division_id":  this.filterRepairDivision,
                "status_id":  this.filterStatusDefect,
                "ppr": this.ppr === true ? true : null,
                "pnr": this.pnr === true ? true : null,
@@ -242,9 +248,13 @@ const appVueFilter = Vue.createApp({
                     responsible = appVueDefect.defects[defect].defect_owner;
                 } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Адресован' ||
                 appVueDefect.defects[defect].defect_status.status_defect_name === 'Не устранен'){
-                  responsible = appVueDefect.defects[defect].defect_repair_manager.user_surname + ' ' + appVueDefect.defects[defect].defect_repair_manager.user_name;
+                  responsible = appVueDefect.defects[defect].defect_repair_manager.user_surname +
+                  ' ' + appVueDefect.defects[defect].defect_repair_manager.user_name +
+                  " (" + appVueDefect.defects[defect].defect_repair_manager.user_division_name + ")";
                 } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Назначен исполнитель' || appVueDefect.defects[defect].defect_status.status_defect_name === 'Принят в работу'){
-                  responsible = appVueDefect.defects[defect].defect_worker.user_surname + ' ' + appVueDefect.defects[defect].defect_worker.user_name;
+                  responsible = appVueDefect.defects[defect].defect_worker.user_surname +
+                  ' ' + appVueDefect.defects[defect].defect_worker.user_name +
+                  " (" + appVueDefect.defects[defect].defect_worker.user_division_name + ")";
                 } else if (appVueDefect.defects[defect].defect_status.status_defect_name === 'Работы завершены'){
                   responsible = 'ОП ' + appVueDefect.defects[defect].defect_owner;
                 }

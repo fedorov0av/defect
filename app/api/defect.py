@@ -88,7 +88,9 @@ class UserDefectFromAD:
             repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
             defect_repair_manager = {'user_surname': repair_manager.user_surname if repair_manager else '',
                                     'user_name': repair_manager.user_name if repair_manager else ''}
-            defect_worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
+            worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
+            defect_worker = {'user_surname': worker.user_surname if worker else '',
+                            'user_name': worker.user_name if worker else ''}
             result.append(
                 {'defect_id': defect.defect_id,
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
@@ -178,9 +180,13 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
                 'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
                 'defect_owner': defect.defect_division.division_name,
                 'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
-                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
+                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else '',
+                                          'user_division_name': defect.defect_repair_manager.user_division.division_name if defect.defect_repair_manager else ''
                                           },
-                'defect_worker': defect.defect_worker,
+                'defect_worker': {'user_surname': defect.defect_worker.user_surname if defect.defect_worker else '',
+                                'user_name': defect.defect_worker.user_name if defect.defect_worker else '',
+                                'user_division_name': defect.defect_worker.user_division.division_name if defect.defect_worker else ''
+                                },
                 'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
                                              if not defect.defect_ppr else 'Устр. в ППР',
                 "defect_description": defect.defect_description,
@@ -214,9 +220,13 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
                 'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
                 'defect_owner': defect.defect_division.division_name,
                 'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
-                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
+                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else '',
+                                          'user_division_name': defect.defect_repair_manager.user_division.division_name if defect.defect_repair_manager else ''
                                           },
-                'defect_worker': defect.defect_worker,
+                'defect_worker': {'user_surname': defect.defect_worker.user_surname if defect.defect_worker else '',
+                                'user_name': defect.defect_worker.user_name if defect.defect_worker else '',
+                                'user_division_name': defect.defect_worker.user_division.division_name if defect.defect_worker else ''
+                                },
                 'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
                                              if not defect.defect_ppr else 'Устр. в ППР',
                 "defect_description": defect.defect_description,
@@ -253,9 +263,13 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
                 'defect_owner_surname': defect.defect_owner.user_surname if defect.defect_owner else None,
                 'defect_owner': defect.defect_division.division_name,
                 'defect_repair_manager': {'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
-                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
+                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else '',
+                                          'user_division_name': defect.defect_repair_manager.user_division.division_name if defect.defect_repair_manager else ''
                                           },
-                'defect_worker': defect.defect_worker,
+                'defect_worker': {'user_surname': defect.defect_worker.user_surname if defect.defect_worker else '',
+                                'user_name': defect.defect_worker.user_name if defect.defect_worker else '',
+                                'user_division_name': defect.defect_worker.user_division.division_name if defect.defect_worker else ''
+                                },
                 'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else defect.defect_planned_finish_date)
                                              if not defect.defect_ppr else 'Устр. в ППР',
                 "defect_description": defect.defect_description,
@@ -654,10 +668,18 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
             defect_owner: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
             defect_owner_surname = defect_owner.user_surname if defect_owner else None
             repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
+            if filter.repair_division_id:
+                print(repair_manager.user_division.division_id)
+                print(filter.repair_division_id)
+                if repair_manager.user_division.division_id != filter.repair_division_id: continue
             checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
             defect_checker = {'user_surname': checker.user_surname if checker else '',
                                         'user_name': checker.user_name if checker else ''}            
             defect_worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
+        else:
+            if filter.repair_division_id:
+                if not defect.defect_repair_manager: continue
+                if defect.defect_repair_manager.user_division.division_id != filter.repair_division_id: continue
         defects_with_filters.append(
             {
                 "defect_id": defect.defect_id,
@@ -666,12 +688,21 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                 'defect_owner_surname': (defect.defect_owner.user_surname if defect.defect_owner else None) if not AD else defect_owner_surname,
                 'defect_owner': defect.defect_division.division_name,
                 'defect_repair_manager': ({'user_surname': defect.defect_repair_manager.user_surname if defect.defect_repair_manager else '',
-                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else ''
+                                          'user_name': defect.defect_repair_manager.user_name if defect.defect_repair_manager else '',
+                                          'user_division_name': defect.defect_repair_manager.user_division.division_name if defect.defect_repair_manager else ''
                                           })  if not AD else
                                           ({'user_surname': repair_manager.user_surname if repair_manager else '',
-                                          'user_name': repair_manager.user_name if repair_manager else ''
+                                          'user_name': repair_manager.user_name if repair_manager else '',
+                                          'user_division_name': repair_manager.user_division.division_name if repair_manager else ''
                                           }),
-                'defect_worker': defect.defect_worker if not AD else defect_worker,
+                'defect_worker': ({'user_surname': defect.defect_worker.user_surname if defect.defect_worker else '',
+                                    'user_name': defect.defect_worker.user_name if defect.defect_worker else '',
+                                    'user_division_name': defect.defect_worker.user_division.division_name if defect.defect_worker else ''
+                                    })  if not AD else
+                                    ({'user_surname': defect_worker.user_surname if defect_worker else '',
+                                    'user_name': defect_worker.user_name if defect_worker else '',
+                                    'user_division_name': defect_worker.user_division.division_name if defect_worker else ''
+                                    }),
                 'defect_planned_finish_date': (defect.defect_planned_finish_date.strftime("%d-%m-%Y") 
                                                if defect.defect_planned_finish_date
                                                else defect.defect_planned_finish_date)

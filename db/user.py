@@ -22,7 +22,7 @@ class User(Base):
     user_surname: Mapped[str] = mapped_column(String(100)) # фамилия пользователя
     user_position: Mapped[str] = mapped_column(String(100)) # должность пользователя
     user_division_id: Mapped[int] = mapped_column(ForeignKey("division.division_id"), nullable=True) # id поста из таблицы User - руководитель ремонта.
-    user_division: Mapped["Division"] = relationship(foreign_keys=[user_division_id]) #  для работы с таблицей User как с объектом
+    user_division: Mapped["Division"] = relationship(foreign_keys=[user_division_id], lazy='selectin') #  для работы с таблицей User как с объектом
     user_role: Mapped[List[Role]] = relationship(secondary=user_role) # роль пользователя в системе
     user_password_hash: Mapped[str] = mapped_column(String(100)) # хешированный пароль пользователя в системе
     user_salt_for_password: Mapped[str] = mapped_column(String(60)) # соль для хеширования пароля пользователя в системе
