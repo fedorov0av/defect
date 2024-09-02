@@ -59,3 +59,10 @@ class System(Base):
         result = await session.scalars(query)
         systems = result.all()
         return systems
+    
+    @staticmethod
+    async def get_all_system_with_kss(session: AsyncSession): # получение всех систем c KKS в БД
+        query = select(System).where(System.system_kks.is_not(None)).order_by(System.system_id)
+        result = await session.scalars(query)
+        systems = result.all()
+        return systems

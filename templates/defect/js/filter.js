@@ -2,6 +2,7 @@ const appVueFilter = Vue.createApp({
     data() {
       return {
         divisions: {}, 
+        systems: {}, 
         type_defects: {},
         statuses_defect: {}, 
         defects: {},
@@ -22,6 +23,7 @@ const appVueFilter = Vue.createApp({
         dataSearch: '',
         kksSearch: '',
         dataSearchDefectID: '',
+        dataSearchSystemKKS: '',
         oldDefects: {},
         srokDate: '',
       }
@@ -91,16 +93,19 @@ const appVueFilter = Vue.createApp({
           this.overdue = false,
           this.dataSearch = '';
           this.dataSearchDefectID = '';
+          this.dataSearchSystemKKS = '';
           this.oldDefects = {};
         }, /* clearData */        
         updateAllTables() {
           updateTableDivision(this.divisions)
+          updateTableSystemWithKKS(this.systems)
           updateTableTypeDefect(this.type_defects)
         }, /* updateAllTables */
         searchKksMainTable(event) {
-          console.log(event)
+          this.kksSearch = this.kksSearch.toUpperCase()
         },
         searchResponsibleMainTable(event) {
+          this.kksSearch = this.kksSearch.toUpperCase()
           if (appVueDefect.pages){
             this.allDefects = true;
             this.useFilter();
@@ -201,7 +206,13 @@ const appVueFilter = Vue.createApp({
 
         }, */ /* searchResponsibleMainTableDefectID */
 
-        useFilter() {
+        useFilter(event) {
+          if (event){
+            console.log(event)
+            if (event.target.id == "searchKSS"){
+              this.dataSearchSystemKKS = event.target.value.toUpperCase()
+            }
+          }
           if (this.startDate !== null && this.endDate !== null) {
             if (this.startDate >= this.endDate) {
               if (this.startDate != this.endDate){
@@ -223,9 +234,10 @@ const appVueFilter = Vue.createApp({
               {"date_start": this.startDate,
                "date_end": this.endDate,
                "srok_date": this.srokDate,
-               "division_id":  this.filterDivision,
-               "repair_division_id":  this.filterRepairDivision,
-               "status_id":  this.filterStatusDefect,
+               "division_id": this.filterDivision,
+               "repair_division_id": this.filterRepairDivision,
+               "status_id": this.filterStatusDefect,
+               "kks": this.dataSearchSystemKKS,
                "ppr": this.ppr === true ? true : null,
                "pnr": this.pnr === true ? true : null,
                "overdue": this.overdue === true ? true : null,

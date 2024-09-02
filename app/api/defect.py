@@ -658,6 +658,8 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                                             )
     defects_with_filters = list()
     for defect in result:
+        if filter.kks:
+            if defect.defect_system.system_kks != filter.kks: continue
         if AD:
             token_dec = await decode_token(request.cookies['jwt_refresh_token'])
             user_id = await decrypt_user_id(token_dec['subject']['userId'])
@@ -669,8 +671,6 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
             defect_owner_surname = defect_owner.user_surname if defect_owner else None
             repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
             if filter.repair_division_id:
-                print(repair_manager.user_division.division_id)
-                print(filter.repair_division_id)
                 if repair_manager.user_division.division_id != filter.repair_division_id: continue
             checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
             defect_checker = {'user_surname': checker.user_surname if checker else '',

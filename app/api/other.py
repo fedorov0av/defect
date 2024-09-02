@@ -11,5 +11,5 @@ other_router = APIRouter()
 async def get_operating_mode(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     return {
-                'operating_mode': 'AD' if AD else 'BD' # вчлючен режим AD?
+                'operating_mode': 'AD' if AD else 'BD' # включен режим AD?
             }

@@ -32,6 +32,7 @@ class Filter(BaseModel):
     division_id: Optional[int] = 0
     repair_division_id: Optional[int] = 0
     status_id: Optional[int] = 0
+    kks: Optional[str] = None
     date_start: Optional[str] = None
     date_end: Optional[str] = None
     ppr: Optional[bool] = None

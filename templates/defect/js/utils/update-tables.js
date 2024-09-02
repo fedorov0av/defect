@@ -21,6 +21,22 @@ function updateTableDivision(defect_divisions) {
             Object.assign(defect_divisions, response.data);
             }) /* axios */
     } /* updateTableDivision */
+
+function updateTableSystem(defect_systems) {
+      axios
+          .post('/systems',)
+          .then(response => {
+              Object.assign(defect_systems, response.data);
+              }) /* axios */
+    } /* updateTableSystem */
+  
+function updateTableSystemWithKKS(defect_systems) {
+      axios
+          .post('/systems_with_kks',)
+          .then(response => {
+              Object.assign(defect_systems, response.data);
+              }) /* axios */
+    } /* updateTableSystemWithKKS */
   
 function updateTableTypeDefect(defect_type_defects) {
     axios

@@ -19,6 +19,8 @@ from app.api.defect_reason_core import category_reason_router
 from app.api.category_defect import category_defect_router
 from app.api.other import other_router
 from app.api.admin import admin_router
+from app.api.system import system_router
+
 
 from fastapi_pagination import add_pagination
 from fastapi.exceptions import RequestValidationError
@@ -52,6 +54,7 @@ app.include_router(router)
 app.include_router(user_router)
 app.include_router(role_router)
 app.include_router(division_router)
+app.include_router(system_router)
 app.include_router(type_defect_router)
 app.include_router(defect_router)
 app.include_router(history_router)
