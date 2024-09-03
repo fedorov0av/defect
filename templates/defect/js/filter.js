@@ -208,7 +208,6 @@ const appVueFilter = Vue.createApp({
 
         useFilter(event) {
           if (event){
-            console.log(event)
             if (event.target.id == "searchKSS"){
               this.dataSearchSystemKKS = event.target.value.toUpperCase()
             }

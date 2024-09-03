@@ -87,10 +87,12 @@ class UserDefectFromAD:
             defect_owner_surname = defect_owner.user_surname if defect_owner else None
             repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
             defect_repair_manager = {'user_surname': repair_manager.user_surname if repair_manager else '',
-                                    'user_name': repair_manager.user_name if repair_manager else ''}
+                                    'user_name': repair_manager.user_name if repair_manager else '',
+                                    'user_division_name': repair_manager.user_division.division_name if repair_manager else '',}
             worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
             defect_worker = {'user_surname': worker.user_surname if worker else '',
-                            'user_name': worker.user_name if worker else ''}
+                            'user_name': worker.user_name if worker else '',
+                            'user_division_name': worker.user_division.division_name if worker else '',}
             result.append(
                 {'defect_id': defect.defect_id,
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
@@ -658,7 +660,7 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                                             )
     defects_with_filters = list()
     for defect in result:
-        if filter.kks:
+        if filter.kks: # поиск по KKS
             if defect.defect_system.system_kks != filter.kks: continue
         if AD:
             token_dec = await decode_token(request.cookies['jwt_refresh_token'])
@@ -670,6 +672,7 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
             defect_owner: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
             defect_owner_surname = defect_owner.user_surname if defect_owner else None
             repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
+            if not repair_manager: continue
             if filter.repair_division_id:
                 if repair_manager.user_division.division_id != filter.repair_division_id: continue
             checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
@@ -677,7 +680,7 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                                         'user_name': checker.user_name if checker else ''}            
             defect_worker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_worker_id) if defect.defect_worker_id else None
         else:
-            if filter.repair_division_id:
+            if filter.repair_division_id: # поиск по подразделению отвественного за устранение дефекта
                 if not defect.defect_repair_manager: continue
                 if defect.defect_repair_manager.user_division.division_id != filter.repair_division_id: continue
         defects_with_filters.append(
