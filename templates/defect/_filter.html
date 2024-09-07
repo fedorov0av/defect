@@ -20,12 +20,12 @@
 									<form autocomplete="off" class="width100">
 										<input type="text" class="form-control" name="DefecctID" v-model.laze="dataSearchDefectID" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Номер дефекта">
 									</form>
+									<input id='searchKSS' class="form-control" autocomplete="off" list="datalistKKS" placeholder="KKS / Номенкл. номер" v-model.laze="dataSearchSystemKKS" @input="useFilter" :disabled='isDisabledConfirmDefect'>
+                        			<datalist id="datalistKKS">
+                          				<option v-for="system in systems" :value="system.system_kks">{{ system.system_kks }}</option>
+                        			</datalist>
 									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterDivision">
 										<option selected value=0>Подразделение-владелец</option>
-										<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
-									</select>
-									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterRepairDivision">
-										<option selected value=0>Ответственный за устр.</option>
 										<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
 									</select>
 								</div>
@@ -37,11 +37,10 @@
 									<form autocomplete="off" class="width100">
 										<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearch" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Ответственный на тек. статусе">
 									</form>
-									<input id='searchKSS' class="form-control" autocomplete="off" list="datalistKKS" placeholder="KKS / Номенклатурный номер" v-model.laze="dataSearchSystemKKS" @input="useFilter" :disabled='isDisabledConfirmDefect'>
-                        			<datalist id="datalistKKS">
-                          				<option v-for="system in systems" :value="system.system_kks">{{ system.system_kks }}</option>
-                        			</datalist>
-
+									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterRepairDivision">
+										<option selected value=0>Ответственный за устр.</option>
+										<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
+									</select>
 								</div>
 								
 							</div>
@@ -144,4 +143,4 @@
 </div>
 {% endraw %}
 
-<script src="{{ url_for('defect_js', path='filter.js?v=0.5') }}"></script>
+<script src="{{ url_for('defect_js', path='filter.js?v=0.6') }}"></script>

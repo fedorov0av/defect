@@ -10,7 +10,7 @@ const appVueDefect = Vue.createApp({
         { name: "Оборудование", key: "defect_system.system_name" },
         { name: "Описание дефекта", key: "defect_description" },
         { name: "Статус", key: "defect_status.status_defect_name" },
-        { name: "Ответственный за устр.", key: "responsible" },
+        { name: "Ответственный на текущем статусе", key: "responsible" },
       ],
       defect_divisions: {},
       defect_type_defects: {},

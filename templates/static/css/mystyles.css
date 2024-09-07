@@ -1,3 +1,19 @@
+.tableFixHead {
+  overflow-y: auto;
+  height: 550px;
+}
+
+.tableFixHead table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tableFixHead th {
+  position: sticky;
+  top: 0;
+}
+
+
 .myfont {
   font-family: "Calibri", "Microsoft Sans Serif";
 }
@@ -809,6 +825,7 @@
 .footer {
   display: flex;
   justify-content: space-between;
+  padding-top: 5px;
 }
 
 .footer-left {
