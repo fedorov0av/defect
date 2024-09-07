@@ -10,7 +10,7 @@ const appVueDefect = Vue.createApp({
         { name: "Оборудование", key: "defect_system.system_name" },
         { name: "Описание дефекта", key: "defect_description" },
         { name: "Статус", key: "defect_status.status_defect_name" },
-        { name: "Ответственный", key: "responsible" },
+        { name: "Ответственный за устр.", key: "responsible" },
       ],
       defect_divisions: {},
       defect_type_defects: {},
@@ -62,7 +62,7 @@ const appVueDefect = Vue.createApp({
 
       // отмена сортировки при третьем клике
       if (this.clicks[index] === 3) {
-        this.updateTableDefect(true);
+        appVueDefect.pages ? this.updateTableDefect(false, true) : appVueFilter.useFilter();
         this.sortColumn = null;
         this.sortDirection = 1;
         this.clicks[index] = 0;
@@ -130,13 +130,15 @@ const appVueDefect = Vue.createApp({
       this.resetSorting();
     },
 
-    updateTableDefect(start = false) {
+    updateTableDefect(start = false, fromSorting = false) {
       if (start) {
         appVueFilter.useFilter();
       } else {
         axios
           .post("/defects", null, {
-            params: { page: 1, size: parseInt(this.pageSize) },
+            params: { page: fromSorting ? this.pageNumber : 1,
+                     size: parseInt(this.pageSize)
+                     },
           })
           .then((response) => {
             /*               this.temp_resp = response.data; */

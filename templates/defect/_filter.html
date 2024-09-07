@@ -37,7 +37,7 @@
 									<form autocomplete="off" class="width100">
 										<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearch" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Ответственный на тек. статусе">
 									</form>
-									<input id='searchKSS' class="form-control" list="datalistKKS" placeholder="Поиск по KSS" v-model.laze="dataSearchSystemKKS" @input="useFilter" :disabled='isDisabledConfirmDefect'>
+									<input id='searchKSS' class="form-control" autocomplete="off" list="datalistKKS" placeholder="KKS / Номенклатурный номер" v-model.laze="dataSearchSystemKKS" @input="useFilter" :disabled='isDisabledConfirmDefect'>
                         			<datalist id="datalistKKS">
                           				<option v-for="system in systems" :value="system.system_kks">{{ system.system_kks }}</option>
                         			</datalist>
