@@ -2,9 +2,10 @@ const appConfirmDefect = Vue.createApp({
     directives: {'maska': Maska.vMaska},
     data() {
       return {
+        defect_conditions_equipment: {},
         defect_id: '0',
         categories_reason: {},
-        categories_reason_direct: {},
+        categories_reason_direct: {}, 
         categories_defect: {},
         defect_divisions: {},
         defect_type_defects: {},
@@ -26,7 +27,8 @@ const appConfirmDefect = Vue.createApp({
         cardDefect: {}, /* ОБЩИЙ ОБЪЕКТ для храненения данных карточки дефекта   */
         cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
         cardStatusDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
-        cardTypeDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
+        cardTypeDefectName: '', /* Для отображения ТИПА ДЕФЕКТА карточке  */
+        cardConditionEquipmentName: '', /* Для отображения СОСТОЯНИЯ ОБОРУДОВАНИЯ карточке  */
         cardKKS: null, /* Для отображения KKS в карточке  */
         cardSystemName: '', /* Для отображения НАЗВАНИЯ ОБОРУДОВАНИЯ в карточке  */
         cardDescription: '', /* Для отображения ОПИСАНИЕ ДЕФЕКТА в карточке  */
@@ -45,6 +47,7 @@ const appConfirmDefect = Vue.createApp({
         newCardDescription: '',
         newCardDatePlannedFinish: '',
         newCardTypeDefectName: '',
+        newCardConditionEquipmentName: '',
         newCoreClassificationCode: '',
         newCoreClassificationName: '',
         newCategoryDefect_id: 0,
@@ -89,6 +92,7 @@ const appConfirmDefect = Vue.createApp({
       updateCategoriesReason(this.categories_reason);
       updateCategoriesReasonDirect(this.categories_reason_direct);
       updateCategoriesDefect(this.categories_defect);
+      this.updateTableConditionEquipment();
       this.isHiddenblockhistory = 'true';
       this.isHiddenblockclassification  = 'true';
       var myModalEl = document.getElementById('ConfirmDefectModalWindow')
@@ -197,6 +201,13 @@ const appConfirmDefect = Vue.createApp({
         this.check_date = false;
         this.clickbuttonmain();
       }, /* updateTables */   
+      updateTableConditionEquipment() {
+        axios
+        .post('/condition_equipment',)
+        .then(response => {
+            this.defect_conditions_equipment = response.data;
+              }) /* axios */
+      }, /* updateTableConditionEquipment */
       updateCardDefect() {
         axios
           .post('/get_defect/',{
@@ -207,6 +218,7 @@ const appConfirmDefect = Vue.createApp({
             this.cardDefectID = this.cardDefect.defect_id; 
             this.cardStatusDefectName = this.cardDefect.defect_status.status_defect_name; 
             this.cardTypeDefectName = this.cardDefect.defect_type.type_defect_name; 
+            this.cardConditionEquipmentName = this.cardDefect.defect_condition_equipment.condition_equipment_name;
             this.cardKKS = this.cardDefect.defect_system.system_kks;
             this.cardSystemName = this.cardDefect.defect_system.system_name; 
             this.cardDescription = this.cardDefect.defect_description;
@@ -230,6 +242,7 @@ const appConfirmDefect = Vue.createApp({
             this.newRepairManager_id = this.repairManager_id; //
             this.newCardDatePlannedFinish = this.cardDatePlannedFinish; //
             this.newCardTypeDefectName = this.cardTypeDefectName; //
+            this.newCardConditionEquipmentName = this.cardConditionEquipmentName;
             this.newCardKKS = this.cardKKS;
             this.newDivisionOwner_id = this.divisionOwner_id;
             this.newSafety = this.cardDefect.defect_safety;
@@ -398,6 +411,9 @@ const appConfirmDefect = Vue.createApp({
             if (this.newCardKKS !== this.cardKKS){
               textHistory = textHistory+'KKS изменился с "'+(this.cardKKS ? this.cardKKS : "")+'" на "'+(this.newCardKKS ? this.newCardKKS : "")+'"\n';
             }
+            if (this.newCardConditionEquipmentName !== this.cardConditionEquipmentName){
+              textHistory = textHistory+'Состояние оборудования изменилось с "'+this.cardConditionEquipmentName+'" на "'+this.newCardConditionEquipmentName+'"\n';
+            }
             if (this.newCardLocation !== this.cardLocation){
               textHistory = textHistory+'Местоположение изменилось с "'+(this.cardLocation ? this.cardLocation : "")+'" на "'+(this.newCardLocation ? this.newCardLocation : "")+'"\n';
             }
@@ -506,6 +522,9 @@ const appConfirmDefect = Vue.createApp({
               },
               "type_defect_name": {
                 "type_defect_name": this.newCardTypeDefectName !== this.cardTypeDefectName ? this.newCardTypeDefectName : null
+              },
+              "condition_equipment_name": {
+                "condition_equipment_name": this.newCardConditionEquipmentName !== this.cardConditionEquipmentName ? this.newCardConditionEquipmentName : null
               },
               "category_defect_id": {
                 "category_defect_id": this.newCategoryDefect_id !== oldCategoryDefectId ? this.newCategoryDefect_id : oldCategoryDefectId

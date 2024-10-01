@@ -14,6 +14,7 @@ from db.division import Division
 from db.system import System
 from db.status_defect import StatusDefect
 from db.type_defect import TypeDefect
+from db.condition_equipment import ConditionEquipment
 from db.history_defect import History
 from db.category_defect import CategoryDefect
 from db.defect_reason_core import CategoryCoreReason
@@ -25,6 +26,7 @@ from app.schemas.defect import New_defect_p, Defect_id, Defects_output, Defect_d
 from app.schemas.status_defect import StatusDefect_name
 from app.schemas.other import Date_p, Division_id, Сomment, Filter, Ppr, Pnr, Safety, Exploitation
 from app.schemas.type_defect import TypeDefect_name
+from app.schemas.condition_equipment import ConditionEquipment_name
 from app.schemas.system import System_kks, System_name
 from app.schemas.category_defect import CategoryDefect_id, ClassSystem_name, CoreClassification_code, DirectClassification_code, DirectClassification_name
 from app.middleware.auth import check_auth_api, check_refresh_token
@@ -106,6 +108,7 @@ class UserDefectFromAD:
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
+                "defect_condition_equipment": defect.defect_condition_equipment,
                 "defect_status": defect.defect_status,
                 "defect_division": defect.defect_division,
                 "defect_system": defect.defect_system,
@@ -121,6 +124,9 @@ async def add_new_defect(request: Request, response: Response, defect_p: New_def
     system = await add_system(session, defect_p.defect_system_name, defect_p.defect_system_kks)
     user = await get_user_for_defect(session, request, token_dec)
     defect_type: TypeDefect = await TypeDefect.get_defect_by_name(session, defect_p.defect_type_defect_name)
+
+    defect_condition_equipment: ConditionEquipment = await ConditionEquipment.get_condition_equipment_by_name(session, defect_p.defect_condition_equipment_name)
+
     defect_status: StatusDefect = await StatusDefect.get_status_defect_by_id(session, STATUS_REGISTRATION)
     if defect_p.defect_category_defect_id != 0:
         category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session, defect_p.defect_category_defect_id)
@@ -141,6 +147,7 @@ async def add_new_defect(request: Request, response: Response, defect_p: New_def
         defect_system=system,
         defect_location=defect_p.defect_location,
         defect_type=defect_type,
+        defect_condition_equipment=defect_condition_equipment,
         defect_status=defect_status,
         defect_division=division if defect_p.defect_user_division_id else user.user_division,
         defect_safety=defect_p.defect_safety,
@@ -172,10 +179,10 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
                 .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                 .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
-                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)) if not AD else
+                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)).options(selectinload(Defect.defect_condition_equipment)) if not AD else
         select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != STATUS_CLOSE_DEFECT_ID, Defect.defect_status_id != STATUS_CANCEL_DEFECT_ID)\
                 .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
-                .options(selectinload(Defect.defect_system)),
+                .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_condition_equipment)),
         transformer=(lambda defects: [{"defect_id": defect.defect_id,
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
                 'defect_registrar': defect.defect_registrar.user_surname if not AD else '',
@@ -194,11 +201,13 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
+                "defect_condition_equipment": defect.defect_condition_equipment, 
                 "defect_status": defect.defect_status,
                 "defect_division": defect.defect_division,
                 "defect_system": defect.defect_system,
                 "defect_system_kks": defect.defect_system.system_kks,} for defect in defects if defect]) if not AD else user_defect.get_user_from_AD_for_paginate
         )
+
 
 @defect_router.post("/all_defects/", response_model=Page[Defects_output]) # fix by AD
 async def get_defects(request: Request, response: Response, session: AsyncSession = Depends(get_db)):
@@ -211,10 +220,10 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
         select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != None)\
                 .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                 .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
-                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_condition_equipment)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                 .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)) if not AD else
         select(Defect).order_by(Defect.defect_id.desc()).where(Defect.defect_status_id != None)\
-                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_condition_equipment)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                 .options(selectinload(Defect.defect_system)),
         transformer=(lambda defects: [{"defect_id": defect.defect_id,
                 'defect_created_at': defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
@@ -234,6 +243,7 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
+                "defect_condition_equipment": defect.defect_condition_equipment,
                 "defect_status": defect.defect_status,
                 "defect_division": defect.defect_division,
                 "defect_system": defect.defect_system,
@@ -287,6 +297,7 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
 async def get_defect(request: Request, response: Response, defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     defect: Defect = await Defect.get_defect_by_id(session=session, defect_id=defect_id.defect_id)
+    print(defect.defect_condition_equipment, defect.defect_type, defect.defect_condition_equipment.condition_equipment_name)
     if AD:
         token_dec = await decode_token(request.cookies['jwt_refresh_token'])
         user_id = await decrypt_user_id(token_dec['subject']['userId'])
@@ -335,6 +346,7 @@ async def get_defect(request: Request, response: Response, defect_id: Defect_id,
                 'defect_work_comment': defect.defect_work_comment,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
+                "defect_condition_equipment": defect.defect_condition_equipment,
                 "defect_status": defect.defect_status,
                 "defect_division": defect.defect_division,
                 "defect_system": defect.defect_system,
@@ -366,6 +378,7 @@ async def confirm_defect(request: Request, response: Response,
                         system_name: System_name = None,
                         system_kks: System_kks = None,
                         type_defect_name: TypeDefect_name = None,
+                        condition_equipment_name: ConditionEquipment_name = None,
                         defect_planned_finish_date_str: Date_p = None,
                         defect_ppr: Ppr = None,
                         defect_pnr: Pnr = None,
@@ -404,6 +417,12 @@ async def confirm_defect(request: Request, response: Response,
             type_defect: TypeDefect = await TypeDefect.get_defect_by_name(session, type_defect_name=type_defect_name.type_defect_name)
             type_defect_id = type_defect.type_defect_id
     else: type_defect_id = None
+
+    if condition_equipment_name.condition_equipment_name:
+            condition_equipment: ConditionEquipment = await ConditionEquipment.get_condition_equipment_by_name(session, condition_equipment_name=condition_equipment_name.condition_equipment_name)
+            condition_equipment_id = condition_equipment.condition_equipment_id
+    else: condition_equipment_id = None
+
     if category_defect_id.category_defect_id:
         category_defect: CategoryDefect = await CategoryDefect.get_category_defect_by_id(session, category_defect_id.category_defect_id)
     else: 
@@ -446,6 +465,7 @@ async def confirm_defect(request: Request, response: Response,
                                             defect_description = defect_description.defect_description if defect_description.defect_description else None,
                                             defect_system_id = system.system_id if (system_name.system_name or system_kks.system_kks) else None,
                                             defect_type_id = type_defect_id,
+                                            defect_condition_equipment_id = condition_equipment_id,
                                             confirm_defect=True)
     history = await History.add_history(
         session=session,
@@ -636,7 +656,7 @@ async def close_defect(
         comment=comment.comment if comment.comment else None,
         )
     return defect
-#################################################################
+################################################################# 
 
 
 @defect_router.post("/get_defect_by_filter/")
@@ -657,8 +677,10 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                                             safety = filter.safety,
                                             exploitation = filter.exploitation,
                                             type_defect_id = filter.type_defect_id,
+                                            condition_equipment_id = filter.condition_equipment_id,
                                             )
     defects_with_filters = list()
+
     for defect in result:
         if filter.kks: # поиск по KKS
             if defect.defect_system.system_kks != filter.kks: continue
@@ -668,13 +690,13 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
             """ passw = await decrypt_user_id(token_dec['subject']['userP'])
             ldap_connection = LdapConnection(session, user_id, passw) """
             ldap_connection = LdapConnection(session, user_id)
-            defect_registrar: UserAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id)
+            defect_registrar: UserAD = await ldap_connection.get_user_by_uid_from_AD(defect.defect_registrator_id) 
             defect_owner: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_owner_id) if defect.defect_owner_id else None
             defect_owner_surname = defect_owner.user_surname if defect_owner else None
             repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
-            if not repair_manager: continue
             if filter.repair_division_id:
-                if repair_manager.user_division.division_id != filter.repair_division_id: continue
+                if not repair_manager: continue
+                if defect.defect_repair_manager.user_division.division_id != filter.repair_division_id: continue
             checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
             defect_checker = {'user_surname': checker.user_surname if checker else '',
                                         'user_name': checker.user_name if checker else ''}            
@@ -683,6 +705,7 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
             if filter.repair_division_id: # поиск по подразделению отвественного за устранение дефекта
                 if not defect.defect_repair_manager: continue
                 if defect.defect_repair_manager.user_division.division_id != filter.repair_division_id: continue
+        # print(defect.defect_id, defect.defect_registrator_id, defect.defect_registrar.user_surname)
         defects_with_filters.append(
             {
                 "defect_id": defect.defect_id,
@@ -713,13 +736,17 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
                 "defect_description": defect.defect_description,
                 "defect_location": defect.defect_location,
                 "defect_type": defect.defect_type,
+                "defect_condition_equipment": defect.defect_condition_equipment,
                 "defect_status": defect.defect_status,
                 "defect_division": defect.defect_division,
                 "defect_system": defect.defect_system,
                 "defect_system_kks": defect.defect_system.system_kks,
             }
         )
+        # print(defect_registrar.user_surname)
+        # print(defects_with_filters) 
     return defects_with_filters
+
 
 @defect_router.post("/update_table_by_timer/")
 async def add_new_defect(request: Request, response: Response, defect_p: New_defect_p, session: AsyncSession = Depends(get_db)):

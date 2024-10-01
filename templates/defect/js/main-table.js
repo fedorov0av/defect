@@ -1,4 +1,4 @@
-const appVueDefect = Vue.createApp({
+const appVueDefect = Vue.createApp({ 
   data() {
     return {
       colunmsName: [
@@ -16,7 +16,7 @@ const appVueDefect = Vue.createApp({
       defect_type_defects: {},
       defects: {},
       pageNumber: 1,
-      pageSize: 15,
+      pageSize: 13,
       pages: 0,
       temp_resp: {},
       nextPageNumber: 0,
@@ -141,7 +141,7 @@ const appVueDefect = Vue.createApp({
                      },
           })
           .then((response) => {
-            /*               this.temp_resp = response.data; */
+            /*               this.temp_resp = response.data; */ 
             this.pageNumber = response.data.page;
             this.pages = response.data.pages;
             this.defects = response.data.items;
@@ -167,7 +167,7 @@ const appVueDefect = Vue.createApp({
                 this.defects[defect].defect_status.status_defect_name === "Назначен исполнитель" ||
                 this.defects[defect].defect_status.status_defect_name === "Принят в работу"
               ) {
-                responsible =
+                responsible = 
                   this.defects[defect].defect_worker.user_surname +
                   " " +
                   this.defects[defect].defect_worker.user_name +
@@ -342,7 +342,7 @@ const appVueDefect = Vue.createApp({
                   this.defects[defect].defect_worker.user_surname +
                   " " +
                   this.defects[defect].defect_worker.user_name +
-                  " (" + this.defects[defect].defect_worker.user_division_name + ")";
+                  " (" + this.defects[defect].defect_worker.user_division_name + "1)";
               } else if (
                 this.defects[defect].defect_status.status_defect_name === "Работы завершены"
               ) {

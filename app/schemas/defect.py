@@ -2,6 +2,7 @@ from typing import Optional
 from pydantic import BaseModel
 from db.user import User
 from db.type_defect import TypeDefect
+from db.condition_equipment import ConditionEquipment
 from db.status_defect import StatusDefect
 from db.division import Division
 from db.system import System
@@ -12,6 +13,7 @@ from config import AD
 
 PydanticUser = sqlalchemy_to_pydantic(User) if not AD else UserAD
 PydanticDefectType = sqlalchemy_to_pydantic(TypeDefect)
+PydanticConditionEquipment = sqlalchemy_to_pydantic(ConditionEquipment)
 PydanticStatusDefect = sqlalchemy_to_pydantic(StatusDefect)
 PydanticDivision = sqlalchemy_to_pydantic(Division)
 PydanticSystem = sqlalchemy_to_pydantic(System)
@@ -22,6 +24,7 @@ class New_defect_p(BaseModel):
     defect_system_name: Optional[str]
     defect_system_kks: Optional[str]
     defect_type_defect_name: Optional[str]
+    defect_condition_equipment_name: Optional[str] 
     defect_location: Optional[str]
     defect_user_division_id: Optional[int] = None
     defect_safety: Optional[bool]
@@ -60,6 +63,7 @@ class Defects_output(BaseModel):
     defect_description: Optional[str]
     defect_location: Optional[str]
     defect_type: Optional[PydanticDefectType]
+    defect_condition_equipment: Optional[PydanticConditionEquipment]
     defect_status: Optional[PydanticStatusDefect]
     defect_division: Optional[PydanticDivision]
     defect_system: Optional[PydanticSystem]

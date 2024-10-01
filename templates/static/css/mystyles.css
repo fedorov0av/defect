@@ -1,6 +1,7 @@
 .tableFixHead {
   overflow-y: auto;
-  height: 550px;
+  height: 570px;
+  margin-bottom: 10px;
 }
 
 .tableFixHead table {
@@ -100,7 +101,7 @@
 }
 
 .block_margin_bottom10 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .nav-scroller {
@@ -219,6 +220,14 @@
   margin: 0px 5px 5px 5px;
 }
 
+.block_KKS {
+  padding: 10px 5px;
+}
+
+.text_KKS {
+  padding: 10px 5px 0px 5px;
+}
+
 .container_about {
   display: flex;
   justify-content: center;
@@ -228,6 +237,7 @@
 .block_data_filter {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .block_data_column {
@@ -256,6 +266,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
+
+.margin_right {
+  margin: 0px 15px 10px 0px;
 }
 
 .block_data_column3 {
@@ -314,14 +328,15 @@
 }
 
 .widthKKS {
-  height: 60px;
+  height: 40px;
   width: 50%;
 }
 
 .KKS_button {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  width: 50%;
 }
 
 .width60 {
@@ -371,7 +386,7 @@
 }
 
 .KKS_discr_p {
-  margin: 0;
+  margin: 0px;
 }
 
 .block_nav_modal {
@@ -491,7 +506,7 @@
 
 .block_overdue {
   width: 210px;
-  margin: 10px 0px;
+  margin: 10px 0px 15px 0px;
 }
 
 .block_data {
@@ -514,8 +529,7 @@
 }
 
 .block_data_ppr {
-  width: 80%;
-  margin: 0px 0px 5px 0px;
+  width: 100%;
 }
 
 .block_data1 {
@@ -825,7 +839,6 @@
 .footer {
   display: flex;
   justify-content: space-between;
-  padding-top: 5px;
 }
 
 .footer-left {
@@ -864,6 +877,10 @@
 
 .main-table_td180 {
   width: 180px;
+}
+
+.main-table_td220 {
+  width: 220px;
 }
 
 .type-defect1 {
@@ -1063,6 +1080,15 @@
   margin: 10px;
 }
 
+.block_pnr_smr {
+  margin-bottom: 12px;
+}
+
+.block_pnr_smr_form {
+  width: 50%;
+  padding: 10px 5px;
+}
+
 .componentWraper {
   margin: 10px 0px;
   position: relative;
@@ -1100,11 +1126,27 @@
   position: relative;
   border: 1px solid rgb(179, 160, 157);
   border-radius: 10px;
-  padding: 10px;
+  padding: 15px 5px 0px 5px;
 }
 
 .componentWraper2::before {
   content: 'Состояние оборудования';
+  position: absolute;
+  top: -15px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.componentWraperKKS {
+  margin: 10px 5px 10px 0px;
+  position: relative;
+  border: 1px solid rgb(179, 160, 157);
+  border-radius: 10px;
+  padding: 15px 5px 0px 5px;
+}
+
+.componentWraperKKS::before {
+  content: 'KKS или номенклатурный номер (при отсутствии KKS)';
   position: absolute;
   top: -15px;
   padding: 0 10px;
@@ -1116,8 +1158,8 @@
   position: relative;
   border: 1px solid rgb(179, 160, 157);
   border-radius: 10px;
-  padding: 10px;
-  min-height: 110px;
+  padding: 22px 10px 12px 10px;
+  min-height: 145px;
 }
 
 .componentWraper0::before {
@@ -1170,7 +1212,7 @@
   width: 170px;
   border: thin solid rgb(179, 160, 157);
   border-radius: 10px;
-  padding: 10px 0px 5px 0px;
+  padding: 15px 0px 12px 0px;
   position: relative;
   margin: 10px 5px 15px 0;
   min-height: 110px;
@@ -1192,7 +1234,7 @@
   border-radius: 10px;
   position: relative;
   margin: 10px 5px 15px 0;
-  min-height: 110px;
+  min-height: 145px;
 }
 
 .overDueFilterWrapper::before {
@@ -1291,6 +1333,7 @@
 
   .block_filter {
     height: 180px;
+    padding: 10px 10px 0px 5px;
   }
 
   .block_filter_flex {
@@ -1344,6 +1387,28 @@
 
   @media screen and (min-width: 200px) and (max-width: 1700px) {
 
+    .block_common_filter {
+      margin-bottom: 2px;
+    }
+    
+    .pos_a1 {
+      position: absolute;
+      top: 79%;
+      left: 94%;
+    }
+    
+    .pos_a2 {
+      position: absolute;
+      top: 59%;
+      left: 45%;
+    }
+
+    .pos_a3 {
+      position: absolute;
+      top: 59%;
+      left: 94%;
+    }
+
     .text-down {
       display: flex;
       align-items: flex-end;
@@ -1353,7 +1418,7 @@
     .KKS_button {
       display: flex;
       justify-content: left;
-      align-items: center;
+      align-items: flex-start;
     }
 
     .text_left {
@@ -1367,7 +1432,7 @@
     } 
 
     .KKS_discr_p {
-      display: none;
+      margin: 0px;
     }
 
     .block_filter_flex2 {
@@ -1399,7 +1464,7 @@
     .overDueFilterWrapper {
       display: flex;
       flex-direction: row;
-      width: 440px;
+      width: 400px;
       border: thin solid rgb(179, 160, 157);
       border-radius: 10px;
       position: relative;
@@ -1412,6 +1477,10 @@
       flex-direction: row;
       justify-content: space-between;
     }
+
+    .block_pnr_smr {
+      padding: 10px 5px 10px 0px;
+    }
     
     .componentWraper0 {
       margin: 0px 5px 0px 0px;
@@ -1419,6 +1488,7 @@
       border: 1px solid rgb(179, 160, 157);
       border-radius: 10px;
       padding: 10px;
+      width: 65%;
       min-height: 80px;
     }
 
@@ -1439,12 +1509,14 @@
     }
 
     .block_filter {
-        height: 240px;
+        height: 255px;
+        padding: 0px 15px;
     }
 
     .block_data_filter {
       display: flex;
       flex-direction: column;
+      justify-content: center;
     }
     
     .type-defect {
@@ -1461,7 +1533,7 @@
 
    @media screen and (min-width:200px) and (max-width:1255px) {
 
-    .componentWraper0 {
+    /* .componentWraper0 {
       display: flex;
       flex-direction: column;
       margin: 0px 5px 0px 0px;
@@ -1471,54 +1543,29 @@
       padding: 10px;
       width: 56.5%;
       min-height: 90px;
+    } */
+
+   .pos_a1 {
+      position: absolute;
+      top: 82%;
+      left: 94%;
+    }
+    
+    .pos_a2 {
+      position: absolute;
+      top: 65%;
+      left: 45%;
     }
 
-    .block-checkbox3 {
-      margin: 0px 5px;
-    }
-
-    .form-check {
-      margin-bottom: 0px;
-    }
-
-    .overDueFilterWrapper {
-      display: flex;
-      flex-direction: row;
-      width: 440px;
-      border: thin solid rgb(179, 160, 157);
-      border-radius: 10px;
-      position: relative;
-      margin: 0px 5px 0px 0px;
-      min-height: 90px;
-    }
-
-    .adapt-block {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      height: 90px;
+    .pos_a3 {
+      position: absolute;
+      top: 65%;
+      left: 94%;
     }
 
     .w190_adapt {
       width: 100px;
     }
-
-    .block_filter {
-      height: 250px;
-  }
-
- 
-
-  .block_filter_flex2 {
-    display: flex;
-    flex-direction: row;
-    margin: 0px 15px 0px 0px;
-  }
-
-  .block_margin_bottom10 {
-    margin-bottom: 0px;
-  }
-
   } 
 
 }

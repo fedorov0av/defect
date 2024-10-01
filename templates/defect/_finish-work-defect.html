@@ -50,39 +50,25 @@
                     </div>
                   </div>
                 </div>
-  
+
                 <div class="block_rowKKS">
-                  <div class="block_data_column_KKS">
-                    <div class="block_input_data">
-                      <b class="label">KKS или номенклатурный номер (при отсутствии KKS)</b>
-                    </div>
-                    <div class="block_data8">
-                      <div class="form-floating block_row1 margin6px">
-                        <input type="text" class="form-control widthKKS margin-right" v-model="cardKKS" placeholder="xxxx xxxx xxxx xxxx" disabled>
-                        <div class="KKS_discr">
-                          <p class="text-muted">KKS должен состоять только из цифр и латинских букв!</p>
-                          <!-- <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p> -->
+                  <div class="block_rowKKS width50 componentWraperKKS">
+                    <div class="block_data_column_KKS width50">
+                      <div class="block_KKS">
+                        <div class="block_row1">
+                          <input type="text" class="form-control" v-model="cardKKS" disabled>
                         </div>
                       </div>
+                    </div>
+                    <div class="block_pnr_smr_form">
+                      <p class="text_KKS">KKS должен состоять только из цифр и латинских букв!</p>
                     </div>
                   </div>
                   <div class="block_row width650 componentWraper2">
-                    <div class="block_row">
-                      <div class="block_filter_flex1">
-                        <div class = "form-check form-switch block-checkbox-left block-checkbox3">
-                          <label class = "form-check-label" for="flexPnrFinish">
-                            В эксплуатации
-                          </label>
-                        </div>
-                        <div class = "form-check form-switch block-checkbox3">
-                          <input class="form-check-input" type="checkbox" id="flexPnrFinish" v-model="cardPnr" disabled>
-                          <label class = "form-check-label margin-right1" for="flexPnrFinish">
-                            В ПНР
-                          </label>
-                        </div>
-                      </div>
+                    <div class="block_pnr_smr_form">
+                      <input type="text" class="form-control" v-model="cardConditionEquipmentName" disabled>
                     </div>
-                    <div class="block_data_column2">
+                    <div class="block_data_column2 margin_right">
                       <div class="form-check form-switch ">
                         <input class="form-check-input" type="checkbox" id="flexSafetyFinish" v-model="cardSafety" disabled>
                         <label class="form-check-label margin-right" for="flexSafetyFinish">Влияет на безопасность и несение нагрузки</label>
@@ -94,6 +80,7 @@
                     </div>
                   </div>
                 </div>
+  
                 <div class="block_data4">
                   <div class="block_data_column1">
                     <div class="block_data_column">
@@ -310,4 +297,4 @@
   </div>
 </div>
 {% endraw %}
-<script src="{{ url_for('defect_js', path='modal/finish-work-defect.js?v=0.6') }}"></script>
+<script src="{{ url_for('defect_js', path='modal/finish-work-defect.js?v=0.7') }}"></script>

@@ -33,7 +33,7 @@
                 <td>{{ defect.defect_system.system_name }}</td>
                 <td>{{ defect.defect_description }}</td>
                 <td id="status" class="main-table_td180 myfont">{{ defect.defect_status.status_defect_name }}</td>
-                <td class="main-table_td180 myfont">{{ defect.responsible }}</td>
+                <td class="main-table_td220 myfont">{{ defect.responsible }}</td>
               </tr>
             </tbody>
         </table>
@@ -44,7 +44,7 @@
     <div class="footer-left" v-if="pages > 1">
       <span class="footer-left-span">Кол-во записей на странице:</span>
       <select class="form-select footer-left-select" aria-label="Default select example" v-model="pageSize" @change="changePage">
-        <option value=15>15</option>
+        <option value=13>13</option>
         <option value=30>30</option>
         <option value=45>45</option>
       </select>
@@ -65,4 +65,4 @@
 </div>
 
 {% endraw %}
-<script src="{{ url_for('defect_js', path='main-table.js?v=0.4') }}"></script>
+<script src="{{ url_for('defect_js', path='main-table.js?v=0.6') }}"></script>

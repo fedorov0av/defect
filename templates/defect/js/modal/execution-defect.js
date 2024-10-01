@@ -1,4 +1,4 @@
-const appExecutionDefect = Vue.createApp({
+const appExecutionDefect = Vue.createApp({ 
     data() {
       return {
         defect_id: '0',
@@ -18,6 +18,7 @@ const appExecutionDefect = Vue.createApp({
         cardDefectID: 0, /* ID ДЕФЕКТА для храненения данных карточки дефекта   */
         cardStatusDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
         cardTypeDefectName: '', /* Для отображения СТАТУСА ДЕФЕКТА карточке  */
+        cardConditionEquipmentName: '', /* Для отображения СОСТОЯНИЯ ОБОРУДОВАНИЯ карточке  */
         cardKKS: '', /* Для отображения KKS в карточке  */
         cardSystemName: '', /* Для отображения НАЗВАНИЯ ОБОРУДОВАНИЯ в карточке  */
         cardDescription: '', /* Для отображения ОПИСАНИЕ ДЕФЕКТА в карточке  */
@@ -119,6 +120,7 @@ const appExecutionDefect = Vue.createApp({
             this.cardDefectID = this.cardDefect.defect_id; 
             this.cardStatusDefectName = this.cardDefect.defect_status.status_defect_name; 
             this.cardTypeDefectName = this.cardDefect.defect_type.type_defect_name; 
+            this.cardConditionEquipmentName = this.cardDefect.defect_condition_equipment.condition_equipment_name;
             this.cardKKS = this.cardDefect.defect_system.system_kks; 
             this.cardSystemName = this.cardDefect.defect_system.system_name; 
             this.cardDescription = this.cardDefect.defect_description;

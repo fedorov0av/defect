@@ -7,6 +7,7 @@ from db.defect import Defect
 from db.history_defect import History
 from db.type_defect import TypeDefect
 from db.status_defect import StatusDefect
+from db.condition_equipment import ConditionEquipment
 from db.create_db import create_tables
 
 

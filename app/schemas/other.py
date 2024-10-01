@@ -10,6 +10,9 @@ class Division_id(BaseModel):
 class Type_defect_id(BaseModel):
     type_defect_id: Optional[int]
 
+class Condition_equipment_id(BaseModel):
+    condition_equipment_id: Optional[int]
+
 class Status_id(BaseModel):
     status_id: Optional[int]
 
@@ -40,6 +43,7 @@ class Filter(BaseModel):
     safety: Optional[bool] = None
     exploitation: Optional[bool] = None
     type_defect_id: Optional[int] = 0 
+    condition_equipment_id: Optional[int] = 0 
     srok_date: Optional[str] = None
     overdue: Optional[bool] = None
     allDefects: Optional[bool] = None

@@ -2,11 +2,11 @@
 <div id='vueFilter'>
 	<div class="accordion" id="accordionExample">
 		<div>
-		  <h2 class="accordion-header">
+		  <!-- <h2 class="accordion-header">
 			<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 			  Фильтры
 			</button>
-		  </h2>
+		  </h2> -->
 		  <div id="collapseOne" class="accordion-collapse collapse show">
 			<div class="">
 
@@ -15,30 +15,32 @@
 						<div class="mydatechoise">
 							<div class="block_row commonFilterWrapper">
 
-							
 								<div class="block_filter_flex block_theme">
-									<form autocomplete="off" class="width100">
-										<input type="text" class="form-control" name="DefecctID" v-model.laze="dataSearchDefectID" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Номер дефекта">
+									<form autocomplete="off" class="width100 block_common_filter">
+										<input id='searchDefectID' type="text" class="form-control" name="DefecctID" v-model.laze="dataSearchDefectID" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Номер дефекта">
 									</form>
-									<input id='searchKSS' class="form-control" autocomplete="off" list="datalistKKS" placeholder="KKS / Номенкл. номер" v-model.laze="dataSearchSystemKKS" @input="useFilter" :disabled='isDisabledConfirmDefect'>
-                        			<datalist id="datalistKKS">
-                          				<option v-for="system in systems" :value="system.system_kks">{{ system.system_kks }}</option>
-                        			</datalist>
-									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterDivision">
+									<form autocomplete="off" class="width100 block_common_filter">
+										<input id='searchKSS' type="text" class="form-control" autocomplete="off" list="datalistKKS" placeholder="KKS / Номенкл. номер" v-model.laze="dataSearchSystemKKS" @input="searchResponsibleMainTable" :disabled='isDisabledConfirmDefect'>
+										<datalist id="datalistKKS">
+											<option v-for="system in systems" :value="system.system_kks">{{ system.system_kks }}</option>
+										</datalist>
+									</form>
+
+									<select class="form-select" @change="useFilter" v-model="filterDivision">
 										<option selected value=0>Подразделение-владелец</option>
 										<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
 									</select>
 								</div>
 								<div class="block_filter_flex">
-									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterType">
+									<select class="form-select" @change="useFilter" v-model="filterType">
 										<option selected value=0>Журнал дефектов</option>
 										<option v-for="type_defect in type_defects" :value="type_defect.type_defect_id">{{ type_defect.type_defect_name	}}</option>
 									</select>
 									<form autocomplete="off" class="width100">
-										<input type="text" class="form-control" name="RapairManager" v-model.laze="dataSearch" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Ответственный на тек. статусе">
+										<input type="text" id='searchRepairManager' class="form-control" name="RapairManager" v-model.laze="dataSearch" autocomplete="off" @input="searchResponsibleMainTable" placeholder="Ответственный на тек. статусе">
 									</form>
-									<select class="form-select" @change="useFilter" aria-label="Default select example" v-model="filterRepairDivision">
-										<option selected value=0>Ответственный за устр.</option>
+									<select class="form-select" @change="useFilter" v-model="filterRepairDivision">
+										<option selected value=0>Отвечает за устранение</option>
 										<option v-for="division in divisions" :value="division.division_id">{{ division.division_name }}</option>
 									</select>
 								</div>
@@ -87,28 +89,34 @@
 
 						<div class="adapt-block">
 							<div class="block_row_pnr componentWraper0">
-								<div class="block_row block_margin_bottom10">
+								<div class="block_pnr_smr">
+									<select class="form-select" @change="useFilter" v-model="filterCondition">
+										<option selected value=0>Состояние оборудования</option>
+										<option v-for="condition in defect_conditions_equipment" :value="condition.condition_equipment_id">{{ condition.condition_equipment_name }}</option>
+									</select>
+								
+								<!-- <div class="block_row block_margin_bottom10">
 									<div class="block_filter_flex2">
-									<div class = "form-check form-switch block-checkbox-left block-checkbox3">
-										<label class = "form-check-label" for = "flexPnrFilter">
-										В эксплуатации
-										</label>
-									</div>
-									<div class = "form-check form-switch block-checkbox3">
-										<input class="form-check-input" type="checkbox" id="flexPnrFilter"  v-model="pnr" @change="useFilter">
-										<label class = "form-check-label" for = "flexPnrFilter">
-										В ПНР
-										</label>
-									</div>
-									</div>
-								</div>
-								<div class="block_data_column2">
+										<div class = "form-check form-switch block-checkbox-left block-checkbox3">
+											<label class = "form-check-label" for = "flexPnrFilter">
+											В эксплуатации
+											</label>
+										</div>
+										<div class = "form-check form-switch block-checkbox3">
+											<input class="form-check-input" type="checkbox" id="flexPnrFilter"  v-model="pnr" @change="useFilter">
+											<label class = "form-check-label" for = "flexPnrFilter">
+											В ПНР
+											</label>
+										</div>
+									</div> -->
+								</div> 
+								<div class="block_data_column2"> 
 									<div class="form-check form-switch ">
-										<input class="form-check-input" type="checkbox" id="flexSafetyFilter" v-model="safety" :disabled="pnr===true" @change="useFilter" data-toggle="popover_safety" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 72 часов">
+										<input class="form-check-input" type="checkbox" id="flexSafetyFilter" v-model="safety" :disabled="filterCondition===2 || filterCondition===3" @change="useFilter" data-toggle="popover_safety" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 72 часов">
 										<label class="form-check-label" for="flexSafetyFilter">Влияет на безопасность и несение нагрузки</label> 
 									</div>
 									<div class="form-check form-switch">
-										<input class="form-check-input" type="checkbox" id="flexExploitationFilter" v-model="exploitation" :disabled="pnr===true" @change="useFilter" data-toggle="popover_exploitation" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 15 рабочих дней">
+										<input class="form-check-input" type="checkbox" id="flexExploitationFilter" v-model="exploitation" :disabled="filterCondition===2 || filterCondition===3" @change="useFilter" data-toggle="popover_exploitation" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 15 рабочих дней">
 										<label class="form-check-label" for="flexExploitationFilter">Влияет на режим нормальной эксплуатации</label>
 									</div>
 								</div>
@@ -143,4 +151,4 @@
 </div>
 {% endraw %}
 
-<script src="{{ url_for('defect_js', path='filter.js?v=0.6') }}"></script>
+<script src="{{ url_for('defect_js', path='filter.js?v=0.9') }}"></script>

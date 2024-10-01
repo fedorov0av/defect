@@ -2,6 +2,7 @@ const appVueAddDefect = Vue.createApp({
     directives: {'maska': Maska.vMaska},
     data() {
       return {
+        defect_conditions_equipment: {},
         defect_divisions: {},
         defect_type_defects: {},
         categories_reason: {},
@@ -12,6 +13,7 @@ const appVueAddDefect = Vue.createApp({
         newSystemKKS: '',
         newDefectNotes: '',
         newLocation: '',
+        newConditionEquipment: '0',
         newTypeDefect: '0',
         newDivisionOwner: '',
         newDivisionOwner_id: 0, /* Для хранения ID ПОДРАЗДЕЛЕНИЯ-ВЛАДЕЛЕЦ  в карточке  */
@@ -24,7 +26,7 @@ const appVueAddDefect = Vue.createApp({
         maskObject: {},
         style_input_type: '',
         check_defect_type: false,
-        check_defect_notes: false,
+        check_defect_notes: false, 
         check_defect_system: false,
         newSafety: false,
         newPnr: false,
@@ -69,6 +71,7 @@ const appVueAddDefect = Vue.createApp({
       updateCategoriesReason(this.categories_reason);
       updateCategoriesDefect(this.categories_defect);
       this.updateTableTypeDefect();
+      this.updateTableConditionEquipment();
       this.isHiddenblockclassification  = 'true';
       var myModalEl = document.getElementById('AddDefectModalWindow');
       myModalEl.addEventListener('hidden.bs.modal', function (event) {
@@ -149,6 +152,7 @@ const appVueAddDefect = Vue.createApp({
         this.newDefectNotes = '';
         this.newLocation = '';
         this.newTypeDefect = '0';
+        this.newConditionEquipment = '0';
         this.newDivisionOwner = '';
         this.newCoreClassificationCode = '0';
         this.newCoreClassificationName = '';
@@ -202,6 +206,13 @@ const appVueAddDefect = Vue.createApp({
             this.defect_type_defects = response.data;
               }) /* axios */
       }, /* updateTableTypeDefect */ 
+      updateTableConditionEquipment() {
+        axios
+        .post('/condition_equipment',)
+        .then(response => {
+            this.defect_conditions_equipment = response.data;
+              }) /* axios */
+      }, /* updateTableConditionEquipment */ 
       checkMask(){
         this.maskObject.completed = this.newSystemKKS.length >= this.placeholders[this.newTypeDefect].slice(0,11).length
       },
@@ -238,7 +249,7 @@ const appVueAddDefect = Vue.createApp({
       addNewDefect() {
         /* if (this.placeholders[this.newTypeDefect] === '##XXX##XN##AAAAAA') {
           this.checkMask()
-        } */
+        } */ 
         if (this.newTypeDefect == '0'){
           this.style_input_type = "#ff2851"
           this.check_defect_type = true
@@ -251,6 +262,10 @@ const appVueAddDefect = Vue.createApp({
         else if (this.newSystemName == ''){
           this.check_defect_system = true
           Swal.fire({html:"<b>Оборудование должно быть заполнено!</b>", heightAuto: false}); 
+        } /* else if */
+        else if (this.newConditionEquipment == '0'){
+          this.check_defect_system = true
+          Swal.fire({html:"<b>Состояние оборудования должно быть заполнено!</b>", heightAuto: false}); 
         } /* else if */
         else if (this.newDivisionOwner_id == '0' ){
           Swal.fire({html:"<b>Все значения (кроме Местоположения) должны быть заполнены!</b>", heightAuto: false}); 
@@ -294,6 +309,7 @@ const appVueAddDefect = Vue.createApp({
                 "defect_system_name": this.newSystemName,
                 "defect_system_kks": this.newSystemKKS !== '' ? this.newSystemKKS : null,
                 "defect_type_defect_name": this.newTypeDefect,
+                "defect_condition_equipment_name": this.newConditionEquipment,
                 "defect_location": this.newLocation,
                 "defect_user_division_id": this.newDivisionOwner_id,
                 "defect_safety": this.newSafety,

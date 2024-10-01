@@ -10,6 +10,7 @@ from db.user import User
 from db.type_defect import TypeDefect
 from db.system import System
 from db.status_defect import StatusDefect
+from db.condition_equipment import ConditionEquipment
 from db.division import Division
 from db.defect_reason_core import CategoryCoreReason
 from db.defect_reason_direct import CategoryDirectReason
@@ -52,10 +53,9 @@ class Defect(Base):
 
     defect_ppr: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Устранить в ППР?
     defect_safety: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Влияет на безопасность?
-    defect_pnr: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Влияет на нагрузку?
-    defect_exploitation: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # True - дефект в эксплуатации; False - дефект в ПНР?
+    defect_pnr: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) #  True - дефект в ПНР; False - дефект в эксплуатации?
+    defect_exploitation: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Влияет на эксплуатацию?
     defect_localized: Mapped[bool] = mapped_column(Boolean, server_default=false(), default=False) # Дефект локализован? (В ЦС ТОИР данное значение назвается "Временно устранен")
-
     defect_description: Mapped[str] = mapped_column(String(500)) # Описание дефекта.
     defect_check_result: Mapped[str] = mapped_column(String(500), nullable=True) # Результат проверки.
     defect_work_comment: Mapped[str] = mapped_column(String(500), nullable=True) # Комментарий исполнителя после выполнения работ.
@@ -63,7 +63,9 @@ class Defect(Base):
     defect_type_id: Mapped[int] = mapped_column(ForeignKey("type_defect.type_defect_id")) # вид дефекта
     defect_type: Mapped["TypeDefect"] = relationship(foreign_keys=[defect_type_id]) #  для работы с таблицей TypeDefect как с объектом
     defect_status_id: Mapped[int] = mapped_column(ForeignKey("status_defect.status_defect_id")) # статус (Этап) дефекта
-    defect_status: Mapped["StatusDefect"] = relationship(foreign_keys=[defect_status_id]) #  для работы с таблицей StatusDefect как с объектом
+    defect_status: Mapped["StatusDefect"] = relationship(foreign_keys=[defect_status_id]) #  для работы с таблицей StatusDefect как с объектом 
+    defect_condition_equipment_id: Mapped[int] = mapped_column(ForeignKey("condition_equipment.condition_equipment_id"), nullable=True) # состояние оборудования дефекта
+    defect_condition_equipment: Mapped["ConditionEquipment"] = relationship(foreign_keys=[defect_condition_equipment_id]) #  для работы с таблицей ConditionEquipment как с объектом
     defect_division_id: Mapped[int] = mapped_column(ForeignKey("division.division_id"), nullable=True) # id поста из таблицы User - руководитель ремонта.
     defect_division: Mapped["Division"] = relationship(foreign_keys=[defect_division_id]) #  для работы с таблицей User как с объектом
     defect_system_id: Mapped[int] = mapped_column(ForeignKey("system.system_id")) # вид дефекта
@@ -79,14 +81,14 @@ class Defect(Base):
     @staticmethod
     async def get_all_defect(session: AsyncSession): # получение всех дефектов в БД
         if AD:
-            query = select(Defect).order_by(Defect.defect_id).options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status))\
+            query = select(Defect).order_by(Defect.defect_id).options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_condition_equipment)).options(selectinload(Defect.defect_status))\
                     .options(selectinload(Defect.defect_division)).options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect))\
                     .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
         else:
             query = select(Defect).order_by(Defect.defect_id)\
                     .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                     .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
-                    .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                    .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_condition_equipment)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                     .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)).options(selectinload(Defect.defect_category_defect))\
                     .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
         result = await session.scalars(query)
@@ -95,7 +97,7 @@ class Defect(Base):
     
     @staticmethod
     async def add_defect(session: AsyncSession, defect_registrator: User, defect_description: str, defect_system: System,
-                          defect_location: str, defect_type: TypeDefect, defect_status: StatusDefect, defect_division: Division, defect_safety: bool,
+                          defect_location: str, defect_type: TypeDefect, defect_condition_equipment: ConditionEquipment, defect_status: StatusDefect, defect_division: Division, defect_safety: bool,
                           defect_pnr: bool, defect_exploitation: bool, defect_system_klass: str, defect_category_defect: CategoryDefect,
                           defect_core_category_reason: CategoryCoreReason, defect_direct_category_reason: CategoryDirectReason): # добавление системы в БД
         defects = await Defect.get_all_defect(session)
@@ -120,6 +122,7 @@ class Defect(Base):
             defect_created_at=now_time,
             defect_location=defect_location,
             defect_type_id=defect_type.type_defect_id,
+            defect_condition_equipment_id=defect_condition_equipment.condition_equipment_id,
             defect_status_id=defect_status.status_defect_id,
             defect_system_id=defect_system.system_id,
             defect_safety=defect_safety,
@@ -140,14 +143,14 @@ class Defect(Base):
     @staticmethod
     async def get_defect_by_id(session: AsyncSession, defect_id: int): # получение дефекта по ID
         if AD:
-            query = select(Defect).where(Defect.defect_id == defect_id).options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status))\
+            query = select(Defect).where(Defect.defect_id == defect_id).options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_condition_equipment)).options(selectinload(Defect.defect_status))\
                     .options(selectinload(Defect.defect_division)).options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect))\
                     .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
         else:
             query = select(Defect).where(Defect.defect_id == defect_id)\
                     .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                     .options(selectinload(Defect.defect_repair_manager)).options(selectinload(Defect.defect_worker))\
-                    .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
+                    .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_condition_equipment)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                     .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_checker)).options(selectinload(Defect.defect_category_defect))\
                     .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
         result = await session.scalars(query)
@@ -168,6 +171,7 @@ class Defect(Base):
                                   defect_work_comment: str=None, # OK
                                   defect_location: str=None, # OK
                                   defect_type_id: int=None, # OK
+                                  defect_condition_equipment_id: int=None, # OK
                                   defect_status_id: int=None, # OK
                                   defect_division_id: int=None, # OK
                                   defect_system_id: int=None, # OK
@@ -203,6 +207,10 @@ class Defect(Base):
             defect.defect_location = defect_location
         if defect_type_id:
             defect.defect_type_id = defect_type_id 
+
+        if defect_condition_equipment_id:
+            defect.defect_condition_equipment_id = defect_condition_equipment_id 
+
         if defect_description:
             defect.defect_description = defect_description
         if defect_work_comment:
@@ -237,7 +245,7 @@ class Defect(Base):
     async def del_defect_by_defect(session: AsyncSession, defect):
         session.delete(defect)
         await session.commit() 
-    
+     
     @staticmethod
     async def get_defects_by_filter(
                                 session: AsyncSession,
@@ -252,13 +260,16 @@ class Defect(Base):
                                 safety: bool = None,
                                 allDefects: bool = None,
                                 exploitation = None,
-                                type_defect_id = None):
+                                type_defect_id = None,
+                                condition_equipment_id = None):
         conditions = []
 
         if division_id is not None and division_id !=0:
             conditions.append(Defect.defect_division_id == division_id)
         if type_defect_id is not None and type_defect_id !=0:
             conditions.append(Defect.defect_type_id == type_defect_id)
+        if condition_equipment_id is not None and condition_equipment_id !=0:
+            conditions.append(Defect.defect_condition_equipment_id == condition_equipment_id)
         if status_id is not None and status_id !=0:
             conditions.append(Defect.defect_status_id == status_id)
         if ppr is not None:
@@ -288,14 +299,14 @@ class Defect(Base):
         if AD:
             query = query.order_by(Defect.defect_id.desc()).options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status))\
                     .options(selectinload(Defect.defect_division)).options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect))\
-                    .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
+                    .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason)).options(selectinload(Defect.defect_condition_equipment))
         else:
             query = query.order_by(Defect.defect_id.desc())\
                         .options(selectinload(Defect.defect_registrar)).options(selectinload(Defect.defect_owner))\
                         .options(selectinload(Defect.defect_worker)).options(selectinload(Defect.defect_repair_manager))\
                         .options(selectinload(Defect.defect_type)).options(selectinload(Defect.defect_status)).options(selectinload(Defect.defect_division))\
                         .options(selectinload(Defect.defect_system)).options(selectinload(Defect.defect_category_defect)).options(selectinload(Defect.defect_checker))\
-                        .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason))
+                        .options(selectinload(Defect.defect_core_category_reason)).options(selectinload(Defect.defect_direct_category_reason)).options(selectinload(Defect.defect_condition_equipment))
         if allDefects:
             result = await session.scalars(query)
         elif status_id not in (STATUS_CLOSE_DEFECT_ID, STATUS_CANCEL_DEFECT_ID):

@@ -12,6 +12,7 @@ from db.defect import Defect
 from db.history_defect import History
 from db.type_defect import TypeDefect
 from db.status_defect import StatusDefect
+from db.condition_equipment import ConditionEquipment
 from db.category_defect import CategoryDefect
 from db.defect_reason_core import CategoryCoreReason
 from db.defect_reason_direct import CategoryDirectReason
@@ -292,6 +293,11 @@ STATUS_DEFECT = ('Зарегистрирован', # 1
                  'Локализован' # 11
                  )
 
+CONDITION_EQUIPMENT = ('В эксплуатации', # 1
+                       'В ПНР', # 2
+                       'В СМР', # 3
+                      )
+
 DIVISIONS = (
             ('РЦ-1', ('Reactor shop', 'Reactor shop of the 1st stage', 'Reactor Workshop 1st stage', 'Pipeline and Valves Department', 'Reactor Shop of The 1st Stage',)),
             ('РЦ-2', ('Reactor shop – 2', 'Reactor shop of the 2nd stage', 'Reactor shop of the 2nd stag',)),
@@ -378,6 +384,14 @@ async def create_tables():
             session.add(status_defect)
         await session.commit()
     ################################################
+
+    ######## добавление состояний оборудования в БД #######
+    async with async_session() as session:
+        for condition_equipment_name in CONDITION_EQUIPMENT:
+            condition_equipment = ConditionEquipment(condition_equipment_name=condition_equipment_name)
+            session.add(condition_equipment)
+        await session.commit()
+    #######################################################
 
     ########### добавление списка ролей в БД #######
     async with async_session() as session:

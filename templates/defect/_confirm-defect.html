@@ -10,7 +10,7 @@
             <h4 class="modal-title" id="exampleModalLabel"> {{ cardDefectID }}</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeConfirmDefectModalWindow"></button>
           </div>
-          <div class="modal-body modal-body1">
+          <div class="modal-body modal-body1"> 
             <form method="post">
               <div class="block_nav_modal">
                 <button @click="clickbuttonmain" type="button" class="btn margin" :class="backgroundMainButtonCCS" >Общая информация</button>
@@ -33,7 +33,7 @@
                           <b class="label">Журнал дефекта</b>
                           <b class="zvezda"> &nbsp * </b> 
                         </div>
-                        <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardTypeDefectName !== '0', 'is-invalid': newCardTypeDefectName === '0' }" @change="changeTextCorrection" aria-label="Default select example" v-model="newCardTypeDefectName" :disabled='isDisabledConfirmDefect' required>
+                        <select class="form-select" :class="{ 'is-valid': isDisabledConfirmDefect === false & newCardTypeDefectName !== '0', 'is-invalid': newCardTypeDefectName === '0' }" @change="changeTextCorrection" v-model="newCardTypeDefectName" :disabled='isDisabledConfirmDefect' required>
                           <option disabled selected :value=0>Выберите журнал дефекта</option>
                           <option  v-for="defect_type_defect in defect_type_defects" :value="defect_type_defect.type_defect_name">{{ defect_type_defect.type_defect_name }}</option>
                         </select>
@@ -61,24 +61,20 @@
                   </div>
     
                   <div class="block_rowKKS">
-                    <div class="block_rowKKS width50">
+                    <div class="block_rowKKS width50 componentWraperKKS">
                       <div class="block_data_column_KKS width50">
-                        <div class="block_row1">
-                          <b class="label">KKS или номенклатурный номер (при отсутствии KKS)</b>
-                          <b class="zvezda"> &nbsp * </b> 
-                        </div>
-                        <div class="block_data8">
+                        <div class="block_KKS">
                           <div class="block_row1">
                             <!-- <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control widthKKS margin-right" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska="maskObject" :data-maska="placeholders[newCardTypeDefectName]" data-maska-tokens="X:[a-zA-Z]|N:[a-zA-Z0-9]|A:[a-zA-Z0-9]:optional"
                             v-model="newCardKKS" :placeholder="placeholders[newCardTypeDefectName]" /> -->
-                            <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control widthKKS block_data8" :class="{ 'is-valid': newCardKKS !== '', 'is-invalid': newCardKKS === null }" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska data-maska="HHHHHHHHHHHHHHHHHHHH" data-maska-tokens="H:[0-9a-zA-Z/-]"
+                            <input type="text" id="inputConfirmKKS" :disabled='isDisabledConfirmDefect' class="form-control widthKKS margin-right" :class="{ 'is-valid': newCardKKS !== '', 'is-invalid': newCardKKS === null }" @input="event => event.target.value = event.target.value.toUpperCase()" v-maska data-maska="HHHHHHHHHHHHHHHHHHHH" data-maska-tokens="H:[0-9a-zA-Z/-]"
                             v-model="newCardKKS"/>
                             <!-- <label for="inputConfirmKKS" :hidden="newCardTypeDefectName==='0'">{{ placeholders[newCardTypeDefectName] }}</label> -->
                             <!-- <p class="text-muted"><b>#</b>-Цифра;  <b>X</b>-Буква; <b>N</b>-цифра/буква; <br> <b>A</b>-(необязательные)</p> -->
                           </div>
                         </div>
                       </div>
-                      <div class="width50 text-down">
+                      <div class="block_pnr_smr_form">
                         <p class="text_left">KKS должен состоять только из цифр и латинских букв!</p>
                         <!-- <div class="block_row1">
                           <div>
@@ -92,8 +88,14 @@
                     </div>
                     
                     <div class="block_row width650 componentWraper2">
-                      <div class="block_row">
-                        <div class="block_filter_flex1">
+                      <div class="block_pnr_smr_form">
+
+                        <select class="form-select" :class="{ 'is-valid': newCardConditionEquipmentName !== '0', 'is-invalid':  newCardConditionEquipmentName === '0' }" v-model="newCardConditionEquipmentName" @change="useFilter" required>
+                          <option disabled selected :value=0>Выберите состояние оборудования</option>
+                          <option v-for="condition in defect_conditions_equipment" :value="condition.condition_equipment_name">{{ condition.condition_equipment_name }}</option>
+                        </select>
+
+                        <!-- <div class="block_filter_flex1">
                           <div class = "form-check form-switch block-checkbox-left block-checkbox3">
                             <label class = "form-check-label" for="flexPnrConfirm">
                               В эксплуатации
@@ -105,15 +107,16 @@
                               В ПНР
                             </label>
                           </div>
-                        </div>
+                        </div> -->
+
                       </div>
                       <div class="block_data_column2">
                         <div class="form-check form-switch ">
-                          <input class="form-check-input" type="checkbox" id="flexSafetyConfirm" v-model="newSafety" :disabled="newPnr===true || isDisabledConfirmDefect===true" data-toggle="popover_safety_confirm_defect" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 72 часов">
+                          <input class="form-check-input" type="checkbox" id="flexSafetyConfirm" v-model="newSafety" :disabled="newCardConditionEquipmentName==='В ПНР' || newCardConditionEquipmentName==='В СМР'|| isDisabledConfirmDefect===true" data-toggle="popover_safety_confirm_defect" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 72 часов">
                           <label class="form-check-label margin-right" for="flexSafetyConfirm">Влияет на безопасность и несение нагрузки</label>
                         </div>
                         <div class="form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="flexExploitationConfirm" v-model="newExploitation" :disabled="newPnr===true || isDisabledConfirmDefect===true" data-toggle="popover_exploitation_confirm_defect" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 15 рабочих дней">
+                          <input class="form-check-input" type="checkbox" id="flexExploitationConfirm" v-model="newExploitation" :disabled="newCardConditionEquipmentName==='В ПНР' || newCardConditionEquipmentName==='В СМР'|| isDisabledConfirmDefect===true" data-toggle="popover_exploitation_confirm_defect" data-bs-trigger="hover focus" data-bs-content="Нормативный срок устранения не более 15 рабочих дней">
                           <label class="form-check-label margin-right" for="flexExploitationConfirm">Влияет на режим нормальной эксплуатации</label>
                         </div>
                       </div>
@@ -375,4 +378,4 @@
 
   </div>
   {% endraw %}
-  <script src="{{ url_for('defect_js', path='modal/confirm-defect.js?v=0.6') }}"></script>
+  <script src="{{ url_for('defect_js', path='modal/confirm-defect.js?v=0.7') }}"></script>
