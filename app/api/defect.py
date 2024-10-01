@@ -297,7 +297,7 @@ async def get_defects(request: Request, response: Response, session: AsyncSessio
 async def get_defect(request: Request, response: Response, defect_id: Defect_id, session: AsyncSession = Depends(get_db)):
     await check_auth_api(request, response) # проверка на истечение времени jwt токена
     defect: Defect = await Defect.get_defect_by_id(session=session, defect_id=defect_id.defect_id)
-    print(defect.defect_condition_equipment, defect.defect_type, defect.defect_condition_equipment.condition_equipment_name)
+    # print(defect.defect_condition_equipment, defect.defect_type, defect.defect_condition_equipment.condition_equipment_name)
     if AD:
         token_dec = await decode_token(request.cookies['jwt_refresh_token'])
         user_id = await decrypt_user_id(token_dec['subject']['userId'])
@@ -696,7 +696,7 @@ async def get_defect_by_filter(request: Request, response: Response, filter: Fil
             repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
             if filter.repair_division_id:
                 if not repair_manager: continue
-                if defect.defect_repair_manager.user_division.division_id != filter.repair_division_id: continue
+                if repair_manager.user_division.division_id != filter.repair_division_id: continue
             checker: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_checker_id) if defect.defect_checker_id else None
             defect_checker = {'user_surname': checker.user_surname if checker else '',
                                         'user_name': checker.user_name if checker else ''}            
