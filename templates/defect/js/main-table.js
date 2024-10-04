@@ -16,7 +16,7 @@ const appVueDefect = Vue.createApp({
       defect_type_defects: {},
       defects: {},
       pageNumber: 1,
-      pageSize: 13,
+      pageSize: 15,
       pages: 0,
       temp_resp: {},
       nextPageNumber: 0,

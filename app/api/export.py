@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.database import get_db
 from db.defect import Defect
+from db.defect import User
 from db.history_defect import History
 
 from app.schemas.defect import Defect_id
@@ -22,8 +23,8 @@ from utils.ldap import LdapConnection
 
 export_router = APIRouter() 
 
-COLUMNS_NAME = ['№', 'Дата регистрации', 'Срок устранения', 'Подразделение-владелец', 'KKS', 'Оборудование', 'Описание дефекта', 'Статус', 'Ответственный', 'Категория дефекта', 'Класс оборудования', 'Код кор. п', 'Коренная причина дефекта', 'Код неп. п', 'Непосредственная причина дефекта']
-COLUMNS_WIDTHS = {'№': 30, 'Дата регистрации': 60, 'Срок устранения': 60, 'Подразделение-владелец': 80, 'KKS': 40, 'Оборудование': 60, 'Описание дефекта': 100, 'Статус': 40, 'Ответственный': 50, 'Категория дефекта': 50, 'Класс оборудования': 50, 'Код кор. п': 40, 'Коренная причина дефекта': 60, 'Код неп. п': 40, 'Непосредственная причина дефекта': 60}
+COLUMNS_NAME = ['№', 'Дата регистрации', 'Срок устранения', 'Подразделение-владелец', 'KKS', 'Оборудование', 'Описание дефекта', 'Статус', 'Ответственный на текущем статусе', 'Состояние оборудования', 'Категория дефекта', 'Класс оборудования', 'Код кор. п', 'Коренная причина дефекта', 'Код неп. п', 'Непосредственная причина дефекта']
+COLUMNS_WIDTHS = {'№': 30, 'Дата регистрации': 60, 'Срок устранения': 60, 'Подразделение-владелец': 80, 'KKS': 40, 'Оборудование': 60, 'Описание дефекта': 100, 'Статус': 40, 'Ответственный на текущем статусе': 50, 'Состояние оборудования': 50, 'Категория дефекта': 50, 'Класс оборудования': 50, 'Код кор. п': 40, 'Коренная причина дефекта': 60, 'Код неп. п': 40, 'Непосредственная причина дефекта': 60}
 
 COLUMNS_NAME_HISTORY = ['№', 'Дата', 'Статус', 'Ответственное лицо', 'Комментарий']
 
@@ -33,6 +34,11 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
     df = pd.DataFrame(columns=COLUMNS_NAME)
     for defect_id in defect_list_ids.defect_list_ids:
         defect = await Defect.get_defect_by_id(session, defect_id)
+
+        if defect.defect_repair_manager_id:
+            division_repair_manager = await User.get_user_by_id(session, defect.defect_repair_manager_id)
+            # print(division_repair_manager.user_division.division_name)
+
         if AD:
             token_dec = await decode_token(request.cookies['jwt_refresh_token'])
             user_id = await decrypt_user_id(token_dec['subject']['userId'])
@@ -54,6 +60,10 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
                             (defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name if
                                 defect.defect_repair_manager else
                                 defect.defect_division.division_name) if not AD else defect_repair_manager_fullname,
+
+                            #division_repair_manager.user_division.division_name if defect.defect_repair_manager_id else defect.defect_division.division_name,
+                            
+                            defect.defect_condition_equipment.condition_equipment_name,
                             (defect.defect_category_defect.category_defect_name) if defect.defect_category_defect else None,
                             (defect.defect_system_klass) if defect.defect_system_klass else None,
                             (defect.defect_core_category_reason.category_reason_code) if defect.defect_core_category_reason else None,
@@ -73,19 +83,21 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
         writer.book.worksheets[-1].column_dimensions['D'].width = 30 # Подразделение-владелец
         writer.book.worksheets[-1].column_dimensions['E'].width = 20 # KKS
         writer.book.worksheets[-1].column_dimensions['F'].width = 30 # Оборудование
-        writer.book.worksheets[-1].column_dimensions['G'].width = 30 # Описание дефекта
+        writer.book.worksheets[-1].column_dimensions['G'].width = 80 # Описание дефекта
         writer.book.worksheets[-1].column_dimensions['H'].width = 22 # Статус
-        writer.book.worksheets[-1].column_dimensions['I'].width = 25 # Ответственный
-        writer.book.worksheets[-1].column_dimensions['J'].width = 25 # Категория дефекта
-        writer.book.worksheets[-1].column_dimensions['K'].width = 23 # Класс оборудования
-        writer.book.worksheets[-1].column_dimensions['L'].width = 13 # Код коренной причины
-        writer.book.worksheets[-1].column_dimensions['M'].width = 80 # Коренная причина дефекта
-        writer.book.worksheets[-1].column_dimensions['N'].width = 13 # Код непосредственной причины
-        writer.book.worksheets[-1].column_dimensions['O'].width = 80 # Непосредственная причина дефекта
+        writer.book.worksheets[-1].column_dimensions['I'].width = 38 # Ответственный на текущем статусе
+        #writer.book.worksheets[-1].column_dimensions['J'].width = 30 # Отвечает за устранение
+        writer.book.worksheets[-1].column_dimensions['J'].width = 28 # Состояние оборудования
+        writer.book.worksheets[-1].column_dimensions['K'].width = 30 # Категория дефекта
+        writer.book.worksheets[-1].column_dimensions['L'].width = 23 # Класс оборудования
+        writer.book.worksheets[-1].column_dimensions['M'].width = 13 # Код коренной причины
+        writer.book.worksheets[-1].column_dimensions['N'].width = 80 # Коренная причина дефекта
+        writer.book.worksheets[-1].column_dimensions['O'].width = 13 # Код непосредственной причины
+        writer.book.worksheets[-1].column_dimensions['P'].width = 80 # Непосредственная причина дефекта
         row_count = 1 # номер стартовой строки для начала добавления рамки и переноса строки
         for row in dataframe_to_rows(df, index=True, header=False):
             row_count += 1
-            for row in writer.book.worksheets[-1]['A'+str(row_count):'O'+str(row_count)]:
+            for row in writer.book.worksheets[-1]['A'+str(row_count):'P'+str(row_count)]:
                 for cell in row:
                     cell.alignment = Alignment(wrap_text=True)
     return StreamingResponse(
