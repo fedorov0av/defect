@@ -34,7 +34,7 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
     df = pd.DataFrame(columns=COLUMNS_NAME)
     for defect_id in defect_list_ids.defect_list_ids:
         defect = await Defect.get_defect_by_id(session, defect_id)
-
+        defect_repair_manager_fullname = ''
         if defect.defect_repair_manager_id:
             division_repair_manager = await User.get_user_by_id(session, defect.defect_repair_manager_id)
             # print(division_repair_manager.user_division.division_name)
@@ -46,29 +46,35 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
             ldap_connection = LdapConnection(session, user_id, passw) """
             ldap_connection = LdapConnection(session, user_id)
             defect_repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
-            defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else defect.defect_division.division_name
+            if defect.defect_status.status_defect_name not in ["Требует решения",]:
+                defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else defect.defect_division.division_name
+            else:
+                defect_repair_manager_fullname = defect.defect_division.division_name
+        else:
+            if defect.defect_status.status_defect_name in ["Требует решения",]:
+                defect_repair_manager_fullname = defect.defect_division.division_name
         df_defect = pd.DataFrame(
-                            [[defect.defect_id,
-                            defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"),
-                            (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '')
-                            if not defect.defect_ppr else 'Устр. в ППР',
-                            defect.defect_division.division_name,
-                            defect.defect_system.system_kks if defect.defect_system else '',
-                            defect.defect_system.system_name,
-                            defect.defect_description,
-                            defect.defect_status.status_defect_name,
+                            [[defect.defect_id, # №
+                            defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"), # Дата регистрации
+                            (defect.defect_planned_finish_date.strftime("%d-%m-%Y") if defect.defect_planned_finish_date else '') 
+                            if not defect.defect_ppr else 'Устр. в ППР', # Срок устранения
+                            defect.defect_division.division_name, # Подразделение-владелец
+                            defect.defect_system.system_kks if defect.defect_system else '', # KKS
+                            defect.defect_system.system_name, # Оборудование
+                            defect.defect_description, # Описание дефекта
+                            defect.defect_status.status_defect_name, # Статус
                             (defect.defect_repair_manager.user_surname + ' ' + defect.defect_repair_manager.user_name if
                                 defect.defect_repair_manager else
-                                defect.defect_division.division_name) if not AD else defect_repair_manager_fullname,
+                                defect.defect_division.division_name) if ((not AD) and (not defect_repair_manager_fullname)) else defect_repair_manager_fullname, # Ответственный на текущем статусе
 
                             #division_repair_manager.user_division.division_name if defect.defect_repair_manager_id else defect.defect_division.division_name,
                             
-                            defect.defect_condition_equipment.condition_equipment_name,
-                            (defect.defect_category_defect.category_defect_name) if defect.defect_category_defect else None,
-                            (defect.defect_system_klass) if defect.defect_system_klass else None,
-                            (defect.defect_core_category_reason.category_reason_code) if defect.defect_core_category_reason else None,
-                            (defect.defect_core_category_reason.category_reason_name) if defect.defect_core_category_reason else None,
-                            (defect.defect_direct_category_reason.category_reason_code) if defect.defect_direct_category_reason else None,
+                            defect.defect_condition_equipment.condition_equipment_name, # Состояние оборудования
+                            (defect.defect_category_defect.category_defect_name) if defect.defect_category_defect else None, # Категория дефекта
+                            (defect.defect_system_klass) if defect.defect_system_klass else None, # Класс оборудования
+                            (defect.defect_core_category_reason.category_reason_code) if defect.defect_core_category_reason else None, # Коренная причина дефекта
+                            (defect.defect_core_category_reason.category_reason_name) if defect.defect_core_category_reason else None, # Код непосредственной причины
+                            (defect.defect_direct_category_reason.category_reason_code) if defect.defect_direct_category_reason else None,# Непосредственная причина дефекта
                             (defect.defect_direct_category_reason.category_reason_name) if defect.defect_direct_category_reason else None,
                             ],], 
                             columns=COLUMNS_NAME
