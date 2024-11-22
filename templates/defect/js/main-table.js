@@ -42,7 +42,6 @@ const appVueDefect = Vue.createApp({
       if (this.defects.length === 0) return;
 
       let key = this.colunmsName[index].key; // выбор ключа для сортировки
-
       // проверка, если все значения в массиве одинаковы
       const firstValue = key.split(".").reduce((o, i) => o[i], this.defects[0]);
       const allSame = this.defects.every((defect) => {
@@ -84,13 +83,22 @@ const appVueDefect = Vue.createApp({
         // пример: объект a {defect_system: {system_kks: 'KKS1'}}, где key: defect_system.system_kks, aValue: KKS1
         let aValue = key.split(".").reduce((o, i) => o[i], a);
         let bValue = key.split(".").reduce((o, i) => o[i], b);
-
         if (aValue == null) return 1; // элемент a должен идти после b в отсортированном списке
         if (bValue == null) return -1; // элемент b должен идти после a в отсортированном списке
 
         // если тип элемента - строка, то преобразование элемента в нижний регистр
         if (typeof aValue === "string") aValue = aValue.toLowerCase();
         if (typeof bValue === "string") bValue = bValue.toLowerCase();
+
+        // если колонки с датами - то преобразование элемента в объект Date
+        let column_name = key.split(".")[0]
+        if (((column_name == 'defect_created_at') || (column_name == 'defect_planned_finish_date')) &&
+            (aValue != 'устр. в ппр' && bValue != 'устр. в ппр')){
+          const [dayAValue, monthAValue, yearAValue] = aValue.split(' ')[0].split("-");
+          const [dayBValue, monthBValue, yearBValue] = bValue.split(' ')[0].split("-");
+          if (aValue != null) aValue = new Date(yearAValue, monthAValue - 1, dayAValue);
+          if (bValue != null) bValue = new Date(yearBValue, monthBValue - 1, dayBValue);
+        }
 
         return aValue < bValue
           ? -1 * this.sortDirection

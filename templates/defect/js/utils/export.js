@@ -85,7 +85,7 @@ function exportPDFcurrentPage(){
     document.getElementById('vueNav').style = 'display:none';
     document.getElementById('vueFilter').style = 'display:none';
     document.getElementById('footer_info').style = 'display:none';
-    document.getElementById('mainTable').classList.remove('tableFixHead')
+    document.getElementById('mainTable').classList.remove('tableFixHead');
     window.print();
     document.getElementById('vueHead').style = 'display:block;';
     document.getElementById('vueNav').style = 'display:block';
