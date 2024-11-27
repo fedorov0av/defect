@@ -9,7 +9,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.database import get_db
 from db.defect import Defect
-from db.defect import User
 from db.history_defect import History
 
 from app.schemas.defect import Defect_id
@@ -27,6 +26,10 @@ COLUMNS_NAME = ['№', 'Дата регистрации', 'Срок устран
 COLUMNS_WIDTHS = {'№': 30, 'Дата регистрации': 60, 'Срок устранения': 60, 'Подразделение-владелец': 80, 'KKS': 40, 'Оборудование': 60, 'Описание дефекта': 100, 'Статус': 40, 'Ответственный на текущем статусе': 50, 'Состояние оборудования': 50, 'Категория дефекта': 50, 'Класс оборудования': 50, 'Код кор. п': 40, 'Коренная причина дефекта': 60, 'Код неп. п': 40, 'Непосредственная причина дефекта': 60}
 
 COLUMNS_NAME_HISTORY = ['№', 'Дата', 'Статус', 'Ответственное лицо', 'Комментарий']
+
+COLUMNS_NAME_FOR_OWNERS = ['Требует решения', 'Устранен', 'Отменен', 'Закрыт', 'Локализован', 'Работы завершены']
+COLUMNS_NAME_FOR_OP = ['Работы завершены',]
+
 
 @export_router.post("/export_excel_defect/")
 async def export_excel_defect(request: Request, response: Response, defect_list_ids: Defect_list_ids, session: AsyncSession = Depends(get_db)):
@@ -46,13 +49,17 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
             ldap_connection = LdapConnection(session, user_id, passw) """
             ldap_connection = LdapConnection(session, user_id)
             defect_repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
-            if defect.defect_status.status_defect_name not in ["Требует решения",]: # если дефект со статусом ТРЕБУЕТ РЕШЕНИЯ то указывается цех-владелец
+            if defect.defect_status.status_defect_name not in COLUMNS_NAME_FOR_OWNERS: # если дефект со статусом ТРЕБУЕТ РЕШЕНИЯ то указывается цех-владелец
                 defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else defect.defect_division.division_name
+                if defect.defect_status.status_defect_name in COLUMNS_NAME_FOR_OP:
+                    defect_repair_manager_fullname = 'ОП '+ defect_repair_manager_fullname
             else:
                 defect_repair_manager_fullname = defect.defect_division.division_name
         else:
-            if defect.defect_status.status_defect_name in ["Требует решения",]:
+            if defect.defect_status.status_defect_name in COLUMNS_NAME_FOR_OWNERS:
                 defect_repair_manager_fullname = defect.defect_division.division_name
+                if defect.defect_status.status_defect_name in COLUMNS_NAME_FOR_OP:
+                    defect_repair_manager_fullname = 'ОП '+ defect_repair_manager_fullname
         df_defect = pd.DataFrame(
                             [[defect.defect_id, # №
                             defect.defect_created_at.strftime("%d-%m-%Y %H:%M:%S"), # Дата регистрации
