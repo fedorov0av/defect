@@ -51,10 +51,10 @@ async def export_excel_defect(request: Request, response: Response, defect_list_
             defect_repair_manager: UserAD =  await ldap_connection.get_user_by_uid_from_AD(defect.defect_repair_manager_id) if defect.defect_repair_manager_id else None
             if defect.defect_status.status_defect_name not in COLUMNS_NAME_FOR_OWNERS: # если дефект со статусом ТРЕБУЕТ РЕШЕНИЯ то указывается цех-владелец
                 defect_repair_manager_fullname = defect_repair_manager.user_surname + ' ' + defect_repair_manager.user_name if defect_repair_manager else defect.defect_division.division_name
-                if defect.defect_status.status_defect_name in COLUMNS_NAME_FOR_OP:
-                    defect_repair_manager_fullname = 'ОП '+ defect_repair_manager_fullname
             else:
                 defect_repair_manager_fullname = defect.defect_division.division_name
+                if defect.defect_status.status_defect_name in COLUMNS_NAME_FOR_OP:
+                    defect_repair_manager_fullname = 'ОП '+ defect_repair_manager_fullname
         else:
             if defect.defect_status.status_defect_name in COLUMNS_NAME_FOR_OWNERS:
                 defect_repair_manager_fullname = defect.defect_division.division_name
